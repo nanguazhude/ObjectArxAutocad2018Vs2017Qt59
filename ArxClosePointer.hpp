@@ -26,11 +26,12 @@ namespace sstd {
 			:$pointer(arg.$pointer) {
 			arg.$pointer = nullptr;
 		}
+
 		inline ArxClosePointer&operator=(ArxClosePointer && arg) {
 			if (this == &arg) { return *this; }
-			this->_p_close();
-			this->$pointer = arg.$pointer;
-			arg.$pointer = nullptr;
+			ArxClosePointer varTmp;
+			std::swap(varTmp.$pointer,arg.$pointer);
+			std::swap(this->$pointer, varTmp.$pointer);
 			return *this;
 		}
 
