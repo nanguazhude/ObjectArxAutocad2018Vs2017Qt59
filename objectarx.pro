@@ -54,16 +54,20 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += $$PWD/object_arx_global.cpp \
     $$PWD/ARXApplication.cpp
+
 HEADERS += $$PWD/object_arx_global.hpp \
-    $$PWD/ARXApplication.hpp
+    $$PWD/ARXApplication.hpp \
+    $$PWD/ArxClosePointer.hpp
 
 #.cpp source
 SOURCES += \
-        $$PWD/HellowWorld.cpp
+        $$PWD/HellowWorld.cpp \
+        $$PWD/SimpleDrawLine.cpp
 
 #.h .hpp source
 HEADERS += \
-        $$PWD/HellowWorld.hpp
+        $$PWD/HellowWorld.hpp \
+        $$PWD/SimpleDrawLine.hpp
 
 
 ##########################

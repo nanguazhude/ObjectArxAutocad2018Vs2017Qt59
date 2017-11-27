@@ -3,15 +3,19 @@
 
 #include "object_arx_global.hpp"
 
-class HellowWorld {
+namespace sstd {
 
-public:
-	HellowWorld();
+	class HellowWorld {
 
-	static void load();
-	static void main();
-	DEFINE_ARX_NAME(LR"(_hellowworld)")
-};
+	public:
+		HellowWorld();
+
+		static void load();
+		static void main();
+		DEFINE_ARX_NAME(LR"(_hellowworld)")
+	};
+
+}/*namespace sstd*/
 
 #endif // HellowWorld_H
 
