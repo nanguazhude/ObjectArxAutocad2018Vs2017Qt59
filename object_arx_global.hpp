@@ -52,6 +52,9 @@ namespace sstd {
 #include <utility>
 #include <type_traits>
 
+/*utility*/
+#include "ArxClosePointer.hpp"
+
 #endif // OBJECT_ARX_GLOBAL_H
 
 
