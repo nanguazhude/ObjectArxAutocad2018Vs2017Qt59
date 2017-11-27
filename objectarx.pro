@@ -1,5 +1,11 @@
+#Visual Studio 2017 With Autocad 2018 Under Windows
+#Others Will Not Be Supported
+
 #the arx name
 TARGET = _ARX_DUTY_BY_NGZ_
+
+#add PRECOMPILED_HEADER
+PRECOMPILED_HEADER  += object_arx_global.hpp
 
 #change output dir
 #DESTDIR =
