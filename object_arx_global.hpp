@@ -34,12 +34,6 @@ constexpr static inline const auto * localName() { return 1 + globalName(); }
 #include <QtGui>
 #endif
 
-/*cplusplus headers*/
-#include <memory>
-#include <cstddef>
-#include <utility>
-#include <type_traits>
-
 #endif // OBJECT_ARX_GLOBAL_H
 
 

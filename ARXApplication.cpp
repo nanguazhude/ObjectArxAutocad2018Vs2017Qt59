@@ -3,34 +3,28 @@
 
 /***************************************************/
 #include "HellowWorld.hpp"
-#include "SimpleDrawLine.hpp"
 /***************************************************/
 
-namespace sstd {
+namespace {
+	using FunctionType = void(*)(void);
+	static constexpr FunctionType _v_functions[] = {
+		{&HellowWorld::load},
+	};
+}
 
-	namespace {
-		using FunctionType = void(*)(void);
-		static constexpr FunctionType _v_functions[] = {
-			{&HellowWorld::load},
-			{&SimpleDrawLine::load},
-		};
+void ARXApplication::load() {
+	for (const auto & varI : _v_functions) {
+		(varI)();
 	}
+}
 
-	void ARXApplication::load() {
-		for (const auto & varI : _v_functions) {
-			(varI)();
-		}
-	}
+void ARXApplication::unload() {
+	acedRegCmds->removeGroup(arx_group_name());
+}
 
-	void ARXApplication::unload() {
-		acedRegCmds->removeGroup(arx_group_name());
-	}
+ARXApplication::ARXApplication() {
 
-	ARXApplication::ARXApplication() {
-
-	}
-
-}/*namespace sstd*/
+}
 
 /********************************/
 

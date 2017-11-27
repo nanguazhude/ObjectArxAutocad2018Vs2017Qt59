@@ -7,11 +7,11 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt) {
 	case AcRx::kInitAppMsg: {
 		acrxDynamicLinker->unlockApplication(pkt);
 		acrxRegisterAppMDIAware(pkt);
-		sstd::ARXApplication::load();
+		ARXApplication::load();
 		break;
 	}
 	case AcRx::kUnloadAppMsg: {
-		sstd::ARXApplication::unload();
+		ARXApplication::unload();
 		break;
 	}
 	default:break;
