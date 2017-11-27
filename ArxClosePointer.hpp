@@ -19,6 +19,8 @@ namespace sstd {
 		inline operator T *&() { return $pointer; }
 		inline operator T * ()const { return $pointer; }
 
+		inline operator bool() const { return bool($pointer); }
+
 		ArxClosePointer(const ArxClosePointer &) = delete;
 		ArxClosePointer&operator=(const ArxClosePointer &) = delete;
 
