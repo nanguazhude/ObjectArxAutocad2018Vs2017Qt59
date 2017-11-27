@@ -7,12 +7,7 @@ namespace sstd {
 	}
 
 	void SimpleDrawLine::load() {
-		acedRegCmds->addCommand(arx_group_name(),
-			globalName(),
-			localName(),
-			ACRX_CMD_MODAL,
-			&SimpleDrawLine::main
-		);
+        arx_add_main_command<SimpleDrawLine>();
 	}
 
 	void SimpleDrawLine::main() {

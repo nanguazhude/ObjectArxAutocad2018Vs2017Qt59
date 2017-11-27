@@ -6,12 +6,7 @@ namespace sstd {
 	}
 
 	void HellowWorld::load() {
-		acedRegCmds->addCommand(arx_group_name(),
-			globalName(),
-			localName(),
-			ACRX_CMD_MODAL,
-			&HellowWorld::main
-		);
+        arx_add_main_command<HellowWorld>();
 	}
 
 	void HellowWorld::main() {

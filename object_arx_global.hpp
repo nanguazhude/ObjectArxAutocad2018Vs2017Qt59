@@ -21,10 +21,22 @@
 #include <arxHeaders.h>
 #pragma warning( pop)
 
-inline constexpr const auto * arx_group_name() { return LR"(SSTD)"; }
 #define DEFINE_ARX_NAME(...) constexpr static inline const auto * globalName() \
 { return  __VA_ARGS__ ; } \
 constexpr static inline const auto * localName() { return 1 + globalName(); }
+
+namespace sstd {
+	inline constexpr const auto * arx_group_name() { return LR"(SSTD)"; }
+	template<typename T>
+	inline void arx_add_main_command() {
+		acedRegCmds->addCommand(arx_group_name(),
+			T::globalName(),
+			T::localName(),
+			ACRX_CMD_MODAL,
+			&T::main
+		);
+	}
+}/*namespace sstd*/
 
 #ifdef QT_CORE_LIB
 #include <QtCore>
