@@ -55,6 +55,22 @@ namespace sstd {
 /*utility*/
 #include "ArxClosePointer.hpp"
 
+namespace sstd {
+	template<typename T>
+	inline Acad::ErrorStatus openObject(T*&arg, AcDbObjectId id, AcDb::OpenMode mode,
+		bool openErasedEntity = false) {
+		if constexpr(std::is_base_of<AcDbEntity, T>::value) {
+			return ::acdbOpenAcDbEntity(arg, id, mode, openErasedEntity);
+		}
+		else if constexpr(std::is_base_of<AcDbObject, T>::value) {
+			return ::acdbOpenAcDbObject(arg, id, mode, openErasedEntity);
+		}
+		else {
+			return ::acdbOpenObject(arg, id, mode, openErasedEntity);
+		}
+	}
+}/*sstd*/
+
 #endif // OBJECT_ARX_GLOBAL_H
 
 
