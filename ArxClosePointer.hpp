@@ -2,11 +2,23 @@
 #define ARXCLOSEPOINTER_HPP
 
 namespace sstd {
-
+	/**  
+	class AcDbSymbolTablePointer; 
+	class AcDbSymbolTableRecordPointer;
+	**/
 	template<typename T>
 	class ArxClosePointer {
 		T * $pointer;
-		void _p_close() { if ($pointer) { $pointer->close(); } }
+		inline void _p_close() {
+			if ($pointer) {
+				if ($pointer->objectId().isNull()) {
+					delete $pointer;
+				}
+				else {
+					$pointer->close();
+				}
+			}
+		}
 	public:
 		ArxClosePointer() :$pointer(nullptr) {}
 		template<typename U>
@@ -32,7 +44,7 @@ namespace sstd {
 		inline ArxClosePointer&operator=(ArxClosePointer && arg) {
 			if (this == &arg) { return *this; }
 			ArxClosePointer varTmp;
-			std::swap(varTmp.$pointer,arg.$pointer);
+			std::swap(varTmp.$pointer, arg.$pointer);
 			std::swap(this->$pointer, varTmp.$pointer);
 			return *this;
 		}
