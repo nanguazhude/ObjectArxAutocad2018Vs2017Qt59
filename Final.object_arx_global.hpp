@@ -66,6 +66,16 @@ namespace sstd {
 #include <QtGui>
 #endif
 
+#ifdef QT_WIDGETS_LIB
+#include <QtWidgets>
+namespace sstd {
+class QtApplication :QApplication {
+public:
+    QtApplication();
+};
+}/*namespace sstd*/
+#endif
+
 /*utility*/
 #include "ArxClosePointer.hpp"
 

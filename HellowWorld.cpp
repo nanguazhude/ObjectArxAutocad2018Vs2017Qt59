@@ -12,6 +12,14 @@ namespace sstd {
 	}
 
 	void HellowWorld::main() {
+
+        {
+            QtApplication varQApplication ;
+            QMessageBox varBox ;
+            varBox.setText("The document has been modified.");
+            varBox.exec() ;
+        }
+
 		auto varDataTime = QDateTime::currentDateTime().toString().toStdWString();
 		varDataTime = LR"(Hellow World!
 )" + varDataTime;

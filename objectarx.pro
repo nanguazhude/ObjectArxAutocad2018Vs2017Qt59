@@ -5,7 +5,7 @@
 TARGET = _ARX_DUTY_BY_NGZ_
 
 #add PRECOMPILED_HEADER
-PRECOMPILED_HEADER  += PRECOMPILED_HEADER.object_arx_global.hpp
+PRECOMPILED_HEADER  += Final.object_arx_global.hpp
 
 #change output dir
 #DESTDIR =
@@ -38,9 +38,10 @@ TARGET_EXT = .arx
 #remove _DEBUG
 DEFINES -= _DEBUG
 
-#just use Qt.Core and Qt.Gui
+#just use Qt.Core and Qt.Gui Qt.Widget
 QT       += core
 QT       += gui
+QT       += widgets
 #CONFIG += suppress_vcproj_warnings
 
 #Qt project template
@@ -57,14 +58,15 @@ SOURCES += \
         $$PWD/HellowWorld.cpp \
         $$PWD/SimpleDrawLine.cpp \
         $$PWD/SimpleDrawLineChangeColor.cpp \
-        $$PWD/SimpleDrawPolygon.cpp
+        $$PWD/SimpleDrawPolygon.cpp \
+        $$PWD/QtApplication.cpp
 
 #.h .hpp source
 HEADERS += \
         $$PWD/HellowWorld.hpp \
         $$PWD/SimpleDrawLine.hpp \
         $$PWD/SimpleDrawLineChangeColor.hpp \
-        $$PWD/PRECOMPILED_HEADER.object_arx_global.hpp \
+        $$PWD/Final.object_arx_global.hpp \
         $$PWD/SimpleDrawPolygon.hpp
 
 SOURCES += $$PWD/object_arx_global.cpp \
