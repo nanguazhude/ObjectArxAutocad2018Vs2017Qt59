@@ -5,7 +5,7 @@
 TARGET = _ARX_DUTY_BY_NGZ_
 
 #add PRECOMPILED_HEADER
-#PRECOMPILED_HEADER  += object_arx_global.hpp
+PRECOMPILED_HEADER  += PRECOMPILED_HEADER.object_arx_global.hpp
 
 #change output dir
 #DESTDIR =
@@ -62,14 +62,17 @@ SOURCES += \
 HEADERS += \
         $$PWD/HellowWorld.hpp \
         $$PWD/SimpleDrawLine.hpp \
-        $$PWD/SimpleDrawLineChangeColor.hpp
+        $$PWD/SimpleDrawLineChangeColor.hpp \
+        $$PWD/PRECOMPILED_HEADER.object_arx_global.hpp
+
 
 SOURCES += $$PWD/object_arx_global.cpp \
     $$PWD/ARXApplication.cpp
 
 HEADERS += $$PWD/object_arx_global.hpp \
     $$PWD/ARXApplication.hpp \
-    $$PWD/ArxClosePointer.hpp
+    $$PWD/ArxClosePointer.hpp \
+    $$PWD/AddToModelSpace.hpp
 
 ##########################
 #                        #

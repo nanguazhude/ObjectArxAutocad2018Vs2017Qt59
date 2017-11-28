@@ -13,4 +13,4 @@
 *
 * WARNING: All changes made in this file will be lost.
 --------------------------------------------------------------------*/
-#include "object_arx_global.hpp"
+#include "PRECOMPILED_HEADER.object_arx_global.hpp"
