@@ -1,6 +1,26 @@
 ﻿#ifndef _P_OBJECT_ARX_GLOBAL_HXX_
 #define _P_OBJECT_ARX_GLOBAL_HXX_
 
+/*cplusplus headers*/
+#include <cmath>
+#include <atomic>
+#include <future>
+#include <thread>
+#include <memory>
+#include <limits>
+#include <cstddef>
+#include <utility>
+#include <numeric>
+#include <type_traits>
+
+#ifndef vmax
+#define vmax (std::max)
+#endif
+
+#ifndef vmin
+#define vmin (std::min)
+#endif
+
 #if defined(LARX_AUTOCAD_LIBRARY)
 
 #ifndef LIBRARY_DEFINE
@@ -45,12 +65,6 @@ namespace sstd {
 #ifdef QT_GUI_LIB
 #include <QtGui>
 #endif
-
-/*cplusplus headers*/
-#include <memory>
-#include <cstddef>
-#include <utility>
-#include <type_traits>
 
 /*utility*/
 #include "ArxClosePointer.hpp"

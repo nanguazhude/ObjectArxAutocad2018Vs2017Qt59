@@ -16,7 +16,7 @@ namespace sstd {
 		varDataTime = LR"(Hellow World!
 )" + varDataTime;
 		acutPrintf(varDataTime.data());
-
+		
 	}
 
 }/*namespace sstd*/
