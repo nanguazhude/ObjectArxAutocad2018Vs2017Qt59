@@ -17,14 +17,28 @@ namespace sstd {
 
 		sstd::ArxClosePointer<AcDbBlockTable> varBlockTable;
 		sstd::ArxClosePointer<AcDbBlockTableRecord> varBlockTableRecord;
-
+		
 		acdbHostApplicationServices()->workingDatabase()
 			->getBlockTable(varBlockTable,AcDb::kForRead);
-		varBlockTable->getAt(ACDB_MODEL_SPACE, varBlockTableRecord, AcDb::kForWrite);
-
-		if (varBlockTable&&varBlockTableRecord) {
-			AcDbObjectId varLineID;
-			varBlockTableRecord->appendAcDbEntity(varLineID,varLine);
+		if (varBlockTable) {
+			varBlockTable->getAt(ACDB_MODEL_SPACE, varBlockTableRecord, 
+				AcDb::kForWrite);
+			if (varBlockTableRecord) {
+				AcDbObjectId varLineID;
+				acutPrintf(varLine->objectId().isNull() ? LR"(LineID is Null
+)" : LR"(LineID is't Null
+)");
+				acutPrintf(varBlockTable->objectId().isNull() ? LR"(TableID is Null
+)" : LR"(TableID is't Null
+)");
+				acutPrintf(varBlockTableRecord->objectId().isNull() ? LR"(TableRecordID is Null
+)" : LR"(TableRecordID is't Null
+)");
+				varBlockTableRecord->appendAcDbEntity(varLineID, varLine);
+				acutPrintf(varLine->objectId().isNull() ? LR"(LineID is Null
+)" : LR"(LineID is't Null
+)");
+			}
 		}
 	}
 
