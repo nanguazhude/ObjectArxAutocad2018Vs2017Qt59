@@ -59,7 +59,7 @@ namespace sstd {
 		if (_add_to_model_space_private::getCurrentBlockTable(
 			varBlockTable, varBlockTableRecord)) {
 			for (; b != e; ++b) {
-				_add_to_model_space_private::addToModelSpace(varItem,
+				_add_to_model_space_private::addToModelSpace(*b,
 					varBlockTableRecord);
 			}
 		}
