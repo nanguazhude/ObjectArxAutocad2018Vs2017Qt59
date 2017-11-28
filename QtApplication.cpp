@@ -28,7 +28,6 @@ namespace sstd {
 
 	QtApplication::QtApplication() :
 		QApplication(_cpp_private::getArgc(), _cpp_private::getArgv()) {
-
 	}
 
 }/*namespace sstd*/

@@ -16,7 +16,7 @@ namespace sstd {
 
 	void SimpleDrawPolygon::main() {
 		constexpr int varEdgesNumber = 77;
-		constexpr double varAngleStep = 3.141592654 * 2 / varEdgesNumber;
+		constexpr double varAngleStep = sstd::dpi<double>() / varEdgesNumber;
 		constexpr double varEdgeLength = 100;
 		const AcGePoint3d varPointZero{ 0,0,0 };
 		std::vector< sstd::ArxClosePointer<AcDbLine> > varLines;

@@ -13,6 +13,13 @@ namespace sstd {
 		3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679); 
 	}
 
+	template<typename T>
+	inline constexpr T hpi() { return pi<T>() / 2; }
+
+	template<typename T>
+	inline constexpr T dpi() { return pi<T>() * 2; }
+
+
 }/*sstd*/
 
 #endif
