@@ -54,8 +54,14 @@ namespace sstd {
 
 	template<typename T,typename U>
 	inline void addToModelSpace(T b,const U & e){
-		for (; b != e;++b) {
-			addToModelSpace(*b);
+		ArxClosePointer<AcDbBlockTable> varBlockTable;
+		ArxClosePointer<AcDbBlockTableRecord> varBlockTableRecord;
+		if (_add_to_model_space_private::getCurrentBlockTable(
+			varBlockTable, varBlockTableRecord)) {
+			for (; b != e; ++b) {
+				_add_to_model_space_private::addToModelSpace(varItem,
+					varBlockTableRecord);
+			}
 		}
 	}
 
