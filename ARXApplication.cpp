@@ -4,6 +4,7 @@
 /***************************************************/
 #include "HellowWorld.hpp"
 #include "SimpleDrawLine.hpp"
+#include "SimpleDrawLineChangeColor.hpp"
 /***************************************************/
 
 namespace sstd {
@@ -13,6 +14,7 @@ namespace sstd {
 		static constexpr FunctionType _v_functions[] = {
 			{&HellowWorld::load},
 			{&SimpleDrawLine::load},
+			{&SimpleDrawLineChangeColor::load},
 		};
 	}
 
