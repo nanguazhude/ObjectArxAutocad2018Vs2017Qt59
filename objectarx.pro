@@ -5,7 +5,7 @@
 TARGET = _ARX_DUTY_BY_NGZ_
 
 #add PRECOMPILED_HEADER
-PRECOMPILED_HEADER  += object_arx_global.hpp
+#PRECOMPILED_HEADER  += object_arx_global.hpp
 
 #change output dir
 #DESTDIR =
