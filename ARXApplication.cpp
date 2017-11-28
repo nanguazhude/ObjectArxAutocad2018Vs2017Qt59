@@ -6,6 +6,7 @@ namespace sstd {
 	extern void loadHellowWord();
 	extern void loadSimpleDrawLine();
 	extern void loadSimpleDrawLineChangeColor();
+	extern void loadSimpleDrawPolygon();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -13,6 +14,7 @@ namespace sstd {
 			{&sstd::loadHellowWord },
 			{&sstd::loadSimpleDrawLine },
 			{&sstd::loadSimpleDrawLineChangeColor },
+			{&sstd::loadSimpleDrawPolygon },
 		};
 	}
 
