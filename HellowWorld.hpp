@@ -14,6 +14,7 @@ namespace sstd {
 		static void main();
 		DEFINE_ARX_NAME(LR"(_hellowworld)")
 	};
+	
 
 }/*namespace sstd*/
 

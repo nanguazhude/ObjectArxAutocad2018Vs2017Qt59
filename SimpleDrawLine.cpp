@@ -2,6 +2,8 @@
 
 namespace sstd {
 
+	extern void loadSimpleDrawLine() { SimpleDrawLine::load(); }
+
 	SimpleDrawLine::SimpleDrawLine() {
 
 	}

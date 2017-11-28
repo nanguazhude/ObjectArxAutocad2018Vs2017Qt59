@@ -1,20 +1,18 @@
-﻿#include <utility>
+﻿#include "object_arx_global.hpp"
 #include "ARXApplication.hpp"
 
-/***************************************************/
-#include "HellowWorld.hpp"
-#include "SimpleDrawLine.hpp"
-#include "SimpleDrawLineChangeColor.hpp"
-/***************************************************/
-
 namespace sstd {
+
+	extern void loadHellowWord();
+	extern void loadSimpleDrawLine();
+	extern void loadSimpleDrawLineChangeColor();
 
 	namespace {
 		using FunctionType = void(*)(void);
 		static constexpr FunctionType _v_functions[] = {
-			{&HellowWorld::load},
-			{&SimpleDrawLine::load},
-			{&SimpleDrawLineChangeColor::load},
+			{&sstd::loadHellowWord },
+			{&sstd::loadSimpleDrawLine },
+			{&sstd::loadSimpleDrawLineChangeColor },
 		};
 	}
 

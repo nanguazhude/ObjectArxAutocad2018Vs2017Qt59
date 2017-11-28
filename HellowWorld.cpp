@@ -2,6 +2,8 @@
 
 namespace sstd {
 
+	extern void loadHellowWord() { HellowWorld::load(); }
+
 	HellowWorld::HellowWorld() {
 	}
 
