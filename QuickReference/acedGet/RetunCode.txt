@@ -1,0 +1,7 @@
+﻿
+RTNORM  用户输入的是一个有效的值
+RTERROR 函数调用失败
+RTCAN 用户按下了ESC
+RTNONE  用户只按下了回车键
+RTREJ AutoCAD 拒绝无效请求
+RTKWORD 用户输入一个关键字或任意文本
