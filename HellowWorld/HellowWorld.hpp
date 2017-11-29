@@ -1,7 +1,7 @@
 ﻿#ifndef HELLOWWORLD_H
 #define HELLOWWORLD_H
 
-#include "object_arx_global.hpp"
+#include <object_arx_global.hpp>
 
 namespace sstd {
 

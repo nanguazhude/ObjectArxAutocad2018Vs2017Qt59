@@ -55,30 +55,33 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 #.cpp source
 SOURCES += \
-        $$PWD/HellowWorld.cpp \
-        $$PWD/SimpleDrawLine.cpp \
-        $$PWD/SimpleDrawLineChangeColor.cpp \
-        $$PWD/SimpleDrawPolygon.cpp \
-        $$PWD/QtApplication.cpp \
-        $$PWD/GetAllLayerName.cpp
+        $$PWD/HellowWorld/HellowWorld.cpp \
+        $$PWD/SimpleDrawLine/SimpleDrawLine.cpp \
+        $$PWD/SimpleDrawLineChangeColor/SimpleDrawLineChangeColor.cpp \
+        $$PWD/SimpleDrawPolygon/SimpleDrawPolygon.cpp \
+        $$PWD/GetAllLayerName/GetAllLayerName.cpp
 
 #.h .hpp source
 HEADERS += \
-        $$PWD/HellowWorld.hpp \
-        $$PWD/SimpleDrawLine.hpp \
-        $$PWD/SimpleDrawLineChangeColor.hpp \
-        $$PWD/Final.object_arx_global.hpp \
-        $$PWD/SimpleDrawPolygon.hpp \
-        $$PWD/StringUtility.hpp \
-        $$PWD/GetAllLayerName.hpp
+        $$PWD/HellowWorld/HellowWorld.hpp \
+        $$PWD/SimpleDrawLine/SimpleDrawLine.hpp \
+        $$PWD/SimpleDrawLineChangeColor/SimpleDrawLineChangeColor.hpp \
+        $$PWD/SimpleDrawPolygon/SimpleDrawPolygon.hpp \
+        $$PWD/GetAllLayerName/GetAllLayerName.hpp
 
 SOURCES += $$PWD/object_arx_global.cpp \
-    $$PWD/ARXApplication.cpp
+    $$PWD/ARXApplication.cpp \
+    $$PWD/QtApplication.cpp
 
 HEADERS += $$PWD/object_arx_global.hpp \
     $$PWD/ARXApplication.hpp \
     $$PWD/ArxClosePointer.hpp \
-    $$PWD/AddToModelSpace.hpp
+    $$PWD/AddToModelSpace.hpp \
+    $$PWD/Final.object_arx_global.hpp \
+    $$PWD/StringUtility.hpp
+
+INCLUDEPATH += $$PWD
+DEPENDPATH  += $$PWD
 
 ##########################
 #                        #

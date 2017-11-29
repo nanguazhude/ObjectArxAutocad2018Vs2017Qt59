@@ -1,7 +1,7 @@
 ﻿#ifndef SIMPLEDRAWLINECHANGECOLOR_HPP
 #define SIMPLEDRAWLINECHANGECOLOR_HPP
 
-#include "object_arx_global.hpp"
+#include <object_arx_global.hpp>
 
 namespace sstd {
 

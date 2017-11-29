@@ -2,7 +2,7 @@
 #define GETALLLAYERNAME_HPP
 
 #include <vector>
-#include "object_arx_global.hpp"
+#include <object_arx_global.hpp>
 
 namespace sstd {
 

@@ -1,7 +1,7 @@
 ﻿#ifndef SIMPLEDRAWPOLYGON_HPP
 #define SIMPLEDRAWPOLYGON_HPP
 
-#include "object_arx_global.hpp"
+#include <object_arx_global.hpp>
 
 namespace sstd {
 
