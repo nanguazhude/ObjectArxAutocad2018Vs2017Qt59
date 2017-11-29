@@ -5,6 +5,7 @@
 
 #include "Final.object_arx_global.hpp"
 #include "AddToModelSpace.hpp"
+#include "StringUtility.hpp"
 
 namespace sstd {
 	

@@ -6,21 +6,19 @@ namespace sstd {
 
 	namespace {
 		namespace _cpp_private {
-			inline constexpr std::string_view operator""_p_sv(const char * a, std::size_t b) {
-				return std::string_view{ a,b };
-			}
 			const constexpr std::string_view qtApplicationPath =
-				u8R"(C:\Program Files\Autodesk\AutoCAD 2018\acad.exe)"_p_sv;
+				u8R"(C:\Program Files\Autodesk\AutoCAD 2018\acad.exe)"sv;
 			inline int & getArgc() {
 				static int ans;
 				ans = 1;
 				return ans;
 			}
 			inline char** getArgv() {
-				static std::string acadpath;
+				static char acadpath[qtApplicationPath.size() + 4] = {};
 				static char *argv[] = { nullptr };
-				acadpath = qtApplicationPath;
-				argv[0] = const_cast<char *>(acadpath.c_str());
+				std::copy(qtApplicationPath.begin(), qtApplicationPath.end(),
+					static_cast<char*>(acadpath));
+				argv[0] = static_cast<char *>(acadpath);
 				return argv;
 			}
 		}

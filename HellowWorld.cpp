@@ -16,13 +16,13 @@ namespace sstd {
         {
             QtApplication varQApplication ;
             QMessageBox varBox ;
-            varBox.setText("The document has been modified.");
+            varBox.setText(VQLS("Hellow World!"));
             varBox.exec() ;
         }
 
 		auto varDataTime = QDateTime::currentDateTime().toString().toStdWString();
 		varDataTime = LR"(Hellow World!
-)" + varDataTime;
+)" + varDataTime ;
 		acutPrintf(varDataTime.data());
 		
 	}

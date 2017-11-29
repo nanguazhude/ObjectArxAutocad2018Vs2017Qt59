@@ -67,7 +67,8 @@ HEADERS += \
         $$PWD/SimpleDrawLine.hpp \
         $$PWD/SimpleDrawLineChangeColor.hpp \
         $$PWD/Final.object_arx_global.hpp \
-        $$PWD/SimpleDrawPolygon.hpp
+        $$PWD/SimpleDrawPolygon.hpp \
+        $$PWD/StringUtility.hpp
 
 SOURCES += $$PWD/object_arx_global.cpp \
     $$PWD/ARXApplication.cpp
