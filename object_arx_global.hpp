@@ -9,15 +9,15 @@
 
 namespace sstd {
 	
-	template<typename T>
+	template<typename T=double>
 	inline constexpr T pi() { return static_cast<T>(
 		3.1415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679); 
 	}
 
-	template<typename T>
+	template<typename T=double>
 	inline constexpr T hpi() { return pi<T>() / 2; }
 
-	template<typename T>
+	template<typename T=double>
 	inline constexpr T dpi() { return pi<T>() * 2; }
 
 

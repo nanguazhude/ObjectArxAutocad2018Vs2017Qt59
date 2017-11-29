@@ -15,24 +15,47 @@ namespace sstd {
 	}
 
 	void SimpleDrawPolygon::main() {
-        int varEdgesNumber = 77;
+		int varEdgesNumber = 0;
+		double varFirstEdgeAngle = 0;
 
-        /*input the number of the edge*/
-		do{
-			int varReturn= acedGetInt(LR"(请输入边数<3>：)", &varEdgesNumber);
-			if (RTNORM == varReturn) {
-				break;
-			}
-
-			if ( RTNONE == varReturn ) {
+		auto varGetEdgetsNumbe = [&varEdgesNumber]()->bool {
+			int varReturn = acedGetInt(LR"(请输入边数<3>：)", &varEdgesNumber);
+			if (RTNONE == varReturn) {
 				varEdgesNumber = 3;
-				break;
+				return true;
 			}
-				 
-			if (varEdgesNumber < 3) {
-				return;
+			if ((RTNORM == varReturn) && (varEdgesNumber > 2)) {
+				return true;
 			}
-		} while (false);
+
+			acutPrintf(LR"(您输入了一个无效值
+)");
+			return false;
+		};
+
+		auto varGetFirstEdgeAngle = [&varFirstEdgeAngle]()->bool {
+			/*ANGBASE*/
+			int varReturn = acedGetAngle(nullptr,LR"(请输入旋转角度<0>：)", &varFirstEdgeAngle);
+			if (RTNONE == varReturn) {
+				varFirstEdgeAngle = 0;
+				return true;
+			}
+			if (RTNORM == varReturn) {
+				return true;
+			}
+
+			acutPrintf(LR"(您输入了一个无效值
+)");
+			return false;
+		};
+
+		/*input the number of the edge*/
+		if (false == varGetEdgetsNumbe()) {
+			return;
+		}
+		if (false == varGetFirstEdgeAngle()) {
+			return;
+		}
 
 		const double varAngleStep = sstd::dpi<double>() / varEdgesNumber;
 		constexpr double varEdgeLength = 100;
@@ -43,7 +66,7 @@ namespace sstd {
 		varEdgePoints.reserve(varEdgesNumber);
 
 		for (int varI = 0; varI < varEdgesNumber; ++varI) {
-			const auto varAngle = varI*varAngleStep;
+			const auto varAngle = std::fma(varAngleStep, varI, varFirstEdgeAngle);
 			varEdgePoints.emplace_back(
 				varEdgeLength*std::cos(varAngle),
 				varEdgeLength*std::sin(varAngle),
