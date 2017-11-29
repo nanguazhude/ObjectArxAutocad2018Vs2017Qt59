@@ -7,6 +7,7 @@ namespace sstd {
 	extern void loadSimpleDrawLine();
 	extern void loadSimpleDrawLineChangeColor();
 	extern void loadSimpleDrawPolygon();
+	extern void loadPrintALlLayerName();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -15,6 +16,7 @@ namespace sstd {
 			{&sstd::loadSimpleDrawLine },
 			{&sstd::loadSimpleDrawLineChangeColor },
 			{&sstd::loadSimpleDrawPolygon },
+			{&sstd::loadPrintALlLayerName },
 		};
 	}
 

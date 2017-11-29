@@ -59,7 +59,8 @@ SOURCES += \
         $$PWD/SimpleDrawLine.cpp \
         $$PWD/SimpleDrawLineChangeColor.cpp \
         $$PWD/SimpleDrawPolygon.cpp \
-        $$PWD/QtApplication.cpp
+        $$PWD/QtApplication.cpp \
+        $$PWD/GetAllLayerName.cpp
 
 #.h .hpp source
 HEADERS += \
@@ -68,7 +69,8 @@ HEADERS += \
         $$PWD/SimpleDrawLineChangeColor.hpp \
         $$PWD/Final.object_arx_global.hpp \
         $$PWD/SimpleDrawPolygon.hpp \
-        $$PWD/StringUtility.hpp
+        $$PWD/StringUtility.hpp \
+        $$PWD/GetAllLayerName.hpp
 
 SOURCES += $$PWD/object_arx_global.cpp \
     $$PWD/ARXApplication.cpp
