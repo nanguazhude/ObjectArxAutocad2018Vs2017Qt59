@@ -15,8 +15,25 @@ namespace sstd {
 	}
 
 	void SimpleDrawPolygon::main() {
-		int varEdgesNumber = 0;
-		double varFirstEdgeAngle = 0;
+		int varEdgesNumber = 0/*边数*/;
+		double varFirstEdgeAngle = 0/*起始角度*/;
+		double varEdgeLength = 0/*边长*/;
+
+		auto varrEdgeLength = [&varEdgeLength]()->bool {
+			int varReturn = acedGetReal(LR"(请输入边长<1.0>：)", &varEdgeLength);
+			if (RTNONE == varReturn) {
+				varEdgeLength = 1.0;
+				return true;
+			}
+			if ((RTNORM == varReturn) && 
+				(varEdgeLength > std::numeric_limits<double>::epsilon() )) {
+				return true;
+			}
+
+			acutPrintf(LR"(您输入了一个无效值
+)");
+			return false;
+		};
 
 		auto varGetEdgetsNumbe = [&varEdgesNumber]()->bool {
 			int varReturn = acedGetInt(LR"(请输入边数<3>：)", &varEdgesNumber);
@@ -49,8 +66,11 @@ namespace sstd {
 			return false;
 		};
 
-		/*input the number of the edge*/
+		/*getInputs*/
 		if (false == varGetEdgetsNumbe()) {
+			return;
+		}
+		if (false == varrEdgeLength()) {
 			return;
 		}
 		if (false == varGetFirstEdgeAngle()) {
@@ -58,7 +78,6 @@ namespace sstd {
 		}
 
 		const double varAngleStep = sstd::dpi<double>() / varEdgesNumber;
-		constexpr double varEdgeLength = 100;
 		const AcGePoint3d varPointZero{ 0,0,0 };
 		std::vector< sstd::ArxClosePointer<AcDbLine> > varLines;
 		varLines.reserve(varEdgesNumber * 2);
