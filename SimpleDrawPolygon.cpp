@@ -15,8 +15,26 @@ namespace sstd {
 	}
 
 	void SimpleDrawPolygon::main() {
-		constexpr int varEdgesNumber = 77;
-		constexpr double varAngleStep = sstd::dpi<double>() / varEdgesNumber;
+        int varEdgesNumber = 77;
+
+        /*input the number of the edge*/
+		do{
+			int varReturn= acedGetInt(LR"(请输入边数<3>：)", &varEdgesNumber);
+			if (RTNORM == varReturn) {
+				break;
+			}
+
+			if ( RTNONE == varReturn ) {
+				varEdgesNumber = 3;
+				break;
+			}
+				 
+			if (varEdgesNumber < 3) {
+				return;
+			}
+		} while (false);
+
+		const double varAngleStep = sstd::dpi<double>() / varEdgesNumber;
 		constexpr double varEdgeLength = 100;
 		const AcGePoint3d varPointZero{ 0,0,0 };
 		std::vector< sstd::ArxClosePointer<AcDbLine> > varLines;
