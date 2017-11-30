@@ -9,6 +9,7 @@ namespace sstd {
 	}
 
 	void UpdateBlockFromOtherFile::main() {
+		Acad::ErrorStatus varAError;
 		constexpr const auto varOtherFileName = LR"(E:\Duty\Duty\template\template.all.dwg)"sv;
 		constexpr const auto varBlockName = LR"(横边框2(G3000))"sv;
 		constexpr const auto varTargetFileName = LR"(E:\Duty\Duty\template\template.all.1.dwg)"sv;
@@ -38,17 +39,25 @@ namespace sstd {
 			return;
 		}			
 
-		/*{
+		{
+			auto document = acDocManager->document(varTargetFile.get());
+			acDocManager->lockDocument(document);
+			acDocManager->setCurDocument(document, AcAp::kNone, false);
 			AcDbObjectId varBlockID;
-			if (Acad::eOk != varTargetFile->insert(varBlockID,
+			if ( (varAError=varTargetFile->insert(varBlockID,
+				varBlockName.data(),
 				varBlockName.data(),
 				varOtherFile.get(),
-				true)) {
-				acutPrintf(LR"(插入文件失败
+				false))!=Acad::eOk) {
+				acutPrintf(LR"(插入块失败:)");
+				acutPrintf( acadErrorStatusText(varAError) );
+				acutPrintf(LR"(
 )");
+				acDocManager->unlockDocument(document);
 				return;
 			}
-		}*/
+			acDocManager->unlockDocument(document);
+		}
 
 		if (Acad::eOk != varTargetFile->save()) {
 			acutPrintf(LR"(保存文件失败
