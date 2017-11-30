@@ -13,16 +13,56 @@ namespace sstd {
 	}
 
 	class DocumentLock {
-		AcApDocument * $olde_document=nullptr;
+		AcApDocument * $old_document = nullptr;
+		AcApDocument * $cur_document = nullptr;
+		bool $isDocumentLocked = false;
 	public:
 		DocumentLock() = delete;
-		
+		inline DocumentLock(AcApDocument *arg) {
+			auto varCD = acDocManager->curDocument();
+			if ((arg == varCD) || (arg == nullptr)) { return; }
+			$old_document = varCD;
+			$cur_document = arg;
+		}
+		inline DocumentLock(AcDbDatabase *arg) :
+			DocumentLock(arg ? acDocManager->document(arg) : nullptr) {
+		}
+
+		inline Acad::ErrorStatus lockAndSetCurrent() {
+			Acad::ErrorStatus varE =
+				acDocManager->lockDocument($cur_document);
+			if (varE != Acad::eOk) { return varE; }
+			$isDocumentLocked = true;
+			varE = acDocManager->setCurDocument($cur_document);
+			if (varE == Acad::eOk) {
+				return acDocManager->activateDocument($cur_document);
+			}
+			return varE;
+		}
+
+		inline ~DocumentLock() {
+			if ($cur_document&&$isDocumentLocked) {
+				acDocManager->unlockDocument($cur_document);
+			}
+			if ($old_document && ($old_document != acDocManager->curDocument())) {
+				acDocManager->setCurDocument($old_document);
+				acDocManager->activateDocument($old_document);
+			}
+		}
+
 	};
 
 	void TestAcDocManager::main() {
 
-		acDocManager->curDocument();
+		/*open file*/
+		constexpr const auto varTargetFileName =
+			LR"(E:\Duty\Duty\template\template.all.1.dwg)"sv;
 
+		/*set file to current document*/
+
+		/*run some command*/
+
+		/*save the document*/
 
 	}
 
