@@ -23,6 +23,7 @@ LIBS+= -L"C:/ObjectARX 2018/lib-x64" -lac1st22
 LIBS+= -L"C:/ObjectARX 2018/lib-x64" -laccore
 
 #DEF_FILE
+DEF_FILE += $$PWD/AcRxDefault.def
 
 ##########################################################################
 #cplusplus version
@@ -59,7 +60,8 @@ SOURCES += \
         $$PWD/SimpleDrawLine/SimpleDrawLine.cpp \
         $$PWD/SimpleDrawLineChangeColor/SimpleDrawLineChangeColor.cpp \
         $$PWD/SimpleDrawPolygon/SimpleDrawPolygon.cpp \
-        $$PWD/GetAllLayerName/GetAllLayerName.cpp
+        $$PWD/GetAllLayerName/GetAllLayerName.cpp \
+        $$PWD/UpdateBlockFromOtherFile/UpdateBlockFromOtherFile.cpp
 
 #.h .hpp source
 HEADERS += \
@@ -67,7 +69,8 @@ HEADERS += \
         $$PWD/SimpleDrawLine/SimpleDrawLine.hpp \
         $$PWD/SimpleDrawLineChangeColor/SimpleDrawLineChangeColor.hpp \
         $$PWD/SimpleDrawPolygon/SimpleDrawPolygon.hpp \
-        $$PWD/GetAllLayerName/GetAllLayerName.hpp
+        $$PWD/GetAllLayerName/GetAllLayerName.hpp \
+        $$PWD/UpdateBlockFromOtherFile/UpdateBlockFromOtherFile.hpp
 
 SOURCES += $$PWD/object_arx_global.cpp \
     $$PWD/ARXApplication.cpp \

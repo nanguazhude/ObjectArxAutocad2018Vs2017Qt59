@@ -1,7 +1,7 @@
 ﻿#include "object_arx_global.hpp"
 #include "ARXApplication.hpp"
 
-extern "C" LIBRARY_DEFINE AcRx::AppRetCode
+extern "C" AcRx::AppRetCode
 acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt) {
 	switch (msg) {
 	case AcRx::kInitAppMsg: {
