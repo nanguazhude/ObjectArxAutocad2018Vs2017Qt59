@@ -18,12 +18,18 @@ namespace sstd {
 		bool $isDocumentLocked = false;
 	public:
 		DocumentLock() = delete;
+		DocumentLock(const DocumentLock &&) = delete;
+		DocumentLock(DocumentLock &&) = delete;
+		DocumentLock&operator=(const DocumentLock &&) = delete;
+		DocumentLock&operator=(DocumentLock &&) = delete;
+
 		inline DocumentLock(AcApDocument *arg) {
 			auto varCD = acDocManager->curDocument();
 			if ((arg == varCD) || (arg == nullptr)) { return; }
 			$old_document = varCD;
 			$cur_document = arg;
 		}
+
 		inline DocumentLock(AcDbDatabase *arg) :
 			DocumentLock(arg ? acDocManager->document(arg) : nullptr) {
 		}
