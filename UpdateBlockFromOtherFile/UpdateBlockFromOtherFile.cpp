@@ -10,7 +10,7 @@ namespace sstd {
 
 	void UpdateBlockFromOtherFile::main() {
 		Acad::ErrorStatus varAError;
-		constexpr const auto varOtherFileName = LR"(E:\Duty\Duty\template\template.all.dwg)"sv;
+		constexpr const auto varOtherFileName = LR"(E:\Duty\Duty\template\blocks\横边框2(G3000).dwg)"sv;
 		constexpr const auto varBlockName = LR"(横边框2(G3000))"sv;
 		constexpr const auto varTargetFileName = LR"(E:\Duty\Duty\template\template.all.1.dwg)"sv;
 		
@@ -40,12 +40,9 @@ namespace sstd {
 		}			
 
 		{
-			auto document = acDocManager->document(varTargetFile.get());
-			acDocManager->lockDocument(document);
-			acDocManager->setCurDocument(document, AcAp::kNone, false);
+		 
 			AcDbObjectId varBlockID;
 			if ( (varAError=varTargetFile->insert(varBlockID,
-				varBlockName.data(),
 				varBlockName.data(),
 				varOtherFile.get(),
 				false))!=Acad::eOk) {
@@ -53,13 +50,11 @@ namespace sstd {
 				acutPrintf( acadErrorStatusText(varAError) );
 				acutPrintf(LR"(
 )");
-				acDocManager->unlockDocument(document);
 				return;
 			}
-			acDocManager->unlockDocument(document);
 		}
 
-		if (Acad::eOk != varTargetFile->save()) {
+		if (Acad::eOk != varTargetFile->saveAs((std::wstring(varTargetFileName)+LR"(.dwg)").data())) {
 			acutPrintf(LR"(保存文件失败
 )");
 			return;
