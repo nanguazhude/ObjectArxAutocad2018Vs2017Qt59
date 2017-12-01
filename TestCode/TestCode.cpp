@@ -1,5 +1,6 @@
 ﻿#include "TestCode.hpp"
 #include <acedCmdNF.h>
+//AcApCommandLineEditor
 
 namespace sstd {
 
@@ -37,20 +38,36 @@ namespace sstd {
 
 	void TestCode::main() {
 		
-		/*acDocManager->closeDocument( acDocManager->curDocument() );*/
+		auto varCurrentDocument = acDocManager->curDocument();
+		const static constexpr auto varFileName = LR"(D:\test1\drawing2.dwg)"sv;
+		
+		bool varIsOk = false;
+		acDocManager->executeInApplicationContext([](void * argIsOk) {
+			*reinterpret_cast<bool*>(argIsOk) = (Acad::eOk == openFile(varFileName.data()));
+		},&varIsOk);
 
-		const auto varFileName = LR"(E:\Duty\Duty\template\template.all.1.dwg)"sv;
-		/*if (Acad::eOk != openFile(varFileName)) {
-			return;
-		}*/
+		if (varIsOk) {
 
-		auto db = new AcDbDatabase{ false };
-		db->readDwgFile(varFileName.data());
-		auto varDB = acDocManager->document(db);
+			std::unique_ptr<AcApDocumentIterator> varIt{ acDocManager->newAcApDocumentIterator() };
 
-		acDocManager->setCurDocument(varDB);
-		acDocManager->activateDocument(varDB);
-
+			for (;!varIt->done();varIt->step() ) {
+				auto varDoc = varIt->document();
+				if ((varDoc==nullptr)||(varDoc == varCurrentDocument)) { continue; }
+				acDocManager->sendStringToExecute(varDoc,LR"(circle
+0,0,0
+100.58
+)"
+					LR"(qsave
+)"
+					LR"(close
+)"
+				);
+				//acDocManager->sendStringToExecute(varDoc,LR"( qsave)");
+				//acDocManager->sendStringToExecute(varDoc,LR"( close)");
+			}
+						
+		}
+				
 	}
 
 }/*namespace sstd*/
