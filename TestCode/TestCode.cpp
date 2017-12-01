@@ -38,10 +38,21 @@ namespace sstd {
 				acutPrintf(LR"(X*****************************************
 )");
 				
-				/*acedCommandS(RTSTR, LR"(CIRCLE)",
-					RTSTR, LR"(0,0,0)",
-					RTSTR, LR"(100)",
-					RTNONE);*/
+				
+
+				acDocManager->curDocument()->database()->getFilename(varFileName);
+				acutPrintf(varFileName);
+				acutPrintf(LR"(X??????????????????????????????????????????
+)");
+
+				//acDocManager->lockDocument(arg);
+				acutPrintf(arg->isCommandInputInactive() ? LR"(YYY)" : LR"(NNN)");
+				//acedCommandS(RTSTR, LR"(CIRCLE)",
+				//RTSTR, LR"(0,0,0)",
+				//RTSTR, LR"(100)",
+				//RTNONE);
+				//acDocManager->unlockDocument(arg);
+				acDocManager->sendStringToExecute(arg, LR"(circle 0,0,0 100 )");
 
 			}
 
@@ -105,6 +116,8 @@ namespace sstd {
 //)");
 //			}
 //		}
+
+		 
 
 	}
 
