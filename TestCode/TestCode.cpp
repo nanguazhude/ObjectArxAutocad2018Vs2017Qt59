@@ -37,7 +37,8 @@ namespace sstd {
 	}/*namespace*/
 
 	void TestCode::main() {
-		
+		const auto varStartTime = std::chrono::high_resolution_clock::now();
+
 		auto varCurrentDocument = acDocManager->curDocument();
 		const static constexpr auto varFileName = LR"(D:\test1\drawing2.dwg)"sv;
 		
@@ -53,6 +54,7 @@ namespace sstd {
 			for (;!varIt->done();varIt->step() ) {
 				auto varDoc = varIt->document();
 				if ((varDoc==nullptr)||(varDoc == varCurrentDocument)) { continue; }
+
 				acDocManager->sendStringToExecute(varDoc,LR"(circle
 0,0,0
 100.58
@@ -61,11 +63,16 @@ namespace sstd {
 )"
 					LR"(close
 )"
-				);
-				//acDocManager->sendStringToExecute(varDoc,LR"( qsave)");
-				//acDocManager->sendStringToExecute(varDoc,LR"( close)");
+				,false);				
+
 			}
-						
+			
+			const auto varLength = std::chrono::high_resolution_clock::now() - varStartTime;
+			const auto varLengthW = QString::number(std::chrono::duration_cast<std::chrono::duration<double>>(varLength).count())
+				.toStdWString();
+			acutPrintf(LR"(用时:)");
+			acutPrintf(varLengthW.data());
+
 		}
 				
 	}
