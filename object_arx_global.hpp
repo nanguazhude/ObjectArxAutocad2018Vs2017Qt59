@@ -3,6 +3,9 @@
 #ifndef OBJECT_ARX_GLOBAL_HXX_
 #define OBJECT_ARX_GLOBAL_HXX_
 
+#include <chrono>
+using namespace std::chrono_literals;
+
 #include "Final.object_arx_global.hpp"
 #include "AddToModelSpace.hpp"
 #include "StringUtility.hpp"
