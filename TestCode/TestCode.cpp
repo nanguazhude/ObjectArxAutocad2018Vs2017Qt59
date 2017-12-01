@@ -55,6 +55,9 @@ namespace sstd {
 				const auto varFileNameQ = varFile.fileName();
 				if ( varFileNameQ.endsWith("dwg")  ) {
 					auto var = QString::number($count++).repeated(10).toStdWString();
+					acutPrintf(acDocManager->isApplicationContext() ?
+						LR"(true)":LR"(false)"
+					);
 					acutPrintf(var.data());
 				}
 				//varIsRun = true;
@@ -110,8 +113,8 @@ namespace sstd {
 	void TestCode::main() {
 		//acedEditor->addReactor(new Y);
 
-		auto r = new ThisReactor;
-		acDocManager->addReactor(r);
+		//auto r = new ThisReactor;
+		//acDocManager->addReactor(r);
 		acDocManager->executeInApplicationContext([](void*) {
 
 			const auto varFileName = LR"(E:\Duty\Duty\template\template.all.1.dwg)"sv;
@@ -120,7 +123,51 @@ namespace sstd {
 			}
 
 			//acDocManager->closeDocument( acDocManager->curDocument() );
-		}, r);
+		},nullptr );
+
+		acutPrintf( LR"(
+D
+)" );
+		acutPrintf( acDocManager->curDocument()->fileName() );
+		AcApDocumentIterator* varDI = acDocManager->newAcApDocumentIterator();
+		if (varDI) {
+			for (;!varDI->done();varDI->step()) {
+				acutPrintf(LR"(
+V
+)");
+				acutPrintf( varDI->document()->fileName() );
+				if (QString::fromWCharArray(
+					varDI->document()->fileName()).endsWith("dwg")) {
+
+					auto varD = varDI->document();
+					if (acDocManager->lockDocument(varD)==Acad::eOk) {
+						if (acDocManager->activateDocument(varD)==Acad::eOk) {
+
+							acedCommandS(RTSTR, LR"(CIRCLE)",
+								RTSTR, LR"(0,0,0)",
+								RTSTR, LR"(100)",
+								RTNONE);
+							
+						}
+						else {
+							acutPrintf(LR"(
+DWGACT FAILED
+)");
+						}
+					}
+					else {
+						acutPrintf(LR"(
+DWGLOCKED FAILED
+)");
+					}
+
+
+				}
+
+			}
+		}
+		
+
 
 		//const auto varStartTime = std::chrono::high_resolution_clock::now();
 		//for (;;) {
