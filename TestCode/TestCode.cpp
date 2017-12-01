@@ -142,12 +142,17 @@ V
 					auto varD = varDI->document();
 					if (acDocManager->lockDocument(varD)==Acad::eOk) {
 						if (acDocManager->activateDocument(varD)==Acad::eOk) {
-
-							acedCommandS(RTSTR, LR"(CIRCLE)",
-								RTSTR, LR"(0,0,0)",
-								RTSTR, LR"(100)",
-								RTNONE);
-							
+							if (acDocManager->setCurDocument(varD) == Acad::eOk) {
+								acedCommandS(RTSTR, LR"(CIRCLE)",
+									RTSTR, LR"(0,0,0)",
+									RTSTR, LR"(100)",
+									RTNONE);
+							}
+							else {
+								acutPrintf(LR"(
+SETCURRENT FAILED
+)");
+							}
 						}
 						else {
 							acutPrintf(LR"(
