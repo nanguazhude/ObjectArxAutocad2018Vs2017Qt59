@@ -15,8 +15,10 @@ namespace sstd {
 
 	namespace {
 		inline Acad::ErrorStatus openFile(const std::wstring_view & argFileName) {
+			
 			Acad::ErrorStatus varE =
 				acDocManager->appContextOpenDocument(argFileName.data());
+
 			if (varE != Acad::eOk) {
 				acutPrintf(LR"(打开文件失败:)");
 				acutPrintf(acadErrorStatusText(varE));
@@ -29,21 +31,33 @@ namespace sstd {
 		}
 
 		class ThisReactor :public AcApDocManagerReactor {
+			//bool varIsRun = false;
+			int $count = 0;
 		public:
 
-			void documentBecameCurrent(AcApDocument* arg) override{
+			void documentBecameCurrent(AcApDocument* arg) override {
+				//if (varIsRun) {
+				//	acDocManager->removeReactor(this);
+				//	delete this;
+				//}
 				const wchar_t * varFileName;
 				arg->database()->getFilename(varFileName);
 				acutPrintf(varFileName);
 				acutPrintf(LR"(X*****************************************
 )");
 				
-				
-
 				acDocManager->curDocument()->database()->getFilename(varFileName);
 				acutPrintf(varFileName);
 				acutPrintf(LR"(X??????????????????????????????????????????
 )");
+
+				QFileInfo varFile{ QString::fromWCharArray(varFileName) };
+				const auto varFileNameQ = varFile.fileName();
+				if ( varFileNameQ.endsWith("dwg")  ) {
+					auto var = QString::number($count++).repeated(10).toStdWString();
+					acutPrintf(var.data());
+				}
+				//varIsRun = true;
 
 				//acDocManager->lockDocument(arg);
 				acutPrintf(arg->isCommandInputInactive() ? LR"(YYY)" : LR"(NNN)");
@@ -52,32 +66,49 @@ namespace sstd {
 				//RTSTR, LR"(100)",
 				//RTNONE);
 				//acDocManager->unlockDocument(arg);
-				acDocManager->sendStringToExecute(arg, LR"(circle 0,0,0 100 )");
+				//acDocManager->sendStringToExecute(arg, LR"(circle 0,0,0 10 )");
+				//acDocManager->sendStringToExecute(arg,
+				//	LR"(circle 0,0,0 10 )"
+                //    LR"(QSAVE )"
+				//	LR"(CLOSE )"
+				//	);
+				//AcEdInputPointManager
+				/*acDocManager-> executeInApplicationContext(
+					[](void *) {
+					acedCommandS(RTSTR, LR"(CIRCLE)",
+						RTSTR, LR"(0,0,0)",
+						RTSTR, LR"(100)",
+						RTNONE);
+				},nullptr
+				);*/
 
 			}
 
 			void documentActivated(AcApDocument* arg) override {
-				
+
 				const wchar_t * varFileName;
 				arg->database()->getFilename(varFileName);
-				
+
 				QFileInfo varFile{ QString::fromWCharArray(varFileName) };
 				const auto varFileNameQ = varFile.fileName();
 				const auto varFileNameW = varFileNameQ.toStdWString();
 				acutPrintf(varFileNameW.data());
-				if ( varFileNameQ == VQLS("template.all.1.dwg")) {
-					 
+				if (varFileNameQ == VQLS("template.all.1.dwg")) {
+
 					acutPrintf(LR"(----------)");
-								
+
 
 				}
 
 			}
 		};
 
+		class Y :public AcEdInputContextReactor {};
+
 	}/*namespace*/
 
 	void TestCode::main() {
+		//acedEditor->addReactor(new Y);
 
 		auto r = new ThisReactor;
 		acDocManager->addReactor(r);
@@ -86,10 +117,10 @@ namespace sstd {
 			const auto varFileName = LR"(E:\Duty\Duty\template\template.all.1.dwg)"sv;
 			if (Acad::eOk != openFile(varFileName)) {
 				return;
-			}		
-			
-		//acDocManager->closeDocument( acDocManager->curDocument() );
-		}, nullptr);
+			}
+
+			//acDocManager->closeDocument( acDocManager->curDocument() );
+		}, r);
 
 		//const auto varStartTime = std::chrono::high_resolution_clock::now();
 		//for (;;) {
@@ -117,7 +148,7 @@ namespace sstd {
 //			}
 //		}
 
-		 
+
 
 	}
 
