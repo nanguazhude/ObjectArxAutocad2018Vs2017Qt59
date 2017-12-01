@@ -62,7 +62,8 @@ SOURCES += \
         $$PWD/SimpleDrawPolygon/SimpleDrawPolygon.cpp \
         $$PWD/GetAllLayerName/GetAllLayerName.cpp \
         $$PWD/UpdateBlockFromOtherFile/UpdateBlockFromOtherFile.cpp \
-        $$PWD/TestAcDocManager/TestAcDocManager.cpp
+        $$PWD/TestAcDocManager/TestAcDocManager.cpp \
+        $$PWD/TestCode/TestCode.cpp
 
 #.h .hpp source
 HEADERS += \
@@ -72,7 +73,8 @@ HEADERS += \
         $$PWD/SimpleDrawPolygon/SimpleDrawPolygon.hpp \
         $$PWD/GetAllLayerName/GetAllLayerName.hpp \
         $$PWD/UpdateBlockFromOtherFile/UpdateBlockFromOtherFile.hpp \
-        $$PWD/TestAcDocManager/TestAcDocManager.hpp
+        $$PWD/TestAcDocManager/TestAcDocManager.hpp \
+        $$PWD/TestCode/TestCode.hpp
 
 SOURCES += $$PWD/object_arx_global.cpp \
     $$PWD/ARXApplication.cpp \
