@@ -33,6 +33,7 @@ namespace sstd {
 			if (Acad::eOk != openFile(LR"(E:\Duty\Duty\template\template.all.1.dwg)"sv)) {
 				return;
 			}
+
 			acDocManager->curDocument()->database()->save();
 			acDocManager->closeDocument( acDocManager->curDocument() );
 		},nullptr);
