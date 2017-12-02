@@ -10,17 +10,19 @@ namespace sstd {
 	extern void loadPrintALlLayerName();
 	extern void loadUpdateBlockFromOtherFile();
 	extern void loadTestCode();
+	extern void loadUpdateLayer();
 
 	namespace {
 		using FunctionType = void(*)(void);
 		static constexpr FunctionType _v_functions[] = {
-			{&sstd::loadHellowWord },
-			{&sstd::loadSimpleDrawLine },
-			{&sstd::loadSimpleDrawLineChangeColor },
-			{&sstd::loadSimpleDrawPolygon },
-			{&sstd::loadPrintALlLayerName },
-			{&sstd::loadUpdateBlockFromOtherFile },
-			{&sstd::loadTestCode },
+			{ &sstd::loadHellowWord },
+			{ &sstd::loadSimpleDrawLine },
+			{ &sstd::loadSimpleDrawLineChangeColor },
+			{ &sstd::loadSimpleDrawPolygon },
+			{ &sstd::loadPrintALlLayerName },
+			{ &sstd::loadUpdateBlockFromOtherFile },
+			{ &sstd::loadTestCode },
+			{ &sstd::loadUpdateLayer },
 		};
 	}
 

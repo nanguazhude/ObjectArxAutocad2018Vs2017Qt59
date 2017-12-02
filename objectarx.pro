@@ -63,7 +63,8 @@ SOURCES += \
         $$PWD/GetAllLayerName/GetAllLayerName.cpp \
         $$PWD/UpdateBlockFromOtherFile/UpdateBlockFromOtherFile.cpp \
         $$PWD/TestAcDocManager/TestAcDocManager.cpp \
-        $$PWD/TestCode/TestCode.cpp
+        $$PWD/TestCode/TestCode.cpp \
+    UpdateLayer/UpdateLayer.cpp
 
 #.h .hpp source
 HEADERS += \
@@ -74,7 +75,8 @@ HEADERS += \
         $$PWD/GetAllLayerName/GetAllLayerName.hpp \
         $$PWD/UpdateBlockFromOtherFile/UpdateBlockFromOtherFile.hpp \
         $$PWD/TestAcDocManager/TestAcDocManager.hpp \
-        $$PWD/TestCode/TestCode.hpp
+        $$PWD/TestCode/TestCode.hpp \
+    UpdateLayer/UpdateLayer.hpp
 
 SOURCES += $$PWD/object_arx_global.cpp \
     $$PWD/ARXApplication.cpp \
