@@ -29,7 +29,7 @@
 		}
 	}
 	/******************************************************/
-	argLTR->setIsOff(false)/*打开/关闭*/;
+	argLTR->setIsOff(true)/*打开/关闭*/;
 	argLTR->setIsFrozen(false)/*冻结*/;
 	argLTR->setIsLocked(false)/*锁定*/;
 	argLTR->setColor(varLColor)/*颜色*/;
