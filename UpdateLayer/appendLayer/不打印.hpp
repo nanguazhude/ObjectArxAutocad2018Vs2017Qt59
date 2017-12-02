@@ -1,4 +1,4 @@
-﻿varAns.emplace(LR"(尺寸线层)"sv, ApplyMaps::value_type::second_type{ [](simple_code_args) {
+﻿varAns.emplace(LR"(不打印)"sv, ApplyMaps::value_type::second_type{ [](simple_code_args) {
 	sstd::ArxClosePointer<AcDbLayerTableRecord> varLocalLTR;
 	if (argLTR == nullptr) {
 		varLocalLTR = new AcDbLayerTableRecord;
@@ -13,7 +13,7 @@
 	AcDb::LineWeight varLWeight = AcDb::kLnWt015;
 	/*设置透明度*****************************************************/
 	AcCmTransparency varLTP;
-	varLTP.setAlphaPercent(1.0)/*1.0代表不透明，0.0代表透明*/;
+	varLTP.setAlphaPercent(1.0-0.1)/*1.0代表不透明，0.0代表透明*/;
 	/*初始化线型*****************************************************/
 	std::optional<AcDbObjectId> varLTypeID;
 	{
@@ -27,8 +27,8 @@
 	argLTR->setIsFrozen(false)/*冻结*/;
 	argLTR->setIsLocked(false)/*锁定*/;
 	argLTR->setColor(varLColor)/*颜色*/;
-	argLTR->setIsPlottable(true)/*打印*/;
-	argLTR->setDescription(LR"(图层：尺寸线层(兼容旧图纸))")/*注释*/;
+	argLTR->setIsPlottable(false)/*打印*/;
+	argLTR->setDescription(LR"(图层：不打印(兼容旧图纸))")/*注释*/;
 	if (varLTypeID) {
 		argLTR->setLinetypeObjectId(*varLTypeID)/*设置线型*/;
 	}

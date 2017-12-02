@@ -1,4 +1,4 @@
-﻿varAns.emplace(LR"(尺寸线层)"sv, ApplyMaps::value_type::second_type{ [](simple_code_args) {
+﻿varAns.emplace(LR"(图层1)"sv, ApplyMaps::value_type::second_type{ [](simple_code_args) {
 	sstd::ArxClosePointer<AcDbLayerTableRecord> varLocalLTR;
 	if (argLTR == nullptr) {
 		varLocalLTR = new AcDbLayerTableRecord;
@@ -28,7 +28,7 @@
 	argLTR->setIsLocked(false)/*锁定*/;
 	argLTR->setColor(varLColor)/*颜色*/;
 	argLTR->setIsPlottable(true)/*打印*/;
-	argLTR->setDescription(LR"(图层：尺寸线层(兼容旧图纸))")/*注释*/;
+	argLTR->setDescription(LR"(图层：图层1(兼容旧图纸))")/*注释*/;
 	if (varLTypeID) {
 		argLTR->setLinetypeObjectId(*varLTypeID)/*设置线型*/;
 	}
