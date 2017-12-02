@@ -31,7 +31,7 @@
 	argLTR->setIsLocked(false)/*锁定*/;
 	argLTR->setColor(varLColor)/*颜色*/;
 	argLTR->setIsPlottable(true)/*打印*/;
-	argLTR->setDescription(LR"(图层：中心线层(兼容旧版本))")/*注释*/;
+	
 	if (varLTypeID) {
 		argLTR->setLinetypeObjectId(*varLTypeID)/*设置线型*/;
 	}
@@ -41,7 +41,7 @@
 	if (varLocalLTR) {
 		argLT->add(argLTR);
 	}
-
+	argLTR->setDescription(LR"(图层：中心线层(兼容旧版本))")/*注释*/;
 } ,false });
 
 
