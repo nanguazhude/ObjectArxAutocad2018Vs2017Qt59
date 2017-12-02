@@ -11,6 +11,7 @@ namespace sstd {
 	extern void loadUpdateBlockFromOtherFile();
 	extern void loadTestCode();
 	extern void loadUpdateLayer();
+	extern void loadUpdateTextStyle();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -23,6 +24,7 @@ namespace sstd {
 			{ &sstd::loadUpdateBlockFromOtherFile },
 			{ &sstd::loadTestCode },
 			{ &sstd::loadUpdateLayer },
+			{ &sstd::loadUpdateTextStyle },
 		};
 	}
 

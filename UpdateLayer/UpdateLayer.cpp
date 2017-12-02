@@ -157,6 +157,7 @@ namespace sstd {
 /*25*/#include "appendLayer/BIAOZHU.hpp"
 /*26*/#include "appendLayer/临时图形.hpp"
 /*27*/#include "appendLayer/隐藏层.hpp"
+/*28*/#include "appendLayer/TEXT.hpp"
 			return std::move(varAns);
 		}
 

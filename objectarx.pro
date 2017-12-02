@@ -64,7 +64,9 @@ SOURCES += \
         $$PWD/UpdateBlockFromOtherFile/UpdateBlockFromOtherFile.cpp \
         $$PWD/TestAcDocManager/TestAcDocManager.cpp \
         $$PWD/TestCode/TestCode.cpp \
-        $$PWD/UpdateLayer/UpdateLayer.cpp
+        $$PWD/UpdateLayer/UpdateLayer.cpp \
+        $$PWD/UpdateDimStyle/UpdateDimStyle.cpp \
+        $$PWD/UpdateTextStyle/UpdateTextStyle.cpp
 
 #.h .hpp source
 HEADERS += \
@@ -76,7 +78,9 @@ HEADERS += \
         $$PWD/UpdateBlockFromOtherFile/UpdateBlockFromOtherFile.hpp \
         $$PWD/TestAcDocManager/TestAcDocManager.hpp \
         $$PWD/TestCode/TestCode.hpp \
-        $$PWD/UpdateLayer/UpdateLayer.hpp
+        $$PWD/UpdateLayer/UpdateLayer.hpp \
+        $$PWD/UpdateDimStyle/UpdateDimStyle.hpp \
+        $$PWD/UpdateTextStyle/UpdateTextStyle.hpp
 
 SOURCES += $$PWD/object_arx_global.cpp \
     $$PWD/ARXApplication.cpp \
