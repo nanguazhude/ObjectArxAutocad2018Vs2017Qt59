@@ -22,7 +22,7 @@
 	{
 		AcDbObjectId varLTypeIDTmp;
 		if (Acad::eOk == argLTT->getAt(LR"(Continuous)", varLTypeIDTmp)) {
-			*varLTypeID = varLTypeIDTmp;
+			varLTypeID = varLTypeIDTmp;
 		}else {
 			acutPrintf(LR"(找不到线型：Continuous
 )");
