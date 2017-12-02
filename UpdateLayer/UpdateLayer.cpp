@@ -109,10 +109,24 @@ namespace sstd {
 
 			} ,false });
 			/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
-#include "appendLayer/BZ.hpp"
-#include "appendLayer/尺寸线.hpp"
-#include "appendLayer/尺寸线层.hpp"
-#include "appendLayer/不打印.hpp"
+/*01*/#include "appendLayer/BZ.hpp"
+/*02*/#include "appendLayer/标注.hpp"
+/*03*/#include "appendLayer/尺寸线.hpp"
+/*04*/#include "appendLayer/尺寸线层.hpp"
+/*05*/#include "appendLayer/不打印.hpp"
+/*06*/#include "appendLayer/图层1.hpp"
+/*07*/#include "appendLayer/图层2.hpp"
+/*08*/#include "appendLayer/参考点.hpp"
+/*09*/#include "appendLayer/参考线.hpp"
+/*10*/#include "appendLayer/粗实线.hpp"
+/*11*/#include "appendLayer/尺寸线层.hpp"
+/*12*/#include "appendLayer/粗实线_粗加工.hpp"
+/*13*/#include "appendLayer/粗实线_非机械加工.hpp"
+/*14*/#include "appendLayer/细实线层.hpp"
+/*15*/#include "appendLayer/细实线.hpp"
+/*16*/#include "appendLayer/剖面线层.hpp"
+/*17*/#include "appendLayer/TXT.hpp"
+/*18*/#include "appendLayer/图纸界限.hpp"
 			return std::move(varAns);
 		}
 
