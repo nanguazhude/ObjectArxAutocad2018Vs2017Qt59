@@ -16,17 +16,17 @@ namespace sstd {
 	namespace {
 #define simple_code_args const std::wstring_view & argNM , AcDbLayerTable * argLT, AcDbLinetypeTable * argLTT , AcDbLayerTableRecord * argLTR
 		using ApplyLayerType = void(*)(simple_code_args);
-
-		inline std::map<std::wstring_view, ApplyLayerType> _p_createFunctions() {
-			std::map<std::wstring_view, ApplyLayerType> varAns;
+		using ApplyMaps = std::map<std::wstring_view, std::pair<ApplyLayerType, bool> >;
+		inline ApplyMaps _p_createFunctions() {
+			ApplyMaps varAns;
 			/********************************************************/
-			varAns.emplace(LR"(0)"sv, [](simple_code_args) {
+			varAns.emplace(LR"(0)"sv, ApplyMaps::value_type{ [](simple_code_args) {
 				sstd::ArxClosePointer<AcDbLayerTableRecord> varLocalLTR;
-				if (argLTR==nullptr) {
+				if (argLTR == nullptr) {
 					varLocalLTR = new AcDbLayerTableRecord;
 					argLTR = varLocalLTR;
-					argLTR->setName( argNM.data() );
-					argLT->add( argLTR );
+					argLTR->setName(argNM.data());
+					argLT->add(argLTR);
 				}
 
 				AcCmColor varLColor;
@@ -37,7 +37,7 @@ namespace sstd {
 				std::optional<AcDbObjectId> varLTypeID;
 				{
 					AcDbObjectId varLTypeIDTmp;
-					if ( Acad::eOk == argLTT->getAt(LR"()", varLTypeIDTmp)) {
+					if (Acad::eOk == argLTT->getAt(LR"()", varLTypeIDTmp)) {
 						*varLTypeID = varLTypeIDTmp;
 					}
 				}
@@ -48,13 +48,13 @@ namespace sstd {
 				argLTR->setColor(varLColor)/*颜色*/;
 				argLTR->setIsPlottable(true)/*打印*/;
 				argLTR->setDescription(LR"(图层：0)")/*注释*/;
-				if (varLTypeID) { 
-					argLTR->setLinetypeObjectId(*varLTypeID)/*设置线型*/; 
+				if (varLTypeID) {
+					argLTR->setLinetypeObjectId(*varLTypeID)/*设置线型*/;
 				}
 				argLTR->setLineWeight(varLWeight)/*线宽*/;
 				argLTR->setTransparency(varLTP)/*透明度*/;
-				
-			});
+
+			} ,false});
 			/********************************************************/
 			return std::move(varAns);
 		}
