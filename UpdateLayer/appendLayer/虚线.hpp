@@ -20,6 +20,9 @@
 		AcDbObjectId varLTypeIDTmp;
 		if (Acad::eOk == argLTT->getAt(LR"(虚线)", varLTypeIDTmp)) {
 			*varLTypeID = varLTypeIDTmp;
+		}else {
+			acutPrintf(LR"(找不到线型：虚线
+)");
 		}
 	}
 	/******************************************************/

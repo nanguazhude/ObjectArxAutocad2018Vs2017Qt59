@@ -20,6 +20,9 @@
 		AcDbObjectId varLTypeIDTmp;
 		if (Acad::eOk == argLTT->getAt(LR"(CENTER2)", varLTypeIDTmp)) {
 			*varLTypeID = varLTypeIDTmp;
+		}else {
+			acutPrintf(LR"(找不到线型：CENTER2
+)");
 		}
 	}
 	/******************************************************/
