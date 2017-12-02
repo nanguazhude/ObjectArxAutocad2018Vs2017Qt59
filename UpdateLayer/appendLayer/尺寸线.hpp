@@ -1,4 +1,4 @@
-﻿varAns.emplace(LR"(BZ)"sv, ApplyMaps::value_type::second_type{ [](simple_code_args) {
+﻿varAns.emplace(LR"(尺寸线)"sv, ApplyMaps::value_type::second_type{ [](simple_code_args) {
 	sstd::ArxClosePointer<AcDbLayerTableRecord> varLocalLTR;
 	if (argLTR == nullptr) {
 		varLocalLTR = new AcDbLayerTableRecord;

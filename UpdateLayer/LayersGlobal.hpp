@@ -1,6 +1,6 @@
 ﻿/*
-0
-BZ
+layer:0
+layer:BZ
 标注
 虚线
 _坐标
@@ -26,7 +26,7 @@ TEXT
 细实线层
 BIAOZHU
 粗实线_粗加工
-Defpoints
+layer:Defpoints
 粗实线_非机械加工
 _MarkInformation
 */
