@@ -129,6 +129,11 @@ namespace sstd {
 /*18*/#include "appendLayer/图纸界限.hpp"
 /*19*/#include "appendLayer/_MarkInformation.hpp"
 /*20*/#include "appendLayer/_坐标.hpp"
+/*21*/#include "appendLayer/虚线.hpp"
+/*21*/#include "appendLayer/虚线层.hpp"
+/*22*/#include "appendLayer/双点划线.hpp"
+/*23*/#include "appendLayer/中心线.hpp"
+/*24*/#include "appendLayer/中心线层.hpp"
 			return std::move(varAns);
 		}
 

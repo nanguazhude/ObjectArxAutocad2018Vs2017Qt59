@@ -37,9 +37,15 @@ namespace sstd {
 			sstd::ArxClosePointer< AcDbLayerTableRecord > varLTR;
 			if (Acad::eOk == varIt->getRecord(varLTR,AcDb::kForRead)) {
 				wchar_t * varName = nullptr;
+				wchar_t * varName1 = nullptr;
+				AcDbLinetypeTableRecord * varLinetypeTRCD=nullptr;
+				acdbOpenObject(varLinetypeTRCD,varLTR->linetypeObjectId(),
+					AcDb::kForRead);
+				varLinetypeTRCD->getName(varName1);
 				if (Acad::eOk == varLTR->getName(varName)) {
-					varAns->emplace_back(varName);
+					varAns->emplace_back(std::wstring(varName) +LR"(    )" + varName1);
 				}
+				varLTR->linetypeObjectId();
 			}
 		}
 
