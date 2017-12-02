@@ -127,6 +127,8 @@ namespace sstd {
 /*16*/#include "appendLayer/剖面线层.hpp"
 /*17*/#include "appendLayer/TXT.hpp"
 /*18*/#include "appendLayer/图纸界限.hpp"
+/*19*/#include "appendLayer/_MarkInformation.hpp"
+/*20*/#include "appendLayer/_坐标.hpp"
 			return std::move(varAns);
 		}
 

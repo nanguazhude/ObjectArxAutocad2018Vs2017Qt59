@@ -3,7 +3,7 @@ layer:0
 layer:BZ
 layer:标注
 虚线
-_坐标
+layer:_坐标
 layer:不打印
 中心线
 layer:参考点
@@ -28,5 +28,5 @@ layer:BIAOZHU
 layer:粗实线_粗加工
 layer:Defpoints
 layer:粗实线_非机械加工
-_MarkInformation
+layer:_MarkInformation
 */
