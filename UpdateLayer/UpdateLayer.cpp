@@ -127,7 +127,7 @@ namespace sstd {
 /*08*/#include "appendLayer/参考点.hpp"
 /*09*/#include "appendLayer/参考线.hpp"
 /*10*/#include "appendLayer/粗实线.hpp"
-/*11*/#include "appendLayer/尺寸线层.hpp"
+/*11*/#include "appendLayer/粗实线层.hpp"
 /*12*/#include "appendLayer/粗实线_粗加工.hpp"
 /*13*/#include "appendLayer/粗实线_非机械加工.hpp"
 /*14*/#include "appendLayer/细实线层.hpp"
@@ -142,6 +142,9 @@ namespace sstd {
 /*22*/#include "appendLayer/双点划线.hpp"
 /*23*/#include "appendLayer/中心线.hpp"
 /*24*/#include "appendLayer/中心线层.hpp"
+/*25*/#include "appendLayer/BIAOZHU.hpp"
+/*26*/#include "appendLayer/临时图形.hpp"
+/*27*/#include "appendLayer/隐藏层.hpp"
 			return std::move(varAns);
 		}
 
