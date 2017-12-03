@@ -13,6 +13,7 @@
 	argR->setFileName(LR"(ztxt.shx)")/*shx字体文件名*/;
 	argR->setBigFontFileName(LR"(whtmtxt.shx)")/*shx大字体文件名*/;
 	argR->setTextSize(6.75)/*文字高度*/;
+	if (argR->priorSize()<5)argR->setPriorSize(6.75)/*默认大小*/;
 	argR->setXScale(0.666666667)/*宽度比*/;
 	setAnnotative(argR,true)/*注释性*/;
 
