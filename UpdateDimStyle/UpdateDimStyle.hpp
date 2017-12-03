@@ -3,17 +3,16 @@
 
 #include <object_arx_global.hpp>
 
-namespace sstd{
+namespace sstd {
 
-class UpdateDimStyle
-{
-public:
-    UpdateDimStyle();
+	class UpdateDimStyle {
+	public:
+		UpdateDimStyle();
 
-	static void load();
-	static void main();
-	DEFINE_ARX_NAME(LR"(_updatedimstyle)")
-};
+		static void load();
+		static void main();
+		DEFINE_ARX_NAME(LR"(_updatedimstyle)")
+	};
 
 }/*namespace sstd*/
 

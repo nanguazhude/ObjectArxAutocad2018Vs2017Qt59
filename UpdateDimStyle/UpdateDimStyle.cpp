@@ -1,18 +1,16 @@
 ﻿#include "UpdateDimStyle.hpp"
 
-namespace sstd{
+namespace sstd {
 
-UpdateDimStyle::UpdateDimStyle(){
+	UpdateDimStyle::UpdateDimStyle() {
 
-}
+	}
 
-void UpdateDimStyle::load()
-{
-}
+	void UpdateDimStyle::load(){
+	}
 
-void UpdateDimStyle::main()
-{
-}
+	void UpdateDimStyle::main(){
+	}
 
 }/*namespace sstd*/
 

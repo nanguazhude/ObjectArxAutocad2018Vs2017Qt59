@@ -3,17 +3,16 @@
 
 #include <object_arx_global.hpp>
 
-namespace sstd{
+namespace sstd {
 
-class UpdateTextStyle
-{
-public:
-    UpdateTextStyle();
+	class UpdateTextStyle {
+	public:
+		UpdateTextStyle();
 
-	static void load();
-	static void main();
-	DEFINE_ARX_NAME(LR"(_updatetexttyle)")
-};
+		static void load();
+		static void main();
+		DEFINE_ARX_NAME(LR"(_updatetexttyle)")
+	};
 
 }/*namespace sstd*/
 
