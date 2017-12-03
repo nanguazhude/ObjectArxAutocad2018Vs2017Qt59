@@ -67,7 +67,7 @@ namespace sstd {
 				argIsAnnotative);
 		}
 
-		inline void/*线型标注*/_linear_child(simple_code_args, StyleTableRecord *argC) {
+		inline void/*线性标注*/_linear_child(simple_code_args, StyleTableRecord *argC) {
 			std::wstring varName{ argNM.begin(),argNM.end() };
 			varName += LR"($0)"sv;
 
@@ -82,7 +82,7 @@ namespace sstd {
 			argC->copyFrom(argR);
 			argC->setName(varName.data());
 
-			argC->setDimasz(3.1);/*箭头长度*/
+			argC->setDimtih(false);
 
 		}
 		inline void/*角度标注*/_angular_child(simple_code_args, StyleTableRecord *argC) {
@@ -154,6 +154,7 @@ namespace sstd {
 				StyleTableRecord * arg0,StyleTableRecord * arg2,
 				StyleTableRecord * arg3,StyleTableRecord * arg4,
 				ThisState * argGl) {
+				/*https://knowledge.autodesk.com/zh-hans/support/autocad/troubleshooting/caas/sfdcarticles/sfdcarticles/CHS/Creating-a-new-dimension-style-on-the-command-line.html*/
 /******************************************************************/
 				sstd::ArxClosePointer<StyleTableRecord> varLocalR;
 				if (argR == nullptr) {
@@ -169,6 +170,7 @@ namespace sstd {
 					argR->setDimclre(102_ac)/*尺寸界限颜色*/;
 					argR->setDimdli(7.0)/*基线间距*/;
 					argR->setDimexe(2.0)/*尺寸界限超出尺寸线距离*/;
+					argR->setDimexo(0.0);
 				}
 				/*符号和箭头***********************/
 				{
@@ -177,32 +179,33 @@ namespace sstd {
 					argR->setDimblk1( varRowType ? varRowInit.data() : LR"()" )/*第一个箭头*/;
 					argR->setDimblk2( varRowType ? varRowInit.data() : LR"()")/*第二个箭头*/;
 					argR->setDimasz(4.6)/*箭头长度*/;
+					argR->setDimcen(0.0);
 				}
 				/*文字****************************/
 				{
 					const auto varTextType = argGl->getTextStyle(LR"(@Standard)");
 					if (varTextType) { argR->setDimtxsty(*varTextType); }
 					argR->setDimclrt( 111_ac );
-					argR->setDimtfill(2)/*0 = No Background Fill color
-                                          1 = Use background fill color from dimtfillclr()
-                                          2 = Use drawing's background color*/;
-					argR->setDimtad(1)/*0  标注文字在尺寸界线之间居中放置。
-                                        1  除非尺寸线不是水平放置的或者尺寸界线内的文字被强制为水平放置 (DIMTIH = 1)，否则就将标注文字放置在尺寸线的上方。标注文字最底部基线到尺寸线的距离值就是系统变量DIMGAP 的当前值。
-                                        2  将标注文字放在尺寸线远离定义点的一边。
-                                        3  将标注文字按照日本工业标准 (JIS) 放置。*/;
-					argR->setDimjust(0)/*0  将文字置于尺寸线之上，并在尺寸界线之间置中对正
-                                        1  紧邻第一条尺寸界线放置标注文字
-                                        2  紧邻第二条尺寸界线放置标注文字
-                                        3  将标注文字放在第一条尺寸界线以上，并与之对齐
-                                        4  将标注文字放在第二条尺寸界线以上，并与之对齐*/;
+					argR->setDimgap(1.125)/*尺寸线和文字的间距*/;
+					argR->setDimtfill(1)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-4E38E29F-DE85-4791-A2E7-4DC22842B1B4-htm.html*/;
+					argR->setDimtad(1)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-60D1241D-CEA7-4493-BD6A-4EF433F3C946-htm.html*/;
+					argR->setDimjust(0)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-C67348A9-2260-4135-A7FF-FE0B45211CB0-htm.html*/;
+					argR->setDimtih(false);
 				}
 				/*调整****************************/
 				{
 					setAnnotative(argR, true)/*注释性*/;
+					argR->setDimatfit(1)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-2F8FA7E7-C79F-40EA-A416-C4B02D09F310-htm.html*/;
 				}
 				/*主单位**************************/
 				{
-					setAnnotative(argR, true)/*注释性*/;
+					argR->setDimlunit(2)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-2ECDF7CF-6EEA-4174-B50C-8630D5002C20-htm.html*/;
+					argR->setDimdec(3)/*0.000*/;
+					argR->setDimdsep(wchar_t('.'))/*小数分隔符*/;
+					argR->setDimaunit(0)/*十进制度数*/;
+					argR->setDimadec(2)/*0.00*/;
+					argR->setDimzin(8)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-A1860981-FE1C-4947-927B-7CD6B8CEF8EE-htm.html*/;
+					argR->setDimazin(2)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-69E9BFD3-06A4-468D-88F0-7C9741407194-htm.html*/;
 				}
 				/*换算单位*/
 				{
