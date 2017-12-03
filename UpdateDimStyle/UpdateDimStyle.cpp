@@ -18,7 +18,7 @@ namespace sstd {
 #define simple_code_args const std::wstring_view & argNM,StyleTable * argTST,StyleTableRecord * argR
 		using ApplyLayerType = void(*)(simple_code_args, StyleTableRecord *, StyleTableRecord *, StyleTableRecord *, StyleTableRecord *);
 		using ApplyMaps = std::map<std::wstring_view, std::pair<ApplyLayerType, bool> >;
-		
+
 		inline void/*线型标注*/_linear_child(simple_code_args) {
 			std::wstring varName{ argNM.begin(),argNM.end() };
 			varName += LR"($0)"sv;
@@ -71,10 +71,10 @@ namespace sstd {
 			}
 
 		}
-		
+
 		inline ApplyMaps _p_createFunctions() {
 			ApplyMaps varAns;
-			varAns.emplace(LR"(MTest)", ApplyMaps::value_type::second_type{ 
+			varAns.emplace(LR"(MTest)", ApplyMaps::value_type::second_type{
 				[](simple_code_args,
 				StyleTableRecord * arg0,
 				StyleTableRecord * arg2,
@@ -88,12 +88,12 @@ namespace sstd {
 					argR->setName(argNM.data());
 					argTST->add(argR);
 				}
-				
+
 				_linear_child(argNM, argTST,arg0);
 				_angular_child(argNM, argTST,arg2);
 				_diameter_child(argNM, argTST,arg3);
 				_radius_child(argNM, argTST,arg4);
-				
+
 			},false });
 			return std::move(varAns);
 		}
@@ -125,8 +125,8 @@ namespace sstd {
 )"); return;
 					}
 					varIt.reset(var);
-				}							
-				
+				}
+
 				for (; !varIt->done(); varIt->step()) {
 					auto varDimStyleTableRecord = std::make_shared<Item>();
 					if (Acad::eOk != varIt->getRecord(varDimStyleTableRecord->r, AcDb::kForWrite)) {
@@ -136,58 +136,63 @@ namespace sstd {
 					if (Acad::eOk != varDimStyleTableRecord->r->getName(varDimStyleName)) {
 						continue;
 					}
-					varAllStyleTableRecord.emplace(varDimStyleName,std::move(varDimStyleTableRecord));
-					/*const std::wstring_view varDimStyleNameW(varDimStyleName);
-					auto varPos = varFunctions.find(varDimStyleNameW);
-					if (varPos == varNoPos) { continue; }
-					varPos->second.second = true;
-					varPos->second.first(varDimStyleNameW,
-						varDimStyleTable,
-						varDimStyleTableRecord,
-						nullptr,
-						nullptr,
-						nullptr,
-						nullptr);*/
+					varAllStyleTableRecord.emplace(varDimStyleName,
+						std::move(varDimStyleTableRecord));
+					
 				}
 
 			}
 
 			{
-				const auto varNoPos = varAllStyleTableRecord.end();
-				const static std::wregex varRJ(LR"($[0234])");
-				auto get_0 = [&varAllStyleTableRecord,&varNoPos](const std::wstring &arg) 
-				->StyleTableRecord*{
-					auto varPos = varAllStyleTableRecord.find(arg+LR"($0)");
-					if (varPos == varNoPos) { return nullptr; }
+				const auto varNoPosx = varAllStyleTableRecord.end();
+				const static std::wregex varRJ(LR"(.*\$[0234])");
+				auto get_0 = [&varAllStyleTableRecord, &varNoPosx](const std::wstring &arg)
+					->StyleTableRecord* {
+					auto varPos = varAllStyleTableRecord.find(arg + LR"($0)");
+					if (varPos == varNoPosx) { return nullptr; }
 					return varPos->second->r.pointer();
 				};
-				auto get_2 = [&varAllStyleTableRecord, &varNoPos](const std::wstring &arg)
+				auto get_2 = [&varAllStyleTableRecord, &varNoPosx](const std::wstring &arg)
 					->StyleTableRecord* {
 					auto varPos = varAllStyleTableRecord.find(arg + LR"($2)");
-					if (varPos == varNoPos) { return nullptr; }
+					if (varPos == varNoPosx) { return nullptr; }
 					return varPos->second->r.pointer();
 				};
-				auto get_3 = [&varAllStyleTableRecord, &varNoPos](const std::wstring &arg)
+				auto get_3 = [&varAllStyleTableRecord, &varNoPosx](const std::wstring &arg)
 					->StyleTableRecord* {
 					auto varPos = varAllStyleTableRecord.find(arg + LR"($3)");
-					if (varPos == varNoPos) { return nullptr; }
+					if (varPos == varNoPosx) { return nullptr; }
 					return varPos->second->r.pointer();
 				};
-				auto get_4 = [&varAllStyleTableRecord, &varNoPos](const std::wstring &arg)
+				auto get_4 = [&varAllStyleTableRecord, &varNoPosx](const std::wstring &arg)
 					->StyleTableRecord* {
 					auto varPos = varAllStyleTableRecord.find(arg + LR"($4)");
-					if (varPos == varNoPos) { return nullptr; }
+					if (varPos == varNoPosx) { return nullptr; }
 					return varPos->second->r.pointer();
 				};
 
 				for (const auto & varII : varAllStyleTableRecord) {
-					if (std::regex_match(varII.first, varRJ)) { 
+					const auto & varDimStyleNameW = varII.first;
+					if (std::regex_match(varDimStyleNameW, varRJ)) {
 						continue;
 					}
-
+										
+					auto varPos = varFunctions.find(varDimStyleNameW);
+					if (varPos == varNoPos) { continue; }
+					varPos->second.second = true;
+					varPos->second.first(varDimStyleNameW,
+						varDimStyleTable,
+						varII.second->r,
+						get_0(varDimStyleNameW),
+						get_2(varDimStyleNameW),
+						get_3(varDimStyleNameW),
+						get_4(varDimStyleNameW));
 				}
 
 			}
+
+			/*close opened record*/
+			varAllStyleTableRecord.clear();
 
 			/*新增文字样式*/
 			{
@@ -205,7 +210,7 @@ namespace sstd {
 			}
 
 		}
-		
+
 	}/*namespace*/
 
 	void UpdateDimStyle::main() {
