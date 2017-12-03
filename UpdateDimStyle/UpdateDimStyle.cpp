@@ -14,6 +14,88 @@ namespace sstd {
 	}
 
 	namespace {
+
+		template<typename T,typename U>
+		inline void _copy(T * argC,const U * argR) {
+			argC->setDimadec(argR->dimadec());
+			argC->setDimalt(argR->dimalt());
+			argC->setDimaltd(argR->dimaltd());
+			argC->setDimaltf(argR->dimaltf());
+			argC->setDimaltmzf(argR->dimaltmzf());
+			argC->setDimaltmzs(argR->dimaltmzs());
+			argC->setDimaltrnd(argR->dimaltrnd());
+			argC->setDimalttd(argR->dimalttd());
+			argC->setDimalttz(argR->dimalttz());
+			argC->setDimaltu(argR->dimaltu());
+			argC->setDimaltz(argR->dimaltz());
+			argC->setDimapost(argR->dimapost());
+			argC->setDimarcsym(argR->dimarcsym());
+			argC->setDimasz(argR->dimasz());
+			argC->setDimatfit(argR->dimatfit());
+			argC->setDimaunit(argR->dimaunit());
+			argC->setDimazin(argR->dimazin());
+			argC->setDimblk(argR->dimblk());
+			argC->setDimblk1(argR->dimblk1());
+			argC->setDimblk2(argR->dimblk2());
+			argC->setDimcen(argR->dimcen());
+			argC->setDimclrd(argR->dimclrd());
+			argC->setDimclre(argR->dimclre());
+			argC->setDimclrt(argR->dimclrt());
+			argC->setDimdec(argR->dimdec());
+			argC->setDimdle(argR->dimdle());
+			argC->setDimdli(argR->dimdli());
+			argC->setDimdsep(argR->dimdsep());
+			argC->setDimexe(argR->dimexe());
+			argC->setDimexo(argR->dimexo());
+			argC->setDimfrac(argR->dimfrac());
+			argC->setDimgap(argR->dimgap());
+			argC->setDimjogang(argR->dimjogang());
+			argC->setDimjust(argR->dimjust());
+			argC->setDimldrblk(argR->dimldrblk());
+			argC->setDimlfac(argR->dimlfac());
+			argC->setDimlim(argR->dimlim());
+			argC->setDimltex1(argR->dimltex1());
+			argC->setDimltex2(argR->dimltex2());
+			argC->setDimltype(argR->dimltype());
+			argC->setDimlunit(argR->dimlunit());
+			argC->setDimlwd(argR->dimlwd());
+			argC->setDimlwe(argR->dimlwe());
+			argC->setDimmzf(argR->dimmzf());
+			argC->setDimmzs(argR->dimmzs());
+			argC->setDimpost(argR->dimpost());
+			argC->setDimrnd(argR->dimrnd());
+			argC->setDimsah(argR->dimsah());
+			argC->setDimscale(argR->dimscale());
+			argC->setDimsd1(argR->dimsd1());
+			argC->setDimsd2(argR->dimsd2());
+			argC->setDimse1(argR->dimse1());
+			argC->setDimse2(argR->dimse2());
+			argC->setDimsoxd(argR->dimsoxd());
+			argC->setDimtad(argR->dimtad());
+			argC->setDimtdec(argR->dimtdec());
+			argC->setDimtfac(argR->dimtfac());
+			argC->setDimtfill(argR->dimtfill());
+			argC->setDimtfillclr(argR->dimtfillclr());
+			//argC->setDimtih(argR->dimtih());
+			argC->setDimtix(argR->dimtix());
+			argC->setDimtm(argR->dimtm());
+			argC->setDimtmove(argR->dimtmove());
+			argC->setDimtofl(argR->dimtofl());
+			//argC->setDimtoh(argR->dimtoh());
+			argC->setDimtol(argR->dimtol());
+			argC->setDimtolj(argR->dimtolj());
+			argC->setDimtp(argR->dimtp());
+			argC->setDimtsz(argR->dimtsz());
+			argC->setDimtvp(argR->dimtvp());
+			argC->setDimtxsty(argR->dimtxsty());
+			argC->setDimtxt(argR->dimtxt());
+			argC->setDimtxtdirection(argR->dimtxtdirection());
+			argC->setDimtzin(argR->dimtzin());
+			argC->setDimupt(argR->dimupt());
+			argC->setDimzin(argR->dimzin());
+			argC->setDimfxlen(argR->dimfxlen());
+		}
+		
 		class ThisState {
 		public:
 			std::map<std::wstring, AcDbObjectId ,std::less<>> $AllTextStyle;
@@ -75,15 +157,16 @@ namespace sstd {
 			if (argC == nullptr) {
 				argC = new StyleTableRecord;
 				varLocalR = argC;
+				argC->setName(varName.data());
 				argTST->add(argC);
 			}
 
-			/*复制父项设置*/
-			argC->copyFrom(argR);
-			argC->setName(varName.data());
-
+			_copy(argC,argR);
+			
+			/*与尺寸线对齐*/
+			argC->setDimtoh(false);
 			argC->setDimtih(false);
-
+			setAnnotative(argC, true)/*注释性*/;
 		}
 		inline void/*角度标注*/_angular_child(simple_code_args, StyleTableRecord *argC) {
 			std::wstring varName{ argNM.begin(),argNM.end() };
@@ -93,15 +176,16 @@ namespace sstd {
 			if (argC == nullptr) {
 				argC = new StyleTableRecord;
 				varLocalR = argC;
+				argC->setName(varName.data());
 				argTST->add(argC);
 			}
+						
+			_copy(argC, argR);
 
-			/*复制父项设置*/
-			argC->copyFrom(argR);
-			argC->setName(varName.data());
-
-			argC->setDimasz(3.2);/*箭头长度*/
-
+			/*强制水平*/
+			argC->setDimtih(true);
+			argC->setDimtoh(true);
+			setAnnotative(argC, true)/*注释性*/;
 		}
 		inline void/*直径标注*/_diameter_child(simple_code_args, StyleTableRecord *argC) {
 			std::wstring varName{ argNM.begin(),argNM.end() };
@@ -111,15 +195,16 @@ namespace sstd {
 			if (argC == nullptr) {
 				argC = new StyleTableRecord;
 				varLocalR = argC;
+				argC->setName(varName.data());
 				argTST->add(argC);
-			}
+			}		
+			
+			_copy(argC, argR);
 
-			/*复制父项设置*/
-			argC->copyFrom(argR);
-			argC->setName(varName.data());
-
-			argC->setDimasz(3.3);/*箭头长度*/
-
+			/*文在在尺寸界限内时对齐尺寸线,在尺寸线外时水平对齐*/
+			argC->setDimtih(false);
+			argC->setDimtoh(true);
+			setAnnotative(argC, true)/*注释性*/;
 		}
 
 		inline void/*半径标注*/_radius_child(simple_code_args, StyleTableRecord *argC) {
@@ -130,15 +215,16 @@ namespace sstd {
 			if (argC == nullptr) {
 				argC = new StyleTableRecord;
 				varLocalR = argC;
+				argC->setName(varName.data());
 				argTST->add(argC);
 			}
 
-			/*复制父项设置*/
-			argC->copyFrom(argR);
-			argC->setName(varName.data());
-
-			argC->setDimasz(3.6);/*箭头长度*/
-
+			_copy(argC, argR);
+		
+			/*文在在尺寸界限内时对齐尺寸线,在尺寸线外时水平对齐*/
+			argC->setDimtih(false);
+			argC->setDimtoh(true);
+			setAnnotative(argC, true)/*注释性*/;
 		}
 
 		inline AcCmColor operator""_ac(unsigned long long arg) {
@@ -176,10 +262,18 @@ namespace sstd {
 				{
 					constexpr const auto varRowInit = LR"(_MY_ROW)"sv;
 					const auto varRowType = argGl->getBlock(varRowInit);
-					argR->setDimblk1( varRowType ? varRowInit.data() : LR"()" )/*第一个箭头*/;
-					argR->setDimblk2( varRowType ? varRowInit.data() : LR"()")/*第二个箭头*/;
+					if(varRowType){
+						argR->setDimblk(*varRowType);
+						argR->setDimblk1(*varRowType)/*第一个箭头*/;
+						argR->setDimblk2(*varRowType)/*第二个箭头*/;
+					}
+					else {
+						argR->setDimblk(LR"()");
+						argR->setDimblk1(LR"()")/*第一个箭头*/;
+						argR->setDimblk2(LR"()")/*第二个箭头*/;
+					}
 					argR->setDimasz(4.6)/*箭头长度*/;
-					argR->setDimcen(0.0);
+					argR->setDimcen(0.0)/*圆心标记*/;
 				}
 				/*文字****************************/
 				{
@@ -190,12 +284,15 @@ namespace sstd {
 					argR->setDimtfill(1)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-4E38E29F-DE85-4791-A2E7-4DC22842B1B4-htm.html*/;
 					argR->setDimtad(1)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-60D1241D-CEA7-4493-BD6A-4EF433F3C946-htm.html*/;
 					argR->setDimjust(0)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-C67348A9-2260-4135-A7FF-FE0B45211CB0-htm.html*/;
+					/*文在在尺寸界限内时对齐尺寸线,在尺寸线外时水平对齐*/
 					argR->setDimtih(false);
+					argR->setDimtoh(true);
 				}
 				/*调整****************************/
 				{
 					setAnnotative(argR, true)/*注释性*/;
 					argR->setDimatfit(1)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-2F8FA7E7-C79F-40EA-A416-C4B02D09F310-htm.html*/;
+					argR->setDimtofl(true)/*强制绘制尺寸线*/;
 				}
 				/*主单位**************************/
 				{
@@ -212,6 +309,8 @@ namespace sstd {
 				}
 				/*公差*/
 				{
+					argR->setDimtdec(2)/*公差小数0.00*/;
+					argR->setDimtfac(0.75)/*公差高度比*/;
 				}
 				
 /******************************************************************/
