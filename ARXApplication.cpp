@@ -12,6 +12,7 @@ namespace sstd {
 	extern void loadTestCode();
 	extern void loadUpdateLayer();
 	extern void loadUpdateTextStyle();
+	extern void loadUpdateDimStyle();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -25,6 +26,7 @@ namespace sstd {
 			{ &sstd::loadTestCode },
 			{ &sstd::loadUpdateLayer },
 			{ &sstd::loadUpdateTextStyle },
+			{ &sstd::loadUpdateDimStyle },
 		};
 	}
 
