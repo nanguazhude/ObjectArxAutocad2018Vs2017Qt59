@@ -1,5 +1,7 @@
-﻿#include <map>
+﻿#include <dbAnnotativeObjectPE.h>
+#include <map>
 #include "UpdateTextStyle.hpp"
+ 
 
 namespace sstd {
 
@@ -15,6 +17,25 @@ namespace sstd {
 #define simple_code_args const std::wstring_view & argNM,AcDbTextStyleTable * argTST,AcDbTextStyleTableRecord * argR
 		using ApplyLayerType = void(*)(simple_code_args);
 		using ApplyMaps = std::map<std::wstring_view, std::pair<ApplyLayerType, bool> >;
+		
+		inline auto setAnnotative(
+			AcDbObject* argObject,
+			bool argIsAnnotative) {
+			AcDbAnnotativeObjectPE * varAnnoPE = ACRX_PE_PTR(
+				argObject,
+				AcDbAnnotativeObjectPE);
+			if ( varAnnoPE == nullptr ) {
+				return Acad::eNullPtr;
+			}
+
+			if (varAnnoPE->annotative(argObject) == argIsAnnotative) {
+				return Acad::eOk;
+			}
+
+			return varAnnoPE->setAnnotative(argObject,
+				argIsAnnotative);
+		}
+		
 		inline ApplyMaps _p_createFunctions() {
 			ApplyMaps varAns;
 			varAns.emplace(LR"(@Basic)"sv, ApplyMaps::value_type::second_type{
@@ -27,16 +48,19 @@ namespace sstd {
 					argTST->add(argR);
 				}
 
+				argR->setFlagBits(argR->flagBits()&0b11111001)/*清除标志位*/;
+				argR->setIsShapeFile(false);
 				argR->setFileName(LR"(ztxt.shx)")/*shx字体文件名*/;
 				argR->setBigFontFileName(LR"(whtmtxt.shx)")/*shx大字体文件名*/;
 				argR->setTextSize(5.7)/*文字高度*/;
-				argR->setXScale(1)/*宽度比*/;
+				argR->setXScale(1.0)/*宽度比*/;
+				setAnnotative(argR,true)/*注释性*/;
 
 			},false });
 			return std::move(varAns);
 		}
 		inline void _p_update_text_style(AcDbDatabase * argDB) {
-
+			
 			sstd::ArxClosePointer< AcDbTextStyleTable > varTextStyleTable;
 			if (Acad::eOk != argDB->getTextStyleTable(varTextStyleTable, AcDb::kForWrite)) {
 				acutPrintf(LR"(获得文字样式失败
