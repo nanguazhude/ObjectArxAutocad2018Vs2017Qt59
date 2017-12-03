@@ -57,6 +57,19 @@ namespace sstd {
 				setAnnotative(argR,true)/*注释性*/;
 
 			},false });
+#include "appendStyle/@Standard.hpp"
+#include "appendStyle/@YD标题栏文字.hpp"
+#include "appendStyle/@块.hpp"
+#include "appendStyle/@块机械文字.hpp"
+#include "appendStyle/Annotative.hpp"
+#include "appendStyle/Standard.hpp"
+#include "appendStyle/宋体.hpp"
+#include "appendStyle/技术要求.hpp"
+#include "appendStyle/机械.hpp"
+#include "appendStyle/标准.hpp"
+#include "appendStyle/标注汉字.hpp"
+#include "appendStyle/标题栏.hpp"
+#include "appendStyle/界限ABCDEF.hpp"
 			return std::move(varAns);
 		}
 		inline void _p_update_text_style(AcDbDatabase * argDB) {
