@@ -18,10 +18,10 @@
 	std::optional<AcDbObjectId> varLTypeID;
 	{
 		AcDbObjectId varLTypeIDTmp;
-		if (Acad::eOk == argLTT->getAt(LR"(DASHED)", varLTypeIDTmp)) {
+		if (Acad::eOk == argLTT->getAt(LR"(DASHEDX2)", varLTypeIDTmp)) {
 			varLTypeID = varLTypeIDTmp;
 		}else {
-			acutPrintf(LR"(找不到线型：DASHED
+			acutPrintf(LR"(找不到线型：DASHEDX2
 )");
 		}
 	}

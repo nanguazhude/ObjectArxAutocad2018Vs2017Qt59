@@ -168,7 +168,7 @@ namespace sstd {
 			argDB->loadLineTypeFile(LR"(Continuous)", LR"(acad.lin)");
 			argDB->loadLineTypeFile(LR"(CENTER2)", LR"(acad.lin)");
 			argDB->loadLineTypeFile(LR"(PHANTOM2)", LR"(acad.lin)");
-			argDB->loadLineTypeFile(LR"(DASHED)", LR"(acad.lin)");
+			argDB->loadLineTypeFile(LR"(DASHEDX2)", LR"(acad.lin)");
 
 			/*获得线型表*/
 			sstd::ArxClosePointer< AcDbLinetypeTable > varLinetypeTable;
