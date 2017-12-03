@@ -121,6 +121,7 @@ namespace sstd {
 			argC->setDimasz(3.3);/*箭头长度*/
 
 		}
+
 		inline void/*半径标注*/_radius_child(simple_code_args, StyleTableRecord *argC) {
 			std::wstring varName{ argNM.begin(),argNM.end() };
 			varName += LR"($4)"sv;
@@ -140,13 +141,19 @@ namespace sstd {
 
 		}
 
+		inline AcCmColor operator""_ac(unsigned long long arg) {
+			AcCmColor varAns;
+			varAns.setColorIndex( static_cast<std::uint16_t>(arg) );
+			return std::move(varAns);
+		}
+
 		inline ApplyMaps _p_createFunctions() {
 			ApplyMaps varAns;
-			varAns.emplace(LR"(MTest)", ApplyMaps::value_type::second_type{
+			varAns.emplace(LR"(默认公差)", ApplyMaps::value_type::second_type{
 				[](simple_code_args,
 				StyleTableRecord * arg0,StyleTableRecord * arg2,
 				StyleTableRecord * arg3,StyleTableRecord * arg4,
-				ThisState *) {
+				ThisState * argGl) {
 /******************************************************************/
 				sstd::ArxClosePointer<StyleTableRecord> varLocalR;
 				if (argR == nullptr) {
@@ -156,10 +163,53 @@ namespace sstd {
 					argTST->add(argR);
 				}
 
-				setAnnotative(argR,true)/*注释性*/;
-				argR->setDimasz(3)/*箭头长度*/;
-				argR->setDimexe(3)/*尺寸界线与标注*/;
-				argR->setDimtad(1)/*文字位于标注线的上方*/;
+				/*线*******************************/
+				{
+					argR->setDimclrd(102_ac)/*尺寸线颜色*/;
+					argR->setDimclre(102_ac)/*尺寸界限颜色*/;
+					argR->setDimdli(7.0)/*基线间距*/;
+					argR->setDimexe(2.0)/*尺寸界限超出尺寸线距离*/;
+				}
+				/*符号和箭头***********************/
+				{
+					constexpr const auto varRowInit = LR"(_MY_ROW)"sv;
+					const auto varRowType = argGl->getBlock(varRowInit);
+					argR->setDimblk1( varRowType ? varRowInit.data() : LR"()" )/*第一个箭头*/;
+					argR->setDimblk2( varRowType ? varRowInit.data() : LR"()")/*第二个箭头*/;
+					argR->setDimasz(4.6)/*箭头长度*/;
+				}
+				/*文字****************************/
+				{
+					const auto varTextType = argGl->getTextStyle(LR"(@Standard)");
+					if (varTextType) { argR->setDimtxsty(*varTextType); }
+					argR->setDimclrt( 111_ac );
+					argR->setDimtfill(2)/*0 = No Background Fill color
+                                          1 = Use background fill color from dimtfillclr()
+                                          2 = Use drawing's background color*/;
+					argR->setDimtad(1)/*0  标注文字在尺寸界线之间居中放置。
+                                        1  除非尺寸线不是水平放置的或者尺寸界线内的文字被强制为水平放置 (DIMTIH = 1)，否则就将标注文字放置在尺寸线的上方。标注文字最底部基线到尺寸线的距离值就是系统变量DIMGAP 的当前值。
+                                        2  将标注文字放在尺寸线远离定义点的一边。
+                                        3  将标注文字按照日本工业标准 (JIS) 放置。*/;
+					argR->setDimjust(0)/*0  将文字置于尺寸线之上，并在尺寸界线之间置中对正
+                                        1  紧邻第一条尺寸界线放置标注文字
+                                        2  紧邻第二条尺寸界线放置标注文字
+                                        3  将标注文字放在第一条尺寸界线以上，并与之对齐
+                                        4  将标注文字放在第二条尺寸界线以上，并与之对齐*/;
+				}
+				/*调整****************************/
+				{
+					setAnnotative(argR, true)/*注释性*/;
+				}
+				/*主单位**************************/
+				{
+					setAnnotative(argR, true)/*注释性*/;
+				}
+				/*换算单位*/
+				{
+				}
+				/*公差*/
+				{
+				}
 				
 /******************************************************************/
 
