@@ -280,7 +280,7 @@ namespace sstd {
 					const auto varTextType = argGl->getTextStyle(LR"(@Standard)");
 					if (varTextType) { argR->setDimtxsty(*varTextType); }
 					argR->setDimclrt( 111_ac );
-					argR->setDimgap(1.8)/*尺寸线和文字的间距*/;
+					argR->setDimgap(1.2)/*尺寸线和文字的间距*/;
 					argR->setDimtfill(0)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-4E38E29F-DE85-4791-A2E7-4DC22842B1B4-htm.html*/;
 					argR->setDimtad(1)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-60D1241D-CEA7-4493-BD6A-4EF433F3C946-htm.html*/;
 					argR->setDimjust(0)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-C67348A9-2260-4135-A7FF-FE0B45211CB0-htm.html*/;
