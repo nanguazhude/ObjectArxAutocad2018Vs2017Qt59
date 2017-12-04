@@ -15,7 +15,7 @@ class DatabaseReacotr :
 public:
 	inline void objectAppended(
 		const AcDbDatabase*,
-		const AcDbObject* dbObj) override {
+		const AcDbObject* dbObj) /*override*/ {
 		AcDbMText * varMtext = AcDbMText::cast(dbObj);
 		if (varMtext) {
 			double varBF = 0;
@@ -50,7 +50,7 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt) {
 		globalDatabaseReacotr = new DatabaseReacotr;
 		globalEditorReactor = new EditorReactor;
 		acedEditor->addReactor(globalEditorReactor);
-		/*****************************************/
+		/*****************************************/		
 		break;
 	}
 	case AcRx::kUnloadAppMsg: {break;}
