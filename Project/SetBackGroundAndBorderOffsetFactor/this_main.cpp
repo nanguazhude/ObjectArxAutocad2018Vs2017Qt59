@@ -16,7 +16,7 @@ public:
 	inline void objectAppended(
 		const AcDbDatabase*,
 		const AcDbObject* dbObj) override {
-		auto varMtext = dynamic_cast<const AcDbMText*>(dbObj);
+		auto varMtext = AcDbMText::cast(dbObj);
 		if (varMtext) {
 			double varBF = 0;
 			varMtext->getBackgroundScaleFactor(varBF);
@@ -24,7 +24,7 @@ public:
 				return;
 			}
 
-			auto var = const_cast<AcDbMText*>(varMtext);
+			auto & var = varMtext;
 			if (Acad::eOk == var->upgradeOpen()) {
 				var->setBackgroundFill(true);
 				var->setUseBackgroundColor(true);
@@ -36,7 +36,7 @@ public:
 };
 
 DatabaseReacotr * globalDatabaseReacotr = 0;
-EditorReactor * globalEditorReactor = 0;
+EditorReactor *   globalEditorReactor   = 0;
 
 void EditorReactor::databaseConstructed(AcDbDatabase* var) {
 	var->addReactor(globalDatabaseReacotr);
