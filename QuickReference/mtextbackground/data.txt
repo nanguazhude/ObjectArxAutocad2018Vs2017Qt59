@@ -1,0 +1,23 @@
+﻿https://forums.autodesk.com/t5/visual-lisp-autolisp-and-general/mtext-background-mask-offset-default/m-p/7373475#M358546
+
+There it is, in C3D 2014 as well.  Except that changing it in the registry had no effect.  In fact it seemed to change the default to 0.0 in AutoCAD, which of course is not allowed.  The factor must be >= 1 and preferably <= 5.
+
+ 
+
+I changed the value in...
+
+HKEY_CURRENT_USER\Software\Autodesk\AutoCAD\R19.1\ACAD-D000:409\MTEXT
+
+which apparently automatically updated
+
+HKEY_USERS\S-1-5-21-3174490996-1184374969-4093637027-1000\Software\Autodesk\AutoCAD\R19.1\ACAD-D000:409\MTEXT
+
+ 
+
+Maybe you need to restart AutoCAD for it to take effect.
+
+
+https://forums.autodesk.com/t5/autocad-forum/dimension-text-background/m-p/2691255/highlight/true#M306896
+
+The same problem is for me. I had used the 2009 AutoCAD, where the default offsect factor is 1.1 and it worked OK. now I use the 2011, the default offsect factor becames 1.25. I do not like the value. I think it is better to set this value to 1, or even change back to 1.1. I do not know how to do it.
+

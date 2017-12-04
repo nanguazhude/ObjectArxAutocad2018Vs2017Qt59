@@ -66,7 +66,8 @@ SOURCES += \
         $$PWD/TestCode/TestCode.cpp \
         $$PWD/UpdateLayer/UpdateLayer.cpp \
         $$PWD/UpdateDimStyle/UpdateDimStyle.cpp \
-        $$PWD/UpdateTextStyle/UpdateTextStyle.cpp
+        $$PWD/UpdateTextStyle/UpdateTextStyle.cpp \
+        $$PWD/UpdateReactor/UpdateReactor.cpp
 
 #.h .hpp source
 HEADERS += \
@@ -80,7 +81,8 @@ HEADERS += \
         $$PWD/TestCode/TestCode.hpp \
         $$PWD/UpdateLayer/UpdateLayer.hpp \
         $$PWD/UpdateDimStyle/UpdateDimStyle.hpp \
-        $$PWD/UpdateTextStyle/UpdateTextStyle.hpp
+        $$PWD/UpdateTextStyle/UpdateTextStyle.hpp \
+        $$PWD/UpdateReactor/UpdateReactor.hpp
 
 SOURCES += $$PWD/object_arx_global.cpp \
     $$PWD/ARXApplication.cpp \
