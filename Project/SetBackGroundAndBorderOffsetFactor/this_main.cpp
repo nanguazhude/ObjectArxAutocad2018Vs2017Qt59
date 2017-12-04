@@ -20,7 +20,7 @@ public:
         if (varMtext) {
             double varBF = 0;
             varMtext->getBackgroundScaleFactor(varBF);
-            if (std::abs(varBF - 1.005) < 0.000001) {
+            if (std::abs(varBF - 1.005) < 0.0001) {
                 return;
             }
 
@@ -49,14 +49,14 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt) {
         acrxDynamicLinker->unlockApplication(pkt);
         acrxRegisterAppMDIAware(pkt);
         /*****************************************/
-        globalDatabaseReacotr = new EditorReactor;
+        globalDatabaseReacotr = new DatabaseReacotr;
         globalEditorReactor = new EditorReactor;
         acedEditor->addReactor(globalEditorReactor);
         /*****************************************/
         break;
     }
     case AcRx::kUnloadAppMsg: {
-        sstd::ARXApplication::unload();
+         
         break;
     }
     default:break;

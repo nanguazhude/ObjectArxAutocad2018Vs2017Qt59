@@ -1,5 +1,5 @@
 
-TARGET = _SBGABOF
+TARGET = ZFinal_SBGABOF
 
 #the sdk include path
 INCLUDEPATH += "C:/ObjectARX 2018/inc"
