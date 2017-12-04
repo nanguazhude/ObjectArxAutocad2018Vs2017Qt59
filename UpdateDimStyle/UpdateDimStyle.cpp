@@ -15,8 +15,8 @@ namespace sstd {
 
 	namespace {
 
-		template<typename T,typename U>
-		inline void _copy(T * argC,const U * argR) {
+		template<typename T, typename U>
+		inline void _copy(T * argC, const U * argR) {
 			argC->setDimadec(argR->dimadec());
 			argC->setDimalt(argR->dimalt());
 			argC->setDimaltd(argR->dimaltd());
@@ -95,23 +95,23 @@ namespace sstd {
 			argC->setDimzin(argR->dimzin());
 			argC->setDimfxlen(argR->dimfxlen());
 		}
-		
+
 		class ThisState {
 		public:
-			std::map<std::wstring, AcDbObjectId ,std::less<>> $AllTextStyle;
-			std::map<std::wstring, AcDbObjectId,std::less<>> $AllBlockStyle;
-			
+			std::map<std::wstring, AcDbObjectId, std::less<>> $AllTextStyle;
+			std::map<std::wstring, AcDbObjectId, std::less<>> $AllBlockStyle;
+
 			using RT = std::optional<AcDbObjectId>;
 
 			inline RT getTextStyle(const std::wstring_view &arg) const {
-				auto varPos = $AllTextStyle.find( arg );
-				if (varPos!= $AllTextStyle.end()) {
-					return  varPos->second ;
+				auto varPos = $AllTextStyle.find(arg);
+				if (varPos != $AllTextStyle.end()) {
+					return  varPos->second;
 				}
 				return {};
 			}
 
-			inline RT getBlock(const std::wstring_view &arg) const{
+			inline RT getBlock(const std::wstring_view &arg) const {
 				auto varPos = $AllBlockStyle.find(arg);
 				if (varPos != $AllBlockStyle.end()) {
 					return  varPos->second;
@@ -125,12 +125,12 @@ namespace sstd {
 		using StyleTableRecord = AcDbDimStyleTableRecord;
 		using StyleTableIterator = AcDbDimStyleTableIterator;
 #define simple_code_args const std::wstring_view & argNM,StyleTable * argTST,StyleTableRecord * argR
-		using ApplyLayerType = void(*)(simple_code_args, 
+		using ApplyLayerType = void(*)(simple_code_args,
 			StyleTableRecord *, StyleTableRecord *,
 			StyleTableRecord *, StyleTableRecord *,
 			ThisState*);
 		using ApplyMaps = std::map<std::wstring_view, std::pair<ApplyLayerType, bool> >;
-				
+
 		inline auto setAnnotative(
 			AcDbObject* argObject,
 			bool argIsAnnotative) {
@@ -161,8 +161,8 @@ namespace sstd {
 				argTST->add(argC);
 			}
 
-			_copy(argC,argR);
-			
+			_copy(argC, argR);
+
 			/*与尺寸线对齐*/
 			argC->setDimtoh(false);
 			argC->setDimtih(false);
@@ -179,7 +179,7 @@ namespace sstd {
 				argC->setName(varName.data());
 				argTST->add(argC);
 			}
-						
+
 			_copy(argC, argR);
 
 			/*强制水平*/
@@ -197,8 +197,8 @@ namespace sstd {
 				varLocalR = argC;
 				argC->setName(varName.data());
 				argTST->add(argC);
-			}		
-			
+			}
+
 			_copy(argC, argR);
 
 			/*文在在尺寸界限内时对齐尺寸线,在尺寸线外时水平对齐*/
@@ -220,7 +220,7 @@ namespace sstd {
 			}
 
 			_copy(argC, argR);
-		
+
 			/*文在在尺寸界限内时对齐尺寸线,在尺寸线外时水平对齐*/
 			argC->setDimtih(false);
 			argC->setDimtoh(true);
@@ -229,7 +229,7 @@ namespace sstd {
 
 		inline AcCmColor operator""_ac(unsigned long long arg) {
 			AcCmColor varAns;
-			varAns.setColorIndex( static_cast<std::uint16_t>(arg) );
+			varAns.setColorIndex(static_cast<std::uint16_t>(arg));
 			return std::move(varAns);
 		}
 
@@ -262,7 +262,7 @@ namespace sstd {
 				{
 					constexpr const auto varRowInit = LR"(_MY_ROW)"sv;
 					const auto varRowType = argGl->getBlock(varRowInit);
-					if(varRowType){
+					if (varRowType) {
 						argR->setDimblk(*varRowType);
 						argR->setDimblk1(*varRowType)/*第一个箭头*/;
 						argR->setDimblk2(*varRowType)/*第二个箭头*/;
@@ -279,9 +279,9 @@ namespace sstd {
 				{
 					const auto varTextType = argGl->getTextStyle(LR"(@Standard)");
 					if (varTextType) { argR->setDimtxsty(*varTextType); }
-					argR->setDimclrt( 111_ac );
-					argR->setDimgap(1.2)/*尺寸线和文字的间距*/;
-					argR->setDimtfill(0)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-4E38E29F-DE85-4791-A2E7-4DC22842B1B4-htm.html*/;
+					argR->setDimclrt(111_ac);
+					argR->setDimgap(1.25)/*尺寸线和文字的间距*/;
+					argR->setDimtfill(1)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-4E38E29F-DE85-4791-A2E7-4DC22842B1B4-htm.html*/;
 					argR->setDimtad(1)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-60D1241D-CEA7-4493-BD6A-4EF433F3C946-htm.html*/;
 					argR->setDimjust(0)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-C67348A9-2260-4135-A7FF-FE0B45211CB0-htm.html*/;
 					/*文在在尺寸界限内时对齐尺寸线,在尺寸线外时水平对齐*/
@@ -297,7 +297,7 @@ namespace sstd {
 				/*主单位**************************/
 				{
 					argR->setDimlunit(2)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-2ECDF7CF-6EEA-4174-B50C-8630D5002C20-htm.html*/;
-					argR->setDimdec(3)/*0.000*/;
+					argR->setDimdec(2)/*小数0.00*/;
 					argR->setDimdsep(wchar_t('.'))/*小数分隔符*/;
 					argR->setDimaunit(0)/*十进制度数*/;
 					argR->setDimadec(2)/*0.00*/;
@@ -309,23 +309,43 @@ namespace sstd {
 				}
 				/*公差*/
 				{
-					argR->setDimtdec(2)/*公差小数0.00*/;
-					argR->setDimtfac(0.75)/*公差高度比*/;
+					argR->setDimtol(false)/*不显示公差*/;
+					argR->setDimtdec(2)/*小数0.00*/;
+					argR->setDimtfac(1)/*公差高度比*/;
+					argR->setDimtp(0.4)/*公差最大值*/;
+					argR->setDimtm(0.4)/*公差最小值*/;
+					argR->setDimtzin(8)/*公差消零*/;
+					argR->setDimalttz(8)/*公差消零*/;
+					argR->setDimtolj(1)/*公差显示位置*/;
 				}
-				 
-/******************************************************************/
 
-				_linear_child(argNM, argTST,argR,arg0);
-				_angular_child(argNM, argTST,argR,arg2);
-				_diameter_child(argNM, argTST,argR,arg3);
-				_radius_child(argNM, argTST,argR,arg4);
+				/******************************************************************/
+				{
+					_linear_child(argNM, argTST, argR, arg0);
+					_angular_child(argNM, argTST, argR, arg2);
+					_diameter_child(argNM, argTST, argR, arg3);
+					_radius_child(argNM, argTST, argR, arg4);
+				}
+							},false });
+/*对称公差******************************************/
+#include "appendDimStyle/对称公差.hpp"
+#include "appendDimStyle/对称公差_0P12.hpp"
+#include "appendDimStyle/对称公差_0P15.hpp"
+/*极限公差******************************************/
+#include "appendDimStyle/极限公差.hpp"
+#include "appendDimStyle/极限公差_0P1.hpp"
+#include "appendDimStyle/极限公差_0P2.hpp"
+#include "appendDimStyle/极限公差_0P3.hpp"
+#include "appendDimStyle/极限公差_0P8.hpp"
+/*一半公差******************************************/
 
-			},false });
+/*加框公差******************************************/
+#include "appendDimStyle/加框_默认公差.hpp"
 			return std::move(varAns);
 		}
 
 		inline std::unique_ptr<ThisState> _p_get_state(AcDbDatabase * argDB) {
-			std::unique_ptr<ThisState> varAns{new ThisState };
+			std::unique_ptr<ThisState> varAns{ new ThisState };
 
 			/*获得所有文字样式的ID*/
 			{
@@ -337,12 +357,12 @@ namespace sstd {
 					varT->newIterator(varTmp);
 					varI.reset(varTmp);
 				}
-				for (;!varI->done();varI->step()) {
-					const wchar_t * varTN=nullptr;
+				for (; !varI->done(); varI->step()) {
+					const wchar_t * varTN = nullptr;
 					sstd::ArxClosePointer< AcDbTextStyleTableRecord > varR;
 					varI->getRecord(varR);
 					varR->getName(varTN);
-					varAns->$AllTextStyle.emplace(varTN , varR->objectId() );
+					varAns->$AllTextStyle.emplace(varTN, varR->objectId());
 				}
 			}
 
