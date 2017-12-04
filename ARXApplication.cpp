@@ -13,6 +13,7 @@ namespace sstd {
 	extern void loadUpdateLayer();
 	extern void loadUpdateTextStyle();
 	extern void loadUpdateDimStyle();
+	extern void loadUpdateReactor();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -27,6 +28,7 @@ namespace sstd {
 			{ &sstd::loadUpdateLayer },
 			{ &sstd::loadUpdateTextStyle },
 			{ &sstd::loadUpdateDimStyle },
+			{ &sstd::loadUpdateReactor },
 		};
 	}
 

@@ -1,4 +1,4 @@
-#ifndef UPDATEREACTOR_HPP
+﻿#ifndef UPDATEREACTOR_HPP
 #define UPDATEREACTOR_HPP
 
 namespace sstd {
@@ -7,6 +7,10 @@ namespace sstd {
 	{
 	public:
 		UpdateReactor();
+
+		static void load();
+		static void main();
+		DEFINE_ARX_NAME(LR"(_updatereactor)")
 	};
 
 }/*namespace sstd*/
