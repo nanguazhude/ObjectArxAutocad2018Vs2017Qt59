@@ -67,7 +67,8 @@ SOURCES += \
         $$PWD/UpdateLayer/UpdateLayer.cpp \
         $$PWD/UpdateDimStyle/UpdateDimStyle.cpp \
         $$PWD/UpdateTextStyle/UpdateTextStyle.cpp \
-        $$PWD/UpdateReactor/UpdateReactor.cpp
+        $$PWD/UpdateReactor/UpdateReactor.cpp \
+        $$PWD/AddMaskToMleader/AddMaskToMleader.cpp
 
 #.h .hpp source
 HEADERS += \
@@ -82,7 +83,8 @@ HEADERS += \
         $$PWD/UpdateLayer/UpdateLayer.hpp \
         $$PWD/UpdateDimStyle/UpdateDimStyle.hpp \
         $$PWD/UpdateTextStyle/UpdateTextStyle.hpp \
-        $$PWD/UpdateReactor/UpdateReactor.hpp
+        $$PWD/UpdateReactor/UpdateReactor.hpp \
+        $$PWD/AddMaskToMleader/AddMaskToMleader.hpp
 
 SOURCES += $$PWD/object_arx_global.cpp \
     $$PWD/ARXApplication.cpp \
