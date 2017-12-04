@@ -16,7 +16,7 @@ public:
 	inline void objectAppended(
 		const AcDbDatabase*,
 		const AcDbObject* dbObj) override {
-		auto varMtext = AcDbMText::cast(dbObj);
+		AcDbMText * varMtext = AcDbMText::cast(dbObj);
 		if (varMtext) {
 			double varBF = 0;
 			varMtext->getBackgroundScaleFactor(varBF);
@@ -24,15 +24,13 @@ public:
 				return;
 			}
 
-			auto & var = varMtext;
-			if (Acad::eOk == var->upgradeOpen()) {
-				var->setBackgroundFill(true);
-				var->setUseBackgroundColor(true);
-				var->setBackgroundScaleFactor(1.005);
+			if (Acad::eOk == varMtext->upgradeOpen()) {
+				varMtext->setBackgroundFill(true);
+				varMtext->setUseBackgroundColor(true);
+				varMtext->setBackgroundScaleFactor(1.005);
 			}
 		}
 	}
-
 };
 
 DatabaseReacotr * globalDatabaseReacotr = 0;
@@ -55,12 +53,9 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt) {
 		/*****************************************/
 		break;
 	}
-	case AcRx::kUnloadAppMsg: {
-		break;
-	}
+	case AcRx::kUnloadAppMsg: {break;}
 	default:break;
 	}
-
 	return AcRx::kRetOK;
 }
 
