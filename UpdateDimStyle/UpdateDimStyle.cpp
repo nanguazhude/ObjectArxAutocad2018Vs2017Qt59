@@ -236,6 +236,11 @@ namespace sstd {
 
 		inline ApplyMaps _p_createFunctions() {
 			ApplyMaps varAns;
+/************************************/
+#include "appendDimStyle/ISO-25.hpp"
+#include "appendDimStyle/Standard.hpp"
+#include "appendDimStyle/Annotative.hpp"
+/************************************/
 			varAns.emplace(LR"(默认公差)", ApplyMaps::value_type::second_type{
 				[](simple_code_args,
 				StyleTableRecord * arg0,StyleTableRecord * arg2,
@@ -343,6 +348,8 @@ namespace sstd {
 #include "appendDimStyle/一半_默认公差.hpp"
 /*加框公差******************************************/
 #include "appendDimStyle/加框_默认公差.hpp"
+/***************************************************/
+
 			return std::move(varAns);
 		}
 
