@@ -224,6 +224,7 @@ namespace sstd {
 			/*文在在尺寸界限内时对齐尺寸线,在尺寸线外时水平对齐*/
 			argC->setDimtih(false);
 			argC->setDimtoh(true);
+			argR->setDimtofl(false)/*不绘制尺寸界限内的尺寸线*/;
 			setAnnotative(argC, true)/*注释性*/;
 		}
 
@@ -338,7 +339,7 @@ namespace sstd {
 #include "appendDimStyle/极限公差_0P3.hpp"
 #include "appendDimStyle/极限公差_0P8.hpp"
 /*一半公差******************************************/
-
+#include "appendDimStyle/一半_默认公差.hpp"
 /*加框公差******************************************/
 #include "appendDimStyle/加框_默认公差.hpp"
 			return std::move(varAns);
