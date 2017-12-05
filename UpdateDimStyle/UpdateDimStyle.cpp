@@ -258,6 +258,7 @@ namespace sstd {
 					argR->setDimdli(7.0)/*基线间距*/;
 					argR->setDimexe(2.0)/*尺寸界限超出尺寸线距离*/;
 					argR->setDimexo(0.0);
+					argR->setDimsd2(false);
 				}
 				/*符号和箭头***********************/
 				{
@@ -347,7 +348,7 @@ namespace sstd {
 
 		inline std::unique_ptr<ThisState> _p_get_state(AcDbDatabase * argDB) {
 			std::unique_ptr<ThisState> varAns{ new ThisState };
-
+			
 			/*获得所有文字样式的ID*/
 			{
 				sstd::ArxClosePointer< AcDbTextStyleTable > varT;
@@ -390,7 +391,7 @@ namespace sstd {
 		}
 
 		inline void _p_update_dim_style(AcDbDatabase * argDB) {
-
+			const static std::wregex varRJ(LR"(.*\$[0234])");
 			sstd::ArxClosePointer< StyleTable > varDimStyleTable;
 			if (Acad::eOk != argDB->getDimStyleTable(varDimStyleTable, AcDb::kForWrite)) {
 				acutPrintf(LR"(获得文字样式失败
@@ -437,7 +438,6 @@ namespace sstd {
 
 			{
 				const auto varNoPosx = varAllStyleTableRecord.end();
-				const static std::wregex varRJ(LR"(.*\$[0234])");
 				auto get_0 = [&varAllStyleTableRecord, &varNoPosx](const std::wstring &arg)
 					->StyleTableRecord* {
 					auto varPos = varAllStyleTableRecord.find(arg + LR"($0)");

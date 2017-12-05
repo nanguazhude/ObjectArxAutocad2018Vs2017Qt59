@@ -20,20 +20,22 @@
 		argR->setDimdli(7.0)/*基线间距*/;
 		argR->setDimexe(2.0)/*尺寸界限超出尺寸线距离*/;
 		argR->setDimexo(0.0);
+		argR->setDimsd2(true)/*隐藏第二条尺寸界限*/;
 	}
 	/*符号和箭头***********************/
 	{
 		constexpr const auto varRowInit = LR"(_MY_ROW)"sv;
 		const auto varRowType = argGl->getBlock(varRowInit);
+		argR->setDimsah(true);
 		if (varRowType) {
 			//argR->setDimblk(*varRowType);
 			argR->setDimblk1(*varRowType)/*第一个箭头*/;
-			argR->setDimblk2(*varRowType)/*第二个箭头*/;
+			argR->setDimblk2(LR"(_NONE)")/*第二个箭头*/;
 		}
 		else {
 			//argR->setDimblk(LR"()");
 			argR->setDimblk1(LR"()")/*第一个箭头*/;
-			argR->setDimblk2(LR"()")/*第二个箭头*/;
+			argR->setDimblk2(LR"(_NONE)")/*第二个箭头*/;
 		}
 		argR->setDimasz(4.6)/*箭头长度*/;
 		argR->setDimcen(0.0)/*圆心标记*/;
@@ -46,7 +48,7 @@
 		argR->setDimgap(1.25)/*尺寸线和文字的间距*/;
 		argR->setDimtfill(1)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-4E38E29F-DE85-4791-A2E7-4DC22842B1B4-htm.html*/;
 		argR->setDimtad(1)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-60D1241D-CEA7-4493-BD6A-4EF433F3C946-htm.html*/;
-		argR->setDimjust(0)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-C67348A9-2260-4135-A7FF-FE0B45211CB0-htm.html*/;
+		argR->setDimjust(2)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-C67348A9-2260-4135-A7FF-FE0B45211CB0-htm.html*/;
 		/*文在在尺寸界限内时对齐尺寸线,在尺寸线外时水平对齐*/
 		argR->setDimtih(false);
 		argR->setDimtoh(true);
