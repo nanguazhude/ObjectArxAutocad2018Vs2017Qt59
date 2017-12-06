@@ -132,6 +132,7 @@ namespace sstd {
 						argR, varID);
 				}
 				/****************************************************************/
+				argR->setTextHeight(6.75);
 				argR->setAnnotative(true)/*注释性*/;
 				argR->setArrowSize(4.6)/*箭头大小*/;
 				argR->setMaxLeaderSegmentsPoints(2);
@@ -154,6 +155,7 @@ namespace sstd {
 				}
 				argR->setTextColor(40_ac);
 				argR->setLeaderLineColor(11_ac);
+				
 				/****************************************************************/
 			} ,false });
 			/*///////////////////////////////////////////////////////////////////////////////*/
