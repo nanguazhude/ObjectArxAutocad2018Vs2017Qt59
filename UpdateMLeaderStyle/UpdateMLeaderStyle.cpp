@@ -22,12 +22,15 @@ namespace sstd {
 			std::optional< AcDbObjectId > $TextTypeID;
 			std::optional< AcDbObjectId > $ArrowID;
 			AcDbDatabase * const $DB;
-			sstd::ArxClosePointer<AcDbDictionary> $MleaderTable;
+			AcDbDictionary * $MleaderTable = nullptr;
 			using Function = void(*)(_UpdateMLeaderStyle*, const std::wstring &, AcDbMLeaderStyle *);
 			using Functions = std::map<std::wstring, std::pair<Function, bool>>;
 			Functions $Functions;
 			_UpdateMLeaderStyle(AcDbDatabase*arg) :$DB(arg) {}
 			inline void update();
+			~_UpdateMLeaderStyle() {
+				if ($MleaderTable) { $MleaderTable->close(); }
+			}
 		private:
 			inline void _arrowTypeID();
 			inline void _textTypeID();
@@ -60,7 +63,7 @@ namespace sstd {
 			_construct();
 
 			if (kOk != $DB->getMLeaderStyleDictionary(
-				$MleaderTable.pointer(), AcDb::kForWrite)) {
+				$MleaderTable , AcDb::kForWrite)) {
 				acutPrintf(LR"(getMLeaderStyleDictionary
 )");
 				return;
@@ -77,26 +80,17 @@ namespace sstd {
 
 			const auto varNoPos = $Functions.end();
 			for (; !varIt->done(); varIt->next()) {
-				sstd::ArxClosePointer<AcDbMLeaderStyle> varR;
 
+				sstd::ArxClosePointer<AcDbMLeaderStyle> varR;
+				
 				if (kOk != varIt->getObject(varR.pointer(), AcDb::kForWrite)) {
 					continue;
 				}
 
-				std::wstring varNameW;
-				{
-					wchar_t * varName = nullptr;
-					if (kOk != varR->getName(varName)) {
-						continue;
-					}
-					varNameW = varName;
-				}
-
+				std::wstring varNameW{ varIt->name() };
 				auto varPos = $Functions.find(varNameW);
-
 				if (varPos == varNoPos) { continue; }
 				varPos->second.second = true;
-
 				varPos->second.first(this, varNameW, varR);
 
 			}
@@ -128,9 +122,6 @@ namespace sstd {
 					argR = new AcDbMLeaderStyle;
 					varLocal = argR;
 					argR->setName(argName.c_str());
-					AcDbObjectId varID;
-					argTable->$MleaderTable->setAt(argName.c_str(),
-						argR, varID);
 				}
 				/****************************************************************/
 				argR->setTextHeight(6.75);
@@ -156,7 +147,12 @@ namespace sstd {
 				}
 				argR->setTextColor(40_ac);
 				argR->setLeaderLineColor(11_ac);
-				
+				AcDbObjectId varID;
+				//argR->postMLeaderStyleToDb(argTable->$DB, argName.c_str(),varID);
+				if ( varLocal ) {
+					argTable->$MleaderTable->setAt(argName.c_str(),
+						argR, varID);
+				}
 				/****************************************************************/
 			} ,false });
 			/*///////////////////////////////////////////////////////////////////////////////*/

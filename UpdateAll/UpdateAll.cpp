@@ -30,8 +30,6 @@ namespace sstd {
 				acDocManager->sendStringToExecute(
 					varCD,
 					LR"(vvvvvvattsyngriducsicon
-qsave
-close
 )"
 				);
 			}

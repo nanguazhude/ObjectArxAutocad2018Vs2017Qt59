@@ -8,8 +8,6 @@
 		argR = new AcDbMLeaderStyle;
 		varLocal = argR;
 		argR->setName(argName.c_str());
-		argTable->$MleaderTable->setAt(argName.c_str(),
-			argR, varID);
 	}
 	/****************************************************************/
 	argR->setTextHeight(6.75);
@@ -35,6 +33,12 @@
 	}
 	argR->setTextColor(40_ac);
 	argR->setLeaderLineColor(11_ac);
+	AcDbObjectId varID;
+	//argR->postMLeaderStyleToDb(argTable->$DB, argName.c_str(), varID);
+	if (varLocal) {
+		argTable->$MleaderTable->setAt(argName.c_str(),
+						argR, varID);
+	}
 	/****************************************************************/
 } ,false });
 
