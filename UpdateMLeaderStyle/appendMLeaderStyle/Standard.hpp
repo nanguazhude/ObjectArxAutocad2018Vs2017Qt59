@@ -27,10 +27,10 @@
 	//argR->setLandingGap(1.2);
 	argR->setEnableDogleg(false);
 	if (argTable->$ArrowID) {
-		argR->setArrowSymbolId(LR"()")/*箭头样式*/;
+		argR->setArrowSymbolId(*(argTable->$ArrowID))/*箭头样式*/;
 	}
 	else { 
-		argR->setArrowSymbolId(*(argTable->$ArrowID))/*箭头样式*/; 
+		argR->setArrowSymbolId(LR"()")/*箭头样式*/;
 	}
 	argR->setTextColor(40_ac);
 	argR->setLeaderLineColor(11_ac);
