@@ -16,6 +16,7 @@ namespace sstd {
 	extern void loadUpdateReactor();
 	extern void loadAddMaskToMleader();
 	extern void loadUpdateMLeaderStyle();
+	extern void loadUpdateAll();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -33,6 +34,7 @@ namespace sstd {
 			{ &sstd::loadUpdateReactor },
 			{ &sstd::loadAddMaskToMleader },
 			{ &sstd::loadUpdateMLeaderStyle },
+			{ &sstd::loadUpdateAll },
 		};
 	}
 
