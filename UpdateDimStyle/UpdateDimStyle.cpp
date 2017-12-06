@@ -390,7 +390,7 @@ namespace sstd {
 					sstd::ArxClosePointer< AcDbBlockTableRecord > varR;
 					varI->getRecord(varR);
 					varR->getName(varTN);
-					varAns->$AllTextStyle.emplace(varTN, varR->objectId());
+					varAns->$AllBlockStyle.emplace(varTN, varR->objectId());
 				}
 			}
 
