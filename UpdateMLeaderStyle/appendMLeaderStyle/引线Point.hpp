@@ -12,7 +12,7 @@
 	/****************************************************************/
 	argR->setTextHeight(6.75);
 	argR->setAnnotative(true)/*注释性*/;
-	argR->setArrowSize(4.6)/*箭头大小*/;
+	argR->setArrowSize(1.6)/*点大小*/;
 	argR->setMaxLeaderSegmentsPoints(2);
 	argR->setBreakSize(0)/**/;
 	//argR->setDescription(LR"(Hellow Kitty!)");
