@@ -10,9 +10,17 @@ namespace sstd {
 	}
 
 	namespace {
+
+		inline AcCmColor operator""_ac(unsigned long long arg) {
+			AcCmColor varAns;
+			varAns.setColorIndex(static_cast<std::uint16_t>(arg));
+			return std::move(varAns);
+		}
+
 		class _UpdateMLeaderStyle {
 		public:
 			std::optional< AcDbObjectId > $TextTypeID;
+			std::optional< AcDbObjectId > $ArrowID;
 			AcDbDatabase * const $DB;
 			sstd::ArxClosePointer<AcDbDictionary> $MleaderTable;
 			using Function = void(*)(_UpdateMLeaderStyle*, const std::wstring &, AcDbMLeaderStyle *);
@@ -21,9 +29,21 @@ namespace sstd {
 			_UpdateMLeaderStyle(AcDbDatabase*arg) :$DB(arg) {}
 			inline void update();
 		private:
+			inline void _arrowTypeID();
 			inline void _textTypeID();
 			inline void _construct();
 		};
+
+		inline void _UpdateMLeaderStyle::_arrowTypeID() {
+			AcDbBlockTable * varT;
+			if (kOk == $DB->getBlockTable(varT)) {
+				AcDbObjectId varID;
+				if (kOk == varT->getAt(LR"(_MY_ROW)", varID)) {
+					$ArrowID = varID;
+				}
+				varT->close();
+			}
+		}
 
 		inline void _UpdateMLeaderStyle::_textTypeID() {
 			AcDbTextStyleTable * varT;
@@ -91,8 +111,10 @@ namespace sstd {
 
 		inline void _UpdateMLeaderStyle::_construct() {
 			if (false == bool($TextTypeID))_textTypeID();
+			if (false == bool($ArrowID)) _arrowTypeID();
 			$Functions.clear();
-			$Functions.emplace(LR"(Test)"s,
+			/*///////////////////////////////////////////////////////////////////////////////*/
+			$Functions.emplace(LR"(引线标注)"s,
 				Functions::value_type::second_type{ [](_UpdateMLeaderStyle*argTable,
 				const std::wstring &argName,
 				AcDbMLeaderStyle *argR) {
@@ -120,9 +142,20 @@ namespace sstd {
 				argR->setExtendLeaderToText(true);
 				argR->setLandingGap(1.2);
 				argR->setEnableDogleg(false);
-				argR->setArrowSymbolId(LR"()");
+				if (argTable->$ArrowID) {
+					argR->setArrowSymbolId(LR"()")/*箭头样式*/;
+				}
+				else { 
+					argR->setArrowSymbolId(*(argTable->$ArrowID))/*箭头样式*/; 
+				}
+				argR->setTextColor(40_ac);
+				argR->setLeaderLineColor(11_ac);
 				/****************************************************************/
 			} ,false });
+			/*///////////////////////////////////////////////////////////////////////////////*/
+#include "appendMLeaderStyle/引线Point.hpp"
+#include "appendMLeaderStyle/无箭头引线.hpp"
+#include "appendMLeaderStyle/Standard.hpp"
 		}
 
 	}/*namespace*/
