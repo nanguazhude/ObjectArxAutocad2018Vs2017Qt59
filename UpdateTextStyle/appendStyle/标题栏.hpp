@@ -22,7 +22,7 @@
 		varSetTextHeight();
 	}
 	else {
-		if (bool(varLocalR)==false) {
+		if (varLocalR) {
 			varSetTextHeight();
 		}
 	}

@@ -239,6 +239,7 @@ namespace sstd {
 			return std::move(varAns);
 		}
 
+		template<typename long long Version>
 		inline ApplyMaps _p_createFunctions() {
 			ApplyMaps varAns;
 /************************************/
@@ -290,8 +291,20 @@ namespace sstd {
 				}
 				/*文字****************************/
 				{
-					const auto varTextType = argGl->getTextStyle(LR"(@Standard)");
-					if (varTextType) { argR->setDimtxsty(*varTextType); }
+					auto varSetTextTypeFunction = [argR, argGl]() {
+						const auto varTextType = argGl->getTextStyle(LR"(@Standard)");
+						if (varTextType) { argR->setDimtxsty(*varTextType); }
+					};
+
+					if constexpr(Version == 0) {
+						varSetTextTypeFunction();
+					}
+					else {
+						if ( varLocalR )  {
+							varSetTextTypeFunction();
+						}
+					}
+
 					argR->setDimclrt(111_ac)/*文字颜色*/;
 					argR->setDimgap(1.25)/*尺寸线和文字的间距*/;
 					argR->setDimtfill(1)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-4E38E29F-DE85-4791-A2E7-4DC22842B1B4-htm.html */;
@@ -403,6 +416,7 @@ namespace sstd {
 			return std::move(varAns);
 		}
 
+		template<long long Version>
 		inline void _p_update_dim_style(AcDbDatabase * argDB) {
 			const static std::wregex varRJ(LR"(.*\$[0-9])");
 			sstd::ArxClosePointer< StyleTable > varDimStyleTable;
@@ -412,7 +426,7 @@ namespace sstd {
 			}
 
 			std::unique_ptr<ThisState> varThisState = _p_get_state(argDB);
-			auto varFunctions = _p_createFunctions();
+			auto varFunctions = _p_createFunctions<Version>();
 			const auto varNoPos = varFunctions.end();
 
 			/*处理已经存在的文字样式*/
@@ -527,7 +541,11 @@ namespace sstd {
 	}/*namespace*/
 
 	void UpdateDimStyle::main() {
-		_p_update_dim_style(acdbHostApplicationServices()->workingDatabase());
+		_p_update_dim_style<0>(acdbHostApplicationServices()->workingDatabase());
+	}
+
+	void UpdateDimStyle::main_do_not_change_text_height(){
+		_p_update_dim_style<1>(acdbHostApplicationServices()->workingDatabase());
 	}
 
 	extern void loadUpdateDimStyle() { UpdateDimStyle::load(); }

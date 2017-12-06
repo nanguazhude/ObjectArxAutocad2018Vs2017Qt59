@@ -41,8 +41,20 @@
 	}
 	/*文字****************************/
 	{
-		const auto varTextType = argGl->getTextStyle(LR"(@Standard)");
-		if (varTextType) { argR->setDimtxsty(*varTextType); }
+		auto varSetTextTypeFunction = [argR, argGl]() {
+			const auto varTextType = argGl->getTextStyle(LR"(@Standard)");
+			if (varTextType) { argR->setDimtxsty(*varTextType); }
+		};
+
+		if constexpr(Version == 0) {
+			varSetTextTypeFunction();
+		}
+		else {
+			if ( varLocalR )  {
+				varSetTextTypeFunction();
+			}
+		}
+		
 		argR->setDimclrt(111_ac);
 		argR->setDimgap(-1.25)/*尺寸线和文字的间距*/;
 		argR->setDimtfill(1)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-4E38E29F-DE85-4791-A2E7-4DC22842B1B4-htm.html*/;
