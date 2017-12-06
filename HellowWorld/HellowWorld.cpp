@@ -23,7 +23,7 @@ namespace sstd {
 		auto varDataTime = QDateTime::currentDateTime().toString().toStdWString();
 		varDataTime = LR"(Hellow World!
 )" + varDataTime ;
-		acutPrintf(varDataTime.data());
+		acutPrintf(varDataTime.c_str());
 		
 	}
 

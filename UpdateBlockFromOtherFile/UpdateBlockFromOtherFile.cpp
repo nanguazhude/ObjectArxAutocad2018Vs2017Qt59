@@ -69,9 +69,9 @@ namespace sstd {
 				const auto & varBlockName = varPos->second;
 
 				std::unique_ptr<AcDbDatabase> varOtherFile{ new AcDbDatabase{ false } };
-				if (Acad::eOk != varOtherFile->readDwgFile(varOtherFileName.data())) {
+				if (Acad::eOk != varOtherFile->readDwgFile(varOtherFileName.c_str())) {
 					acutPrintf(LR"(打开文件")");
-					acutPrintf(varOtherFileName.data());
+					acutPrintf(varOtherFileName.c_str());
 					acutPrintf(LR"("失败
 )");
 					continue;

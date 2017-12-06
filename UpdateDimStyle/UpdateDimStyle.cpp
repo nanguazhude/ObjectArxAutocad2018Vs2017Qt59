@@ -157,7 +157,7 @@ namespace sstd {
 			if (argC == nullptr) {
 				argC = new StyleTableRecord;
 				varLocalR = argC;
-				argC->setName(varName.data());
+				argC->setName(varName.c_str());
 				argTST->add(argC);
 			}
 
@@ -177,7 +177,7 @@ namespace sstd {
 			if (argC == nullptr) {
 				argC = new StyleTableRecord;
 				varLocalR = argC;
-				argC->setName(varName.data());
+				argC->setName(varName.c_str());
 				argTST->add(argC);
 			}
 
@@ -197,7 +197,7 @@ namespace sstd {
 			if (argC == nullptr) {
 				argC = new StyleTableRecord;
 				varLocalR = argC;
-				argC->setName(varName.data());
+				argC->setName(varName.c_str());
 				argTST->add(argC);
 			}
 
@@ -218,7 +218,7 @@ namespace sstd {
 			if (argC == nullptr) {
 				argC = new StyleTableRecord;
 				varLocalR = argC;
-				argC->setName(varName.data());
+				argC->setName(varName.c_str());
 				argTST->add(argC);
 			}
 

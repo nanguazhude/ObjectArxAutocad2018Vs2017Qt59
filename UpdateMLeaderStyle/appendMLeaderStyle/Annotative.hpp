@@ -7,8 +7,8 @@
 		AcDbObjectId varID;
 		argR = new AcDbMLeaderStyle;
 		varLocal = argR;
-		argR->setName(argName.data());
-		argTable->$MleaderTable->setAt(argName.data(),
+		argR->setName(argName.c_str());
+		argTable->$MleaderTable->setAt(argName.c_str(),
 			argR, varID);
 	}
 	/****************************************************************/
@@ -17,7 +17,7 @@
 	argR->setArrowSize(4.6)/*箭头大小*/;
 	argR->setMaxLeaderSegmentsPoints(2);
 	argR->setBreakSize(0)/**/;
-	argR->setDescription(LR"(Hellow Kitty!)");
+	//argR->setDescription(LR"(Hellow Kitty!)");
 	argR->setContentType(AcDbMLeaderStyle::kMTextContent);
 	if (argTable->$TextTypeID) argR->setTextStyleId(*argTable->$TextTypeID);
 	argR->setTextAngleType(AcDbMLeaderStyle::kHorizontalAngle);

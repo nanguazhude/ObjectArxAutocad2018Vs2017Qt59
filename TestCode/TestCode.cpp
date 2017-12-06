@@ -71,7 +71,7 @@ namespace sstd {
 			const auto varLengthW = QString::number(std::chrono::duration_cast<std::chrono::duration<double>>(varLength).count())
 				.toStdWString();
 			acutPrintf(LR"(用时:)");
-			acutPrintf(varLengthW.data());
+			acutPrintf(varLengthW.c_str());
 
 		}
 				
