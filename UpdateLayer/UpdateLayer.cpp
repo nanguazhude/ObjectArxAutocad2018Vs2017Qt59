@@ -212,6 +212,12 @@ namespace sstd {
 						if (Acad::eOk == varLTR->getName(varName)) {
 							auto varCPos = varFunctions.find(varName);
 							if (varCPos == varFNoPos) { continue; }
+
+							acutPrintf(LR"(已有图层样式：)");
+							acutPrintf(varName);
+							acutPrintf(LR"(
+)");
+
 							varCPos->second.second = true;
 							varCPos->second.first(varCPos->first,
 								varLayerTable,

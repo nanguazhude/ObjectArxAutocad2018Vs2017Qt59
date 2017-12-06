@@ -63,15 +63,12 @@ namespace sstd {
 			_construct();
 
 			if (kOk != $DB->getMLeaderStyleDictionary(
-				$MleaderTable , AcDb::kForWrite)) {
+				$MleaderTable, AcDb::kForWrite)) {
 				acutPrintf(LR"(getMLeaderStyleDictionary
 )");
 				return;
 			}
-			else {
-				acutPrintf(LR"(getMLeaderStyleDictionary : ok
-)");
-			}
+			 
 
 			std::unique_ptr<AcDbDictionaryIterator>
 				varIt{ $MleaderTable->newIterator() };
@@ -82,7 +79,7 @@ namespace sstd {
 			for (; !varIt->done(); varIt->next()) {
 
 				sstd::ArxClosePointer<AcDbMLeaderStyle> varR;
-				
+
 				if (kOk != varIt->getObject(varR.pointer(), AcDb::kForWrite)) {
 					continue;
 				}
@@ -90,6 +87,12 @@ namespace sstd {
 				std::wstring varNameW{ varIt->name() };
 				auto varPos = $Functions.find(varNameW);
 				if (varPos == varNoPos) { continue; }
+
+				acutPrintf(LR"(已有引线样式：)");
+				acutPrintf(varNameW.c_str());
+				acutPrintf(LR"(
+)");
+
 				varPos->second.second = true;
 				varPos->second.first(this, varNameW, varR);
 
@@ -139,17 +142,17 @@ namespace sstd {
 				argR->setExtendLeaderToText(true);
 				argR->setLandingGap(1.2);
 				argR->setEnableDogleg(false);
-				if ( argTable->$ArrowID ) {
+				if (argTable->$ArrowID) {
 					argR->setArrowSymbolId(*(argTable->$ArrowID))/*箭头样式*/;
 				}
-				else { 
+				else {
 					argR->setArrowSymbolId(LR"()")/*箭头样式*/;
 				}
 				argR->setTextColor(40_ac);
 				argR->setLeaderLineColor(11_ac);
 				AcDbObjectId varID;
 				//argR->postMLeaderStyleToDb(argTable->$DB, argName.c_str(),varID);
-				if ( varLocal ) {
+				if (varLocal) {
 					argTable->$MleaderTable->setAt(argName.c_str(),
 						argR, varID);
 				}

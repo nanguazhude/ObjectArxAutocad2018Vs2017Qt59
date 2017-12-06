@@ -484,6 +484,12 @@ namespace sstd {
 					auto varPos = varFunctions.find(varDimStyleNameW);
 					if (varPos == varNoPos) { continue; }
 					varPos->second.second = true;
+
+					acutPrintf(LR"(已有标注样式：)");
+					acutPrintf(varDimStyleNameW.c_str());
+					acutPrintf(LR"(
+)");
+
 					varPos->second.first(varDimStyleNameW,
 						varDimStyleTable,
 						varII.second->r,

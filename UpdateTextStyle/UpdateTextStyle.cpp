@@ -107,9 +107,16 @@ namespace sstd {
 					if (Acad::eOk != varTextStyleTableRecord->getName(varTextStyleName)) {
 						continue;
 					}
+					
 					const std::wstring_view varTextStyleNameW(varTextStyleName);
 					auto varPos = varFunctions.find(varTextStyleNameW);
 					if (varPos == varNoPos) { continue; }
+
+					acutPrintf(LR"(已有文字样式：)");
+					acutPrintf(varTextStyleName);
+					acutPrintf(LR"(
+)");
+
 					varPos->second.second = true;
 					varPos->second.first(varTextStyleNameW,
 						varTextStyleTable,
