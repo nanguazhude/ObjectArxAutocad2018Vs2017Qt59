@@ -39,6 +39,7 @@
 		}
 		argR->setDimasz(4.6)/*箭头长度*/;
 		argR->setDimcen(0.0)/*圆心标记*/;
+		acdbSetDimBreakSize(argR, 0);
 	}
 	/*文字****************************/
 	{

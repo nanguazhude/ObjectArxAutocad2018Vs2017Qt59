@@ -167,6 +167,7 @@ namespace sstd {
 			argC->setDimtoh(false);
 			argC->setDimtih(false);
 			setAnnotative(argC, true)/*注释性*/;
+			acdbSetDimBreakSize(argC, 0);
 		}
 		inline void/*角度标注*/_angular_child(simple_code_args, StyleTableRecord *argC) {
 			std::wstring varName{ argNM.begin(),argNM.end() };
@@ -186,6 +187,7 @@ namespace sstd {
 			argC->setDimtih(true);
 			argC->setDimtoh(true);
 			setAnnotative(argC, true)/*注释性*/;
+			acdbSetDimBreakSize(argC, 0);
 		}
 		inline void/*直径标注*/_diameter_child(simple_code_args, StyleTableRecord *argC) {
 			std::wstring varName{ argNM.begin(),argNM.end() };
@@ -205,6 +207,7 @@ namespace sstd {
 			argC->setDimtih(false);
 			argC->setDimtoh(true);
 			setAnnotative(argC, true)/*注释性*/;
+			acdbSetDimBreakSize(argC, 0);
 		}
 
 		inline void/*半径标注*/_radius_child(simple_code_args, StyleTableRecord *argC) {
@@ -226,6 +229,7 @@ namespace sstd {
 			argC->setDimtoh(true);
 			//argR->setDimtofl(false)/*不绘制尺寸界限内的尺寸线*/;
 			setAnnotative(argC, true)/*注释性*/;
+			acdbSetDimBreakSize(argC, 0);
 		}
 
 		inline AcCmColor operator""_ac(unsigned long long arg) {
@@ -281,6 +285,7 @@ namespace sstd {
 					}
 					argR->setDimasz(4.6)/*箭头长度*/;
 					argR->setDimcen(0.0)/*圆心标记*/;
+					acdbSetDimBreakSize(argR,0);
 				}
 				/*文字****************************/
 				{
@@ -325,7 +330,7 @@ namespace sstd {
 					argR->setDimalttz(8)/*公差消零*/;
 					argR->setDimtolj(1)/*公差显示位置*/;
 				}
-
+				 
 				/******************************************************************/
 				{
 					_linear_child(argNM, argTST, argR, arg0);
