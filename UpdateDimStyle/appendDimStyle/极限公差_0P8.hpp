@@ -15,8 +15,8 @@
 
 	/*线*******************************/
 	{
-		argR->setDimclrd(102_ac)/*尺寸线颜色*/;
-		argR->setDimclre(102_ac)/*尺寸界限颜色*/;
+		argR->setDimclrd(151_ac)/*尺寸线颜色*/;
+		argR->setDimclre(151_ac)/*尺寸界限颜色*/;
 		argR->setDimdli(7.0)/*基线间距*/;
 		argR->setDimexe(2.0)/*尺寸界限超出尺寸线距离*/;
 		argR->setDimexo(0.0);
@@ -42,7 +42,7 @@
 	{
 		const auto varTextType = argGl->getTextStyle(LR"(@Standard)");
 		if (varTextType) { argR->setDimtxsty(*varTextType); }
-		argR->setDimclrt(111_ac);
+		argR->setDimclrt(51_ac);
 		argR->setDimgap(1.25)/*尺寸线和文字的间距*/;
 		argR->setDimtfill(1)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-4E38E29F-DE85-4791-A2E7-4DC22842B1B4-htm.html*/;
 		argR->setDimtad(1)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-60D1241D-CEA7-4493-BD6A-4EF433F3C946-htm.html*/;

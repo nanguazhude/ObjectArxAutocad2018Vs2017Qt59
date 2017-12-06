@@ -15,8 +15,8 @@
 
 	/*线*******************************/
 	{
-		argR->setDimclrd(102_ac)/*尺寸线颜色*/;
-		argR->setDimclre(102_ac)/*尺寸界限颜色*/;
+		argR->setDimclrd(4_ac)/*尺寸线颜色*/;
+		argR->setDimclre(4_ac)/*尺寸界限颜色*/;
 		argR->setDimdli(7.0)/*基线间距*/;
 		argR->setDimexe(2.0)/*尺寸界限超出尺寸线距离*/;
 		argR->setDimexo(0.0);
