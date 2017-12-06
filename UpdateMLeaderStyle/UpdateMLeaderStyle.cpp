@@ -132,7 +132,7 @@ namespace sstd {
 				argR->setArrowSize(4.6)/*箭头大小*/;
 				argR->setMaxLeaderSegmentsPoints(2);
 				argR->setBreakSize(0)/**/;
-				argR->setDescription(LR"(Hellow Kitty!)");
+				argR->setDescription(LR"(引线标注)");
 				argR->setContentType(AcDbMLeaderStyle::kMTextContent);
 				if (argTable->$TextTypeID) argR->setTextStyleId(*argTable->$TextTypeID);
 				argR->setTextAngleType(AcDbMLeaderStyle::kHorizontalAngle);
@@ -156,6 +156,7 @@ namespace sstd {
 #include "appendMLeaderStyle/引线Point.hpp"
 #include "appendMLeaderStyle/无箭头引线.hpp"
 #include "appendMLeaderStyle/Standard.hpp"
+#include "appendMLeaderStyle/Annotative.hpp"
 		}
 
 	}/*namespace*/

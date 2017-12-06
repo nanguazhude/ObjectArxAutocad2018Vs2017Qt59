@@ -1,4 +1,4 @@
-﻿$Functions.emplace(LR"(引线Point)"s,
+﻿$Functions.emplace(LR"(Annotative)"s,
 	Functions::value_type::second_type{ [](_UpdateMLeaderStyle*argTable,
 	const std::wstring &argName,
 	AcDbMLeaderStyle *argR) {
@@ -16,7 +16,7 @@
 	argR->setArrowSize(4.6)/*箭头大小*/;
 	argR->setMaxLeaderSegmentsPoints(2);
 	argR->setBreakSize(0)/**/;
-	argR->setDescription(LR"(引线Point)");
+	argR->setDescription(LR"(Annotative)");
 	argR->setContentType(AcDbMLeaderStyle::kMTextContent);
 	if (argTable->$TextTypeID) argR->setTextStyleId(*argTable->$TextTypeID);
 	argR->setTextAngleType(AcDbMLeaderStyle::kHorizontalAngle);
@@ -26,9 +26,14 @@
 	argR->setExtendLeaderToText(true);
 	argR->setLandingGap(1.2);
 	argR->setEnableDogleg(false);
-	argR->setArrowSymbolId(LR"(_DOT)")/*箭头样式*/;
+	if ( argTable->$ArrowID ) {
+		argR->setArrowSymbolId(*(argTable->$ArrowID))/*箭头样式*/;
+	}
+	else { 
+		argR->setArrowSymbolId(LR"()")/*箭头样式*/;
+	}
 	argR->setTextColor(40_ac);
-	argR->setLeaderLineColor(31_ac);
+	argR->setLeaderLineColor(11_ac);
 	/****************************************************************/
 } ,false });
 

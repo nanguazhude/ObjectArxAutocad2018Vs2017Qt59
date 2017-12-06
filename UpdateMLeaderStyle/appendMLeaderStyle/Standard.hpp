@@ -16,7 +16,7 @@
 	argR->setArrowSize(4.6)/*箭头大小*/;
 	argR->setMaxLeaderSegmentsPoints(2);
 	argR->setBreakSize(0)/**/;
-	argR->setDescription(LR"(Hellow Kitty!)");
+	argR->setDescription(LR"(Standard)");
 	argR->setContentType(AcDbMLeaderStyle::kNoneContent);
 	if (argTable->$TextTypeID) argR->setTextStyleId(*argTable->$TextTypeID);
 	//argR->setTextAngleType(AcDbMLeaderStyle::kHorizontalAngle);
