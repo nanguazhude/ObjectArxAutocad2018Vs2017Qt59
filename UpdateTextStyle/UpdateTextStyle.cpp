@@ -36,6 +36,7 @@ namespace sstd {
 				argIsAnnotative);
 		}
 		
+		template<unsigned long long Version>
 		inline ApplyMaps _p_createFunctions() {
 			ApplyMaps varAns;
 			varAns.emplace(LR"(@Basic)"sv, ApplyMaps::value_type::second_type{
@@ -52,10 +53,23 @@ namespace sstd {
 				argR->setIsShapeFile(false);
 				argR->setFileName(LR"(ztxt.shx)")/*shx字体文件名*/;
 				argR->setBigFontFileName(LR"(whtmtxt.shx)")/*shx大字体文件名*/;
-				argR->setTextSize(5.7)/*文字高度*/;
-				if (argR->priorSize()<5) {
-					argR->setPriorSize(5.7)/*默认大小*/;
-				} 
+
+				auto varSetTextHeight = [argR]() {
+					argR->setTextSize(5.7)/*文字高度*/;
+					if (argR->priorSize() < 5) {
+						argR->setPriorSize(5.7)/*默认大小*/;
+					}
+				};
+
+				if constexpr(Version == 0) {
+					varSetTextHeight();
+				}
+				else {
+					if (bool(varLocalR)==false) {
+						varSetTextHeight();
+					}
+				}
+				
 				argR->setXScale(1.0)/*宽度比*/;
 				setAnnotative(argR,true)/*注释性*/;
 
@@ -75,6 +89,8 @@ namespace sstd {
 #include "appendStyle/界限ABCDEF.hpp"
 			return std::move(varAns);
 		}
+
+		template<long long Version>
 		inline void _p_update_text_style(AcDbDatabase * argDB) {
 			
 			sstd::ArxClosePointer< AcDbTextStyleTable > varTextStyleTable;
@@ -83,7 +99,7 @@ namespace sstd {
 )"); return;
 			}
 
-			auto varFunctions = _p_createFunctions();
+			auto varFunctions = _p_createFunctions<Version>();
 			const auto varNoPos = varFunctions.end();
 
 			/*处理已经存在的文字样式*/
@@ -140,7 +156,11 @@ namespace sstd {
 	}/*namespace*/
 
 	void UpdateTextStyle::main() {
-		_p_update_text_style(acdbHostApplicationServices()->workingDatabase());
+		_p_update_text_style<0>(acdbHostApplicationServices()->workingDatabase());
+	}
+
+	void UpdateTextStyle::main_do_not_change_text_height(){
+		_p_update_text_style<1>(acdbHostApplicationServices()->workingDatabase());
 	}
 
 	extern void loadUpdateTextStyle() { UpdateTextStyle::load(); }

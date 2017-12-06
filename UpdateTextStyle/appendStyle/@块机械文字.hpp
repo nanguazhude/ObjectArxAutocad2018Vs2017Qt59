@@ -12,8 +12,19 @@
 	argR->setIsShapeFile(false)/**/;
 	argR->setFileName(LR"(txt.shx)")/*shx字体文件名*/;
 	argR->setBigFontFileName(LR"(bigfont.shx)")/*shx大字体文件名*/;
+	auto varSetTextHeight = [argR]() {
 	argR->setTextSize(6.75)/*文字高度*/;
 	if (argR->priorSize()<5)argR->setPriorSize(6.75)/*默认大小*/;
+};
+	if constexpr(Version == 0) {
+		varSetTextHeight();
+	}
+	else {
+		if (bool(varLocalR)==false) {
+			varSetTextHeight();
+		}
+	}
+
 	argR->setXScale(0.8)/*宽度比*/;
 	setAnnotative(argR,true)/*注释性*/;
 
