@@ -53,7 +53,7 @@ namespace sstd {
 	}/*namespace ___private_string_u_sstd*/
 
 	template<typename T>
-	inline const wchar_t * get_c_style_string(const T & arg) {
+	inline const wchar_t * get_cstr(const T & arg) {
 		if constexpr(std::is_pointer_v<std::remove_reference_t<T>>) {
 			return arg;
 		}
