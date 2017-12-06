@@ -22,9 +22,9 @@ namespace sstd {
 		inline void ThisFunction::UpdatePart() {
 			UpdateBlockFromOtherFile::main();
 			UpdateLayer::main();
-			UpdateTextStyle::main();
-			UpdateDimStyle::main();
-			UpdateMLeaderStyle::main();
+			UpdateTextStyle::main_do_not_change_text_height();
+			UpdateDimStyle::main_do_not_change_text_height();
+			UpdateMLeaderStyle::main_do_not_change_text_height();
 			auto varCD = acDocManager->curDocument();
 			if (varCD) {
 				acDocManager->sendStringToExecute(
