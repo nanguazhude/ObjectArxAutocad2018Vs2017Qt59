@@ -45,6 +45,12 @@ namespace sstd {
 		}
 		inline void ThisFunction::_p_updateBlockSearchDir() {
 			if ($BlockSearchDir.empty()) {
+				{
+					if (QFileInfo::exists(VQLS(R"(E:/Duty/Duty/template/blocks)"))) {
+						$BlockSearchDir = LR"(E:\Duty\Duty\template\blocks\)"s;
+						return;
+					}
+				}
 				QtApplication qapp;
 				QString varDir = QFileDialog::getExistingDirectory();
 				if (varDir.isEmpty()) { return; }
