@@ -403,7 +403,7 @@ namespace sstd {
 		}
 
 		inline void _p_update_dim_style(AcDbDatabase * argDB) {
-			const static std::wregex varRJ(LR"(.*\$[0234])");
+			const static std::wregex varRJ(LR"(.*\$[0-9])");
 			sstd::ArxClosePointer< StyleTable > varDimStyleTable;
 			if (Acad::eOk != argDB->getDimStyleTable(varDimStyleTable, AcDb::kForWrite)) {
 				acutPrintf(LR"(获得文字样式失败
