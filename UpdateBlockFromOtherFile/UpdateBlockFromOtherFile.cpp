@@ -8,62 +8,98 @@ namespace sstd {
 		arx_add_main_command<UpdateBlockFromOtherFile>();
 	}
 
-	void UpdateBlockFromOtherFile::main() {
-		Acad::ErrorStatus varAError;
-		constexpr const auto varOtherFileName = LR"(E:\Duty\Duty\template\blocks\横边框2(G3000).dwg)"sv;
-		constexpr const auto varBlockName = LR"(横边框2(G3000))"sv;
-		constexpr const auto varTargetFileName = LR"(E:\Duty\Duty\template\template.all.1.dwg)"sv;
-		
-		std::unique_ptr<AcDbDatabase> varTargetFile{ new AcDbDatabase{ false } };
-		if (Acad::eOk != varTargetFile->readDwgFile(varTargetFileName.data(),
-			AcDbDatabase::kForReadAndWriteNoShare)) {
-			acutPrintf(LR"(打开文件")");
-			acutPrintf(varTargetFileName.data());
-			acutPrintf(LR"("失败
-)");
-			return;
-		}
-		else {
-			acutPrintf(LR"(打开文件")");
-			acutPrintf(varTargetFileName.data());
-			acutPrintf(LR"("成功
-)");
-		}
+	namespace {
+		class ThisFunction final {
+		public:
+			AcDbDatabase *const $TargetDataBase;
+			static std::wstring $BlockSearchDir;
+			using BlockFiles = std::pair< const std::pair<
+				std::wstring/*filename*/,
+				std::wstring_view/*blockname*/ > *,
+				int >;
+			inline void update();
+			ThisFunction(AcDbDatabase * arg) :$TargetDataBase(arg) {}
+		private:
+			inline void _p_updateBlockSearchDir();
+			static inline BlockFiles _p_getBlockFiles();
+		};
 
-		std::unique_ptr<AcDbDatabase> varOtherFile{ new AcDbDatabase{false} };
-		if (Acad::eOk != varOtherFile->readDwgFile(varOtherFileName.data())) {
-			acutPrintf(LR"(打开文件")");
-			acutPrintf(varOtherFileName.data());
-			acutPrintf(LR"("失败
-)");
-			return;
-		}			
+		template<typename T> class ArraySize;
+		template<typename T, int N>
+		class ArraySize<T[N]> {
+		public:
+			constexpr static int value() { return N; }
+		};
 
-		{
-		 
-			AcDbObjectId varBlockID;
-			if ( (varAError=varTargetFile->insert(varBlockID,
-				varBlockName.data(),
-				varOtherFile.get(),
-				false))!=Acad::eOk) {
-				acutPrintf(LR"(插入块失败:)");
-				acutPrintf( acadErrorStatusText(varAError) );
-				acutPrintf(LR"(
-)");
-				return;
+		std::wstring ThisFunction::$BlockSearchDir;
+		inline ThisFunction::BlockFiles ThisFunction::_p_getBlockFiles() {
+			static const std::pair<
+				std::wstring/*filename*/,
+				std::wstring_view/*blockname*/ > varData[] = {
+					{ LR"(横边框2(G3000).dwg)"s,LR"(横边框2(G3000))"sv },
+					{ LR"(_毂形位公差.dwg)"s,LR"(@毂形位公差.111133)"sv },
+					{ LR"(_刹车面形位公差.dwg)"s,LR"(@刹车面形位公差.111133)"sv },
+			};
+			return { varData,ArraySize<decltype(varData)>::value() };
+		}
+		inline void ThisFunction::_p_updateBlockSearchDir() {
+			if ($BlockSearchDir.empty()) {
+				QtApplication qapp;
+				QString varDir = QFileDialog::getExistingDirectory();
+				if (varDir.isEmpty()) { return; }
+				if (varDir.endsWith(QChar('/')) || varDir.endsWith(QChar('\\'))) {
+					$BlockSearchDir = varDir.toStdWString();
+				}
+				else {
+					varDir += '/';
+					$BlockSearchDir = varDir.toStdWString();
+				}
 			}
 		}
 
-		if (Acad::eOk != varTargetFile->saveAs((std::wstring(varTargetFileName)+LR"(.dwg)").data())) {
-			acutPrintf(LR"(保存文件失败
+		inline void  ThisFunction::update() {
+			Acad::ErrorStatus varAError;
+			_p_updateBlockSearchDir();
+			auto varFiles = _p_getBlockFiles();
+			const auto varBegin = varFiles.first;
+			const auto varEnd = varBegin + varFiles.second;
+			for (auto varPos = varBegin; varPos != varEnd; ++varPos) {
+				const auto varOtherFileName = $BlockSearchDir + varPos->first;
+				const auto & varBlockName = varPos->second;
+
+				std::unique_ptr<AcDbDatabase> varOtherFile{ new AcDbDatabase{ false } };
+				if (Acad::eOk != varOtherFile->readDwgFile(varOtherFileName.data())) {
+					acutPrintf(LR"(打开文件")");
+					acutPrintf(varOtherFileName.data());
+					acutPrintf(LR"("失败
 )");
-			return;
-		}
-		else {
-			acutPrintf(LR"(保存文件成功
+					continue;
+				}
+
+				{
+
+					AcDbObjectId varBlockID;
+					if ((varAError = $TargetDataBase->insert(varBlockID,
+						varBlockName.data(),
+						varOtherFile.get(),
+						false)) != Acad::eOk) {
+						acutPrintf(LR"(插入块失败:)");
+						acutPrintf(acadErrorStatusText(varAError));
+						acutPrintf(LR"(
 )");
+						continue;
+					}
+				}
+
+			}
 		}
-		
+
+	}/*namespace*/
+
+	void UpdateBlockFromOtherFile::main() {
+		ThisFunction varThis(
+			acdbHostApplicationServices()->workingDatabase());
+		varThis.update();
 	}/*UpdateBlockFromOtherFile::main*/
 
 	UpdateBlockFromOtherFile::UpdateBlockFromOtherFile() {
