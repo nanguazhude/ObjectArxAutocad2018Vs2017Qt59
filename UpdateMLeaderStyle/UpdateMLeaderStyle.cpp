@@ -113,8 +113,8 @@ namespace sstd {
 			if (false == bool($TextTypeID))_textTypeID();
 			if (false == bool($ArrowID)) _arrowTypeID();
 			$Functions.clear();
-#include "appendMLeaderStyle/Standard.hpp"
 #include "appendMLeaderStyle/Annotative.hpp"
+#include "appendMLeaderStyle/Standard.hpp"
 #include "appendMLeaderStyle/引线Point.hpp"
 #include "appendMLeaderStyle/无箭头引线.hpp"
 			/*///////////////////////////////////////////////////////////////////////////////*/
@@ -123,6 +123,7 @@ namespace sstd {
 				const std::wstring &argName,
 				AcDbMLeaderStyle *argR) {
 				sstd::ArxClosePointer<AcDbMLeaderStyle> varLocal;
+				//AcDbMLeaderStyle * varLocal = nullptr;
 				if (argR == nullptr) {
 					argR = new AcDbMLeaderStyle;
 					varLocal = argR;
