@@ -17,6 +17,7 @@ namespace sstd {
 			return std::move(varAns);
 		}
 
+		template<long long Version>
 		class _UpdateMLeaderStyle {
 		public:
 			std::optional< AcDbObjectId > $TextTypeID;
@@ -37,7 +38,8 @@ namespace sstd {
 			inline void _construct();
 		};
 
-		inline void _UpdateMLeaderStyle::_arrowTypeID() {
+		template<long long Version>
+		inline void _UpdateMLeaderStyle<Version>::_arrowTypeID() {
 			AcDbBlockTable * varT;
 			if (kOk == $DB->getBlockTable(varT)) {
 				AcDbObjectId varID;
@@ -48,7 +50,8 @@ namespace sstd {
 			}
 		}
 
-		inline void _UpdateMLeaderStyle::_textTypeID() {
+		template<long long Version>
+		inline void _UpdateMLeaderStyle<Version>::_textTypeID() {
 			AcDbTextStyleTable * varT;
 			if (kOk == $DB->getTextStyleTable(varT)) {
 				AcDbObjectId varID;
@@ -59,7 +62,8 @@ namespace sstd {
 			}
 		}
 
-		inline void _UpdateMLeaderStyle::update() {
+		template<long long Version>
+		inline void _UpdateMLeaderStyle<Version>::update() {
 			_construct();
 
 			if (kOk != $DB->getMLeaderStyleDictionary(
@@ -106,7 +110,8 @@ namespace sstd {
 
 		}
 
-		inline void _UpdateMLeaderStyle::_construct() {
+		template<long long Version>
+		inline void _UpdateMLeaderStyle<Version>::_construct() {
 			if (false == bool($TextTypeID))_textTypeID();
 			if (false == bool($ArrowID)) _arrowTypeID();
 			$Functions.clear();
@@ -127,29 +132,43 @@ namespace sstd {
 					argR->setName(argName.c_str());
 				}
 				/****************************************************************/
-				argR->setTextHeight(6.75);
-				argR->setAnnotative(true)/*注释性*/;
-				argR->setArrowSize(4.6)/*箭头大小*/;
-				argR->setMaxLeaderSegmentsPoints(2);
-				argR->setBreakSize(0)/**/;
-				//argR->setDescription(LR"(Hellow Kitty!)");
-				argR->setContentType(AcDbMLeaderStyle::kMTextContent);
-				if (argTable->$TextTypeID) argR->setTextStyleId(*argTable->$TextTypeID);
-				argR->setTextAngleType(AcDbMLeaderStyle::kHorizontalAngle);
-				argR->setTextAttachmentDirection(AcDbMLeaderStyle::kAttachmentHorizontal);
-				argR->setTextAttachmentType(AcDbMLeaderStyle::kAttachmentBottomLine, AcDbMLeaderStyle::kLeftLeader);
-				argR->setTextAttachmentType(AcDbMLeaderStyle::kAttachmentBottomLine, AcDbMLeaderStyle::kRightLeader);
-				argR->setExtendLeaderToText(true);
-				argR->setLandingGap(1.2);
-				argR->setEnableDogleg(false);
-				if (argTable->$ArrowID) {
-					argR->setArrowSymbolId(*(argTable->$ArrowID))/*箭头样式*/;
-				}
-				else {
-					argR->setArrowSymbolId(LR"()")/*箭头样式*/;
-				}
+				
 				argR->setTextColor(40_ac);
 				argR->setLeaderLineColor(11_ac);
+				argR->setAnnotative(true)/*注释性*/;
+				argR->setBreakSize(0)/**/;
+				
+				auto varDoFunction = [argR, argTable]() {
+					argR->setTextHeight(6.75);
+					argR->setLandingGap(1.2);
+					argR->setArrowSize(4.6)/*箭头大小*/;
+					if (argTable->$TextTypeID) argR->setTextStyleId(*argTable->$TextTypeID);
+					argR->setMaxLeaderSegmentsPoints(2);
+					//argR->setDescription(LR"(Hellow Kitty!)");
+					argR->setContentType(AcDbMLeaderStyle::kMTextContent);
+					argR->setTextAngleType(AcDbMLeaderStyle::kHorizontalAngle);
+					argR->setTextAttachmentDirection(AcDbMLeaderStyle::kAttachmentHorizontal);
+					argR->setTextAttachmentType(AcDbMLeaderStyle::kAttachmentBottomLine, AcDbMLeaderStyle::kLeftLeader);
+					argR->setTextAttachmentType(AcDbMLeaderStyle::kAttachmentBottomLine, AcDbMLeaderStyle::kRightLeader);
+					argR->setExtendLeaderToText(true);
+					argR->setEnableDogleg(false);
+					if (argTable->$ArrowID) {
+						argR->setArrowSymbolId(*(argTable->$ArrowID))/*箭头样式*/;
+					}
+					else {
+						argR->setArrowSymbolId(LR"()")/*箭头样式*/;
+					}
+				};
+
+				if constexpr( Version == 0 ) {
+					varDoFunction();
+				}
+				else {
+					if (varLocal) {
+						varDoFunction();
+					}
+				}
+
 				AcDbObjectId varID;
 				//argR->postMLeaderStyleToDb(argTable->$DB, argName.c_str(),varID);
 				if (varLocal) {
@@ -173,7 +192,13 @@ namespace sstd {
 	}
 
 	void UpdateMLeaderStyle::main() {
-		_UpdateMLeaderStyle varThisFunction(
+		_UpdateMLeaderStyle<0> varThisFunction(
+			acdbHostApplicationServices()->workingDatabase());
+		varThisFunction.update();
+	}
+
+	void UpdateMLeaderStyle::main_do_not_change_text_height(){
+		_UpdateMLeaderStyle<1> varThisFunction(
 			acdbHostApplicationServices()->workingDatabase());
 		varThisFunction.update();
 	}

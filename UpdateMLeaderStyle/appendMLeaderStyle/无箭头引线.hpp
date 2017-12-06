@@ -10,11 +10,16 @@
 		argR->setName(argName.c_str());
 	}
 	/****************************************************************/
+	
+		argR->setTextColor(40_ac);
+		argR->setLeaderLineColor(11_ac);
+		argR->setBreakSize(0)/**/;
+		argR->setAnnotative(true)/*注释性*/;
+	
+auto varDoFunction = [argR,argTable]() {
 	argR->setTextHeight(6.75);
-	argR->setAnnotative(true)/*注释性*/;
 	argR->setArrowSize(4.6)/*箭头大小*/;
 	argR->setMaxLeaderSegmentsPoints(2);
-	argR->setBreakSize(0)/**/;
 	//argR->setDescription(LR"(Hellow Kitty!)");
 	argR->setContentType(AcDbMLeaderStyle::kMTextContent);
 	if (argTable->$TextTypeID) argR->setTextStyleId(*argTable->$TextTypeID);
@@ -26,8 +31,17 @@
 	argR->setLandingGap(1.2);
 	argR->setEnableDogleg(false);
 	argR->setArrowSymbolId(LR"(_NONE)")/*箭头样式*/;
-	argR->setTextColor(40_ac);
-	argR->setLeaderLineColor(11_ac);
+};
+	 
+	if constexpr( Version == 0 ) {
+		varDoFunction();
+	}
+	else {
+		if (varLocal) {
+			varDoFunction();
+		}
+	}
+
 	AcDbObjectId varID;
 	//argR->postMLeaderStyleToDb(argTable->$DB, argName.c_str(),varID);
 	if (varLocal) {
