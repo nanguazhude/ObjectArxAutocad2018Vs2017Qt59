@@ -64,6 +64,22 @@ namespace sstd {
 		}
 	}
 
+	class ArxString {
+		wchar_t * $Data;
+	public:
+		ArxString&operator=(ArxString&) = delete;
+		ArxString&operator=(ArxString&&) = delete;
+		ArxString(ArxString&) = delete;
+		ArxString(ArxString&&) = delete;
+	public:
+		inline ArxString(wchar_t * arg) :$Data(arg) {}
+		inline ~ArxString() { acutDelString($Data); }
+		operator wchar_t * & () { return $Data; }
+		operator wchar_t *() const { return $Data; }
+		wchar_t * & pointer() { return $Data; }
+		wchar_t * pointer() const { return $Data; }
+	};
+
 }/*namespace sstd*/
 
 #endif // STRINGUTILITY_HPP
