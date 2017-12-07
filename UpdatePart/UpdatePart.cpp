@@ -7,6 +7,7 @@
 #include "../UpdateTextStyle/UpdateTextStyle.hpp"
 #include "../UpdateDimStyle/UpdateDimStyle.hpp"
 #include "../UpdateMLeaderStyle/UpdateMLeaderStyle.hpp"
+#include "../UpdateTitleBlockTime/UpdateTitleBlockTime.hpp"
 /*****************************************************/
 
 sstd::UpdatePart::UpdatePart() {
@@ -25,6 +26,7 @@ namespace sstd {
 			UpdateTextStyle::main_do_not_change_text_height();
 			UpdateDimStyle::main_do_not_change_text_height();
 			UpdateMLeaderStyle::main_do_not_change_text_height();
+			UpdateTitleBlockTime::main();
 			auto varCD = acDocManager->curDocument();
 			if (varCD) {
 				acDocManager->sendStringToExecute(
