@@ -30,6 +30,7 @@ namespace sstd {
 	using namespace std::string_view_literals;/*sv*/
 
 	namespace ___private_string_u_sstd {
+
 		template<typename T, typename U = void>
 		class Has_C_Str_Function : public std::false_type {};
 
@@ -42,7 +43,8 @@ namespace sstd {
 
 		template<typename T>
 		inline const wchar_t * get_c_style_string(const T & arg) {
-			if constexpr(Has_C_Str_Function<T>::value) {
+			constexpr bool _c = Has_C_Str_Function<T>::value;
+			if constexpr(_c) {
 				return arg.c_str();
 			}
 			else {

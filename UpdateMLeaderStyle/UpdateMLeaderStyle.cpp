@@ -41,9 +41,9 @@ namespace sstd {
 		template<long long Version>
 		inline void _UpdateMLeaderStyle<Version>::_arrowTypeID() {
 			AcDbBlockTable * varT;
-			if (kOk == $DB->getBlockTable(varT)) {
+			if (eOk == $DB->getBlockTable(varT)) {
 				AcDbObjectId varID;
-				if (kOk == varT->getAt(LR"(_MY_ROW)", varID)) {
+				if (eOk == varT->getAt(LR"(_MY_ROW)", varID)) {
 					$ArrowID = varID;
 				}
 				varT->close();
@@ -53,9 +53,9 @@ namespace sstd {
 		template<long long Version>
 		inline void _UpdateMLeaderStyle<Version>::_textTypeID() {
 			AcDbTextStyleTable * varT;
-			if (kOk == $DB->getTextStyleTable(varT)) {
+			if (eOk == $DB->getTextStyleTable(varT)) {
 				AcDbObjectId varID;
-				if (kOk == varT->getAt(LR"(@Standard)", varID)) {
+				if (eOk == varT->getAt(LR"(@Standard)", varID)) {
 					$TextTypeID = varID;
 				}
 				varT->close();
@@ -66,7 +66,7 @@ namespace sstd {
 		inline void _UpdateMLeaderStyle<Version>::update() {
 			_construct();
 
-			if (kOk != $DB->getMLeaderStyleDictionary(
+			if (eOk != $DB->getMLeaderStyleDictionary(
 				$MleaderTable, AcDb::kForWrite)) {
 				acutPrintf(LR"(getMLeaderStyleDictionary
 )");
@@ -84,7 +84,7 @@ namespace sstd {
 
 				sstd::ArxClosePointer<AcDbMLeaderStyle> varR;
 
-				if (kOk != varIt->getObject(varR.pointer(), AcDb::kForWrite)) {
+				if (eOk != varIt->getObject(varR.pointer(), AcDb::kForWrite)) {
 					continue;
 				}
 
