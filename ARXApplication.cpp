@@ -39,6 +39,7 @@ namespace sstd {
 			{ &sstd::loadUpdateAll },
 			{ &sstd::loadUpdatePart },
 			{ &sstd::loadAddMaskToMText },
+
 		};
 	}
 

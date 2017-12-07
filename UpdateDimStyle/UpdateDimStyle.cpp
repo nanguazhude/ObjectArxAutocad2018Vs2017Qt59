@@ -242,7 +242,7 @@ namespace sstd {
 		template<typename long long Version>
 		inline ApplyMaps _p_createFunctions() {
 			ApplyMaps varAns;
-/************************************/
+			/************************************/
 #include "appendDimStyle/ISO-25.hpp"
 #include "appendDimStyle/Standard.hpp"
 #include "appendDimStyle/Annotative.hpp"
@@ -300,7 +300,7 @@ namespace sstd {
 						varSetTextTypeFunction();
 					}
 					else {
-						if ( varLocalR )  {
+						if (varLocalR) {
 							varSetTextTypeFunction();
 						}
 					}
@@ -344,7 +344,7 @@ namespace sstd {
 					argR->setDimalttz(8)/*公差消零*/;
 					argR->setDimtolj(1)/*公差显示位置*/;
 				}
-				 
+
 				/******************************************************************/
 				{
 					_linear_child(argNM, argTST, argR, arg0);
@@ -353,7 +353,7 @@ namespace sstd {
 					_radius_child(argNM, argTST, argR, arg4);
 				}
 							},false });
-/*对称公差******************************************/
+			/*对称公差******************************************/
 #include "appendDimStyle/对称公差.hpp"
 #include "appendDimStyle/对称公差_0P12.hpp"
 #include "appendDimStyle/对称公差_0P15.hpp"
@@ -374,7 +374,7 @@ namespace sstd {
 
 		inline std::unique_ptr<ThisState> _p_get_state(AcDbDatabase * argDB) {
 			std::unique_ptr<ThisState> varAns{ new ThisState };
-			
+
 			/*获得所有文字样式的ID*/
 			{
 				sstd::ArxClosePointer< AcDbTextStyleTable > varT;
@@ -497,7 +497,9 @@ namespace sstd {
 					}
 
 					auto varPos = varFunctions.find(varDimStyleNameW);
-					if (varPos == varNoPos) { continue; }
+					if (varPos == varNoPos) {
+						continue;
+					}
 					varPos->second.second = true;
 
 					acutPrintf(LR"(已有标注样式：)");
@@ -544,7 +546,7 @@ namespace sstd {
 		_p_update_dim_style<0>(acdbHostApplicationServices()->workingDatabase());
 	}
 
-	void UpdateDimStyle::main_do_not_change_text_height(){
+	void UpdateDimStyle::main_do_not_change_text_height() {
 		_p_update_dim_style<1>(acdbHostApplicationServices()->workingDatabase());
 	}
 
