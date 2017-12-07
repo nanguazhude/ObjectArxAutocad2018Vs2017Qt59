@@ -119,12 +119,12 @@ namespace sstd {
 					if (Acad::eOk != varIt->getRecord(varTextStyleTableRecord, AcDb::kForWrite)) {
 						continue;
 					}
-					const wchar_t * varTextStyleName = nullptr;
-					if (Acad::eOk != varTextStyleTableRecord->getName(varTextStyleName)) {
+					ArxString varTextStyleName ;
+					if (Acad::eOk != varTextStyleTableRecord->getName(varTextStyleName.pointer())) {
 						continue;
 					}
 					
-					const std::wstring_view varTextStyleNameW(varTextStyleName);
+					const std::wstring_view varTextStyleNameW(varTextStyleName.pointer());
 					auto varPos = varFunctions.find(varTextStyleNameW);
 					if (varPos == varNoPos) { continue; }
 

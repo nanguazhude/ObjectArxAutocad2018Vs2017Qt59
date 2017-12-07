@@ -386,11 +386,11 @@ namespace sstd {
 					varI.reset(varTmp);
 				}
 				for (; !varI->done(); varI->step()) {
-					const wchar_t * varTN = nullptr;
+					ArxString varTN ;
 					sstd::ArxClosePointer< AcDbTextStyleTableRecord > varR;
 					varI->getRecord(varR);
 					varR->getName(varTN);
-					varAns->$AllTextStyle.emplace(varTN, varR->objectId());
+					varAns->$AllTextStyle.emplace(varTN.pointer(), varR->objectId());
 				}
 			}
 
@@ -405,11 +405,11 @@ namespace sstd {
 					varI.reset(varTmp);
 				}
 				for (; !varI->done(); varI->step()) {
-					const wchar_t * varTN = nullptr;
+					ArxString varTN ;
 					sstd::ArxClosePointer< AcDbBlockTableRecord > varR;
 					varI->getRecord(varR);
 					varR->getName(varTN);
-					varAns->$AllBlockStyle.emplace(varTN, varR->objectId());
+					varAns->$AllBlockStyle.emplace(varTN.pointer(), varR->objectId());
 				}
 			}
 
@@ -452,11 +452,11 @@ namespace sstd {
 					if (Acad::eOk != varIt->getRecord(varDimStyleTableRecord->r, AcDb::kForWrite)) {
 						continue;
 					}
-					const wchar_t * varDimStyleName = nullptr;
+					ArxString  varDimStyleName ;
 					if (Acad::eOk != varDimStyleTableRecord->r->getName(varDimStyleName)) {
 						continue;
 					}
-					varAllStyleTableRecord.emplace(varDimStyleName,
+					varAllStyleTableRecord.emplace(varDimStyleName.pointer(),
 						std::move(varDimStyleTableRecord));
 
 				}

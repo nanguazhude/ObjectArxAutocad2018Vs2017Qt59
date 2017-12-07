@@ -208,9 +208,9 @@ namespace sstd {
 				for (varIt->start(); !varIt->done(); varIt->step()) {
 					sstd::ArxClosePointer< AcDbLayerTableRecord > varLTR;
 					if (Acad::eOk == varIt->getRecord(varLTR, AcDb::kForWrite)) {
-						wchar_t * varName = nullptr;
+						ArxString varName ;
 						if (Acad::eOk == varLTR->getName(varName)) {
-							auto varCPos = varFunctions.find(varName);
+							auto varCPos = varFunctions.find(varName.pointer());
 							if (varCPos == varFNoPos) { continue; }
 
 							acutPrintf(LR"(已有图层样式：)");

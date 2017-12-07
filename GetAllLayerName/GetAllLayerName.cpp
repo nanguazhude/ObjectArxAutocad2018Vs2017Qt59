@@ -36,14 +36,14 @@ namespace sstd {
 		for (varIt->start(); !varIt->done();varIt->step()) {
 			sstd::ArxClosePointer< AcDbLayerTableRecord > varLTR;
 			if (Acad::eOk == varIt->getRecord(varLTR,AcDb::kForRead)) {
-				wchar_t * varName = nullptr;
-				wchar_t * varName1 = nullptr;
+				ArxString varName ;
+				ArxString varName1 ;
 				AcDbLinetypeTableRecord * varLinetypeTRCD=nullptr;
 				acdbOpenObject(varLinetypeTRCD,varLTR->linetypeObjectId(),
 					AcDb::kForRead);
 				varLinetypeTRCD->getName(varName1);
 				if (Acad::eOk == varLTR->getName(varName)) {
-					varAns->emplace_back(std::wstring(varName) +LR"(    )" + varName1);
+					varAns->emplace_back(std::wstring(varName) +LR"(    )" + varName1.pointer());
 				}
 				varLTR->linetypeObjectId();
 			}
@@ -71,7 +71,7 @@ namespace sstd {
 		const auto varAllLayerName = getAllLayerName();
 		if (varAllLayerName) {
 			for (const auto & varI : (*varAllLayerName)) {
-				acutPrintf( varI.c_str() );
+				acutPrintf( get_cstr( varI ) );
 				acutPrintf(LR"(
 )");
 			}
