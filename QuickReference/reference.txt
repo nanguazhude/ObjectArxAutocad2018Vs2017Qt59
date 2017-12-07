@@ -4,3 +4,6 @@ https://forums.autodesk.com/t5/objectarx/how-to-create-annotative-objects/m-p/25
 
 (entget (car (entsel)))
 ACAD_DSTYLE_DIMBREAK
+
+https://forums.autodesk.com/t5/net/without-open-dwg-get-getsystemvariable-quot-tdcreate-quot/m-p/4956018/highlight/true#M40143
+
