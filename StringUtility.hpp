@@ -78,6 +78,7 @@ namespace sstd {
 		operator wchar_t *() const { return $Data; }
 		wchar_t * & pointer() { return $Data; }
 		wchar_t * pointer() const { return $Data; }
+		operator bool() const { return $Data; }
 	};
 
 }/*namespace sstd*/
