@@ -72,8 +72,9 @@ namespace sstd {
 		ArxString(ArxString&) = delete;
 		ArxString(ArxString&&) = delete;
 	public:
-		inline ArxString(wchar_t * arg) :$Data(arg) {}
-		inline ~ArxString() { acutDelString($Data); }
+		inline ArxString() :$Data(nullptr) {}
+		inline ArxString(wchar_t * arg) : $Data(arg) {}
+		inline ~ArxString() { if ($Data) { acutDelString($Data); } }
 		operator wchar_t * & () { return $Data; }
 		operator wchar_t *() const { return $Data; }
 		wchar_t * & pointer() { return $Data; }
