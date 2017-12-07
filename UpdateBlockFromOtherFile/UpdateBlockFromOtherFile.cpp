@@ -36,10 +36,11 @@ namespace sstd {
 			static const std::pair<
 				std::wstring/*filename*/,
 				std::wstring_view/*blockname*/ > varData[] = {
+					{ LR"(横边框2(G3000).dwg)"s,LR"(横边框2(G3000))"sv }/*this must be the first*/,
 					{ LR"(_毂形位公差.dwg)"s,LR"(@毂形位公差.111133)"sv },
 					{ LR"(_刹车面形位公差.dwg)"s,LR"(@刹车面形位公差.111133)"sv },
 					{ LR"(@标题栏_粗加工.dwg)"s,LR"(@标题栏_粗加工)"sv },
-					{ LR"(横边框2(G3000).dwg)"s,LR"(横边框2(G3000))"sv }/*this must be the endl*/,
+					
 			};
 			return { varData,ArraySize<decltype(varData)>::value() };
 		}
