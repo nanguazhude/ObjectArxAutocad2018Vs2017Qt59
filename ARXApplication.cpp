@@ -19,6 +19,7 @@ namespace sstd {
 	extern void loadUpdateAll();
 	extern void loadUpdatePart();
 	extern void loadAddMaskToMText();
+	extern void loadUpdateTitleBlockTime();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -39,7 +40,7 @@ namespace sstd {
 			{ &sstd::loadUpdateAll },
 			{ &sstd::loadUpdatePart },
 			{ &sstd::loadAddMaskToMText },
-
+			{ &sstd::loadUpdateTitleBlockTime },
 		};
 	}
 

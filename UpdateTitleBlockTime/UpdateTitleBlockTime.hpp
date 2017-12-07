@@ -7,6 +7,10 @@ namespace sstd {
 	{
 	public:
 		UpdateTitleBlockTime();
+
+		static void load();
+		static void main();
+		DEFINE_ARX_NAME(LR"(_updatetitleblocktime)")
 	};
 
 }/*namespace sstd*/
