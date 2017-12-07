@@ -67,8 +67,8 @@ namespace sstd {
 				if (eOk != acdbOpenObject(varAT.pointer(), varAIt->objectId(), AcDb::kForWrite)) {
 					continue;
 				}
-				auto varTag = varAT->tag();
-				if (LR"(日期)"sv==varTag) {
+				const sstd::ArxString varTag = varAT->tag();
+				if (LR"(日期)"sv==varTag.pointer()) {
 					varAT->setTextString( get_cstr($DataTime)  );
 				}
 			}
