@@ -18,6 +18,7 @@ namespace sstd {
 	extern void loadUpdateMLeaderStyle();
 	extern void loadUpdateAll();
 	extern void loadUpdatePart();
+	extern void loadAddMaskToMText();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -37,6 +38,7 @@ namespace sstd {
 			{ &sstd::loadUpdateMLeaderStyle },
 			{ &sstd::loadUpdateAll },
 			{ &sstd::loadUpdatePart },
+			{ &sstd::loadAddMaskToMText },
 		};
 	}
 

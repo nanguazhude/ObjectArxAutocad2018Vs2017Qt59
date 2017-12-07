@@ -71,7 +71,8 @@ SOURCES += \
         $$PWD/AddMaskToMleader/AddMaskToMleader.cpp \
         $$PWD/UpdateMLeaderStyle/UpdateMLeaderStyle.cpp \
         $$PWD/UpdateAll/UpdateAll.cpp \
-        $$PWD/UpdatePart/UpdatePart.cpp
+        $$PWD/UpdatePart/UpdatePart.cpp \
+        $$PWD/AddMaskToMText/AddMaskToMText.cpp
 
 #.h .hpp source
 HEADERS += \
@@ -90,7 +91,8 @@ HEADERS += \
         $$PWD/AddMaskToMleader/AddMaskToMleader.hpp \
         $$PWD/UpdateMLeaderStyle/UpdateMLeaderStyle.hpp \
         $$PWD/UpdateAll/UpdateAll.hpp \
-        $$PWD/UpdatePart/UpdatePart.hpp
+        $$PWD/UpdatePart/UpdatePart.hpp \
+        $$PWD/AddMaskToMText/AddMaskToMText.hpp
 
 SOURCES += $$PWD/object_arx_global.cpp \
     $$PWD/ARXApplication.cpp \
