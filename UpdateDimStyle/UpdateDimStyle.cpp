@@ -183,7 +183,7 @@ namespace sstd {
 
 			_copy(argC, argR);
 
-			argR->setDimtad(3);
+			argC->setDimtad(3);
 			/*强制水平*/
 			argC->setDimtih(true);
 			argC->setDimtoh(true);
