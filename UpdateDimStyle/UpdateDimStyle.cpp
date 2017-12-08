@@ -167,7 +167,6 @@ namespace sstd {
 			argC->setDimtoh(false);
 			argC->setDimtih(false);
 			setAnnotative(argC, true)/*注释性*/;
-			argR->setDimatfit(1);
 			acdbSetDimBreakSize(argC, 0);
 		}
 		inline void/*角度标注*/_angular_child(simple_code_args, StyleTableRecord *argC) {
