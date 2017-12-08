@@ -56,6 +56,17 @@ namespace sstd {
 			&T::main
 		);
 	}
+
+	template<typename T>
+	inline void arx_add_main_command_usepickset() {
+		acedRegCmds->addCommand(arx_group_name(),
+			T::globalName(),
+			T::localName(),
+			ACRX_CMD_MODAL| ACRX_CMD_USEPICKSET,
+			&T::main
+		);
+	}
+
 }/*namespace sstd*/
 
 #ifdef QT_CORE_LIB

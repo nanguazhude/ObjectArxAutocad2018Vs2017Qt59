@@ -73,7 +73,8 @@ SOURCES += \
         $$PWD/UpdateAll/UpdateAll.cpp \
         $$PWD/UpdatePart/UpdatePart.cpp \
         $$PWD/AddMaskToMText/AddMaskToMText.cpp \
-        $$PWD/UpdateTitleBlockTime/UpdateTitleBlockTime.cpp
+        $$PWD/UpdateTitleBlockTime/UpdateTitleBlockTime.cpp \
+    HideDimEdge/HideDimEdge.cpp
 
 
 #.h .hpp source
@@ -95,7 +96,8 @@ HEADERS += \
         $$PWD/UpdateAll/UpdateAll.hpp \
         $$PWD/UpdatePart/UpdatePart.hpp \
         $$PWD/AddMaskToMText/AddMaskToMText.hpp \
-        $$PWD/UpdateTitleBlockTime/UpdateTitleBlockTime.hpp
+        $$PWD/UpdateTitleBlockTime/UpdateTitleBlockTime.hpp \
+    HideDimEdge/HideDimEdge.hpp
 
 
 SOURCES += $$PWD/object_arx_global.cpp \
