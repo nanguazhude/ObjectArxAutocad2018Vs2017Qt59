@@ -8,6 +8,7 @@
 #include "../UpdateDimStyle/UpdateDimStyle.hpp"
 #include "../UpdateMLeaderStyle/UpdateMLeaderStyle.hpp"
 #include "../UpdateTitleBlockTime/UpdateTitleBlockTime.hpp"
+#include "../CopyFilePathToClipboard/CopyFilePathToClipboard.hpp"
 /*****************************************************/
 
 sstd::UpdateAll::UpdateAll() {
@@ -27,6 +28,7 @@ namespace sstd {
 			UpdateDimStyle::main();
 			UpdateMLeaderStyle::main();
 			UpdateTitleBlockTime::main();
+			CopyFilePathToClipboard::main();
 			auto varCD = acDocManager->curDocument();
 			if (varCD) {
 				acDocManager->sendStringToExecute(

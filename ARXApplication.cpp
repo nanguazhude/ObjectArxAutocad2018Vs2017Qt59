@@ -21,6 +21,7 @@ namespace sstd {
 	extern void loadAddMaskToMText();
 	extern void loadUpdateTitleBlockTime();
 	extern void loadHideDimEdge();
+	extern void loadCopyFilePathToClipboard();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -42,7 +43,8 @@ namespace sstd {
 			{ &sstd::loadUpdatePart },
 			{ &sstd::loadAddMaskToMText },
 			{ &sstd::loadUpdateTitleBlockTime },
-			{ &sstd::loadHideDimEdge  },
+			{ &sstd::loadHideDimEdge },
+			{ &sstd::loadCopyFilePathToClipboard },
 		};
 	}
 
