@@ -11,6 +11,7 @@ namespace sstd {
 
 		static void load();
 		static void main();
+		static void main_do_not_change_text_height();
 		DEFINE_ARX_NAME(LR"(_updatelayer)")
 	};
 

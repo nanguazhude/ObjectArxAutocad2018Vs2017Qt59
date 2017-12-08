@@ -22,7 +22,7 @@ namespace sstd {
 		};
 		inline void ThisFunction::UpdatePart() {
 			UpdateBlockFromOtherFile::main();
-			UpdateLayer::main();
+			UpdateLayer::main_do_not_change_text_height();
 			UpdateTextStyle::main_do_not_change_text_height();
 			UpdateDimStyle::main_do_not_change_text_height();
 			UpdateMLeaderStyle::main_do_not_change_text_height();

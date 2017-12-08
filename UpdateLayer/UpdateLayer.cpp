@@ -161,6 +161,7 @@ namespace sstd {
 			return std::move(varAns);
 		}
 
+		template<unsigned long long Version>
 		inline void _p_update_layer(AcDbDatabase * argDB) {
 			if (nullptr == argDB) { return; }
 
@@ -213,7 +214,7 @@ namespace sstd {
 							auto varCPos = varFunctions.find(varName.pointer());
 							if (varCPos == varFNoPos) { continue; }
 
-							if constexpr(1 == 0 ) {
+							if constexpr(Version == 0 ) {
 								acutPrintf(LR"(已有图层样式：)");
 								acutPrintf(varName);
 								acutPrintf(LR"(
@@ -246,7 +247,11 @@ namespace sstd {
 	}/*namespace*/
 
 	void UpdateLayer::main() {
-		_p_update_layer(acdbHostApplicationServices()->workingDatabase());
+		_p_update_layer<0>(acdbHostApplicationServices()->workingDatabase());
+	}
+
+	void UpdateLayer::main_do_not_change_text_height(){
+		_p_update_layer<1>(acdbHostApplicationServices()->workingDatabase());
 	}
 
 }/*namespace sstd*/

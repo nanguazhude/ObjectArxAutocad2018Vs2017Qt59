@@ -189,8 +189,19 @@ namespace sstd {
 		UpdateMLeaderStyle::load();
 	}
 
+	namespace {
+		class UpdateMLeaderStyle_1 {
+		public:
+			static void main() {
+				UpdateMLeaderStyle::main_do_not_change_text_height();
+			}
+			DEFINE_ARX_NAME(LR"(_partupdatemleaderstyle)")
+		};
+	}/*namespace*/
+
 	void UpdateMLeaderStyle::load() {
 		arx_add_main_command<UpdateMLeaderStyle>();
+		arx_add_main_command<UpdateMLeaderStyle_1>();
 	}
 
 	void UpdateMLeaderStyle::main() {

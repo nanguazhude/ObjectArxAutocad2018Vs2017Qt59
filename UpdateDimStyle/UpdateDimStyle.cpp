@@ -9,8 +9,19 @@ namespace sstd {
 
 	}
 
+	namespace {
+		class UpdateDimStyle_1 {
+		public:
+			static void main() {
+				UpdateDimStyle::main_do_not_change_text_height();
+			}
+			DEFINE_ARX_NAME(LR"(_partUpdateDimStyle)")
+		};
+	}/*namespace*/
+
 	void UpdateDimStyle::load() {
 		arx_add_main_command<UpdateDimStyle>();
+		arx_add_main_command<UpdateDimStyle_1>();
 	}
 
 	namespace {
