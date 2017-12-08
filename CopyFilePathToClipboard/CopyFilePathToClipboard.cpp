@@ -14,14 +14,18 @@ namespace sstd {
 	}
 
 	void CopyFilePathToClipboard::main() {
-		auto varDB = acdbHostApplicationServices()
-			->workingDatabase();
+
 		QString varFileNameQ;
 		{
-			const wchar_t * varFileName;
-			varDB->getFilename(varFileName);
-			varFileNameQ.fromWCharArray(varFileName);
+			const wchar_t * varFileName
+				= acDocManager
+				->mdiActiveDocument()
+				->fileName();
+			if (varFileName == nullptr) { return; }
+			varFileNameQ = QString::fromWCharArray(varFileName);
 		}
+
+		QtApplication varQtApp;
 		QClipboard *varClipborad = QApplication::clipboard();
 		const auto varFilePath = QFileInfo(varFileNameQ).absolutePath();
 		varClipborad->setText(varFilePath);
