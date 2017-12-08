@@ -62,7 +62,7 @@ namespace sstd {
 		acedRegCmds->addCommand(arx_group_name(),
 			T::globalName(),
 			T::localName(),
-			ACRX_CMD_MODAL| ACRX_CMD_USEPICKSET,
+			ACRX_CMD_MODAL | ACRX_CMD_USEPICKSET,
 			&T::main
 		);
 	}
@@ -80,10 +80,10 @@ namespace sstd {
 #ifdef QT_WIDGETS_LIB
 #include <QtWidgets>
 namespace sstd {
-class QtApplication :QApplication {
-public:
-    QtApplication();
-};
+	class QtApplication :QApplication {
+	public:
+		QtApplication();
+	};
 }/*namespace sstd*/
 #endif
 

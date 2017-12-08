@@ -68,7 +68,7 @@ namespace sstd {
 			acedSSGet(nullptr,
 				nullptr,
 				nullptr,
-				nullptr, 
+				nullptr,
 				varSSName);
 			std::int32_t varSSLength = 0;
 			acedSSLength(varSSName, &varSSLength);
