@@ -167,6 +167,7 @@ namespace sstd {
 			argC->setDimtoh(false);
 			argC->setDimtih(false);
 			setAnnotative(argC, true)/*注释性*/;
+			argR->setDimatfit(1);
 			acdbSetDimBreakSize(argC, 0);
 		}
 		inline void/*角度标注*/_angular_child(simple_code_args, StyleTableRecord *argC) {
@@ -317,12 +318,12 @@ namespace sstd {
 				/*调整****************************/
 				{
 					setAnnotative(argR, true)/*注释性*/;
-					argR->setDimatfit(1)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-2F8FA7E7-C79F-40EA-A416-C4B02D09F310-htm.html*/;
+					argR->setDimatfit(3)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-2F8FA7E7-C79F-40EA-A416-C4B02D09F310-htm.html */;
 					argR->setDimtofl(true)/*强制绘制尺寸线*/;
 				}
 				/*主单位**************************/
 				{
-					argR->setDimlunit(2)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-2ECDF7CF-6EEA-4174-B50C-8630D5002C20-htm.html*/;
+					argR->setDimlunit(2)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-2ECDF7CF-6EEA-4174-B50C-8630D5002C20-htm.html */;
 					argR->setDimdec(2)/*小数0.00*/;
 					argR->setDimdsep(wchar_t('.'))/*小数分隔符*/;
 					argR->setDimaunit(0)/*十进制度数*/;
