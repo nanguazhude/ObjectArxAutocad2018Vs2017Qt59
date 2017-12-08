@@ -103,6 +103,12 @@ namespace sstd {
 		template<long long Version>
 		inline void _p_update_text_style(AcDbDatabase * argDB) {
 			
+			sstd::ArxClosePointer< AcDbTextStyleTableRecord > varCopyOfStyleStandard{
+				new AcDbTextStyleTableRecord
+			};
+			bool varCopyStandard = false;
+			bool varHasStandard_1 = false;
+
 			sstd::ArxClosePointer< AcDbTextStyleTable > varTextStyleTable;
 			if (Acad::eOk != argDB->getTextStyleTable(varTextStyleTable, AcDb::kForWrite)) {
 				acutPrintf(LR"(获得文字样式失败
@@ -135,6 +141,18 @@ namespace sstd {
 					}
 					
 					const std::wstring_view varTextStyleNameW(varTextStyleName.pointer());
+
+					{
+						if ( varTextStyleNameW == LR"(Standard)"sv ) {
+							varCopyOfStyleStandard->copyFrom(
+								varTextStyleTableRecord.pointer());
+							varCopyStandard = true;
+						}
+						else if(varTextStyleNameW == LR"(Standard_1)"sv){
+							varHasStandard_1 = true;
+						}
+					}
+
 					auto varPos = varFunctions.find(varTextStyleNameW);
 					if (varPos == varNoPos) { continue; }
 
@@ -162,6 +180,12 @@ namespace sstd {
 						varTextStyleTable,
 						nullptr);
 				}
+			}
+
+			if (varCopyStandard&&(false == varHasStandard_1)) {
+				AcDbObjectId varTmpID;
+				varCopyOfStyleStandard->setName(LR"(Standard_1)");
+				varTextStyleTable->add(varTmpID,varCopyOfStyleStandard.pointer());
 			}
 
 		}
