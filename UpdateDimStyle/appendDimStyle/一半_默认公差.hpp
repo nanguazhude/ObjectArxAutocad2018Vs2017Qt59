@@ -69,7 +69,7 @@
 	/*调整****************************/
 	{
 		setAnnotative(argR, true)/*注释性*/;
-		argR->setDimatfit(1)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-2F8FA7E7-C79F-40EA-A416-C4B02D09F310-htm.html*/;
+		argR->setDimatfit(3)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-2F8FA7E7-C79F-40EA-A416-C4B02D09F310-htm.html*/;
 		argR->setDimtofl(true)/*强制绘制尺寸线*/;
 	}
 	/*主单位**************************/
