@@ -128,10 +128,12 @@ namespace sstd {
 					auto varPos = varFunctions.find(varTextStyleNameW);
 					if (varPos == varNoPos) { continue; }
 
-					acutPrintf(LR"(已有文字样式：)");
-					acutPrintf(varTextStyleName);
-					acutPrintf(LR"(
+					if constexpr(Version == 0) {
+						acutPrintf(LR"(已有文字样式：)");
+						acutPrintf(varTextStyleName);
+						acutPrintf(LR"(
 )");
+					}
 
 					varPos->second.second = true;
 					varPos->second.first(varTextStyleNameW,

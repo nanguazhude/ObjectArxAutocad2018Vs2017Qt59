@@ -502,10 +502,12 @@ namespace sstd {
 					}
 					varPos->second.second = true;
 
-					acutPrintf(LR"(已有标注样式：)");
-					acutPrintf(varDimStyleNameW.c_str());
-					acutPrintf(LR"(
+					if constexpr(Version == 0) {
+						acutPrintf(LR"(已有标注样式：)");
+						acutPrintf(varDimStyleNameW.c_str());
+						acutPrintf(LR"(
 )");
+					}
 
 					varPos->second.first(varDimStyleNameW,
 						varDimStyleTable,

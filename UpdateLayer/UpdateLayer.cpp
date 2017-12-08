@@ -213,10 +213,12 @@ namespace sstd {
 							auto varCPos = varFunctions.find(varName.pointer());
 							if (varCPos == varFNoPos) { continue; }
 
-							acutPrintf(LR"(已有图层样式：)");
-							acutPrintf(varName);
-							acutPrintf(LR"(
+							if constexpr(1 == 0 ) {
+								acutPrintf(LR"(已有图层样式：)");
+								acutPrintf(varName);
+								acutPrintf(LR"(
 )");
+							}
 
 							varCPos->second.second = true;
 							varCPos->second.first(varCPos->first,

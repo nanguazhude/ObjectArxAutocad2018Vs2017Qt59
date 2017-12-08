@@ -92,10 +92,12 @@ namespace sstd {
 				auto varPos = $Functions.find(varNameW);
 				if (varPos == varNoPos) { continue; }
 
-				acutPrintf(LR"(已有引线样式：)");
-				acutPrintf(varNameW.c_str());
-				acutPrintf(LR"(
+				if constexpr(Version == 0) {
+					acutPrintf(LR"(已有引线样式：)");
+					acutPrintf(varNameW.c_str());
+					acutPrintf(LR"(
 )");
+				}
 
 				varPos->second.second = true;
 				varPos->second.first(this, varNameW, varR);
