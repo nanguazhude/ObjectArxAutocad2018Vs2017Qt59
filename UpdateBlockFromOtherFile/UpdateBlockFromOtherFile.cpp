@@ -41,7 +41,7 @@ namespace sstd {
 					{ LR"(_毂形位公差.dwg)"s,LR"(@毂形位公差.111133)"sv },
 					{ LR"(_刹车面形位公差.dwg)"s,LR"(@刹车面形位公差.111133)"sv },
 					{ LR"(@标题栏_粗加工.dwg)"s,LR"(@标题栏_粗加工)"sv },
-					
+					{ LR"(@标题栏文字(1).dwg)"s,LR"(@标题栏文字(1))"sv },
 			};
 			return { varData,ArraySize<decltype(varData)>::value() };
 		}
