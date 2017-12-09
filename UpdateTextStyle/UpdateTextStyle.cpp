@@ -97,6 +97,7 @@ namespace sstd {
 #include "appendStyle/标注汉字.hpp"
 #include "appendStyle/标题栏.hpp"
 #include "appendStyle/界限ABCDEF.hpp"
+#include "appendStyle/@仿宋_11_1.hpp"
 			return std::move(varAns);
 		}
 
