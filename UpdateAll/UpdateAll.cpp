@@ -22,12 +22,12 @@ namespace sstd {
 			inline void updateAll();
 		};
 		inline void ThisFunction::updateAll() {
-			UpdateBlockFromOtherFile::main();
-			UpdateLayer::main();
 			UpdateTextStyle::main();
+			UpdateBlockFromOtherFile::main();
 			UpdateDimStyle::main();
 			UpdateMLeaderStyle::main();
 			UpdateTitleBlockTime::main();
+			UpdateLayer::main();
 			CopyFilePathToClipboard::main();
 			auto varCD = acDocManager->curDocument();
 			if (varCD) {
