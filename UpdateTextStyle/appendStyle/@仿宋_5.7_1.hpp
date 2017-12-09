@@ -9,7 +9,7 @@ if (argR == nullptr) {
 }
 
 argR->setFlagBits(argR->flagBits()&0b11111001)/*清除标志位*/;
-argR->setIsShapeFile(false);
+//argR->setIsShapeFile(false);
 argR->setFileName(LR"(simfang.ttf)")/*shx字体文件名*/;
 //argR->setBigFontFileName(LR"(whtmtxt.shx)")/*shx大字体文件名*/;
 
