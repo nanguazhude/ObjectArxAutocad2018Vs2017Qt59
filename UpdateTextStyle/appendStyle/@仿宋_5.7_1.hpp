@@ -1,4 +1,4 @@
-﻿varAns.emplace(LR"(@仿宋_11_1)"sv, ApplyMaps::value_type::second_type{
+﻿varAns.emplace(LR"(@仿宋_5.7_1)"sv, ApplyMaps::value_type::second_type{
 [](simple_code_args) {
 sstd::ArxClosePointer<AcDbTextStyleTableRecord> varLocalR;
 if (argR == nullptr) {
@@ -14,9 +14,9 @@ argR->setFileName(LR"(simgfang.ttf)")/*shx字体文件名*/;
 //argR->setBigFontFileName(LR"(whtmtxt.shx)")/*shx大字体文件名*/;
 
 auto varSetTextHeight = [argR]() {
-	argR->setTextSize(11)/*文字高度*/;
+	argR->setTextSize(5.7)/*文字高度*/;
 	if (argR->priorSize() < 5) {
-		argR->setPriorSize(11)/*默认大小*/;
+		argR->setPriorSize(5.7)/*默认大小*/;
 	}
 };
 
