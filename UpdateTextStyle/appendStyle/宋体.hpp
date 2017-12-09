@@ -10,8 +10,13 @@
 
 	argR->setFlagBits(argR->flagBits()&0b11111001)/*清除标志位*/;
 	argR->setIsShapeFile(false)/**/;
-	argR->setFileName(LR"(txt.shx)")/*shx字体文件名*/;
-	argR->setBigFontFileName(LR"(whtmtxt.shx)")/*shx大字体文件名*/;
+	argR->setFont(LR"(宋体)",
+		false,
+		false,
+		kChineseSimpCharset,
+		Autodesk::AutoCAD::PAL::FontUtils::FontPitch::kFixed,
+		Autodesk::AutoCAD::PAL::FontUtils::FontFamily::kModern
+	);
 
 	auto varSetTextHeight = [argR]() {
 		argR->setTextSize(0.0)/*文字高度*/;
