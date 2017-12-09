@@ -75,7 +75,8 @@ SOURCES += \
         $$PWD/AddMaskToMText/AddMaskToMText.cpp \
         $$PWD/UpdateTitleBlockTime/UpdateTitleBlockTime.cpp \
         $$PWD/HideDimEdge/HideDimEdge.cpp \
-        $$PWD/CopyFilePathToClipboard/CopyFilePathToClipboard.cpp
+        $$PWD/CopyFilePathToClipboard/CopyFilePathToClipboard.cpp \
+        $$PWD/PrintFontsInformation/PrintFontsInformation.cpp
 
 #.h .hpp source
 HEADERS += \
@@ -98,7 +99,8 @@ HEADERS += \
         $$PWD/AddMaskToMText/AddMaskToMText.hpp \
         $$PWD/UpdateTitleBlockTime/UpdateTitleBlockTime.hpp \
         $$PWD/HideDimEdge/HideDimEdge.hpp \
-        $$PWD/CopyFilePathToClipboard/CopyFilePathToClipboard.hpp
+        $$PWD/CopyFilePathToClipboard/CopyFilePathToClipboard.hpp \
+        $$PWD/PrintFontsInformation/PrintFontsInformation.hpp
 
 SOURCES += $$PWD/object_arx_global.cpp \
     $$PWD/ARXApplication.cpp \

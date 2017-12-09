@@ -22,6 +22,7 @@ namespace sstd {
 	extern void loadUpdateTitleBlockTime();
 	extern void loadHideDimEdge();
 	extern void loadCopyFilePathToClipboard();
+	extern void loadPrintFontsInformation();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -45,6 +46,7 @@ namespace sstd {
 			{ &sstd::loadUpdateTitleBlockTime },
 			{ &sstd::loadHideDimEdge },
 			{ &sstd::loadCopyFilePathToClipboard },
+			{ &sstd::loadPrintFontsInformation },
 		};
 	}
 
