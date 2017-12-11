@@ -23,6 +23,7 @@ namespace sstd {
 	extern void loadHideDimEdge();
 	extern void loadCopyFilePathToClipboard();
 	extern void loadPrintFontsInformation();
+	extern void loadDrawMultiCircles();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -47,6 +48,7 @@ namespace sstd {
 			{ &sstd::loadHideDimEdge },
 			{ &sstd::loadCopyFilePathToClipboard },
 			{ &sstd::loadPrintFontsInformation },
+			{ &sstd::loadDrawMultiCircles },
 		};
 	}
 
