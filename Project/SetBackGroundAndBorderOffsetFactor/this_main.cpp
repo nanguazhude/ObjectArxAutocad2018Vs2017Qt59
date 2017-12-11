@@ -4,6 +4,10 @@
 #include <arxHeaders.h>
 #pragma warning( pop)
 
+static bool globalAddFlage = false;
+inline void setAutoAddMaskToMText() { globalAddFlage = true; }
+inline void clearAutoAddMaskToMText() { globalAddFlage = false; }
+
 class EditorReactor :
 	public AcEditorReactor {
 public:
@@ -16,6 +20,9 @@ public:
 	inline void objectAppended(
 		const AcDbDatabase*,
 		const AcDbObject* dbObj) /*override*/ {
+		if (false == globalAddFlage) { 
+			return; 
+		}
 		AcDbMText * varMtext = AcDbMText::cast(dbObj);
 		if (varMtext) {
 			double varBF = 0;
@@ -50,7 +57,19 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt) {
 		globalDatabaseReacotr = new DatabaseReacotr;
 		globalEditorReactor = new EditorReactor;
 		acedEditor->addReactor(globalEditorReactor);
-		/*****************************************/		
+		/*****************************************/	
+		acedRegCmds->addCommand(
+			L"SSTD_GLOBAL_CMD_GROUP", 
+			L"_setAutoAddMaskToMText", 
+			L"setAutoAddMaskToMText", 
+			ACRX_CMD_MODAL , 
+			&setAutoAddMaskToMText);
+		acedRegCmds->addCommand(
+			L"SSTD_GLOBAL_CMD_GROUP",
+			L"_clearAutoAddMaskToMText",
+			L"clearAutoAddMaskToMText",
+			ACRX_CMD_MODAL,
+			&clearAutoAddMaskToMText);
 		break;
 	}
 	case AcRx::kUnloadAppMsg: {break;}
