@@ -32,7 +32,7 @@ namespace sstd {
 					acutPrintf(LR"(1
 )");
 					varMtext->getBackgroundScaleFactor(varBF);
-					if (std::abs(varBF - 1.005) < 0.000001) {
+					if (std::abs(varBF - 1.075) < 0.000001) {
 						return;
 					}
 
@@ -42,7 +42,7 @@ namespace sstd {
 )");
 						var->setBackgroundFill(true);
 						var->setUseBackgroundColor(true);
-						var->setBackgroundScaleFactor(1.005);
+						var->setBackgroundScaleFactor(1.075);
 					}
 					else {
 						acutPrintf(LR"(3

@@ -20,14 +20,14 @@ public:
 		if (varMtext) {
 			double varBF = 0;
 			varMtext->getBackgroundScaleFactor(varBF);
-			if (std::abs(varBF - 1.005) < 0.0001) {
+			if (std::abs(varBF - 1.075) < 0.0001) {
 				return;
 			}
 
 			if (Acad::eOk == varMtext->upgradeOpen()) {
 				varMtext->setBackgroundFill(true);
 				varMtext->setUseBackgroundColor(true);
-				varMtext->setBackgroundScaleFactor(1.005);
+				varMtext->setBackgroundScaleFactor(1.075);
 			}
 		}
 	}

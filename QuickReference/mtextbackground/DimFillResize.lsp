@@ -11,17 +11,17 @@
 
 (defun c:DFR (/ obj Fsize test1 __________fsn2)
    (if (= __________fsn nil)
-      (setq __________fsn 1.005 )
+      (setq __________fsn 1.075 )
       (progn
          (setq __________fsn2 __________fsn)
-         (setq __________fsn 1.005 )
+         (setq __________fsn 1.075 )
          (if (= __________fsn nil )(
             setq __________fsn __________fsn2)
          )
       );end progn
    );end if
    (if (= __________fsn nil)
-      (setq __________fsn 1.005 ) 
+      (setq __________fsn 1.075 ) 
    )
    (setq obj nil)
    (setq obj (nentsel "\nPick the text portion of a dimension: "))

@@ -96,7 +96,7 @@ namespace sstd {
 				}
 				varMtext->setBackgroundFill(true);
 				varMtext->setUseBackgroundColor(true);
-				varMtext->setBackgroundScaleFactor(1.005);
+				varMtext->setBackgroundScaleFactor(1.075);
 				varML->setMText(varMtext.release());
 
 			}
