@@ -76,7 +76,9 @@ SOURCES += \
         $$PWD/UpdateTitleBlockTime/UpdateTitleBlockTime.cpp \
         $$PWD/HideDimEdge/HideDimEdge.cpp \
         $$PWD/CopyFilePathToClipboard/CopyFilePathToClipboard.cpp \
-        $$PWD/PrintFontsInformation/PrintFontsInformation.cpp
+        $$PWD/PrintFontsInformation/PrintFontsInformation.cpp \
+        $$PWD/DrawMultiCircles/DrawMultiCircles.cpp
+
 
 #.h .hpp source
 HEADERS += \
@@ -100,7 +102,8 @@ HEADERS += \
         $$PWD/UpdateTitleBlockTime/UpdateTitleBlockTime.hpp \
         $$PWD/HideDimEdge/HideDimEdge.hpp \
         $$PWD/CopyFilePathToClipboard/CopyFilePathToClipboard.hpp \
-        $$PWD/PrintFontsInformation/PrintFontsInformation.hpp
+        $$PWD/PrintFontsInformation/PrintFontsInformation.hpp \
+        $$PWD/DrawMultiCircles/DrawMultiCircles.hpp
 
 SOURCES += $$PWD/object_arx_global.cpp \
     $$PWD/ARXApplication.cpp \
