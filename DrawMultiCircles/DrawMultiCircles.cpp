@@ -3,6 +3,7 @@
 #include "DrawMultiCircles.hpp"
 #include <array>
 #include <optional>
+#include "../ThirdPart/ADN/ADNAssocCreateConstraint.hpp"
 
 namespace sstd {
 
@@ -35,7 +36,18 @@ namespace sstd {
 			std::optional<AcDbObjectId> $DLintLayerID;
 			std::optional<AcDbObjectId> $CLintLayerID;
 			std::optional<AcDbObjectId> $RLintLayerID;
+
+			class CircleItem {
+			public:
+				AcGePoint3d $CPoint;
+				AcGeVector3d $CVector;
+				AcDbObjectId $CRLine;
+				AcDbObjectId $CCirle;
+				AcDbObjectId $CCLine;
+			};
+			std::vector<CircleItem> $CircleItems;
 		public:
+			inline void update_constraint();
 			inline void update_this();
 			inline void update_layer();
 			inline void check_this();
@@ -49,7 +61,7 @@ namespace sstd {
 			$Error = $DB->getLayerTable(varLayer.pointer());
 			check_error();
 			AcDbObjectId varTID;
-			if (eOk == varLayer->getAt(LR"(参考线)",varTID)) {
+			if (eOk == varLayer->getAt(LR"(参考线)", varTID)) {
 				$RLintLayerID = varTID;
 			}
 			if (eOk == varLayer->getAt(LR"(中心线)", varTID)) {
@@ -91,16 +103,14 @@ namespace sstd {
 			else { check_error(RTNORM); }
 		}
 
-		template<typename T,typename U>
-		inline void setLayer(T&a,const U&b) {
+		template<typename T, typename U>
+		inline void setLayer(T&a, const U&b) {
 			if (b) { a->setLayer(*b, true, true); }
 		}
 
 		inline void ThisMain::draw_items() {
-			std::vector<AcGePoint3d> varCPoints;
-			std::vector<AcGeVector3d> varCNormal;
-			varCNormal.reserve($N);
-			varCPoints.reserve($N);
+			$CircleItems.resize($N);
+
 			const auto varStep = sstd::dpi() / $N;
 			const auto varHPCD = $PCD*0.5;
 			const auto varHD = $D*0.5;
@@ -115,42 +125,109 @@ namespace sstd {
 			}
 			/*绘制中心孔*/
 			for (double varI = 0; varI < $N; ++varI) {
-				AcGePoint3d varPos = $C;
+				AcGePoint3d & varPos = $CircleItems[varI].$CPoint;
+				varPos = $C;
 				const auto varA = std::fma(varI,
 					varStep,
 					varStartAngle);
-				AcGeVector3d varXN(std::cos(varA), std::sin(varA), 0.);
-				varCNormal.push_back(varXN);
+				AcGeVector3d & varXN = $CircleItems[varI].$CVector;
+				varXN = AcGeVector3d(std::cos(varA), std::sin(varA), 0.);
 				varPos += AcGeVector3d{
 					varHPCD*varXN.x,
 					varHPCD*varXN.y,
 					0. };
-				varCPoints.push_back(varPos);
 				sstd::ArxClosePointer<AcDbCircle> varCircle = new AcDbCircle(varPos,
 					varV, varHD);
 				this->add(varCircle);
 				setLayer(varCircle, $DLintLayerID);
+				$CircleItems[varI].$CCirle = varCircle->objectId();
 			}
 			/*绘制辅助线*/
 			{
-				for (const auto & varI : varCPoints) {
+				const auto varTmpV = AcGeVector3d(varHD, varHD, 0.);
+				for (auto & varI : $CircleItems) {
 					sstd::ArxClosePointer<AcDbLine> varLine =
-						new AcDbLine($C, $C + (varI - $C)*1.3);
+						new AcDbLine($C, $C + ((varI.$CPoint - $C)*1.3 + varTmpV));
 					this->add(varLine);
 					setLayer(varLine, $RLintLayerID);
+					varI.$CRLine = varLine->objectId();
 				}
 			}
 			{
 				const auto varHDAdd3_0 = varHD + 3.;
 				for (double varI = 0; varI < $N; ++varI) {
-					const auto & varC = varCPoints[varI];
-					const auto & varCN = varCNormal[varI];
+					const auto & varC = $CircleItems[varI].$CPoint;
+					const auto & varCN = $CircleItems[varI].$CVector;
 					const auto varCN0 = varCN*varHDAdd3_0;
 					sstd::ArxClosePointer<AcDbLine> varLine =
 						new AcDbLine(varC + varCN0, varC - varCN0);
 					this->add(varLine);
 					setLayer(varLine, $CLintLayerID);
+					$CircleItems[varI].$CCLine = varLine->objectId();
 				}
+			}
+
+			$BlockTableRecord.close();
+			$BlockTable.close();
+		}
+
+		inline void ThisMain::update_constraint() {
+			AcDbObjectId varDimID;
+			AcDbAssoc2dConstraintAPI::createVerticalConstraint($CircleItems[0].$CRLine, $CircleItems[0].$CPoint);
+			const auto varNSub1 = $N - 1;
+			int varIndexLast = -1;
+			int varIndexCurrent = 0;
+			
+			//for ( auto & varI : $CircleItems) {
+			//	//acedTrans
+			//	const static class RBuffer {
+			//	public:
+			//		resbuf varFrom;
+			//		resbuf varTo;
+			//		RBuffer() {
+			//			varFrom.rbnext = nullptr;
+			//			varTo.rbnext = nullptr;
+			//			varFrom.restype = RTSHORT;
+			//			varTo.restype = RTSHORT;
+			//			varFrom.resval.rint = 1;
+			//			varTo.resval.rint = 2;
+			//		}
+			//	} varBuffer;
+			//	ads_real varAns[4] = {0,0,0,0};
+			//	acedTrans(&varI.$CPoint.x,
+			//		&varBuffer.varFrom,
+			//		&varBuffer.varTo,0, 
+			//		varAns);
+			//	varI.$CPoint.y = varAns[1]; 
+			//	varI.$CPoint.x = varAns[0];
+			//	varI.$CPoint.z = 0;
+			//}
+			
+			for (; varIndexCurrent < varNSub1; ) {
+				varIndexLast = varIndexCurrent;
+				++varIndexCurrent;
+				auto & varCurrent = $CircleItems[varIndexCurrent];
+				auto & varLast = $CircleItems[varIndexLast];
+				//AcDbAssocVariable
+
+				AcDbAssoc2dConstraintAPI::createCoincidentConstraint(
+					varCurrent.$CRLine, varLast.$CRLine, $C, $C);
+
+				AcDbAssoc2dConstraintAPI::create2LineAngularDimConstraint(
+					varCurrent.$CRLine, varLast.$CRLine,
+					varCurrent.$CPoint, varLast.$CPoint,
+					AcGePoint3d((varCurrent.$CPoint.x + varLast.$CPoint.x)*0.5,
+					(varCurrent.$CPoint.y + varLast.$CPoint.y)*0.5, 0.),
+					varDimID
+				);
+
+				AcDbAssoc2dConstraintAPI::createEqualLengthConstraint(
+					varCurrent.$CRLine, varLast.$CRLine,
+					$C, $C
+				);
+
+				
+
 			}
 		}
 
@@ -163,6 +240,8 @@ namespace sstd {
 		thisMain->update_this();
 		thisMain->check_this();
 		thisMain->draw_items();
+		thisMain->update_constraint();
+
 	}
 	catch (...) { return; }
 

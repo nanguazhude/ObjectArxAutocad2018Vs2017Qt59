@@ -7,10 +7,10 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createCoincidentConstraint(
-	AcDbObjectId& entId1, 
-	AcDbObjectId& entId2, 
-	AcGePoint3d& ptEnt1, 
-	AcGePoint3d& ptEnt2)
+	const AcDbObjectId& entId1, 
+	const AcDbObjectId& entId2, 
+	const AcGePoint3d& ptEnt1, 
+	const AcGePoint3d& ptEnt2)
 {
 	Acad::ErrorStatus es = Acad::eOk;
 
@@ -74,10 +74,10 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createCoincidentConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createParallelConstraint(
-	AcDbObjectId& entId1, 
-	AcDbObjectId& entId2, 
-	AcGePoint3d& ptEnt1,
-	AcGePoint3d& ptEnt2)
+	const AcDbObjectId& entId1, 
+	const AcDbObjectId& entId2, 
+	const AcGePoint3d& ptEnt1,
+	const AcGePoint3d& ptEnt2)
 {
 	Acad::ErrorStatus es = Acad::eOk;
 
@@ -120,10 +120,10 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createParallelConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createPerpendicularConstraint(
-	AcDbObjectId& entId1, 
-	AcDbObjectId& entId2, 
-	AcGePoint3d& ptEnt1,  
-	AcGePoint3d& ptEnt2)
+	const AcDbObjectId& entId1, 
+	const AcDbObjectId& entId2, 
+	const AcGePoint3d& ptEnt1,  
+	const AcGePoint3d& ptEnt2)
 {
 	Acad::ErrorStatus es = Acad::eOk;
 
@@ -166,10 +166,10 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createPerpendicularConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createConcentricConstraint(
-	AcDbObjectId& entId1, 
-	AcDbObjectId& entId2, 
-	AcGePoint3d& ptEnt1,  
-	AcGePoint3d& ptEnt2)
+	const AcDbObjectId& entId1, 
+	const AcDbObjectId& entId2, 
+	const AcGePoint3d& ptEnt1,  
+	const AcGePoint3d& ptEnt2)
 {
 	Acad::ErrorStatus es = Acad::eOk;
 
@@ -218,10 +218,10 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createConcentricConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createColinearConstraint(
-	AcDbObjectId& entId1, 
-	AcDbObjectId& entId2, 
-	AcGePoint3d& ptEnt1,  
-	AcGePoint3d& ptEnt2)
+	const AcDbObjectId& entId1, 
+	const AcDbObjectId& entId2, 
+	const AcGePoint3d& ptEnt1,  
+	const AcGePoint3d& ptEnt2)
 {
 	Acad::ErrorStatus es = Acad::eOk;
 
@@ -270,8 +270,8 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createColinearConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createHorizontalConstraint(
-	AcDbObjectId& entId, 
-	AcGePoint3d& ptEnt)
+	const AcDbObjectId& entId, 
+	const AcGePoint3d& ptEnt)
 {
 	Acad::ErrorStatus es = Acad::eOk;
 
@@ -305,8 +305,8 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createHorizontalConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createVerticalConstraint(
-	AcDbObjectId& entId,
-	AcGePoint3d& ptEnt)
+	const AcDbObjectId& entId,
+	const AcGePoint3d& ptEnt)
 {
 	Acad::ErrorStatus es = Acad::eOk;
 
@@ -340,8 +340,8 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createVerticalConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createFixConstraint(
-	AcDbObjectId& entId,
-	AcGePoint3d& ptEnt)
+	const AcDbObjectId& entId,
+	const AcGePoint3d& ptEnt)
 {
 	Acad::ErrorStatus es = Acad::eOk;
 
@@ -384,10 +384,10 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createFixConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createTangentConstraint(
-	AcDbObjectId& entId1, 
-	AcDbObjectId& entId2, 
-	AcGePoint3d& ptEnt1,  
-	AcGePoint3d& ptEnt2)
+	const AcDbObjectId& entId1, 
+	const AcDbObjectId& entId2, 
+	const AcGePoint3d& ptEnt1,  
+	const AcGePoint3d& ptEnt2)
 {
 	Acad::ErrorStatus es = Acad::eOk;
 
@@ -436,10 +436,10 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createTangentConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createSmoothConstraint(
-	AcDbObjectId& entId1, 
-	AcDbObjectId& entId2, 
-	AcGePoint3d& ptEnt1,  
-	AcGePoint3d& ptEnt2)
+	const AcDbObjectId& entId1, 
+	const AcDbObjectId& entId2, 
+	const AcGePoint3d& ptEnt1,  
+	const AcGePoint3d& ptEnt2)
 {
 	Acad::ErrorStatus es = Acad::eOk;
 
@@ -498,12 +498,12 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createSmoothConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createSymmetricConstraint(
-	AcDbObjectId& entId1, // ObjectID of first entity
-	AcDbObjectId& entId2, // ObjectID of second entity 
-	AcDbObjectId& entSymId, // ObjectID of third entity 
-	AcGePoint3d& ptEnt1,  // Point on first entity used to determine which edge subentity is closest to it
-	AcGePoint3d& ptEnt2,  // Point on second entity used to determine which edge subentity is closest to it
-	AcGePoint3d& ptEntSym)  // Point on third entity used to determine which edge subentity is closest to it											
+	const AcDbObjectId& entId1, // ObjectID of first entity
+	const AcDbObjectId& entId2, // ObjectID of second entity 
+	const AcDbObjectId& entSymId, // ObjectID of third entity 
+	const AcGePoint3d& ptEnt1,  // Point on first entity used to determine which edge subentity is closest to it
+	const AcGePoint3d& ptEnt2,  // Point on second entity used to determine which edge subentity is closest to it
+	const AcGePoint3d& ptEntSym)  // Point on third entity used to determine which edge subentity is closest to it											
 {
 	Acad::ErrorStatus es = Acad::eOk;
 	
@@ -560,10 +560,10 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createSymmetricConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createEqualLengthConstraint(
-	AcDbObjectId& entId1, 
-	AcDbObjectId& entId2, 
-	AcGePoint3d& ptEnt1,  
-	AcGePoint3d& ptEnt2)
+	const AcDbObjectId& entId1, 
+	const AcDbObjectId& entId2, 
+	const AcGePoint3d& ptEnt1,  
+	const AcGePoint3d& ptEnt2)
 {
 	Acad::ErrorStatus es = Acad::eOk;
 
@@ -612,10 +612,10 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createEqualLengthConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createEqualRadiusConstraint(
-	AcDbObjectId& entId1, 
-	AcDbObjectId& entId2, 
-	AcGePoint3d& ptEnt1,
-	AcGePoint3d& ptEnt2)
+	const AcDbObjectId& entId1, 
+	const AcDbObjectId& entId2, 
+	const AcGePoint3d& ptEnt1,
+	const AcGePoint3d& ptEnt2)
 {
 	Acad::ErrorStatus es = Acad::eOk;
 
@@ -855,11 +855,11 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createAlignedDimConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::create2LineAngularDimConstraint(
-	AcDbObjectId& entId1, 
-    AcDbObjectId& entId2,
-	AcGePoint3d& entPt1, 
-    AcGePoint3d& entPt2,  
-    AcGePoint3d& dimPos, 
+	const AcDbObjectId& entId1, 
+    const AcDbObjectId& entId2,
+	const AcGePoint3d& entPt1, 
+    const AcGePoint3d& entPt2,  
+    const AcGePoint3d& dimPos, 
 	AcDbObjectId& varDimId)
 {
 	AcDbObjectIdArray cleanupObjectIds;

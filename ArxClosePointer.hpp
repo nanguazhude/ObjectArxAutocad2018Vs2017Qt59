@@ -2,8 +2,8 @@
 #define ARXCLOSEPOINTER_HPP
 
 namespace sstd {
-	/**  
-	class AcDbSymbolTablePointer; 
+	/**
+	class AcDbSymbolTablePointer;
 	class AcDbSymbolTableRecordPointer;
 	**/
 	template<typename T>
@@ -51,6 +51,8 @@ namespace sstd {
 			std::swap(this->$pointer, varTmp.$pointer);
 			return *this;
 		}
+
+		inline void close() { _p_close(); $pointer = nullptr; }
 
 	};
 

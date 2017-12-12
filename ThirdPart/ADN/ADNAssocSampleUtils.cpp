@@ -1144,7 +1144,7 @@ AdnAssocSampleUtils::create2LinesAngularDim(const AcGePoint3d& startPoint1,
 																   dimStart2.transformBy(ucsMatrixInv), 
 																   dimEnd2.transformBy(ucsMatrixInv), 
 																   dimTxt.transformBy(ucsMatrixInv));
-
+	
 	dim->transformBy(ucsMatrix);
 
 	if(dimStyleId != AcDbObjectId::kNull)
@@ -1163,8 +1163,8 @@ AdnAssocSampleUtils::create2LinesAngularDim(const AcGePoint3d& startPoint1,
 	es = AdnAssocSampleUtils::postToDatabase (dim, pDb, spaceId);
 	
 	dimId = dim->objectId();
-	dim->close();
 
+	dim->close();
 	return es;
 }
 
@@ -1618,7 +1618,10 @@ AdnAssocSampleUtils::addNewVariableToAssocNetwork(const AcDbObjectId& networkId,
 	
 	pAssocVar->setValue(AcDbEvalVariant(1.0));
 
-	if((es = pAssocVar->setExpression(expression, EXPRESSION_EVALUATOR_DEFAULT, true, true)) != Acad::eOk)
+	if((es = pAssocVar->setExpression(expression, 
+		EXPRESSION_EVALUATOR_DEFAULT, 
+		true, 
+		true)) != Acad::eOk)
 		return es;
 
 	AcString errMsgEval(L"Expression evaluation failed");

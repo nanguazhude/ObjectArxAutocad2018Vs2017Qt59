@@ -37,66 +37,66 @@ public:
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a coincident geometric constraint
-	//
+	// 重合约束
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static Acad::ErrorStatus createCoincidentConstraint(
-		AcDbObjectId& entId1,	// ObjectID of first entity
-		AcDbObjectId& entId2,	// ObjectID of second entity
-		AcGePoint3d& ptEnt1,	// Point on first entity used to determine which subentity point is closest to it
-		AcGePoint3d& ptEnt2		// Point on second entity used to determine which subentity point is closest to it
+		const AcDbObjectId& entId1,	// ObjectID of first entity
+		const AcDbObjectId& entId2,	// ObjectID of second entity
+		const AcGePoint3d& ptEnt1,	// Point on first entity used to determine which subentity point is closest to it
+		const AcGePoint3d& ptEnt2		// Point on second entity used to determine which subentity point is closest to it
 		);
 	 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a parallel geometric constraint
-	//
+	// 平行约束
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static Acad::ErrorStatus createParallelConstraint(
-		AcDbObjectId& entId1,	// ObjectID of first entity
-		AcDbObjectId& entId2,	// ObjectID of second entity
-		AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
-		AcGePoint3d& ptEnt2		// Point on second entity used to determine which edge subentity is closest to it
+		const AcDbObjectId& entId1,	// ObjectID of first entity
+		const AcDbObjectId& entId2,	// ObjectID of second entity
+		const AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
+		const AcGePoint3d& ptEnt2		// Point on second entity used to determine which edge subentity is closest to it
 		);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a perpendicular geometric constraint
-	//
+	// 垂直约束
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static Acad::ErrorStatus createPerpendicularConstraint(
-		AcDbObjectId& entId1,	// ObjectID of first entity
-		AcDbObjectId& entId2,	// ObjectID of second entity
-		AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
-		AcGePoint3d& ptEnt2		// Point on second entity used to determine which edge subentity is closest to it
+		const AcDbObjectId& entId1,	// ObjectID of first entity
+		const AcDbObjectId& entId2,	// ObjectID of second entity
+		const AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
+		const AcGePoint3d& ptEnt2		// Point on second entity used to determine which edge subentity is closest to it
 		);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a concentric geometric constraint
-	//
+	// 同心约束
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static Acad::ErrorStatus createConcentricConstraint(
-		AcDbObjectId& entId1,	// ObjectID of first entity
-		AcDbObjectId& entId2,	// ObjectID of second entity
-		AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
-		AcGePoint3d& ptEnt2		// Point on second entity used to determine which edge subentity is closest to it
+		const AcDbObjectId& entId1,	// ObjectID of first entity
+		const AcDbObjectId& entId2,	// ObjectID of second entity
+		const AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
+		const AcGePoint3d& ptEnt2		// Point on second entity used to determine which edge subentity is closest to it
 		);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a colinear geometric constraint
-	//
+	// 共线约束
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static Acad::ErrorStatus createColinearConstraint(
-		AcDbObjectId& entId1,	// ObjectID of first entity
-		AcDbObjectId& entId2,	// ObjectID of second entity
-		AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
-		AcGePoint3d& ptEnt2		// Point on second entity used to determine which edge subentity is closest to it
+		const AcDbObjectId& entId1,	// ObjectID of first entity
+		const AcDbObjectId& entId2,	// ObjectID of second entity
+		const AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
+		const AcGePoint3d& ptEnt2		// Point on second entity used to determine which edge subentity is closest to it
 		);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a horizontal geometric constraint
-	//
+	// 水平约束
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static Acad::ErrorStatus createHorizontalConstraint(
-		AcDbObjectId& entId,	// ObjectID of first entity
-		AcGePoint3d& ptEnt		// Point on first entity used to determine which edge subentity is closest to it
+		const AcDbObjectId& entId,	// ObjectID of first entity
+		const AcGePoint3d& ptEnt		// Point on first entity used to determine which edge subentity is closest to it
 		);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -104,74 +104,74 @@ public:
 	//
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static Acad::ErrorStatus createVerticalConstraint(
-		AcDbObjectId& entId,	// ObjectID of first entity
-		AcGePoint3d& ptEnt		// Point on first entity used to determine which edge subentity is closest to it
+		const AcDbObjectId& entId,	// ObjectID of first entity
+		const AcGePoint3d& ptEnt		// Point on first entity used to determine which edge subentity is closest to it
 		);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a fix geometric constraint
-	//
+	// 固定约束
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static Acad::ErrorStatus createFixConstraint(
-		AcDbObjectId& entId,	// ObjectID of first entity
-		AcGePoint3d& ptEnt		// Point on first entity used to determine which edge subentity is closest to it
+		const AcDbObjectId& entId,	// ObjectID of first entity
+		const AcGePoint3d& ptEnt		// Point on first entity used to determine which edge subentity is closest to it
 		);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a tangent geometric constraint
-	//
+	// 相切约束
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static Acad::ErrorStatus createTangentConstraint(
-		AcDbObjectId& entId1,	// ObjectID of first entity
-		AcDbObjectId& entId2,	// ObjectID of second entity
-		AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
-		AcGePoint3d& ptEnt2		// Point on second entity used to determine which edge subentity is closest to it
+		const AcDbObjectId& entId1,	// ObjectID of first entity
+		const AcDbObjectId& entId2,	// ObjectID of second entity
+		const AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
+		const AcGePoint3d& ptEnt2		// Point on second entity used to determine which edge subentity is closest to it
 		);
 	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a smooth geometric constraint
-	//
+	// 平滑约束
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static Acad::ErrorStatus createSmoothConstraint(
-		AcDbObjectId& entId1,	// ObjectID of first entity which is a spline
-		AcDbObjectId& entId2,	// ObjectID of second entity which can be a spline, line, arc, or polyline
-		AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
-		AcGePoint3d& ptEnt2		// Point on second entity used to determine which edge subentity is closest to it
+		const AcDbObjectId& entId1,	// ObjectID of first entity which is a spline
+		const AcDbObjectId& entId2,	// ObjectID of second entity which can be a spline, line, arc, or polyline
+		const AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
+		const AcGePoint3d& ptEnt2		// Point on second entity used to determine which edge subentity is closest to it
 		);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a symmetric geometric constraint
-	//
+	// 对称约束
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static Acad::ErrorStatus createSymmetricConstraint(
-		AcDbObjectId& entId1,	// ObjectID of first entity
-		AcDbObjectId& entId2,	// ObjectID of second entity 
-		AcDbObjectId& entSymId,	// ObjectID of symmetry entity 
-		AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
-		AcGePoint3d& ptEnt2,	// Point on second entity used to determine which edge subentity is closest to it
-		AcGePoint3d& ptSymEnt		// Point on symmetry entity used to determine which edge subentity is closest to it
+		const AcDbObjectId& entId1,	// ObjectID of first entity
+		const AcDbObjectId& entId2,	// ObjectID of second entity 
+		const AcDbObjectId& entSymId,	// ObjectID of symmetry entity 
+		const AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
+		const AcGePoint3d& ptEnt2,	// Point on second entity used to determine which edge subentity is closest to it
+		const AcGePoint3d& ptSymEnt		// Point on symmetry entity used to determine which edge subentity is closest to it
 		);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a equal length geometric constraint
-	//
+	// 相等约束
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static Acad::ErrorStatus createEqualLengthConstraint(
-		AcDbObjectId& entId1,	// ObjectID of first entity
-		AcDbObjectId& entId2,	// ObjectID of second entity 
-		AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
-		AcGePoint3d& ptEnt2		// Point on second entity used to determine which edge subentity is closest to it
+		const AcDbObjectId& entId1,	// ObjectID of first entity
+		const AcDbObjectId& entId2,	// ObjectID of second entity 
+		const AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
+		const AcGePoint3d& ptEnt2		// Point on second entity used to determine which edge subentity is closest to it
 		);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a equal radius geometric constraint
-	//
+	// 相等约束
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static Acad::ErrorStatus createEqualRadiusConstraint(
-		AcDbObjectId& entId1,	// ObjectID of first entity
-		AcDbObjectId& entId2,	// ObjectID of second entity 
-		AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
-		AcGePoint3d& ptEnt2		// Point on second entity used to determine which edge subentity is closest to it
+		const AcDbObjectId& entId1,	// ObjectID of first entity
+		const AcDbObjectId& entId2,	// ObjectID of second entity 
+		const AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
+		const AcGePoint3d& ptEnt2		// Point on second entity used to determine which edge subentity is closest to it
 		);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -215,11 +215,11 @@ public:
 	//
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static Acad::ErrorStatus create2LineAngularDimConstraint(
-		AcDbObjectId& entId1,	// ObjectID of first entity for angular dimension
-		AcDbObjectId& entId2,	// ObjectID of second entity for angular dimension
-		AcGePoint3d& entPt1,	// Point on first entity used to determine edge sub entity for the angular dimension
-		AcGePoint3d& entPt2,	// Point on second entity used to determine edge sub entity for the angular dimension
-		AcGePoint3d& dimPos,	// Location of the dimension
+		const AcDbObjectId& entId1,	// ObjectID of first entity for angular dimension
+		const AcDbObjectId& entId2,	// ObjectID of second entity for angular dimension
+		const AcGePoint3d& entPt1,	// Point on first entity used to determine edge sub entity for the angular dimension
+		const AcGePoint3d& entPt2,	// Point on second entity used to determine edge sub entity for the angular dimension
+		const AcGePoint3d& dimPos,	// Location of the dimension
 		AcDbObjectId& varDimId	// ObjectId of the associated AssocVariable created (dimemsion parameter)
 		);
 
