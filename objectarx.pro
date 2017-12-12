@@ -77,7 +77,10 @@ SOURCES += \
         $$PWD/HideDimEdge/HideDimEdge.cpp \
         $$PWD/CopyFilePathToClipboard/CopyFilePathToClipboard.cpp \
         $$PWD/PrintFontsInformation/PrintFontsInformation.cpp \
-        $$PWD/DrawMultiCircles/DrawMultiCircles.cpp
+        $$PWD/DrawMultiCircles/DrawMultiCircles.cpp \
+        $$PWD/ThirdPart/ADN/ADNAssocCreateConstraint.cpp \
+        $$PWD/ThirdPart/ADN/ADNAssocSampleUtils.cpp \
+        $$PWD/ThirdPart/ADN/AdnConstraintEvaluationCallback.cpp
 
 
 #.h .hpp source
@@ -103,7 +106,11 @@ HEADERS += \
         $$PWD/HideDimEdge/HideDimEdge.hpp \
         $$PWD/CopyFilePathToClipboard/CopyFilePathToClipboard.hpp \
         $$PWD/PrintFontsInformation/PrintFontsInformation.hpp \
-        $$PWD/DrawMultiCircles/DrawMultiCircles.hpp
+        $$PWD/DrawMultiCircles/DrawMultiCircles.hpp \
+        $$PWD/ThirdPart/ADN/AdnAssocConstraintAPI.hpp \
+        $$PWD/ThirdPart/ADN/ADNAssocCreateConstraint.hpp \
+        $$PWD/ThirdPart/ADN/ADNAssocSampleUtils.hpp \
+        $$PWD/ThirdPart/ADN/AdnConstraintEvaluationCallback.hpp
 
 SOURCES += $$PWD/object_arx_global.cpp \
     $$PWD/ARXApplication.cpp \
