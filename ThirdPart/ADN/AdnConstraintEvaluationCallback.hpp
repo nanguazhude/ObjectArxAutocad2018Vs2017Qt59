@@ -15,27 +15,27 @@ public:
 	virtual void beginActionEvaluation          (AcDbAssocAction*) {}
 	virtual void endActionEvaluation            (AcDbAssocAction*) {}
 
-	virtual void setActionEvaluationErrorStatus (AcDbAssocAction*    pAction,
-		Acad::ErrorStatus   errorStatus,
-		const AcDbObjectId& objectId   = AcDbObjectId::kNull,
-		AcDbObject*         pObject    = NULL,
-		void*               pErrorInfo = NULL){}
+	virtual void setActionEvaluationErrorStatus (AcDbAssocAction*    /*pAction*/,
+		Acad::ErrorStatus   /*errorStatus*/,
+		const AcDbObjectId& /*objectId*/   = AcDbObjectId::kNull,
+		AcDbObject*         /*pObject*/    = nullptr,
+		void*               /*pErrorInfo*/ = nullptr){}
 
-	virtual void getActionEvaluationErrorStatus (AcDbAssocAction*   pAction,
-		Acad::ErrorStatus& errorStatus,
-		AcDbObjectId&      objectId,
-		AcDbObject*&       pObject,
-		void*&             pErrorInfo) {}
+	virtual void getActionEvaluationErrorStatus (AcDbAssocAction*   /*pAction*/,
+		Acad::ErrorStatus& /*errorStatus*/,
+		AcDbObjectId&      /*objectId*/,
+		AcDbObject*&       /*pObject*/,
+		void*&             /*pErrorInfo*/) {}
 
-	virtual void beginActionEvaluationUsingObject(AcDbAssocAction*    pAction, 
-		const AcDbObjectId& objectId, 
-		bool                objectIsGoingToBeUsed,
-		bool                objectIsGoingToBeModified,
-		AcDbObject*&        pSubstituteObject) {}
+	virtual void beginActionEvaluationUsingObject(AcDbAssocAction*    /*pAction*/ ,
+		const AcDbObjectId& /*objectId*/,
+		bool                /*objectIsGoingToBeUsed*/,
+		bool                /*objectIsGoingToBeModified*/,
+		AcDbObject*&        /*pSubstituteObject*/) {}
 
-	virtual void endActionEvaluationUsingObject  (AcDbAssocAction*    pAction, 
-		const AcDbObjectId& objectId, 
-		AcDbObject*         pObject) {}
+	virtual void endActionEvaluationUsingObject  (AcDbAssocAction*    /*pAction*/ ,
+		const AcDbObjectId& /*objectId*/,
+		AcDbObject*         /*pObject*/) {}
 
 	virtual AcDbEvalContext*                      getAdditionalData() const;
 

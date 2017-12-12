@@ -125,7 +125,7 @@ Acad::ErrorStatus AdnAssocSampleUtils::getFullSubentPaths(
 	AcDbFullSubentPathArray &aPaths)
 {
 	ErrorStatus es;
-	AcConstrainedGeometry* pConsGeom = NULL;
+	//AcConstrainedGeometry* pConsGeom = NULL;
 
 	// Get the Protocol extension associated with the entity
 	AcDbAssocPersSubentIdPE* const pAssocPersSubentIdPE = 
@@ -724,7 +724,7 @@ bool AdnAssocSampleUtils::isEntityValidForConstraint(
 {
 	Acad::ErrorStatus es;
 
-	bool isValid = false;
+	//bool isValid = false;
 
 	AcDbFullSubentPath edgeSubent;
 
@@ -1277,7 +1277,7 @@ AdnAssocSampleUtils::create3PointAngularDim(const AcGePoint3d& centerPoint,
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus 
-AdnAssocSampleUtils::createRadialDim(const AcDbObjectId& entId,
+AdnAssocSampleUtils::createRadialDim(const AcDbObjectId& /*entId*/,
 								     const AcGePoint3d& centerPt, 
 								     const AcGePoint3d& chordPt,
 									 const double leaderLength,
@@ -1326,7 +1326,7 @@ AdnAssocSampleUtils::createRadialDim(const AcDbObjectId& entId,
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus 
-AdnAssocSampleUtils::createDiametricDim(const AcDbObjectId& entId,
+AdnAssocSampleUtils::createDiametricDim(const AcDbObjectId& /*entId*/,
 								        const AcGePoint3d& chordPt, 
 									    const AcGePoint3d& farChordPt,
 										const AcGePoint3d& dimPos, 
@@ -1380,12 +1380,12 @@ AdnAssocSampleUtils::createDiametricDim(const AcDbObjectId& entId,
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus 
-AdnAssocSampleUtils::createRotatedDim(const AcDbObjectId& entId1,
+AdnAssocSampleUtils::createRotatedDim(const AcDbObjectId& /*entId1*/,
 									  const AcGePoint3d& entPt1, 
-									  const AcDbFullSubentPath& edgeEntPath1,
-									  const AcDbObjectId& entId2,
+									  const AcDbFullSubentPath& /*edgeEntPath1*/,
+									  const AcDbObjectId& /*entId2*/,
 									  const AcGePoint3d& entPt2,
-									  const AcDbFullSubentPath& edgeEntPath2,
+									  const AcDbFullSubentPath& /*edgeEntPath2*/,
 									  const AcGePoint3d& dimPos, 
 									  double rotation,
 									  AcDbObjectId& dimId,
@@ -1564,8 +1564,8 @@ AdnAssocSampleUtils::getNameAndExpressionFromDimension(const AcDbObjectId& netwo
 
 		dfltName = namePrefix;
 		const int kBufSize = 20;
-		char buf[kBufSize];
-		const errno_t err = _itoa_s(index, buf, kBufSize, 10);
+		wchar_t buf[kBufSize];
+		const errno_t err = _itow_s(index, buf, kBufSize, 10);
 		assert(err == 0);
 		dfltName += buf;
 	}
@@ -1610,7 +1610,7 @@ AdnAssocSampleUtils::addNewVariableToAssocNetwork(const AcDbObjectId& networkId,
 
 	AcString errMsgValidate(L"Name or Expression invalid");
 
-	if((es = pAssocVar->validateNameAndExpression(name, "1.0", errMsgValidate)) != Acad::eOk)
+	if((es = pAssocVar->validateNameAndExpression(name, L"1.0", errMsgValidate)) != Acad::eOk)
 		return es;
    
 	if((es = pAssocVar->setName(name, true)) != Acad::eOk)
