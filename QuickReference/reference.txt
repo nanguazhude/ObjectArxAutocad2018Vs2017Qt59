@@ -11,3 +11,5 @@ https://forums.autodesk.com/t5/net/without-open-dwg-get-getsystemvariable-quot-t
 https://forums.autodesk.com/t5/objectarx/how-to-create-geometric-constraints-with-objectarx-c/m-p/7439080/highlight/true#M36307
 
 https://forums.autodesk.com/t5/objectarx/associative-networks-acdbassocaction/td-p/3726026
+
+https://forums.autodesk.com/t5/net/net-api-for-geometric-constraint/m-p/6835841/highlight/true#M51808
