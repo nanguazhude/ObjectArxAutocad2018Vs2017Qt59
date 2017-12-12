@@ -7,3 +7,7 @@ ACAD_DSTYLE_DIMBREAK
 
 https://forums.autodesk.com/t5/net/without-open-dwg-get-getsystemvariable-quot-tdcreate-quot/m-p/4956018/highlight/true#M40143
 
+
+https://forums.autodesk.com/t5/objectarx/how-to-create-geometric-constraints-with-objectarx-c/m-p/7439080/highlight/true#M36307
+
+https://forums.autodesk.com/t5/objectarx/associative-networks-acdbassocaction/td-p/3726026
