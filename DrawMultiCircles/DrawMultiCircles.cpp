@@ -2,6 +2,7 @@
 #include <vector>
 #include "DrawMultiCircles.hpp"
 #include <array>
+#include <optional>
 
 namespace sstd {
 
@@ -31,13 +32,33 @@ namespace sstd {
 			sstd::ArxClosePointer<AcDbBlockTable> $BlockTable;
 			sstd::ArxClosePointer<AcDbBlockTableRecord> $BlockTableRecord;
 			AcDbObjectId $CurrentID;
+			std::optional<AcDbObjectId> $DLintLayerID;
+			std::optional<AcDbObjectId> $CLintLayerID;
+			std::optional<AcDbObjectId> $RLintLayerID;
 		public:
 			inline void update_this();
+			inline void update_layer();
 			inline void check_this();
 			inline void draw_items();
 			inline void check_error(int varG = eOk);
 			inline void add(AcDbEntity*);
 		};
+
+		inline void ThisMain::update_layer() {
+			sstd::ArxClosePointer< AcDbLayerTable > varLayer;
+			$Error = $DB->getLayerTable(varLayer.pointer());
+			check_error();
+			AcDbObjectId varTID;
+			if (eOk == varLayer->getAt(LR"(参考线)",varTID)) {
+				$RLintLayerID = varTID;
+			}
+			if (eOk == varLayer->getAt(LR"(中心线)", varTID)) {
+				$CLintLayerID = varTID;
+			}
+			if (eOk == varLayer->getAt(LR"(粗实线)", varTID)) {
+				$DLintLayerID = varTID;
+			}
+		}
 
 		inline void ThisMain::add(AcDbEntity*arg) {
 			$BlockTableRecord->appendAcDbEntity($CurrentID, arg);
@@ -70,6 +91,11 @@ namespace sstd {
 			else { check_error(RTNORM); }
 		}
 
+		template<typename T,typename U>
+		inline void setLayer(T&a,const U&b) {
+			if (b) { a->setLayer(*b, true, true); }
+		}
+
 		inline void ThisMain::draw_items() {
 			std::vector<AcGePoint3d> varCPoints;
 			std::vector<AcGeVector3d> varCNormal;
@@ -85,6 +111,7 @@ namespace sstd {
 				sstd::ArxClosePointer<AcDbCircle> varPCDCircle = new AcDbCircle($C,
 					varV, varHPCD);
 				this->add(varPCDCircle);
+				setLayer(varPCDCircle, $CLintLayerID);
 			}
 			/*绘制中心孔*/
 			for (double varI = 0; varI < $N; ++varI) {
@@ -102,6 +129,7 @@ namespace sstd {
 				sstd::ArxClosePointer<AcDbCircle> varCircle = new AcDbCircle(varPos,
 					varV, varHD);
 				this->add(varCircle);
+				setLayer(varCircle, $DLintLayerID);
 			}
 			/*绘制辅助线*/
 			{
@@ -109,6 +137,7 @@ namespace sstd {
 					sstd::ArxClosePointer<AcDbLine> varLine =
 						new AcDbLine($C, $C + (varI - $C)*1.3);
 					this->add(varLine);
+					setLayer(varLine, $RLintLayerID);
 				}
 			}
 			{
@@ -120,6 +149,7 @@ namespace sstd {
 					sstd::ArxClosePointer<AcDbLine> varLine =
 						new AcDbLine(varC + varCN0, varC - varCN0);
 					this->add(varLine);
+					setLayer(varLine, $CLintLayerID);
 				}
 			}
 		}
@@ -127,10 +157,12 @@ namespace sstd {
 	}/*namespace*/
 
 	void DrawMultiCircles::main() try {
-		ThisMain thisMain{ acdbHostApplicationServices()->workingDatabase() };
-		thisMain.update_this();
-		thisMain.check_this();
-		thisMain.draw_items();
+		std::unique_ptr<ThisMain>thisMain{
+			new ThisMain{ acdbHostApplicationServices()->workingDatabase() } };
+		thisMain->update_layer();
+		thisMain->update_this();
+		thisMain->check_this();
+		thisMain->draw_items();
 	}
 	catch (...) { return; }
 
