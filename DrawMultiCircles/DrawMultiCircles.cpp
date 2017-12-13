@@ -45,9 +45,11 @@ namespace sstd {
 				AcDbObjectId $CRLine;
 				AcDbObjectId $CCirle;
 				AcDbObjectId $CCLine;
+				AcGePoint3d $KPoints[3];
 			};
 			AcDbObjectId $PCDCircle;
 			std::vector<CircleItem> $CircleItems;
+
 		public:
 			inline void update_constraint();
 			inline void update_this();
@@ -83,7 +85,9 @@ namespace sstd {
 			throw $Error;
 		}
 
-		void ThisMain::check_this() {}
+		void ThisMain::check_this() {
+			if ($N < 3) { throw 2; }
+		}
 
 		inline void ThisMain::update_this() {
 			$Error = $DB->getBlockTable($BlockTable, AcDb::kForRead);
@@ -153,10 +157,12 @@ namespace sstd {
 			{
 				//int varJ = 1;
 				for (auto & varI : $CircleItems) {
-					{
+					{// $KPoints
+						auto & varK0 = varI.$KPoints[0];
+						varK0 = $C + ((varI.$CPoint - $C)*1.3 +
+							varHD *varI.$CVector);
 						sstd::ArxClosePointer<AcDbLine> varLine =
-							new AcDbLine($C, $C + ((varI.$CPoint - $C)*1.3 +
-								varHD *varI.$CVector));
+							new AcDbLine($C, varK0);
 						this->add(varLine);
 						setLayer(varLine, $RLintLayerID);
 						varI.$CRLine = varLine->objectId();
@@ -171,14 +177,18 @@ namespace sstd {
 					}*/
 				}
 			}
-			{
+			{/*中心线*/
 				const auto varHDAdd3_0 = varHD + 3.;
 				for (double varI = 0; varI < $N; ++varI) {
+					auto & varK1 = $CircleItems[varI].$KPoints[1];
+					auto & varK2 = $CircleItems[varI].$KPoints[2];
 					const auto & varC = $CircleItems[varI].$CPoint;
 					const auto & varCN = $CircleItems[varI].$CVector;
 					const auto varCN0 = varCN*varHDAdd3_0;
+					varK1 = varC + varCN0;
+					varK2 = varC - varCN0;
 					sstd::ArxClosePointer<AcDbLine> varLine =
-						new AcDbLine(varC + varCN0, varC - varCN0);
+						new AcDbLine(varK1, varK2);
 					this->add(varLine);
 					setLayer(varLine, $CLintLayerID);
 					$CircleItems[varI].$CCLine = varLine->objectId();
@@ -199,7 +209,7 @@ namespace sstd {
 		inline void ThisMain::update_constraint() {
 			AcDbObjectId varDimID;
 			AcDbAssoc2dConstraintAPI::createVerticalConstraint(
-				$CircleItems[0].$CRLine, 
+				$CircleItems[0].$CRLine,
 				$CircleItems[0].$CPoint);
 
 			const auto varNSub1 = $N - 1;
@@ -208,8 +218,14 @@ namespace sstd {
 
 			$C = UcsToWorld($C);
 			for (auto & varI : $CircleItems) {
+				auto & varK0 = varI.$KPoints[0];
+				auto & varK1 = varI.$KPoints[1];
+				auto & varK2 = varI.$KPoints[2];
 				varI.$CPoint = UcsToWorld(varI.$CPoint);
 				varI.$CKPoint = UcsToWorld(varI.$CKPoint);
+				varK0 = UcsToWorld(varK0);
+				varK1 = UcsToWorld(varK1);
+				varK2 = UcsToWorld(varK2);
 			}
 
 			for (; varIndexCurrent < varNSub1; ) {
@@ -261,9 +277,33 @@ namespace sstd {
 				varDimID
 			);
 
+			/*{
+				constexpr auto K = 0 ;
+				const auto & var = $CircleItems[K];
+				AcDbAssoc2dConstraintAPI::createAlignedDimConstraint(
+					var.$CRLine,
+					var.$KPoints[0],
+					$C,
+					var.$KPoints[0] + var.$CVector,
+					varDimID
+				);
+			}*/
+
+			/*{
+				constexpr auto K = 2;
+				AcDbAssoc2dConstraintAPI::createAlignedDimConstraint(
+					$CircleItems[K].$CCLine,
+					$CircleItems[K].$KPoints[1],
+					$CircleItems[K].$KPoints[2],
+					$CircleItems[K].$KPoints[1] + $CircleItems[K].$CVector,
+					varDimID
+				);
+			}*/
+
 			AcDbAssoc2dConstraintAPI::createCoincidentConstraint(
 				$PCDCircle, $CircleItems[0].$CRLine,
 				$C, $C);
+
 			AcDbAssoc2dConstraintAPI::createDiamDimConstraint(
 				$PCDCircle,
 				$C,
