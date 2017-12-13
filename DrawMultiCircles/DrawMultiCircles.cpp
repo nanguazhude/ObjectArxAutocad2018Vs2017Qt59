@@ -40,11 +40,13 @@ namespace sstd {
 			class CircleItem {
 			public:
 				AcGePoint3d $CPoint;
+				AcGePoint3d $CKPoint;
 				AcGeVector3d $CVector;
 				AcDbObjectId $CRLine;
 				AcDbObjectId $CCirle;
 				AcDbObjectId $CCLine;
 			};
+			AcDbObjectId $PCDCircle;
 			std::vector<CircleItem> $CircleItems;
 		public:
 			inline void update_constraint();
@@ -122,6 +124,7 @@ namespace sstd {
 					varV, varHPCD);
 				this->add(varPCDCircle);
 				setLayer(varPCDCircle, $CLintLayerID);
+				$PCDCircle = varPCDCircle->objectId();
 			}
 			/*绘制中心孔*/
 			for (double varI = 0; varI < $N; ++varI) {
@@ -136,6 +139,10 @@ namespace sstd {
 					varHPCD*varXN.x,
 					varHPCD*varXN.y,
 					0. };
+				$CircleItems[varI].$CKPoint = varPos + AcGeVector3d{
+					varHD*varXN.x,
+					varHD*varXN.y,
+					0. };
 				sstd::ArxClosePointer<AcDbCircle> varCircle = new AcDbCircle(varPos,
 					varV, varHD);
 				this->add(varCircle);
@@ -144,13 +151,24 @@ namespace sstd {
 			}
 			/*绘制辅助线*/
 			{
-				const auto varTmpV = AcGeVector3d(varHD, varHD, 0.);
+				//int varJ = 1;
 				for (auto & varI : $CircleItems) {
-					sstd::ArxClosePointer<AcDbLine> varLine =
-						new AcDbLine($C, $C + ((varI.$CPoint - $C)*1.3 + varTmpV));
-					this->add(varLine);
-					setLayer(varLine, $RLintLayerID);
-					varI.$CRLine = varLine->objectId();
+					{
+						sstd::ArxClosePointer<AcDbLine> varLine =
+							new AcDbLine($C, $C + ((varI.$CPoint - $C)*1.3 +
+								varHD *varI.$CVector));
+						this->add(varLine);
+						setLayer(varLine, $RLintLayerID);
+						varI.$CRLine = varLine->objectId();
+					}
+					/*{
+						sstd::ArxClosePointer<AcDbLine> varLine =
+							new AcDbLine(varI.$CPoint, $CircleItems[varJ].$CPoint);
+						this->add(varLine);
+						setLayer(varLine, $RLintLayerID);
+						++varJ;
+						if (varJ >= $N) { varJ = 0; }
+					}*/
 				}
 			}
 			{
@@ -171,38 +189,29 @@ namespace sstd {
 			$BlockTable.close();
 		}
 
+		static inline AcGePoint3d UcsToWorld(const AcGePoint3d& ucsPoint) {
+			AcGeMatrix3d ucs;
+			acedGetCurrentUCS(ucs);
+			AcGePoint3d res(ucsPoint);
+			return res.transformBy(ucs);
+		}
+
 		inline void ThisMain::update_constraint() {
 			AcDbObjectId varDimID;
-			AcDbAssoc2dConstraintAPI::createVerticalConstraint($CircleItems[0].$CRLine, $CircleItems[0].$CPoint);
+			AcDbAssoc2dConstraintAPI::createVerticalConstraint(
+				$CircleItems[0].$CRLine, 
+				$CircleItems[0].$CPoint);
+
 			const auto varNSub1 = $N - 1;
 			int varIndexLast = -1;
 			int varIndexCurrent = 0;
-			
-			//for ( auto & varI : $CircleItems) {
-			//	//acedTrans
-			//	const static class RBuffer {
-			//	public:
-			//		resbuf varFrom;
-			//		resbuf varTo;
-			//		RBuffer() {
-			//			varFrom.rbnext = nullptr;
-			//			varTo.rbnext = nullptr;
-			//			varFrom.restype = RTSHORT;
-			//			varTo.restype = RTSHORT;
-			//			varFrom.resval.rint = 1;
-			//			varTo.resval.rint = 2;
-			//		}
-			//	} varBuffer;
-			//	ads_real varAns[4] = {0,0,0,0};
-			//	acedTrans(&varI.$CPoint.x,
-			//		&varBuffer.varFrom,
-			//		&varBuffer.varTo,0, 
-			//		varAns);
-			//	varI.$CPoint.y = varAns[1]; 
-			//	varI.$CPoint.x = varAns[0];
-			//	varI.$CPoint.z = 0;
-			//}
-			
+
+			$C = UcsToWorld($C);
+			for (auto & varI : $CircleItems) {
+				varI.$CPoint = UcsToWorld(varI.$CPoint);
+				varI.$CKPoint = UcsToWorld(varI.$CKPoint);
+			}
+
 			for (; varIndexCurrent < varNSub1; ) {
 				varIndexLast = varIndexCurrent;
 				++varIndexCurrent;
@@ -226,9 +235,42 @@ namespace sstd {
 					$C, $C
 				);
 
-				
+				AcDbAssoc2dConstraintAPI::createEqualLengthConstraint(
+					varCurrent.$CCLine, varLast.$CCLine,
+					varCurrent.$CPoint, varLast.$CPoint
+				);
+
+				AcDbAssoc2dConstraintAPI::createEqualRadiusConstraint(
+					varCurrent.$CCirle, varLast.$CCirle,
+					varCurrent.$CKPoint, varLast.$CKPoint
+				);
+			}
+
+			for (const auto & varI : $CircleItems) {
+				AcDbAssoc2dConstraintAPI::createColinearConstraint(
+					varI.$CCLine, varI.$CRLine,
+					varI.$CPoint, varI.$CPoint
+				);
 
 			}
+
+			AcDbAssoc2dConstraintAPI::createDiamDimConstraint(
+				$CircleItems[0].$CCirle,
+				$CircleItems[0].$CPoint,
+				$CircleItems[0].$CKPoint,
+				varDimID
+			);
+
+			AcDbAssoc2dConstraintAPI::createCoincidentConstraint(
+				$PCDCircle, $CircleItems[0].$CRLine,
+				$C, $C);
+			AcDbAssoc2dConstraintAPI::createDiamDimConstraint(
+				$PCDCircle,
+				$C,
+				$CircleItems[1].$CKPoint,
+				varDimID
+			);
+
 		}
 
 	}/*namespace*/

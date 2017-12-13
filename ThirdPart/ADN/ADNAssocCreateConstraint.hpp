@@ -10,13 +10,13 @@ class AcDbAssoc2dConstraintId
 {
 public:
 
-	AcDbAssoc2dConstraintId() : mIndex(0) 
+	AcDbAssoc2dConstraintId() : mIndex(0)
 	{
-	
+
 	}
 
-	bool isNull() const 
-	{ 
+	bool isNull() const
+	{
 		return mIndex == 0;//: 
 	}
 
@@ -44,8 +44,8 @@ public:
 		const AcDbObjectId& entId2,	// ObjectID of second entity
 		const AcGePoint3d& ptEnt1,	// Point on first entity used to determine which subentity point is closest to it
 		const AcGePoint3d& ptEnt2		// Point on second entity used to determine which subentity point is closest to it
-		);
-	 
+	);
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a parallel geometric constraint
 	// 平行约束
@@ -55,7 +55,7 @@ public:
 		const AcDbObjectId& entId2,	// ObjectID of second entity
 		const AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
 		const AcGePoint3d& ptEnt2		// Point on second entity used to determine which edge subentity is closest to it
-		);
+	);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a perpendicular geometric constraint
@@ -66,7 +66,7 @@ public:
 		const AcDbObjectId& entId2,	// ObjectID of second entity
 		const AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
 		const AcGePoint3d& ptEnt2		// Point on second entity used to determine which edge subentity is closest to it
-		);
+	);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a concentric geometric constraint
@@ -77,7 +77,7 @@ public:
 		const AcDbObjectId& entId2,	// ObjectID of second entity
 		const AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
 		const AcGePoint3d& ptEnt2		// Point on second entity used to determine which edge subentity is closest to it
-		);
+	);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a colinear geometric constraint
@@ -88,7 +88,7 @@ public:
 		const AcDbObjectId& entId2,	// ObjectID of second entity
 		const AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
 		const AcGePoint3d& ptEnt2		// Point on second entity used to determine which edge subentity is closest to it
-		);
+	);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a horizontal geometric constraint
@@ -97,16 +97,16 @@ public:
 	static Acad::ErrorStatus createHorizontalConstraint(
 		const AcDbObjectId& entId,	// ObjectID of first entity
 		const AcGePoint3d& ptEnt		// Point on first entity used to determine which edge subentity is closest to it
-		);
+	);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a vertical geometric constraint
-	//
+	// 垂直约束
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static Acad::ErrorStatus createVerticalConstraint(
 		const AcDbObjectId& entId,	// ObjectID of first entity
 		const AcGePoint3d& ptEnt		// Point on first entity used to determine which edge subentity is closest to it
-		);
+	);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a fix geometric constraint
@@ -115,7 +115,7 @@ public:
 	static Acad::ErrorStatus createFixConstraint(
 		const AcDbObjectId& entId,	// ObjectID of first entity
 		const AcGePoint3d& ptEnt		// Point on first entity used to determine which edge subentity is closest to it
-		);
+	);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a tangent geometric constraint
@@ -126,8 +126,8 @@ public:
 		const AcDbObjectId& entId2,	// ObjectID of second entity
 		const AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
 		const AcGePoint3d& ptEnt2		// Point on second entity used to determine which edge subentity is closest to it
-		);
-	
+	);
+
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a smooth geometric constraint
 	// 平滑约束
@@ -137,7 +137,7 @@ public:
 		const AcDbObjectId& entId2,	// ObjectID of second entity which can be a spline, line, arc, or polyline
 		const AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
 		const AcGePoint3d& ptEnt2		// Point on second entity used to determine which edge subentity is closest to it
-		);
+	);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a symmetric geometric constraint
@@ -150,7 +150,7 @@ public:
 		const AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
 		const AcGePoint3d& ptEnt2,	// Point on second entity used to determine which edge subentity is closest to it
 		const AcGePoint3d& ptSymEnt		// Point on symmetry entity used to determine which edge subentity is closest to it
-		);
+	);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a equal length geometric constraint
@@ -161,7 +161,7 @@ public:
 		const AcDbObjectId& entId2,	// ObjectID of second entity 
 		const AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
 		const AcGePoint3d& ptEnt2		// Point on second entity used to determine which edge subentity is closest to it
-		);
+	);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a equal radius geometric constraint
@@ -172,43 +172,43 @@ public:
 		const AcDbObjectId& entId2,	// ObjectID of second entity 
 		const AcGePoint3d& ptEnt1,	// Point on first entity used to determine which edge subentity is closest to it
 		const AcGePoint3d& ptEnt2		// Point on second entity used to determine which edge subentity is closest to it
-		);
+	);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates an aligned dimensional constraint (between 2 different entities)
 	//
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static Acad::ErrorStatus createAlignedDimConstraint(
-		AcDbObjectId& entId1,	// ObjectID of first entity for aligned dimension
-		AcGePoint3d& entPt1,	// Point on first entity used to determine first point sub entity for the aligned dimension
-		AcDbObjectId& entId2,	// ObjectID of second entity for aligned dimension
-		AcGePoint3d& entPt2,	// Point on second entity used to determine second point sub entity for the aligned dimension
-		AcGePoint3d& dimPos,	// Location of the dimension
+		const AcDbObjectId& entId1,	// ObjectID of first entity for aligned dimension
+		const AcGePoint3d& entPt1,	// Point on first entity used to determine first point sub entity for the aligned dimension
+		const AcDbObjectId& entId2,	// ObjectID of second entity for aligned dimension
+		const AcGePoint3d& entPt2,	// Point on second entity used to determine second point sub entity for the aligned dimension
+		const AcGePoint3d& dimPos,	// Location of the dimension
 		AcDbObjectId& varDimId	// ObjectId of the associated AssocVariable created (dimemsion parameter)
-		);
+	);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates an aligned dimensional constraint (between 2 vertices on the same entity)
 	//
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static Acad::ErrorStatus createAlignedDimConstraint(
-		AcDbObjectId& entId,	// ObjectID of entity for aligned dimension
-		AcGePoint3d& entPt1,	// Point on entity used to determine first point sub entity for the aligned dimension
-		AcGePoint3d& entPt2,	// Point on entity used to determine second point sub entity for the aligned dimension
-		AcGePoint3d& dimPos,	// Location of the dimension
+		const AcDbObjectId& entId,	// ObjectID of entity for aligned dimension
+		const AcGePoint3d& entPt1,	// Point on entity used to determine first point sub entity for the aligned dimension
+		const AcGePoint3d& entPt2,	// Point on entity used to determine second point sub entity for the aligned dimension
+		const AcGePoint3d& dimPos,	// Location of the dimension
 		AcDbObjectId& varDimId	// ObjectId of the associated AssocVariable created (dimemsion parameter)
-		);
+	);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates an aligned dimensional constraint on whole entity or on a segment of a Polyline
 	//
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static Acad::ErrorStatus createAlignedDimConstraint(
-		AcDbObjectId& entId,	// ObjectID of entity for aligned dimension
-		AcGePoint3d& dimPos,	// Location of the dimension
-		AcDbSubentId subentId,	//subentity id, only used if entity is a polyline
+		const AcDbObjectId& entId,	// ObjectID of entity for aligned dimension
+		const AcGePoint3d& dimPos,	// Location of the dimension
+		const AcDbSubentId subentId,	//subentity id, only used if entity is a polyline
 		AcDbObjectId& varDimId	// ObjectId of the associated AssocVariable created (dimemsion parameter)
-		);
+	);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a 2 line angular dimensional constraint
@@ -221,7 +221,7 @@ public:
 		const AcGePoint3d& entPt2,	// Point on second entity used to determine edge sub entity for the angular dimension
 		const AcGePoint3d& dimPos,	// Location of the dimension
 		AcDbObjectId& varDimId	// ObjectId of the associated AssocVariable created (dimemsion parameter)
-		);
+	);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates an arc angular dimensional constraint
@@ -232,7 +232,7 @@ public:
 		AcGePoint3d& entPt,		// Point on arc based entity
 		AcGePoint3d& dimPos,	// Location of the dimension
 		AcDbObjectId& varDimId	// ObjectId of the associated AssocVariable created (dimemsion parameter)
-		);
+	);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a 3 point angular dimensional constraint
@@ -247,7 +247,7 @@ public:
 		AcGePoint3d& entPt3,	// Point on third entity used to determine third point sub entity for the angular dimension
 		AcGePoint3d& dimPos,	// Location of the dimension
 		AcDbObjectId& varDimId	// ObjectId of the associated AssocVariable created (dimemsion parameter)
-		);
+	);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a radial dimensional constraint
@@ -258,18 +258,18 @@ public:
 		AcGePoint3d& entPt,		// Point on first entity used to determine arc sub entity for the radial dimension
 		AcGePoint3d& dimPos,	// Location of the dimension
 		AcDbObjectId& varDimId	// ObjectId of the associated AssocVariable created (dimemsion parameter)
-		);
+	);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a diameter dimensional constraint
 	//
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static Acad::ErrorStatus createDiamDimConstraint(
-		AcDbObjectId& entId,	// ObjectID of entity for radial dimension
-		AcGePoint3d& entPt,		// Point on first entity used to determine arc sub entity for the radial dimension
-		AcGePoint3d& dimPos,	// Location of the dimension
+		const AcDbObjectId& entId,	// ObjectID of entity for radial dimension
+		const AcGePoint3d& entPt,		// Point on first entity used to determine arc sub entity for the radial dimension
+		const AcGePoint3d& dimPos,	// Location of the dimension
 		AcDbObjectId& varDimId	// ObjectId of the associated AssocVariable created (dimemsion parameter)
-		);
+	);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates an horizontal dimensional constraint
@@ -282,7 +282,7 @@ public:
 		AcGePoint3d& entPt2,	// Point on second entity used to determine point sub entity for the horizontal dimension
 		AcGePoint3d& dimPos,	// Location of the dimension
 		AcDbObjectId& varDimId	// ObjectId of the associated AssocVariable created (dimemsion parameter)
-		);
+	);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Creates a vertical dimensional constraint
@@ -295,7 +295,7 @@ public:
 		AcGePoint3d& entPt2,	// Point on second entity used to determine point sub entity for the vertical dimension
 		AcGePoint3d& dimPos,	// Location of the dimension
 		AcDbObjectId& varDimId	// ObjectId of the associated AssocVariable created (dimemsion parameter)
-		);
+	);
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// Use: Finds an existing AcDbAssocVariable of the given name in the scope of the given BTR

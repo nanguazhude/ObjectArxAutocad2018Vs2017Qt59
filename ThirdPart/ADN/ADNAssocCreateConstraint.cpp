@@ -7,53 +7,53 @@
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createCoincidentConstraint(
-	const AcDbObjectId& entId1, 
-	const AcDbObjectId& entId2, 
-	const AcGePoint3d& ptEnt1, 
+	const AcDbObjectId& entId1,
+	const AcDbObjectId& entId2,
+	const AcGePoint3d& ptEnt1,
 	const AcGePoint3d& ptEnt2)
 {
 	Acad::ErrorStatus es = Acad::eOk;
 
-	if((es = AcDbAssocManager::initialize()) != Acad::eOk)
+	if ((es = AcDbAssocManager::initialize()) != Acad::eOk)
 		return es;
 
 	AcDbFullSubentPathArray aEdgePaths;
 
 	AcDbFullSubentPath edgeEntPath1;
-	if((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(
+	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(
 		entId1, ptEnt1, edgeEntPath1)) != Acad::eOk)
 		return es;
-	
-	aEdgePaths.append(edgeEntPath1); 
+
+	aEdgePaths.append(edgeEntPath1);
 
 	AcDbFullSubentPath edgeEntPath2;
-	if((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(
+	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(
 		entId2, ptEnt2, edgeEntPath2)) != Acad::eOk)
 		return es;
-	
-	aEdgePaths.append(edgeEntPath2); 
+
+	aEdgePaths.append(edgeEntPath2);
 
 
 	AcDbFullSubentPathArray aVertexPaths;
 
 	AcDbFullSubentPath vertEntPath1;
 	AcGePoint3d vertexPos1;
-	if((es = AdnAssocSampleUtils::getClosestVertexInfo(
+	if ((es = AdnAssocSampleUtils::getClosestVertexInfo(
 		entId1, edgeEntPath1, ptEnt1, vertexPos1, vertEntPath1)) != Acad::eOk)
 		return es;
-	
+
 	aVertexPaths.append(vertEntPath1);
-	
+
 	AcDbFullSubentPath vertEntPath2;
 	AcGePoint3d vertexPos2;
-	if((es = AdnAssocSampleUtils::getClosestVertexInfo(
+	if ((es = AdnAssocSampleUtils::getClosestVertexInfo(
 		entId2, edgeEntPath2, ptEnt2, vertexPos2, vertEntPath2)) != Acad::eOk)
 		return es;
 
 	aVertexPaths.append(vertEntPath2);
-	
+
 	AcArray<AcConstrainedGeometry*> pConsGeoms;
-	if((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
 		return es;
 
 	// hint fixed geometry
@@ -62,10 +62,10 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createCoincidentConstraint(
 	fixedGeom.append(edgeEntPath1);
 
 	es = AdnAssocSampleUtils::addGeomConstraint(
-		AcGeomConstraint::kCoincident, 
+		AcGeomConstraint::kCoincident,
 		aVertexPaths,
 		fixedGeom);
-	
+
 	return es;
 }
 
@@ -74,32 +74,32 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createCoincidentConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createParallelConstraint(
-	const AcDbObjectId& entId1, 
-	const AcDbObjectId& entId2, 
+	const AcDbObjectId& entId1,
+	const AcDbObjectId& entId2,
 	const AcGePoint3d& ptEnt1,
 	const AcGePoint3d& ptEnt2)
 {
 	Acad::ErrorStatus es = Acad::eOk;
 
-	if((es = AcDbAssocManager::initialize()) != Acad::eOk)
+	if ((es = AcDbAssocManager::initialize()) != Acad::eOk)
 		return es;
 
 	AcDbFullSubentPathArray aEdgePaths;
 
 	AcDbFullSubentPath edgeEntPath1;
-	if((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId1, ptEnt1, edgeEntPath1)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId1, ptEnt1, edgeEntPath1)) != Acad::eOk)
 		return es;
-	
-	aEdgePaths.append(edgeEntPath1); 
+
+	aEdgePaths.append(edgeEntPath1);
 
 	AcDbFullSubentPath edgeEntPath2;
-	if((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId2, ptEnt2, edgeEntPath2)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId2, ptEnt2, edgeEntPath2)) != Acad::eOk)
 		return es;
-	
-	aEdgePaths.append(edgeEntPath2); 
-	
+
+	aEdgePaths.append(edgeEntPath2);
+
 	AcArray<AcConstrainedGeometry*> pConsGeoms;
-	if((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
 		return es;
 
 	// hint fixed geometry
@@ -108,10 +108,10 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createParallelConstraint(
 	fixedGeom.append(edgeEntPath1);
 
 	es = AdnAssocSampleUtils::addGeomConstraint(
-		AcGeomConstraint::kParallel, 
+		AcGeomConstraint::kParallel,
 		aEdgePaths,
 		fixedGeom);
-	
+
 	return es;
 }
 
@@ -120,32 +120,32 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createParallelConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createPerpendicularConstraint(
-	const AcDbObjectId& entId1, 
-	const AcDbObjectId& entId2, 
-	const AcGePoint3d& ptEnt1,  
+	const AcDbObjectId& entId1,
+	const AcDbObjectId& entId2,
+	const AcGePoint3d& ptEnt1,
 	const AcGePoint3d& ptEnt2)
 {
 	Acad::ErrorStatus es = Acad::eOk;
 
-	if((es = AcDbAssocManager::initialize()) != Acad::eOk)
+	if ((es = AcDbAssocManager::initialize()) != Acad::eOk)
 		return es;
 
 	AcDbFullSubentPathArray aEdgePaths;
 
 	AcDbFullSubentPath edgeEntPath1;
-	if((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId1, ptEnt1, edgeEntPath1)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId1, ptEnt1, edgeEntPath1)) != Acad::eOk)
 		return es;
-	
-	aEdgePaths.append(edgeEntPath1); 
+
+	aEdgePaths.append(edgeEntPath1);
 
 	AcDbFullSubentPath edgeEntPath2;
-	if((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId2, ptEnt2, edgeEntPath2)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId2, ptEnt2, edgeEntPath2)) != Acad::eOk)
 		return es;
-	
-	aEdgePaths.append(edgeEntPath2); 
-	
+
+	aEdgePaths.append(edgeEntPath2);
+
 	AcArray<AcConstrainedGeometry*> pConsGeoms;
-	if((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
 		return es;
 
 	// hint fixed geometry
@@ -154,10 +154,10 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createPerpendicularConstraint(
 	fixedGeom.append(edgeEntPath1);
 
 	es = AdnAssocSampleUtils::addGeomConstraint(
-		AcGeomConstraint::kPerpendicular, 
+		AcGeomConstraint::kPerpendicular,
 		aEdgePaths,
 		fixedGeom);
-	
+
 	return es;
 }
 
@@ -166,38 +166,38 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createPerpendicularConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createConcentricConstraint(
-	const AcDbObjectId& entId1, 
-	const AcDbObjectId& entId2, 
-	const AcGePoint3d& ptEnt1,  
+	const AcDbObjectId& entId1,
+	const AcDbObjectId& entId2,
+	const AcGePoint3d& ptEnt1,
 	const AcGePoint3d& ptEnt2)
 {
 	Acad::ErrorStatus es = Acad::eOk;
 
-	if((es = AcDbAssocManager::initialize()) != Acad::eOk)
+	if ((es = AcDbAssocManager::initialize()) != Acad::eOk)
 		return es;
 
 	bool isValidCrv1 = AdnAssocSampleUtils::isEntityValidForConstraint(entId1, ptEnt1, AcGeomConstraint::kConcentric);
 	bool isValidCrv2 = AdnAssocSampleUtils::isEntityValidForConstraint(entId2, ptEnt2, AcGeomConstraint::kConcentric);
-		
-	if(!(isValidCrv1 && isValidCrv2))
+
+	if (!(isValidCrv1 && isValidCrv2))
 		return Acad::eInvalidInput;
 
 	AcDbFullSubentPathArray aEdgePaths;
 
 	AcDbFullSubentPath edgeEntPath1;
-	if((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId1, ptEnt1, edgeEntPath1)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId1, ptEnt1, edgeEntPath1)) != Acad::eOk)
 		return es;
-	
-	aEdgePaths.append(edgeEntPath1); 
+
+	aEdgePaths.append(edgeEntPath1);
 
 	AcDbFullSubentPath edgeEntPath2;
-	if((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId2, ptEnt2, edgeEntPath2)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId2, ptEnt2, edgeEntPath2)) != Acad::eOk)
 		return es;
-	
-	aEdgePaths.append(edgeEntPath2); 
-	
+
+	aEdgePaths.append(edgeEntPath2);
+
 	AcArray<AcConstrainedGeometry*> pConsGeoms;
-	if((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
 		return es;
 
 	// hint fixed geometry
@@ -206,7 +206,7 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createConcentricConstraint(
 	fixedGeom.append(edgeEntPath1);
 
 	es = AdnAssocSampleUtils::addGeomConstraint(
-		AcGeomConstraint::kConcentric, 
+		AcGeomConstraint::kConcentric,
 		aEdgePaths,
 		fixedGeom);
 
@@ -218,38 +218,38 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createConcentricConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createColinearConstraint(
-	const AcDbObjectId& entId1, 
-	const AcDbObjectId& entId2, 
-	const AcGePoint3d& ptEnt1,  
+	const AcDbObjectId& entId1,
+	const AcDbObjectId& entId2,
+	const AcGePoint3d& ptEnt1,
 	const AcGePoint3d& ptEnt2)
 {
 	Acad::ErrorStatus es = Acad::eOk;
 
-	if((es = AcDbAssocManager::initialize()) != Acad::eOk)
+	if ((es = AcDbAssocManager::initialize()) != Acad::eOk)
 		return es;
 
 	bool isValidCrv1 = AdnAssocSampleUtils::isEntityValidForConstraint(entId1, ptEnt1, AcGeomConstraint::kColinear);
 	bool isValidCrv2 = AdnAssocSampleUtils::isEntityValidForConstraint(entId2, ptEnt2, AcGeomConstraint::kColinear);
-		
-	if(!(isValidCrv1 && isValidCrv2))
+
+	if (!(isValidCrv1 && isValidCrv2))
 		return Acad::eInvalidInput;
 
 	AcDbFullSubentPathArray aEdgePaths;
 
 	AcDbFullSubentPath edgeEntPath1;
-	if((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId1, ptEnt1, edgeEntPath1)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId1, ptEnt1, edgeEntPath1)) != Acad::eOk)
 		return es;
-	
-	aEdgePaths.append(edgeEntPath1); 
+
+	aEdgePaths.append(edgeEntPath1);
 
 	AcDbFullSubentPath edgeEntPath2;
-	if((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId2, ptEnt2, edgeEntPath2)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId2, ptEnt2, edgeEntPath2)) != Acad::eOk)
 		return es;
-	
-	aEdgePaths.append(edgeEntPath2); 
-	
+
+	aEdgePaths.append(edgeEntPath2);
+
 	AcArray<AcConstrainedGeometry*> pConsGeoms;
-	if((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
 		return es;
 
 	// hint fixed geometry
@@ -258,7 +258,7 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createColinearConstraint(
 	fixedGeom.append(edgeEntPath1);
 
 	es = AdnAssocSampleUtils::addGeomConstraint(
-		AcGeomConstraint::kColinear, 
+		AcGeomConstraint::kColinear,
 		aEdgePaths,
 		fixedGeom);
 
@@ -270,29 +270,29 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createColinearConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createHorizontalConstraint(
-	const AcDbObjectId& entId, 
+	const AcDbObjectId& entId,
 	const AcGePoint3d& ptEnt)
 {
 	Acad::ErrorStatus es = Acad::eOk;
 
-	if((es = AcDbAssocManager::initialize()) != Acad::eOk)
+	if ((es = AcDbAssocManager::initialize()) != Acad::eOk)
 		return es;
 
 	bool isValidCrv1 = AdnAssocSampleUtils::isEntityValidForConstraint(entId, ptEnt, AcGeomConstraint::kHorizontal);
 
-	if(!isValidCrv1)
+	if (!isValidCrv1)
 		return Acad::eInvalidInput;
 
 	AcDbFullSubentPathArray aEdgePaths;
 
 	AcDbFullSubentPath edgeEntPath1;
-	if((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId, ptEnt, edgeEntPath1)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId, ptEnt, edgeEntPath1)) != Acad::eOk)
 		return es;
-	
-	aEdgePaths.append(edgeEntPath1); 
+
+	aEdgePaths.append(edgeEntPath1);
 
 	AcArray<AcConstrainedGeometry*> pConsGeoms;
-	if((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
 		return es;
 
 	es = AdnAssocSampleUtils::addGeomConstraint(AcGeomConstraint::kHorizontal, aEdgePaths);
@@ -310,24 +310,24 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createVerticalConstraint(
 {
 	Acad::ErrorStatus es = Acad::eOk;
 
-	if((es = AcDbAssocManager::initialize()) != Acad::eOk)
+	if ((es = AcDbAssocManager::initialize()) != Acad::eOk)
 		return es;
 
 	bool isValidCrv1 = AdnAssocSampleUtils::isEntityValidForConstraint(entId, ptEnt, AcGeomConstraint::kVertical);
 
-	if(!isValidCrv1)
+	if (!isValidCrv1)
 		return Acad::eInvalidInput;
 
 	AcDbFullSubentPathArray aEdgePaths;
 
 	AcDbFullSubentPath edgeEntPath1;
-	if((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId, ptEnt, edgeEntPath1)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId, ptEnt, edgeEntPath1)) != Acad::eOk)
 		return es;
-	
-	aEdgePaths.append(edgeEntPath1); 
+
+	aEdgePaths.append(edgeEntPath1);
 
 	AcArray<AcConstrainedGeometry*> pConsGeoms;
-	if((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
 		return es;
 
 	es = AdnAssocSampleUtils::addGeomConstraint(AcGeomConstraint::kVertical, aEdgePaths);
@@ -345,33 +345,33 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createFixConstraint(
 {
 	Acad::ErrorStatus es = Acad::eOk;
 
-	if((es = AcDbAssocManager::initialize()) != Acad::eOk)
+	if ((es = AcDbAssocManager::initialize()) != Acad::eOk)
 		return es;
 
 	bool isValidCrv1 = AdnAssocSampleUtils::isEntityValidForConstraint(entId, ptEnt, AcGeomConstraint::kFix);
 
-	if(!isValidCrv1)
+	if (!isValidCrv1)
 		return Acad::eInvalidInput;
 
 	AcDbFullSubentPathArray aEdgePaths;
 
 	AcDbFullSubentPath edgeEntPath1;
-	if((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId, ptEnt, edgeEntPath1)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId, ptEnt, edgeEntPath1)) != Acad::eOk)
 		return es;
-	
-	aEdgePaths.append(edgeEntPath1); 
+
+	aEdgePaths.append(edgeEntPath1);
 
 	AcArray<AcConstrainedGeometry*> pConsGeoms;
-	if((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
 		return es;
 
 	AcDbFullSubentPathArray aVertexPaths;
 
 	AcDbFullSubentPath vertEntPath1;
 	AcGePoint3d vertexPos1;
-	if((es = AdnAssocSampleUtils::getClosestVertexInfo(entId, edgeEntPath1, ptEnt, vertexPos1, vertEntPath1)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestVertexInfo(entId, edgeEntPath1, ptEnt, vertexPos1, vertEntPath1)) != Acad::eOk)
 		return es;
-	
+
 	aVertexPaths.append(vertEntPath1);
 
 	es = AdnAssocSampleUtils::addGeomConstraint(AcGeomConstraint::kFix, aVertexPaths);
@@ -384,38 +384,38 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createFixConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createTangentConstraint(
-	const AcDbObjectId& entId1, 
-	const AcDbObjectId& entId2, 
-	const AcGePoint3d& ptEnt1,  
+	const AcDbObjectId& entId1,
+	const AcDbObjectId& entId2,
+	const AcGePoint3d& ptEnt1,
 	const AcGePoint3d& ptEnt2)
 {
 	Acad::ErrorStatus es = Acad::eOk;
 
-	if((es = AcDbAssocManager::initialize()) != Acad::eOk)
+	if ((es = AcDbAssocManager::initialize()) != Acad::eOk)
 		return es;
 
 	bool isValidCrv1 = AdnAssocSampleUtils::isEntityValidForConstraint(entId1, ptEnt1, AcGeomConstraint::kTangent);
 	bool isValidCrv2 = AdnAssocSampleUtils::isEntityValidForConstraint(entId2, ptEnt2, AcGeomConstraint::kTangent);
-		
-	if(!isValidCrv1 || !isValidCrv2)
+
+	if (!isValidCrv1 || !isValidCrv2)
 		return Acad::eInvalidInput;
 
 	AcDbFullSubentPathArray aEdgePaths;
 
 	AcDbFullSubentPath edgeEntPath1;
-	if((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId1, ptEnt1, edgeEntPath1)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId1, ptEnt1, edgeEntPath1)) != Acad::eOk)
 		return es;
-	
-	aEdgePaths.append(edgeEntPath1); 
+
+	aEdgePaths.append(edgeEntPath1);
 
 	AcDbFullSubentPath edgeEntPath2;
-	if((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId2, ptEnt2, edgeEntPath2)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId2, ptEnt2, edgeEntPath2)) != Acad::eOk)
 		return es;
-	
-	aEdgePaths.append(edgeEntPath2); 
-	
+
+	aEdgePaths.append(edgeEntPath2);
+
 	AcArray<AcConstrainedGeometry*> pConsGeoms;
-	if((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
 		return es;
 
 	// hint fixed geometry
@@ -424,7 +424,7 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createTangentConstraint(
 	fixedGeom.append(edgeEntPath1);
 
 	es = AdnAssocSampleUtils::addGeomConstraint(
-		AcGeomConstraint::kTangent, 
+		AcGeomConstraint::kTangent,
 		aEdgePaths,
 		fixedGeom);
 
@@ -436,48 +436,48 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createTangentConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createSmoothConstraint(
-	const AcDbObjectId& entId1, 
-	const AcDbObjectId& entId2, 
-	const AcGePoint3d& ptEnt1,  
+	const AcDbObjectId& entId1,
+	const AcDbObjectId& entId2,
+	const AcGePoint3d& ptEnt1,
 	const AcGePoint3d& ptEnt2)
 {
 	Acad::ErrorStatus es = Acad::eOk;
 
-	if((es = AcDbAssocManager::initialize()) != Acad::eOk)
+	if ((es = AcDbAssocManager::initialize()) != Acad::eOk)
 		return es;
 
 	bool isValidCrv1 = AdnAssocSampleUtils::isEntityValidForConstraint(entId1, ptEnt1, AcGeomConstraint::kG2Smooth);
 	bool isValidCrv2 = AdnAssocSampleUtils::isEntityValidForConstraint(entId2, ptEnt2, AcGeomConstraint::kG2Smooth);
 
-	if(!isValidCrv1 || !isValidCrv2)
+	if (!isValidCrv1 || !isValidCrv2)
 		return Acad::eInvalidInput;
-	
+
 	AcDbFullSubentPathArray aEdgePaths;
 
 	AcDbFullSubentPath edgeEntPath1;
-	if((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId1, ptEnt1, edgeEntPath1)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId1, ptEnt1, edgeEntPath1)) != Acad::eOk)
 		return es;
-	
-	aEdgePaths.append(edgeEntPath1); 
+
+	aEdgePaths.append(edgeEntPath1);
 
 	AcDbFullSubentPath edgeEntPath2;
-	if((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId2, ptEnt2, edgeEntPath2)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId2, ptEnt2, edgeEntPath2)) != Acad::eOk)
 		return es;
-	
-	aEdgePaths.append(edgeEntPath2); 
-	
+
+	aEdgePaths.append(edgeEntPath2);
+
 	AcArray<AcConstrainedGeometry*> pConsGeoms;
-	if((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
 		return es;
 
 	AcGePoint3d pos1;
 
-	if((es = AdnAssocSampleUtils::getClosestVertexPos(entId1, edgeEntPath1, ptEnt1, pos1)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestVertexPos(entId1, edgeEntPath1, ptEnt1, pos1)) != Acad::eOk)
 		return es;
 
 	AcGePoint3d pos2;
 
-	if((es = AdnAssocSampleUtils::getClosestVertexPos(entId2, edgeEntPath2, ptEnt2, pos2)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestVertexPos(entId2, edgeEntPath2, ptEnt2, pos2)) != Acad::eOk)
 		return es;
 
 	AcGePoint3dArray points;
@@ -486,10 +486,10 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createSmoothConstraint(
 	points.append(pos2);
 
 	es = AdnAssocSampleUtils::addGeomConstraint(
-		AcGeomConstraint::kG2Smooth, 
-		pConsGeoms, 
+		AcGeomConstraint::kG2Smooth,
+		pConsGeoms,
 		points);
-	
+
 	return es;
 }
 
@@ -506,39 +506,39 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createSymmetricConstraint(
 	const AcGePoint3d& ptEntSym)  // Point on third entity used to determine which edge subentity is closest to it											
 {
 	Acad::ErrorStatus es = Acad::eOk;
-	
-	if((es = AcDbAssocManager::initialize()) != Acad::eOk)
+
+	if ((es = AcDbAssocManager::initialize()) != Acad::eOk)
 		return es;
 
 	bool isValidCrv1 = AdnAssocSampleUtils::isEntityValidForConstraint(entId1, ptEnt1, AcGeomConstraint::kSymmetric);
 	bool isValidCrv2 = AdnAssocSampleUtils::isEntityValidForConstraint(entId2, ptEnt2, AcGeomConstraint::kSymmetric);
 	bool isValidCrv3 = AdnAssocSampleUtils::isEntityValidForConstraint(entSymId, ptEntSym, AcGeomConstraint::kSymmetric);
 
-	if(!isValidCrv1 || !isValidCrv2 || !isValidCrv3)
+	if (!isValidCrv1 || !isValidCrv2 || !isValidCrv3)
 		return Acad::eInvalidInput;
 
 	AcDbFullSubentPathArray aEdgePaths;
 
 	AcDbFullSubentPath edgeEntPath1;
-	if((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId1, ptEnt1, edgeEntPath1)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId1, ptEnt1, edgeEntPath1)) != Acad::eOk)
 		return es;
-	
-	aEdgePaths.append(edgeEntPath1); 
+
+	aEdgePaths.append(edgeEntPath1);
 
 	AcDbFullSubentPath edgeEntPath2;
-	if((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId2, ptEnt2, edgeEntPath2)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId2, ptEnt2, edgeEntPath2)) != Acad::eOk)
 		return es;
-	
-	aEdgePaths.append(edgeEntPath2); 
+
+	aEdgePaths.append(edgeEntPath2);
 
 	AcDbFullSubentPath edgeEntPath3;
-	if((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entSymId, ptEntSym, edgeEntPath3)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entSymId, ptEntSym, edgeEntPath3)) != Acad::eOk)
 		return es;
-	
+
 	aEdgePaths.append(edgeEntPath3);
-	
+
 	AcArray<AcConstrainedGeometry*> pConsGeoms;
-	if((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
 		return es;
 
 	// hint fixed geometry
@@ -548,10 +548,10 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createSymmetricConstraint(
 	fixedGeom.append(edgeEntPath3);
 
 	es = AdnAssocSampleUtils::addGeomConstraint(
-		AcGeomConstraint::kSymmetric, 
+		AcGeomConstraint::kSymmetric,
 		aEdgePaths,
 		fixedGeom);
-	
+
 	return es;
 }
 
@@ -560,38 +560,38 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createSymmetricConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createEqualLengthConstraint(
-	const AcDbObjectId& entId1, 
-	const AcDbObjectId& entId2, 
-	const AcGePoint3d& ptEnt1,  
+	const AcDbObjectId& entId1,
+	const AcDbObjectId& entId2,
+	const AcGePoint3d& ptEnt1,
 	const AcGePoint3d& ptEnt2)
 {
 	Acad::ErrorStatus es = Acad::eOk;
 
-	if((es = AcDbAssocManager::initialize()) != Acad::eOk)
+	if ((es = AcDbAssocManager::initialize()) != Acad::eOk)
 		return es;
 
 	bool isValidCrv1 = AdnAssocSampleUtils::isEntityValidForConstraint(entId1, ptEnt1, AcGeomConstraint::kEqualLength);
 	bool isValidCrv2 = AdnAssocSampleUtils::isEntityValidForConstraint(entId2, ptEnt2, AcGeomConstraint::kEqualLength);
-		
-	if(!isValidCrv1 || !isValidCrv2)
+
+	if (!isValidCrv1 || !isValidCrv2)
 		return Acad::eInvalidInput;
 
 	AcDbFullSubentPathArray aEdgePaths;
 
 	AcDbFullSubentPath edgeEntPath1;
-	if((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId1, ptEnt1, edgeEntPath1)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId1, ptEnt1, edgeEntPath1)) != Acad::eOk)
 		return es;
-	
-	aEdgePaths.append(edgeEntPath1); 
+
+	aEdgePaths.append(edgeEntPath1);
 
 	AcDbFullSubentPath edgeEntPath2;
-	if((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId2, ptEnt2, edgeEntPath2)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId2, ptEnt2, edgeEntPath2)) != Acad::eOk)
 		return es;
-	
-	aEdgePaths.append(edgeEntPath2); 
-	
+
+	aEdgePaths.append(edgeEntPath2);
+
 	AcArray<AcConstrainedGeometry*> pConsGeoms;
-	if((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
 		return es;
 
 	// hint fixed geometry
@@ -600,7 +600,7 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createEqualLengthConstraint(
 	fixedGeom.append(edgeEntPath1);
 
 	es = AdnAssocSampleUtils::addGeomConstraint(
-		AcGeomConstraint::kEqualLength, 
+		AcGeomConstraint::kEqualLength,
 		aEdgePaths,
 		fixedGeom);
 
@@ -612,38 +612,38 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createEqualLengthConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createEqualRadiusConstraint(
-	const AcDbObjectId& entId1, 
-	const AcDbObjectId& entId2, 
+	const AcDbObjectId& entId1,
+	const AcDbObjectId& entId2,
 	const AcGePoint3d& ptEnt1,
 	const AcGePoint3d& ptEnt2)
 {
 	Acad::ErrorStatus es = Acad::eOk;
 
-	if((es = AcDbAssocManager::initialize()) != Acad::eOk)
+	if ((es = AcDbAssocManager::initialize()) != Acad::eOk)
 		return es;
 
 	bool isValidCrv1 = AdnAssocSampleUtils::isEntityValidForConstraint(entId1, ptEnt1, AcGeomConstraint::kEqualRadius);
 	bool isValidCrv2 = AdnAssocSampleUtils::isEntityValidForConstraint(entId2, ptEnt2, AcGeomConstraint::kEqualRadius);
-		
-	if(!isValidCrv1 || !isValidCrv2)
+
+	if (!isValidCrv1 || !isValidCrv2)
 		return Acad::eInvalidInput;
 
 	AcDbFullSubentPathArray aEdgePaths;
 
 	AcDbFullSubentPath edgeEntPath1;
-	if((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId1, ptEnt1, edgeEntPath1)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId1, ptEnt1, edgeEntPath1)) != Acad::eOk)
 		return es;
-	
-	aEdgePaths.append(edgeEntPath1); 
+
+	aEdgePaths.append(edgeEntPath1);
 
 	AcDbFullSubentPath edgeEntPath2;
-	if((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId2, ptEnt2, edgeEntPath2)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId2, ptEnt2, edgeEntPath2)) != Acad::eOk)
 		return es;
-	
-	aEdgePaths.append(edgeEntPath2); 
-	
+
+	aEdgePaths.append(edgeEntPath2);
+
 	AcArray<AcConstrainedGeometry*> pConsGeoms;
-	if((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
 		return es;
 
 	// hint fixed geometry
@@ -652,7 +652,7 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createEqualRadiusConstraint(
 	fixedGeom.append(edgeEntPath1);
 
 	es = AdnAssocSampleUtils::addGeomConstraint(
-		AcGeomConstraint::kEqualRadius, 
+		AcGeomConstraint::kEqualRadius,
 		aEdgePaths,
 		fixedGeom);
 
@@ -664,11 +664,11 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createEqualRadiusConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createAlignedDimConstraint(
-	AcDbObjectId& entId1, 
-    AcGePoint3d& entPt1,  
-    AcDbObjectId& entId2, 
-    AcGePoint3d& entPt2,  
-    AcGePoint3d& dimPos,  
+	const AcDbObjectId& entId1,
+	const AcGePoint3d& entPt1,
+	const AcDbObjectId& entId2,
+	const AcGePoint3d& entPt2,
+	const AcGePoint3d& dimPos,
 	AcDbObjectId& varDimId)
 {
 	AcDbObjectIdArray cleanupObjectIds;
@@ -687,41 +687,41 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createAlignedDimConstraint(
 	{
 		Acad::ErrorStatus err = Acad::eOk;
 
-		if((err = AcDbAssocManager::initialize()) != Acad::eOk)
+		if ((err = AcDbAssocManager::initialize()) != Acad::eOk)
 			throw err;
 
 		AcDbFullSubentPathArray aPathsEdge;
 
 		// Take the first edge
 		AcDbFullSubentPath edgeEntPath1;
-		if((err = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId1, entPt1, edgeEntPath1)) != Acad::eOk)
+		if ((err = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId1, entPt1, edgeEntPath1)) != Acad::eOk)
 			throw err;
 
-		aPathsEdge.append(edgeEntPath1); 
+		aPathsEdge.append(edgeEntPath1);
 
 		AcGePoint3d vertex1;
-		if((err = AdnAssocSampleUtils::getClosestVertexPos(entId1, edgeEntPath1, entPt1, vertex1)) != Acad::eOk)
+		if ((err = AdnAssocSampleUtils::getClosestVertexPos(entId1, edgeEntPath1, entPt1, vertex1)) != Acad::eOk)
 			throw err;
-															  
+
 		// Take the second edge
 		AcDbFullSubentPath edgeEntPath2;
-		if((err = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId2, entPt2, edgeEntPath2)) != Acad::eOk)
+		if ((err = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId2, entPt2, edgeEntPath2)) != Acad::eOk)
 			throw err;
 
-		aPathsEdge.append(edgeEntPath2); 
+		aPathsEdge.append(edgeEntPath2);
 
 		AcGePoint3d vertex2;
-		if((err = AdnAssocSampleUtils::getClosestVertexPos(entId2, edgeEntPath2, entPt2, vertex2)) != Acad::eOk)
+		if ((err = AdnAssocSampleUtils::getClosestVertexPos(entId2, edgeEntPath2, entPt2, vertex2)) != Acad::eOk)
 			throw err;
 
 		AcArray<AcConstrainedGeometry*> pConsGeoms;
-		if((err = AdnAssocSampleUtils::addConstrainedGeometry(aPathsEdge, pConsGeoms)) != Acad::eOk)
+		if ((err = AdnAssocSampleUtils::addConstrainedGeometry(aPathsEdge, pConsGeoms)) != Acad::eOk)
 			throw err;
 
-		if((err = AdnAssocSampleUtils::createAlignedDim(
-			vertex1, 
-			vertex2, 
-			dimPos, 
+		if ((err = AdnAssocSampleUtils::createAlignedDim(
+			vertex1,
+			vertex2,
+			dimPos,
 			dimId,
 			dimStyleId,
 			pDb,
@@ -729,45 +729,45 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createAlignedDimConstraint(
 			throw err;
 
 		cleanupObjectIds.append(dimId);
-								
+
 		AcDbObjectId networkId = AcDbAssocNetwork::getInstanceFromObject(spaceId, true);
 
 		AcString dimName;
 		AcString dimExpression;
 
-		if((err = AdnAssocSampleUtils::getNameAndExpressionFromDimension(
-			networkId, 
-			dimId, 
-			AcDbAssocConstraintType::kDistanceAssocConstraintType, 
-			dimName, 
+		if ((err = AdnAssocSampleUtils::getNameAndExpressionFromDimension(
+			networkId,
+			dimId,
+			AcDbAssocConstraintType::kDistanceAssocConstraintType,
+			dimName,
 			dimExpression)) != Acad::eOk)
-				throw err;
+			throw err;
 
 		//Create new AssocVariable
-		if((err = AdnAssocSampleUtils::addNewVariableToAssocNetwork(
-			networkId, 
-			dimName, 
-			dimExpression, 
-			varDimId))!= Acad::eOk)
+		if ((err = AdnAssocSampleUtils::addNewVariableToAssocNetwork(
+			networkId,
+			dimName,
+			dimExpression,
+			varDimId)) != Acad::eOk)
 			throw err;
 
 		//As the variable didn't exist, we will need to clean it up if something goes wrong from here.
 		cleanupObjectIds.append(varDimId);
 
-		if((err = AdnAssocSampleUtils::addValueDependency(networkId, varDimId, varDepId)) != Acad::eOk)
+		if ((err = AdnAssocSampleUtils::addValueDependency(networkId, varDimId, varDepId)) != Acad::eOk)
 			throw err;
 
 		//create dim dependency
 		AcDbObjectId dimDepBodyId, dimDepId;
 
-		if((err = AcDbAssocDimDependencyBody::createAndPostToDatabase(dimId, dimDepId, dimDepBodyId)) != Acad::eOk)
+		if ((err = AcDbAssocDimDependencyBody::createAndPostToDatabase(dimId, dimDepId, dimDepBodyId)) != Acad::eOk)
 			throw err;
 
 		const bool bPreviousValue = AcDbAssocDimDependencyBodyBase::setEraseDimensionIfDependencyIsErased(false);
 
-		if((err = AdnAssocSampleUtils::createDistanceConstraint(
-			varDepId, 
-			dimDepId, 
+		if ((err = AdnAssocSampleUtils::createDistanceConstraint(
+			varDepId,
+			dimDepId,
 			pConsGeoms[0],
 			vertex1,
 			pConsGeoms[1],
@@ -775,16 +775,16 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createAlignedDimConstraint(
 			NULL,
 			pDb,
 			spaceId,
-			ppNewDisConstraint))!= Acad::eOk)
+			ppNewDisConstraint)) != Acad::eOk)
 			throw err;
 
 		AcDbAssocDimDependencyBodyBase::setEraseDimensionIfDependencyIsErased(bPreviousValue);
 
 		return err;
 	}
-	catch(Acad::ErrorStatus err)
+	catch (Acad::ErrorStatus err)
 	{
-		if(err != Acad::eOk)
+		if (err != Acad::eOk)
 		{
 			AdnAssocSampleUtils::doCleanUp(cleanupObjectIds);
 		}
@@ -797,10 +797,10 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createAlignedDimConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createAlignedDimConstraint(
-	AcDbObjectId& entId, 
-	AcGePoint3d& entPt1, 
-	AcGePoint3d& entPt2, 
-	AcGePoint3d& dimPos, 
+	const AcDbObjectId& entId,
+	const AcGePoint3d& entPt1,
+	const AcGePoint3d& entPt2,
+	const AcGePoint3d& dimPos,
 	AcDbObjectId& varDimId)
 {
 	return AcDbAssoc2dConstraintAPI::createAlignedDimConstraint(
@@ -812,34 +812,34 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createAlignedDimConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createAlignedDimConstraint(
-	AcDbObjectId& entId,
-	AcGePoint3d& dimPos, 
-	AcDbSubentId subentId,
+	const AcDbObjectId& entId,
+	const AcGePoint3d& dimPos,
+	const AcDbSubentId subentId,
 	AcDbObjectId& varDimId)
 {
 	Acad::ErrorStatus err = Acad::eOk;
 
 	AcDbSmartObjectPointer <AcDbEntity> pEntity(entId, AcDb::kForRead);
 
-	if((err = pEntity.openStatus()) != Acad::eOk )
+	if ((err = pEntity.openStatus()) != Acad::eOk)
 		return err;
 
-	AcDbAssocPersSubentIdPE* const pAssocPersSubentIdPE = 
+	AcDbAssocPersSubentIdPE* const pAssocPersSubentIdPE =
 		AcDbAssocPersSubentIdPE::cast(pEntity->queryX(AcDbAssocPersSubentIdPE::desc()));
 
 	AcGeCurve3d* segment = NULL;
-	if((err = pAssocPersSubentIdPE->getEdgeSubentityGeometry(pEntity, subentId, segment))!= Acad::eOk )
+	if ((err = pAssocPersSubentIdPE->getEdgeSubentityGeometry(pEntity, subentId, segment)) != Acad::eOk)
 		return err;
 
 	AcGePoint3d startPoint;
-	if(!segment->hasStartPoint(startPoint))
+	if (!segment->hasStartPoint(startPoint))
 	{
 		delete segment;
 		return Acad::eInvalidInput;
 	}
 
 	AcGePoint3d endPoint;
-	if(!segment->hasEndPoint(endPoint))
+	if (!segment->hasEndPoint(endPoint))
 	{
 		delete segment;
 		return Acad::eInvalidInput;
@@ -855,11 +855,11 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createAlignedDimConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::create2LineAngularDimConstraint(
-	const AcDbObjectId& entId1, 
-    const AcDbObjectId& entId2,
-	const AcGePoint3d& entPt1, 
-    const AcGePoint3d& entPt2,  
-    const AcGePoint3d& dimPos, 
+	const AcDbObjectId& entId1,
+	const AcDbObjectId& entId2,
+	const AcGePoint3d& entPt1,
+	const AcGePoint3d& entPt2,
+	const AcGePoint3d& dimPos,
 	AcDbObjectId& varDimId)
 {
 	AcDbObjectIdArray cleanupObjectIds;
@@ -878,32 +878,32 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::create2LineAngularDimConstraint(
 	{
 		Acad::ErrorStatus err = Acad::eOk;
 
-		if((err = AcDbAssocManager::initialize()) != Acad::eOk)
+		if ((err = AcDbAssocManager::initialize()) != Acad::eOk)
 			throw err;
 
 		AcDbFullSubentPath edgeEntPath1;
 		AcGePoint3d startPoint1;
 		AcGePoint3d endPoint1;
-		
-		if((err = AdnAssocSampleUtils::getLinearEdgeData(entId1, entPt1, edgeEntPath1, startPoint1, endPoint1)) != Acad::eOk)
+
+		if ((err = AdnAssocSampleUtils::getLinearEdgeData(entId1, entPt1, edgeEntPath1, startPoint1, endPoint1)) != Acad::eOk)
 			throw err;
 
 		AcDbFullSubentPath edgeEntPath2;
 		AcGePoint3d startPoint2;
 		AcGePoint3d endPoint2;
-		
-		if((err = AdnAssocSampleUtils::getLinearEdgeData(entId2, entPt2, edgeEntPath2, startPoint2, endPoint2)) != Acad::eOk)
+
+		if ((err = AdnAssocSampleUtils::getLinearEdgeData(entId2, entPt2, edgeEntPath2, startPoint2, endPoint2)) != Acad::eOk)
 			throw err;
-														    
-		if((err = AdnAssocSampleUtils::create2LinesAngularDim(startPoint2, 
-															  endPoint2, 
-															  startPoint1, 
-															  endPoint1, 
-															  dimPos, 
-															  dimId,
-															  dimStyleId,
-															  pDb,
-															  spaceId)) != Acad::eOk)
+
+		if ((err = AdnAssocSampleUtils::create2LinesAngularDim(startPoint2,
+			endPoint2,
+			startPoint1,
+			endPoint1,
+			dimPos,
+			dimId,
+			dimStyleId,
+			pDb,
+			spaceId)) != Acad::eOk)
 			throw err;
 
 		cleanupObjectIds.append(dimId);
@@ -914,7 +914,7 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::create2LineAngularDimConstraint(
 		aPathsEdge.append(edgeEntPath2);
 
 		AcArray<AcConstrainedGeometry*> pConsGeoms;
-		if((err = AdnAssocSampleUtils::addConstrainedGeometry(aPathsEdge, pConsGeoms)) != Acad::eOk)
+		if ((err = AdnAssocSampleUtils::addConstrainedGeometry(aPathsEdge, pConsGeoms)) != Acad::eOk)
 			throw err;
 
 		AcDbObjectId networkId = AcDbAssocNetwork::getInstanceFromObject(spaceId, true);
@@ -922,50 +922,50 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::create2LineAngularDimConstraint(
 		AcString dimName;
 		AcString dimExpression;
 
-		if((err = AdnAssocSampleUtils::getNameAndExpressionFromDimension(networkId, 
-																		 dimId, 
-																		 AcDbAssocConstraintType::kAngle0AssocConstraintType, 
-																		 dimName, 
-																		 dimExpression)) != Acad::eOk)
-				throw err;
+		if ((err = AdnAssocSampleUtils::getNameAndExpressionFromDimension(networkId,
+			dimId,
+			AcDbAssocConstraintType::kAngle0AssocConstraintType,
+			dimName,
+			dimExpression)) != Acad::eOk)
+			throw err;
 
 		//Create new AssocVariable
-		if((err = AdnAssocSampleUtils::addNewVariableToAssocNetwork(networkId, dimName, dimExpression, varDimId))!= Acad::eOk)
+		if ((err = AdnAssocSampleUtils::addNewVariableToAssocNetwork(networkId, dimName, dimExpression, varDimId)) != Acad::eOk)
 			throw err;
 
 		//As the variable didn't exist, we will need to clean it up if something goes wrong from here.
 		cleanupObjectIds.append(varDimId);
 
-		if((err = AdnAssocSampleUtils::addValueDependency(networkId, varDimId, varDepId)) != Acad::eOk)
+		if ((err = AdnAssocSampleUtils::addValueDependency(networkId, varDimId, varDepId)) != Acad::eOk)
 			throw err;
 
 		//create dim dependency
 		AcDbObjectId dimDepBodyId, dimDepId;
 
-		if((err = AcDbAssocDimDependencyBody::createAndPostToDatabase(dimId, dimDepId, dimDepBodyId)) != Acad::eOk)
+		if ((err = AcDbAssocDimDependencyBody::createAndPostToDatabase(dimId, dimDepId, dimDepBodyId)) != Acad::eOk)
 			throw err;
 
 		const bool bPreviousValue = AcDbAssocDimDependencyBodyBase::setEraseDimensionIfDependencyIsErased(false);
 
 		AcAngleConstraint::SectorType sectorType = AcAngleConstraint::SectorType::kParallelClockwise;
-		
-		if((err = AdnAssocSampleUtils::create2LineAngleConstraint(varDepId, 
-																  dimDepId, 
-																  pConsGeoms[0],
-																  pConsGeoms[1],
-																  sectorType,
-																  pDb,
-																  spaceId,
-																  ppNewAngConstraint))!= Acad::eOk)
+
+		if ((err = AdnAssocSampleUtils::create2LineAngleConstraint(varDepId,
+			dimDepId,
+			pConsGeoms[0],
+			pConsGeoms[1],
+			sectorType,
+			pDb,
+			spaceId,
+			ppNewAngConstraint)) != Acad::eOk)
 			throw err;
 
 		AcDbAssocDimDependencyBodyBase::setEraseDimensionIfDependencyIsErased(bPreviousValue);
 
 		return err;
 	}
-	catch(Acad::ErrorStatus err)
+	catch (Acad::ErrorStatus err)
 	{
-		if(err != Acad::eOk)
+		if (err != Acad::eOk)
 		{
 			AdnAssocSampleUtils::doCleanUp(cleanupObjectIds);
 		}
@@ -978,36 +978,36 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::create2LineAngularDimConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createArcAngularDimConstraint(
-	AcDbObjectId& entId, 
-	AcGePoint3d& entPt,  
-	AcGePoint3d& dimPos, 
+	AcDbObjectId& entId,
+	AcGePoint3d& entPt,
+	AcGePoint3d& dimPos,
 	AcDbObjectId& varDimId)
 {
 	Acad::ErrorStatus err = Acad::eOk;
 
-	if((err = AcDbAssocManager::initialize()) != Acad::eOk)
+	if ((err = AcDbAssocManager::initialize()) != Acad::eOk)
 		return err;
 
 	AcDbFullSubentPathArray aPathsEdge;
 
 	AcDbFullSubentPath edgeEntPath;
-	if((err = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId, entPt, edgeEntPath)) != Acad::eOk)
+	if ((err = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId, entPt, edgeEntPath)) != Acad::eOk)
 		return err;
 
-	aPathsEdge.append(edgeEntPath); 
+	aPathsEdge.append(edgeEntPath);
 
 	AcDbSmartObjectPointer <AcDbEntity> pEntity(entId, AcDb::kForRead);
 
-	if((err = pEntity.openStatus()) != Acad::eOk )
+	if ((err = pEntity.openStatus()) != Acad::eOk)
 		return err;
 
 	AcDbAssocPersSubentIdPE* const pAssocPersSubentIdPE = AcDbAssocPersSubentIdPE::cast(pEntity->queryX(AcDbAssocPersSubentIdPE::desc()));
 
 	AcGeCurve3d* segment = NULL;
-	if((err = pAssocPersSubentIdPE->getEdgeSubentityGeometry(pEntity, edgeEntPath.subentId(), segment))!= Acad::eOk )
+	if ((err = pAssocPersSubentIdPE->getEdgeSubentityGeometry(pEntity, edgeEntPath.subentId(), segment)) != Acad::eOk)
 		return err;
 
-	if(!(segment->type() == AcGe::EntityId::kCircArc3d))
+	if (!(segment->type() == AcGe::EntityId::kCircArc3d))
 	{
 		delete segment;
 		return Acad::eInvalidInput;
@@ -1018,19 +1018,19 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createArcAngularDimConstraint(
 	AcDbObjectId dimId;
 
 	AcGePoint3d centerPoint = arc->center();
-	AcGePoint3d xLine1Point = arc->startPoint();	
+	AcGePoint3d xLine1Point = arc->startPoint();
 	AcGePoint3d xLine2Point = arc->endPoint();
 
 	delete arc;
 
 	return AcDbAssoc2dConstraintAPI::create3PointAngularDimConstraint(
-		entId, 
 		entId,
 		entId,
-		centerPoint, 
-		xLine1Point, 
-		xLine2Point, 
-		dimPos, 
+		entId,
+		centerPoint,
+		xLine1Point,
+		xLine2Point,
+		dimPos,
 		varDimId);
 }
 
@@ -1039,13 +1039,13 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createArcAngularDimConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::create3PointAngularDimConstraint(
-	AcDbObjectId& entId1,  
+	AcDbObjectId& entId1,
 	AcDbObjectId& entId2,
-	AcDbObjectId& entId3, 
-	AcGePoint3d& entPt1, 
-	AcGePoint3d& entPt2,   
-	AcGePoint3d& entPt3,   
-	AcGePoint3d& dimPos,   
+	AcDbObjectId& entId3,
+	AcGePoint3d& entPt1,
+	AcGePoint3d& entPt2,
+	AcGePoint3d& entPt3,
+	AcGePoint3d& dimPos,
 	AcDbObjectId& varDimId)
 {
 	AcDbObjectIdArray cleanupObjectIds;
@@ -1059,62 +1059,62 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::create3PointAngularDimConstraint(
 	AcDbObjectId dimStyleId = AcDbObjectId::kNull;
 
 	Ac3PointAngleConstraint** ppNewAngConstraint = NULL;
-		
+
 	try
 	{
 		Acad::ErrorStatus err = Acad::eOk;
 
-		if((err = AcDbAssocManager::initialize()) != Acad::eOk)
+		if ((err = AcDbAssocManager::initialize()) != Acad::eOk)
 			throw err;
 
 		AcDbFullSubentPathArray aPathsEdge;
 
 		//Get Edge/Vertex 1
 		AcDbFullSubentPath edgeEntPath1;
-		if((err = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId1, entPt1, edgeEntPath1)) != Acad::eOk)
+		if ((err = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId1, entPt1, edgeEntPath1)) != Acad::eOk)
 			throw err;
 
-		aPathsEdge.append(edgeEntPath1); 
+		aPathsEdge.append(edgeEntPath1);
 
 		AcGePoint3d vertex1;
-		if((err = AdnAssocSampleUtils::getClosestVertexPos(entId1, edgeEntPath1, entPt1, vertex1)) != Acad::eOk)
+		if ((err = AdnAssocSampleUtils::getClosestVertexPos(entId1, edgeEntPath1, entPt1, vertex1)) != Acad::eOk)
 			throw err;
 
 		//Get Edge/Vertex 2
 		AcDbFullSubentPath edgeEntPath2;
-		if((err = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId2, entPt2, edgeEntPath2)) != Acad::eOk)
+		if ((err = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId2, entPt2, edgeEntPath2)) != Acad::eOk)
 			throw err;
 
-		aPathsEdge.append(edgeEntPath2); 
+		aPathsEdge.append(edgeEntPath2);
 
 		AcGePoint3d vertex2;
-		if((err = AdnAssocSampleUtils::getClosestVertexPos(entId2, edgeEntPath2, entPt2, vertex2)) != Acad::eOk)
+		if ((err = AdnAssocSampleUtils::getClosestVertexPos(entId2, edgeEntPath2, entPt2, vertex2)) != Acad::eOk)
 			throw err;
 
 		//Get Edge/Vertex 3
 		AcDbFullSubentPath edgeEntPath3;
-		if((err = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId3, entPt3, edgeEntPath3)) != Acad::eOk)
+		if ((err = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId3, entPt3, edgeEntPath3)) != Acad::eOk)
 			throw err;
 
-		aPathsEdge.append(edgeEntPath3); 
+		aPathsEdge.append(edgeEntPath3);
 
 		AcGePoint3d vertex3;
-		if((err = AdnAssocSampleUtils::getClosestVertexPos(entId3, edgeEntPath3, entPt3, vertex3)) != Acad::eOk)
+		if ((err = AdnAssocSampleUtils::getClosestVertexPos(entId3, edgeEntPath3, entPt3, vertex3)) != Acad::eOk)
 			throw err;
 
 		AcArray<AcConstrainedGeometry*> pConsGeoms;
 
-		if((err = AdnAssocSampleUtils::addConstrainedGeometry(aPathsEdge, pConsGeoms)) != Acad::eOk)
+		if ((err = AdnAssocSampleUtils::addConstrainedGeometry(aPathsEdge, pConsGeoms)) != Acad::eOk)
 			throw err;
-														    
-		if((err = AdnAssocSampleUtils::create3PointAngularDim(vertex1, 
-			                                                  vertex3, 
-															  vertex2, 
-															  dimPos, 
-															  dimId,
-															  dimStyleId,
-															  pDb,
-															  spaceId)) != Acad::eOk)
+
+		if ((err = AdnAssocSampleUtils::create3PointAngularDim(vertex1,
+			vertex3,
+			vertex2,
+			dimPos,
+			dimId,
+			dimStyleId,
+			pDb,
+			spaceId)) != Acad::eOk)
 			throw err;
 
 		cleanupObjectIds.append(dimId);
@@ -1124,54 +1124,54 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::create3PointAngularDimConstraint(
 		AcString dimName;
 		AcString dimExpression;
 
-		if((err = AdnAssocSampleUtils::getNameAndExpressionFromDimension(networkId, 
-																		 dimId, 
-																		 AcDbAssocConstraintType::kAngle0AssocConstraintType, 
-																		 dimName, 
-																		 dimExpression)) != Acad::eOk)
-				throw err;
+		if ((err = AdnAssocSampleUtils::getNameAndExpressionFromDimension(networkId,
+			dimId,
+			AcDbAssocConstraintType::kAngle0AssocConstraintType,
+			dimName,
+			dimExpression)) != Acad::eOk)
+			throw err;
 
 		//Create new AssocVariable
-		if((err = AdnAssocSampleUtils::addNewVariableToAssocNetwork(networkId, dimName, dimExpression, varDimId))!= Acad::eOk)
+		if ((err = AdnAssocSampleUtils::addNewVariableToAssocNetwork(networkId, dimName, dimExpression, varDimId)) != Acad::eOk)
 			throw err;
 
 		//As the variable didn't exist, we will need to clean it up if something goes wrong from here.
 		cleanupObjectIds.append(varDimId);
 
-		if((err = AdnAssocSampleUtils::addValueDependency(networkId, varDimId, varDepId)) != Acad::eOk)
+		if ((err = AdnAssocSampleUtils::addValueDependency(networkId, varDimId, varDepId)) != Acad::eOk)
 			throw err;
 
 		//create dim dependency
 		AcDbObjectId dimDepBodyId, dimDepId;
 
-		if((err = AcDbAssocDimDependencyBody::createAndPostToDatabase(dimId, dimDepId, dimDepBodyId)) != Acad::eOk)
+		if ((err = AcDbAssocDimDependencyBody::createAndPostToDatabase(dimId, dimDepId, dimDepBodyId)) != Acad::eOk)
 			throw err;
 
 		const bool bPreviousValue = AcDbAssocDimDependencyBodyBase::setEraseDimensionIfDependencyIsErased(false);
 
 		AcAngleConstraint::SectorType sectorType = AcAngleConstraint::SectorType::kParallelClockwise;
 
-		if((err = AdnAssocSampleUtils::create3PointAngleConstraint(varDepId, 
-																   dimDepId, 
-																   pConsGeoms[0],
-																   vertex1,
-																   pConsGeoms[1],
-																   vertex2,
-																   pConsGeoms[2],
-																   vertex3,
-																   sectorType,
-																   pDb,
-																   spaceId,
-																   ppNewAngConstraint))!= Acad::eOk)
+		if ((err = AdnAssocSampleUtils::create3PointAngleConstraint(varDepId,
+			dimDepId,
+			pConsGeoms[0],
+			vertex1,
+			pConsGeoms[1],
+			vertex2,
+			pConsGeoms[2],
+			vertex3,
+			sectorType,
+			pDb,
+			spaceId,
+			ppNewAngConstraint)) != Acad::eOk)
 			throw err;
 
 		AcDbAssocDimDependencyBodyBase::setEraseDimensionIfDependencyIsErased(bPreviousValue);
 
 		return err;
 	}
-	catch(Acad::ErrorStatus err)
+	catch (Acad::ErrorStatus err)
 	{
-		if(err != Acad::eOk)
+		if (err != Acad::eOk)
 		{
 			AdnAssocSampleUtils::doCleanUp(cleanupObjectIds);
 		}
@@ -1184,11 +1184,11 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::create3PointAngularDimConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus createRadialOrDiamDimConstraint(
-	AcDbObjectId& entId, 
-	AcGePoint3d& entPt,  
-	AcGePoint3d& dimPos, 
+	const AcDbObjectId& entId,
+	const AcGePoint3d& entPt,
+	const AcGePoint3d& dimPos,
 	bool isRadial,
-	AcDbObjectId& varDimId )
+	AcDbObjectId& varDimId)
 {
 	AcDbObjectIdArray cleanupObjectIds;
 
@@ -1206,29 +1206,29 @@ Acad::ErrorStatus createRadialOrDiamDimConstraint(
 	{
 		Acad::ErrorStatus err = Acad::eOk;
 
-		if((err = AcDbAssocManager::initialize()) != Acad::eOk)
+		if ((err = AcDbAssocManager::initialize()) != Acad::eOk)
 			throw err;
 
 		AcDbFullSubentPathArray aPathsEdge;
 
 		AcDbFullSubentPath edgeEntPath;
-		if((err = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId, entPt, edgeEntPath)) != Acad::eOk)
+		if ((err = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId, entPt, edgeEntPath)) != Acad::eOk)
 			throw err;
 
-		aPathsEdge.append(edgeEntPath); 
+		aPathsEdge.append(edgeEntPath);
 
 		AcDbSmartObjectPointer <AcDbEntity> pEntity(entId, AcDb::kForRead);
 
-		if((err = pEntity.openStatus()) != Acad::eOk )
+		if ((err = pEntity.openStatus()) != Acad::eOk)
 			throw err;
 
 		AcDbAssocPersSubentIdPE* const pAssocPersSubentIdPE = AcDbAssocPersSubentIdPE::cast(pEntity->queryX(AcDbAssocPersSubentIdPE::desc()));
 
 		AcGeCurve3d* segment = NULL;
-		if((err = pAssocPersSubentIdPE->getEdgeSubentityGeometry(pEntity, edgeEntPath.subentId(), segment))!= Acad::eOk )
+		if ((err = pAssocPersSubentIdPE->getEdgeSubentityGeometry(pEntity, edgeEntPath.subentId(), segment)) != Acad::eOk)
 			throw err;
 
-		if(!(segment->type() == AcGe::EntityId::kCircArc3d))
+		if (!(segment->type() == AcGe::EntityId::kCircArc3d))
 		{
 			delete segment;
 			throw Acad::eInvalidInput;
@@ -1238,21 +1238,21 @@ Acad::ErrorStatus createRadialOrDiamDimConstraint(
 
 		AcGePoint3d center = arc->center();
 
-		AcGeVector3d dir(dimPos-center);
+		AcGeVector3d dir(dimPos - center);
 
-		if(dir.length() > 0.001)
-			dir	= dir * (arc->radius() / dir.length());
+		if (dir.length() > 0.001)
+			dir = dir * (arc->radius() / dir.length());
 
 		AcGePoint3d chordPt((center.x + dir.x),
-							(center.y + dir.y),
-							(center.z + dir.z));
-		
+			(center.y + dir.y),
+			(center.z + dir.z));
+
 		double leaderLength = chordPt.distanceTo(dimPos);
 
 		AcDbAssocConstraintType constrTypeForName;
 		AcRadiusDiameterConstraint::RadiusDiameterConstrType constrType;
 
-		if(isRadial)
+		if (isRadial)
 		{
 			err = AdnAssocSampleUtils::createRadialDim(entId, center, chordPt, leaderLength, dimId, dimStyleId, pDb, spaceId);
 
@@ -1262,8 +1262,8 @@ Acad::ErrorStatus createRadialOrDiamDimConstraint(
 		else
 		{
 			AcGePoint3d farChordPt((center.x - dir.x),
-								   (center.y - dir.y),
-								   (center.z - dir.z));
+				(center.y - dir.y),
+				(center.z - dir.z));
 
 			err = AdnAssocSampleUtils::createDiametricDim(entId, chordPt, farChordPt, dimPos, leaderLength, dimId, dimStyleId, pDb, spaceId);
 
@@ -1273,13 +1273,13 @@ Acad::ErrorStatus createRadialOrDiamDimConstraint(
 
 		delete arc;
 
-		if(err != Acad::eOk)
+		if (err != Acad::eOk)
 			throw err;
 
 		cleanupObjectIds.append(dimId);
 
 		AcArray<AcConstrainedGeometry*> pConsGeoms;
-		if((err = AdnAssocSampleUtils::addConstrainedGeometry(aPathsEdge, pConsGeoms)) != Acad::eOk)
+		if ((err = AdnAssocSampleUtils::addConstrainedGeometry(aPathsEdge, pConsGeoms)) != Acad::eOk)
 			throw err;
 
 		AcDbObjectId networkId = AcDbAssocNetwork::getInstanceFromObject(spaceId, true);
@@ -1287,47 +1287,47 @@ Acad::ErrorStatus createRadialOrDiamDimConstraint(
 		AcString dimName;
 		AcString dimExpression;
 
-		if((err = AdnAssocSampleUtils::getNameAndExpressionFromDimension(networkId, 
-																		 dimId, 
-																		 constrTypeForName, 
-																		 dimName, 
-																		 dimExpression)) != Acad::eOk)
-				throw err;
+		if ((err = AdnAssocSampleUtils::getNameAndExpressionFromDimension(networkId,
+			dimId,
+			constrTypeForName,
+			dimName,
+			dimExpression)) != Acad::eOk)
+			throw err;
 
 		//Create new AssocVariable
-		if((err = AdnAssocSampleUtils::addNewVariableToAssocNetwork(networkId, dimName, dimExpression, varDimId))!= Acad::eOk)
+		if ((err = AdnAssocSampleUtils::addNewVariableToAssocNetwork(networkId, dimName, dimExpression, varDimId)) != Acad::eOk)
 			throw err;
 
 		//As the variable didn't exist, we will need to clean it up if something goes wrong from here.
 		cleanupObjectIds.append(varDimId);
 
-		if((err = AdnAssocSampleUtils::addValueDependency(networkId, varDimId, varDepId)) != Acad::eOk)
+		if ((err = AdnAssocSampleUtils::addValueDependency(networkId, varDimId, varDepId)) != Acad::eOk)
 			throw err;
 
 		//create dim dependency
 		AcDbObjectId dimDepBodyId, dimDepId;
 
-		if((err = AcDbAssocDimDependencyBody::createAndPostToDatabase(dimId, dimDepId, dimDepBodyId)) != Acad::eOk)
+		if ((err = AcDbAssocDimDependencyBody::createAndPostToDatabase(dimId, dimDepId, dimDepBodyId)) != Acad::eOk)
 			throw err;
 
 		const bool bPreviousValue = AcDbAssocDimDependencyBodyBase::setEraseDimensionIfDependencyIsErased(false);
 
-		if((err = AdnAssocSampleUtils::createRadiusDiameterConstraint(varDepId, 
-																	  dimDepId, 
-																	  pConsGeoms[0],
-																	  constrType, 
-																	  pDb,
-																	  spaceId,
-																	  ppNewRadDiaConstraint))!= Acad::eOk)
+		if ((err = AdnAssocSampleUtils::createRadiusDiameterConstraint(varDepId,
+			dimDepId,
+			pConsGeoms[0],
+			constrType,
+			pDb,
+			spaceId,
+			ppNewRadDiaConstraint)) != Acad::eOk)
 			throw err;
 
 		AcDbAssocDimDependencyBodyBase::setEraseDimensionIfDependencyIsErased(bPreviousValue);
 
 		return err;
 	}
-	catch(Acad::ErrorStatus err)
+	catch (Acad::ErrorStatus err)
 	{
-		if(err != Acad::eOk)
+		if (err != Acad::eOk)
 		{
 			AdnAssocSampleUtils::doCleanUp(cleanupObjectIds);
 		}
@@ -1340,9 +1340,9 @@ Acad::ErrorStatus createRadialOrDiamDimConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createRadialDimConstraint(
-	AcDbObjectId& entId, 
-	AcGePoint3d& entPt,  
-	AcGePoint3d& dimPos, 
+	AcDbObjectId& entId,
+	AcGePoint3d& entPt,
+	AcGePoint3d& dimPos,
 	AcDbObjectId& varDimId)
 {
 	bool isRadial = true;
@@ -1355,9 +1355,9 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createRadialDimConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createDiamDimConstraint(
-	AcDbObjectId& entId,  
-	AcGePoint3d& entPt,   
-	AcGePoint3d& dimPos,  
+	const AcDbObjectId& entId,
+	const AcGePoint3d& entPt,
+	const AcGePoint3d& dimPos,
 	AcDbObjectId& varDimId)
 {
 	bool isRadial = false;
@@ -1370,11 +1370,11 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createDiamDimConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus createRotatedDimConstraint(
-	AcDbObjectId& entId1, 
-    AcGePoint3d& entPt1, 
-	AcDbObjectId& entId2, 
-    AcGePoint3d& entPt2, 
-    AcGePoint3d& dimPos,
+	AcDbObjectId& entId1,
+	AcGePoint3d& entPt1,
+	AcDbObjectId& entId2,
+	AcGePoint3d& entPt2,
+	AcGePoint3d& dimPos,
 	double rotation,
 	const AcGeVector3d& fixedDirection,
 	AcDbObjectId& varDimId)
@@ -1395,52 +1395,52 @@ Acad::ErrorStatus createRotatedDimConstraint(
 	{
 		Acad::ErrorStatus err = Acad::eOk;
 
-		if((err = AcDbAssocManager::initialize()) != Acad::eOk)
+		if ((err = AcDbAssocManager::initialize()) != Acad::eOk)
 			throw err;
 
 		AcDbFullSubentPathArray aPathsEdge;
 
 		// Take the first edge
 		AcDbFullSubentPath edgeEntPath1;
-		if((err = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId1, entPt1, edgeEntPath1)) != Acad::eOk)
+		if ((err = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId1, entPt1, edgeEntPath1)) != Acad::eOk)
 			throw err;
 
-		aPathsEdge.append(edgeEntPath1); 
+		aPathsEdge.append(edgeEntPath1);
 
 		AcGePoint3d vertex1;
-		if((err = AdnAssocSampleUtils::getClosestVertexPos(entId1, edgeEntPath1, entPt1, vertex1)) != Acad::eOk)
+		if ((err = AdnAssocSampleUtils::getClosestVertexPos(entId1, edgeEntPath1, entPt1, vertex1)) != Acad::eOk)
 			throw err;
-															  
+
 		// Take the second edge
 		AcDbFullSubentPath edgeEntPath2;
-		if((err = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId2, entPt2, edgeEntPath2)) != Acad::eOk)
+		if ((err = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId2, entPt2, edgeEntPath2)) != Acad::eOk)
 			throw err;
 
-		aPathsEdge.append(edgeEntPath2); 
+		aPathsEdge.append(edgeEntPath2);
 
 		AcGePoint3d vertex2;
-		if((err = AdnAssocSampleUtils::getClosestVertexPos(entId2, edgeEntPath2, entPt2, vertex2)) != Acad::eOk)
+		if ((err = AdnAssocSampleUtils::getClosestVertexPos(entId2, edgeEntPath2, entPt2, vertex2)) != Acad::eOk)
 			throw err;
 
 		AcArray<AcConstrainedGeometry*> pConsGeoms;
 
-		if((err = AdnAssocSampleUtils::addConstrainedGeometry(aPathsEdge, pConsGeoms)) != Acad::eOk)
+		if ((err = AdnAssocSampleUtils::addConstrainedGeometry(aPathsEdge, pConsGeoms)) != Acad::eOk)
 			throw err;
-		
-		if((err = AdnAssocSampleUtils::createRotatedDim(entId1, 
-														vertex1, 
-														edgeEntPath1, 
-														entId2, 
-														vertex2, 
-														edgeEntPath2, 
-														dimPos, 
-														rotation, 
-														dimId,
-														dimStyleId,
-														pDb,
-														spaceId)) != Acad::eOk)
+
+		if ((err = AdnAssocSampleUtils::createRotatedDim(entId1,
+			vertex1,
+			edgeEntPath1,
+			entId2,
+			vertex2,
+			edgeEntPath2,
+			dimPos,
+			rotation,
+			dimId,
+			dimStyleId,
+			pDb,
+			spaceId)) != Acad::eOk)
 			throw err;
-						
+
 		cleanupObjectIds.append(dimId);
 
 		AcDbObjectId networkId = AcDbAssocNetwork::getInstanceFromObject(spaceId, true);
@@ -1448,27 +1448,27 @@ Acad::ErrorStatus createRotatedDimConstraint(
 		AcString dimName;
 		AcString dimExpression;
 
-		if((err = AdnAssocSampleUtils::getNameAndExpressionFromDimension(networkId, 
-																		 dimId, 
-																		 AcDbAssocConstraintType::kDistanceAssocConstraintType, 
-																		 dimName, 
-																		 dimExpression)) != Acad::eOk)
-				throw err;
+		if ((err = AdnAssocSampleUtils::getNameAndExpressionFromDimension(networkId,
+			dimId,
+			AcDbAssocConstraintType::kDistanceAssocConstraintType,
+			dimName,
+			dimExpression)) != Acad::eOk)
+			throw err;
 
 		//Create new AssocVariable
-		if((err = AdnAssocSampleUtils::addNewVariableToAssocNetwork(networkId, dimName, dimExpression, varDimId))!= Acad::eOk)
+		if ((err = AdnAssocSampleUtils::addNewVariableToAssocNetwork(networkId, dimName, dimExpression, varDimId)) != Acad::eOk)
 			throw err;
 
 		//As the variable didn't exist, we will need to clean it up if something goes wrong from here.
 		cleanupObjectIds.append(varDimId);
 
-		if((err = AdnAssocSampleUtils::addValueDependency(networkId, varDimId, varDepId)) != Acad::eOk)
+		if ((err = AdnAssocSampleUtils::addValueDependency(networkId, varDimId, varDepId)) != Acad::eOk)
 			throw err;
 
 		//create dim dependency
 		AcDbObjectId dimDepBodyId, dimDepId;
 
-		if((err = AcDbAssocDimDependencyBody::createAndPostToDatabase(dimId, dimDepId, dimDepBodyId)) != Acad::eOk)
+		if ((err = AcDbAssocDimDependencyBody::createAndPostToDatabase(dimId, dimDepId, dimDepBodyId)) != Acad::eOk)
 			throw err;
 
 		const bool bPreviousValue = AcDbAssocDimDependencyBodyBase::setEraseDimensionIfDependencyIsErased(false);
@@ -1478,25 +1478,25 @@ Acad::ErrorStatus createRotatedDimConstraint(
 		AcGeVector3d fixedDirectionUcs(fixedDirection);
 		fixedDirectionUcs.transformBy(ucs);
 
-		if((err = AdnAssocSampleUtils::createDistanceConstraint(varDepId, 
-																dimDepId, 
-																pConsGeoms[0],
-																vertex1,
-																pConsGeoms[1],
-																vertex2,
-																&fixedDirectionUcs,
-																pDb,
-																spaceId,
-																ppNewDisConstraint))!= Acad::eOk)
+		if ((err = AdnAssocSampleUtils::createDistanceConstraint(varDepId,
+			dimDepId,
+			pConsGeoms[0],
+			vertex1,
+			pConsGeoms[1],
+			vertex2,
+			&fixedDirectionUcs,
+			pDb,
+			spaceId,
+			ppNewDisConstraint)) != Acad::eOk)
 			throw err;
 
 		AcDbAssocDimDependencyBodyBase::setEraseDimensionIfDependencyIsErased(bPreviousValue);
 
 		return err;
 	}
-	catch(Acad::ErrorStatus err)
+	catch (Acad::ErrorStatus err)
 	{
-		if(err != Acad::eOk)
+		if (err != Acad::eOk)
 		{
 			AdnAssocSampleUtils::doCleanUp(cleanupObjectIds);
 		}
@@ -1509,11 +1509,11 @@ Acad::ErrorStatus createRotatedDimConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createHorizontalDimConstraint(
-	AcDbObjectId& entId1, 
-	AcDbObjectId& entId2, 
+	AcDbObjectId& entId1,
+	AcDbObjectId& entId2,
 	AcGePoint3d& entPt1,
-    AcGePoint3d& entPt2,  
-    AcGePoint3d& dimPos,  
+	AcGePoint3d& entPt2,
+	AcGePoint3d& dimPos,
 	AcDbObjectId& varDimId)
 {
 	double rotation = 0.0;
@@ -1528,11 +1528,11 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createHorizontalDimConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createVerticalDimConstraint(
-	AcDbObjectId& entId1, 
-	AcDbObjectId& entId2, 
+	AcDbObjectId& entId1,
+	AcDbObjectId& entId2,
 	AcGePoint3d& entPt1,
-	AcGePoint3d& entPt2,  
-	AcGePoint3d& dimPos,  
+	AcGePoint3d& entPt2,
+	AcGePoint3d& dimPos,
 	AcDbObjectId& varDimId)
 {
 	double rotation = 2.0 * atan(1.0); // 2.0 * atan(1.0) = Pi/2
@@ -1547,35 +1547,35 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createVerticalDimConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::getVariableByName(
-	const AcDbObjectId& btrId, 
+	const AcDbObjectId& btrId,
 	const AcString& name,
 	bool createIfDoesNotExist,
 	AcDbObjectId& variableId)
 {
 	Acad::ErrorStatus es;
 
-	if(name.length() == 0)
+	if (name.length() == 0)
 		return Acad::eInvalidInput;
 
 	// Initialize Associative Framework
-	if((es = AcDbAssocManager::initialize()) != Acad::eOk)
+	if ((es = AcDbAssocManager::initialize()) != Acad::eOk)
 		return es;
 
 	AcDbObjectId networkId = AcDbAssocNetwork::getInstanceFromObject(btrId, true);
 
-	if (networkId.isNull()) 
+	if (networkId.isNull())
 	{
 		return Acad::eInvalidInput;
 	}
 
 	AcDbObjectPointer<AcDbAssocNetwork> pNetwork(networkId, kForRead);
-		
+
 	if ((es = pNetwork.openStatus()) != Acad::eOk)
 		return es;
-	
+
 	//Iterate the network, trying to find an existing AssocVariable with the same name
 	AcDbAssocNetworkIterator iter(pNetwork);
-	
+
 	while (iter.moveNext())
 	{
 		if (iter.current().objectClass() != AcDbAssocVariable::desc())
@@ -1594,7 +1594,7 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::getVariableByName(
 	}
 
 	//If we don't want to create a new variable, returns an error
-	if(!createIfDoesNotExist)
+	if (!createIfDoesNotExist)
 	{
 		return Acad::eNullObjectId;
 	}
@@ -1604,11 +1604,11 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::getVariableByName(
 
 	//Need to provide a default initial expression
 	AcString expression(L"1.0");
-	
-	return AdnAssocSampleUtils::addNewVariableToAssocNetwork(networkId, 
-														     name, 
-														     expression,
-														     variableId);												 
+
+	return AdnAssocSampleUtils::addNewVariableToAssocNetwork(networkId,
+		name,
+		expression,
+		variableId);
 }
 
 
@@ -1624,7 +1624,7 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::renameVariable(
 	Acad::ErrorStatus es;
 
 	// Initialize Associative Framework
-	if((es = AcDbAssocManager::initialize()) != Acad::eOk)
+	if ((es = AcDbAssocManager::initialize()) != Acad::eOk)
 		return es;
 
 	AcDbObjectPointer<AcDbAssocVariable> pAssocVar(variableId, kForRead);
@@ -1634,7 +1634,7 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::renameVariable(
 
 	AcString errMsgValidate(L"Name or Expression invalid");
 
-	if((es = pAssocVar->validateNameAndExpression(newName, pAssocVar->expression(), errMsgValidate)) != Acad::eOk)
+	if ((es = pAssocVar->validateNameAndExpression(newName, pAssocVar->expression(), errMsgValidate)) != Acad::eOk)
 		return es;
 
 	if ((es = pAssocVar->upgradeOpen()) != Acad::eOk)
@@ -1660,7 +1660,7 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::getVariableValue(
 	Acad::ErrorStatus es;
 
 	// Initialize Associative Framework
-	if((es = AcDbAssocManager::initialize()) != Acad::eOk)
+	if ((es = AcDbAssocManager::initialize()) != Acad::eOk)
 		return es;
 
 	AcDbObjectPointer<AcDbAssocVariable> pAssocVar(variableId, kForRead);
@@ -1671,10 +1671,10 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::getVariableValue(
 	name = pAssocVar->name();
 
 	AcString errMsgEval(L"Expression evaluation failed");
-	
-	if((es = pAssocVar->evaluateExpression(value, errMsgEval)) != Acad::eOk)
+
+	if ((es = pAssocVar->evaluateExpression(value, errMsgEval)) != Acad::eOk)
 		return es;
-	
+
 	expression = pAssocVar->expression();
 	evaluatorId = pAssocVar->evaluatorId();
 
@@ -1695,7 +1695,7 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::setVariableValue(
 	Acad::ErrorStatus es;
 
 	// Initialize Associative Framework
-	if((es = AcDbAssocManager::initialize()) != Acad::eOk)
+	if ((es = AcDbAssocManager::initialize()) != Acad::eOk)
 		return es;
 
 	AcDbObjectPointer<AcDbAssocVariable> pAssocVar(variableId, kForWrite);
@@ -1703,37 +1703,37 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::setVariableValue(
 	if ((es = pAssocVar.openStatus()) != Acad::eOk)
 		return es;
 
-	if(evaluatorId.length() != 0)
+	if (evaluatorId.length() != 0)
 	{
-		if((es = pAssocVar->setEvaluatorId(evaluatorId)) != Acad::eOk)
+		if ((es = pAssocVar->setEvaluatorId(evaluatorId)) != Acad::eOk)
 			return es;
 	}
 
-	if(expression.length() != 0)
+	if (expression.length() != 0)
 	{
-		if((es = pAssocVar->validateNameAndExpression(pAssocVar->name(), expression, errorMessage)) != Acad::eOk)
+		if ((es = pAssocVar->validateNameAndExpression(pAssocVar->name(), expression, errorMessage)) != Acad::eOk)
 			return es;
 
-		if((es = pAssocVar->setExpression(expression, 
-			EXPRESSION_EVALUATOR_DEFAULT, 
-			true, 
-			true, 
+		if ((es = pAssocVar->setExpression(expression,
+			EXPRESSION_EVALUATOR_DEFAULT,
+			true,
+			true,
 			errorMessage)) != Acad::eOk)
 			return es;
 
 		AcDbEvalVariant evaluatedExpressionValue;
 
-		if((es = pAssocVar->evaluateExpression(evaluatedExpressionValue, errorMessage)) != Acad::eOk)
+		if ((es = pAssocVar->evaluateExpression(evaluatedExpressionValue, errorMessage)) != Acad::eOk)
 			return es;
 
-		if((pAssocVar->setValue(evaluatedExpressionValue)) != Acad::eOk)
+		if ((pAssocVar->setValue(evaluatedExpressionValue)) != Acad::eOk)
 			return es;
 
 		return es;
 	}
 
-	if((pAssocVar->setValue(value)) != Acad::eOk)
-			return es;
+	if ((pAssocVar->setValue(value)) != Acad::eOk)
+		return es;
 
 	return es;
 }
