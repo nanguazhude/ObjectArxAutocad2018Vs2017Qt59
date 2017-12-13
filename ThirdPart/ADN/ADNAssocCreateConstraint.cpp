@@ -958,7 +958,7 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::create2LineAngularDimConstraint(
 			spaceId,
 			ppNewAngConstraint)) != Acad::eOk)
 			throw err;
-
+		
 		AcDbAssocDimDependencyBodyBase::setEraseDimensionIfDependencyIsErased(bPreviousValue);
 
 		return err;

@@ -25,10 +25,10 @@ AcDbObjectId AdnAssocSampleUtils::getConstraintGroup(
 	bool createIfDoesNotExist)
 {
 	AcDbObjectId idConstrGroup = AcDbObjectId::kNull;
-	
+
 	AcDbObjectId networkId = AcDbAssocNetwork::getInstanceFromObject(spaceId, true);
 
-	if (networkId.isNull()) 
+	if (networkId.isNull())
 	{
 		return AcDbObjectId::kNull;
 	}
@@ -48,7 +48,7 @@ AcDbObjectId AdnAssocSampleUtils::getConstraintGroup(
 	{
 		AcDbObjectPointer<AcDbAssocNetwork> pNetwork(networkId, kForRead);
 
-		if (pNetwork.openStatus() != Acad::eOk) 
+		if (pNetwork.openStatus() != Acad::eOk)
 		{
 			return AcDbObjectId::kNull;
 		}
@@ -62,16 +62,16 @@ AcDbObjectId AdnAssocSampleUtils::getConstraintGroup(
 			if (idAction == AcDbObjectId::kNull)
 				continue;
 
-			if ( actionsInNetwork[nCount].objectClass() == NULL || 
-				 !actionsInNetwork[nCount].objectClass()->isDerivedFrom(AcDbAssoc2dConstraintGroup::desc()))
+			if (actionsInNetwork[nCount].objectClass() == NULL ||
+				!actionsInNetwork[nCount].objectClass()->isDerivedFrom(AcDbAssoc2dConstraintGroup::desc()))
 				continue;
-			
+
 			AcDbObjectPointer<AcDbAssocAction> pAction(idAction, kForRead);
 
 			if (pAction.openStatus() != Acad::eOk)
 				continue;
 
-			const AcDbAssoc2dConstraintGroup* const pConstGrp = 
+			const AcDbAssoc2dConstraintGroup* const pConstGrp =
 				static_cast<AcDbAssoc2dConstraintGroup*>(pAction.object());
 
 			if (!pConstGrp)
@@ -89,7 +89,7 @@ AcDbObjectId AdnAssocSampleUtils::getConstraintGroup(
 	{
 		AcDbObjectPointer<AcDbAssocNetwork> pNetwork(networkId, kForWrite);
 
-		if (pNetwork.openStatus() != Acad::eOk) 
+		if (pNetwork.openStatus() != Acad::eOk)
 		{
 			return AcDbObjectId::kNull;
 		}
@@ -106,7 +106,7 @@ AcDbObjectId AdnAssocSampleUtils::getConstraintGroup(
 
 		pConstrGroup->close();
 
-		if (pNetwork->addAction(idConstrGroup, true) !=  Acad::eOk) 
+		if (pNetwork->addAction(idConstrGroup, true) != Acad::eOk)
 		{
 			return AcDbObjectId::kNull;
 		}
@@ -120,25 +120,25 @@ AcDbObjectId AdnAssocSampleUtils::getConstraintGroup(
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AdnAssocSampleUtils::getFullSubentPaths(
-	const AcDbEntity *pEnt, 
-	AcDb::SubentType subentType, 
+	const AcDbEntity *pEnt,
+	AcDb::SubentType subentType,
 	AcDbFullSubentPathArray &aPaths)
 {
 	ErrorStatus es;
 	//AcConstrainedGeometry* pConsGeom = NULL;
 
 	// Get the Protocol extension associated with the entity
-	AcDbAssocPersSubentIdPE* const pAssocPersSubentIdPE = 
+	AcDbAssocPersSubentIdPE* const pAssocPersSubentIdPE =
 		AcDbAssocPersSubentIdPE::cast(pEnt->queryX(AcDbAssocPersSubentIdPE::desc()));
 
 	AcArray<AcDbSubentId> subentIds;
 
 	// Get all the subentities associated with the subentity type such as the vertices or edges
-	if((es = pAssocPersSubentIdPE->getAllSubentities(pEnt, subentType, subentIds)) != Acad::eOk)
+	if ((es = pAssocPersSubentIdPE->getAllSubentities(pEnt, subentType, subentIds)) != Acad::eOk)
 		return es;
-	
+
 	//Get subent path and put them into aPaths collection
-	for(int i = 0; i < subentIds.length(); ++i)
+	for (int i = 0; i < subentIds.length(); ++i)
 	{
 		aPaths.append(AcDbFullSubentPath(pEnt->objectId(), subentIds[i]));
 	}
@@ -151,7 +151,7 @@ Acad::ErrorStatus AdnAssocSampleUtils::getFullSubentPaths(
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AdnAssocSampleUtils::addConstrainedGeometry(
-	AcDbFullSubentPathArray &aPaths, 
+	AcDbFullSubentPathArray &aPaths,
 	AcArray<AcConstrainedGeometry*> &pConsGeoms)
 {
 	ErrorStatus es;
@@ -159,26 +159,26 @@ Acad::ErrorStatus AdnAssocSampleUtils::addConstrainedGeometry(
 	AcDbDatabase *pDatabase = acdbHostApplicationServices()->workingDatabase();
 
 	AcDbObjectId consGrpId = AdnAssocSampleUtils::getConstraintGroup(
-		pDatabase->currentSpaceId(), 
+		pDatabase->currentSpaceId(),
 		true);
 
-	if(consGrpId.isNull())
+	if (consGrpId.isNull())
 		return Acad::eInvalidInput;
 
 	AcDbObjectPointer<AcDbAssoc2dConstraintGroup> p2dConstrGrp(consGrpId, kForWrite);
 
 	// Could not open constraint group for updates.
-	if ((es = p2dConstrGrp.openStatus()) != Acad::eOk )
+	if ((es = p2dConstrGrp.openStatus()) != Acad::eOk)
 		return es;
 
 	//Add the relevent subentities as the constrained geometry
-	for(int i=0; i < aPaths.length(); ++i)
+	for (int i = 0; i < aPaths.length(); ++i)
 	{
 		AcConstrainedGeometry* pConsGeom = NULL;
 
 		es = p2dConstrGrp->addConstrainedGeometry(aPaths[i], pConsGeom);
 
-		if(!((es == Acad::eAlreadyInGroup) || (es == Acad::eOk)))
+		if (!((es == Acad::eAlreadyInGroup) || (es == Acad::eOk)))
 			return es;
 
 		pConsGeoms.append(pConsGeom);
@@ -192,7 +192,7 @@ Acad::ErrorStatus AdnAssocSampleUtils::addConstrainedGeometry(
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AdnAssocSampleUtils::addGeomConstraint(
-	const AcGeomConstraint::GeomConstraintType& constraintType, 
+	const AcGeomConstraint::GeomConstraintType& constraintType,
 	AcArray<AcConstrainedGeometry*> &pConsGeoms,
 	const AcGePoint3dArray& points)
 {
@@ -200,14 +200,14 @@ Acad::ErrorStatus AdnAssocSampleUtils::addGeomConstraint(
 
 	// Get the 2D constraint Group
 	AcDbDatabase *pDatabase = acdbHostApplicationServices()->workingDatabase();
-	
+
 	const AcString dictionaryKey(DICTIONARYKEY);
 
 	AcDbObjectId consGrpId = AdnAssocSampleUtils::getConstraintGroup(
 		pDatabase->currentSpaceId(),
 		true);
 
-	if(consGrpId.isNull())
+	if (consGrpId.isNull())
 		return Acad::eNullObjectId;
 
 	AcDbObjectPointer<AcDbAssoc2dConstraintGroup> p2dConstrGrp(consGrpId, kForWrite);
@@ -217,19 +217,19 @@ Acad::ErrorStatus AdnAssocSampleUtils::addGeomConstraint(
 
 	//Get closest constrained points
 
-	if(pConsGeoms.length() != points.length())
+	if (pConsGeoms.length() != points.length())
 		return Acad::eInvalidInput;
 
 	AcArray<AcConstrainedGeometry*> pConsPoints;
 
-	for(int i=0; i<pConsGeoms.length(); ++i)
+	for (int i = 0; i < pConsGeoms.length(); ++i)
 	{
 		AcGePoint3d entPtInConstGrp = points[i];
 		entPtInConstGrp.transformBy(coordSysInv);
 
 		AcConstrainedPoint* consPoint;
 
-		if((es = AdnAssocSampleUtils::getClosestConstrainedPoint(pConsGeoms[i], entPtInConstGrp, consPoint)) != Acad::eOk)
+		if ((es = AdnAssocSampleUtils::getClosestConstrainedPoint(pConsGeoms[i], entPtInConstGrp, consPoint)) != Acad::eOk)
 			return es;
 
 		pConsPoints.append(consPoint);
@@ -241,18 +241,18 @@ Acad::ErrorStatus AdnAssocSampleUtils::addGeomConstraint(
 	if ((es = p2dConstrGrp->addGeometricalConstraint(constraintType, pConsPoints, ppNewConstraint)) != Acad::eOk)
 		return es;
 
-	AcDbObjectId idNetwork = 
+	AcDbObjectId idNetwork =
 		AcDbAssocNetwork::getInstanceFromDatabase(pDatabase,
-		true,
-		dictionaryKey);
+			true,
+			dictionaryKey);
 
-	if (idNetwork.isNull())    
-		return Acad::eInvalidInput; 
+	if (idNetwork.isNull())
+		return Acad::eInvalidInput;
 
 	AcDbObjectPointer<AcDbAssocNetwork> pNetwork(idNetwork, kForWrite);
 
 	if (pNetwork.openStatus() != Acad::eOk)
-		return Acad::eInvalidInput; 
+		return Acad::eInvalidInput;
 
 	// Evaluate the constraint. 
 	// This is like a refresh to make sure the constraint takes effect.
@@ -268,7 +268,7 @@ Acad::ErrorStatus AdnAssocSampleUtils::addGeomConstraint(
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AdnAssocSampleUtils::addGeomConstraint(
-	const AcGeomConstraint::GeomConstraintType& constraintType, 
+	const AcGeomConstraint::GeomConstraintType& constraintType,
 	AcDbFullSubentPathArray &aPaths)
 {
 	ErrorStatus es;
@@ -281,7 +281,7 @@ Acad::ErrorStatus AdnAssocSampleUtils::addGeomConstraint(
 		pDatabase->currentSpaceId(),
 		true);
 
-	if(consGrpId.isNull())
+	if (consGrpId.isNull())
 		return Acad::eNullObjectId;
 
 	AcDbObjectPointer<AcDbAssoc2dConstraintGroup> p2dConstrGrp(
@@ -294,18 +294,18 @@ Acad::ErrorStatus AdnAssocSampleUtils::addGeomConstraint(
 		constraintType, aPaths, ppNewConstraint)) != Acad::eOk)
 		return es;
 
-	AcDbObjectId idNetwork = 
+	AcDbObjectId idNetwork =
 		AcDbAssocNetwork::getInstanceFromDatabase(pDatabase,
-		true,
-		dictionaryKey);
+			true,
+			dictionaryKey);
 
-	if (idNetwork.isNull())    
-		return Acad::eInvalidInput; 
+	if (idNetwork.isNull())
+		return Acad::eInvalidInput;
 
 	AcDbObjectPointer<AcDbAssocNetwork> pNetwork(idNetwork, kForWrite);
 
 	if (pNetwork.openStatus() != Acad::eOk)
-		return Acad::eInvalidInput; 
+		return Acad::eInvalidInput;
 
 	// Evaluate the constraint. 
 	// This is like a refresh to make sure the constraint takes effect.
@@ -321,7 +321,7 @@ Acad::ErrorStatus AdnAssocSampleUtils::addGeomConstraint(
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AdnAssocSampleUtils::addGeomConstraint(
-	const AcGeomConstraint::GeomConstraintType& constraintType, 
+	const AcGeomConstraint::GeomConstraintType& constraintType,
 	AcDbFullSubentPathArray &aPaths,
 	AcDbFullSubentPathArray &fixedGeom)
 {
@@ -335,7 +335,7 @@ Acad::ErrorStatus AdnAssocSampleUtils::addGeomConstraint(
 		pDatabase->currentSpaceId(),
 		true);
 
-	if(consGrpId.isNull())
+	if (consGrpId.isNull())
 		return Acad::eNullObjectId;
 
 	AcDbObjectPointer<AcDbAssoc2dConstraintGroup> p2dConstrGrp(
@@ -348,18 +348,18 @@ Acad::ErrorStatus AdnAssocSampleUtils::addGeomConstraint(
 		constraintType, aPaths, ppNewConstraint)) != Acad::eOk)
 		return es;
 
-	AcDbObjectId idNetwork = 
+	AcDbObjectId idNetwork =
 		AcDbAssocNetwork::getInstanceFromDatabase(pDatabase,
-		true,
-		dictionaryKey);
+			true,
+			dictionaryKey);
 
-	if (idNetwork.isNull())    
-		return Acad::eInvalidInput; 
+	if (idNetwork.isNull())
+		return Acad::eInvalidInput;
 
 	AcDbObjectPointer<AcDbAssocNetwork> pNetwork(idNetwork, kForWrite);
 
 	if (pNetwork.openStatus() != Acad::eOk)
-		return Acad::eInvalidInput; 
+		return Acad::eInvalidInput;
 
 	// Evaluate the constraint. 
 	// This is like a refresh to make sure the constraint takes effect.
@@ -377,63 +377,63 @@ Acad::ErrorStatus AdnAssocSampleUtils::addGeomConstraint(
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AdnAssocSampleUtils::getClosestEdgeSubEntPath(
-	const AcDbObjectId& entId, 
-	const AcGePoint3d& entPt, 
+	const AcDbObjectId& entId,
+	const AcGePoint3d& entPt,
 	AcDbFullSubentPath &closestPath,
 	double* pMinDist,
 	AcGePoint3d* pClosestPt)
 {
 	Acad::ErrorStatus es = Acad::eOk;
 
-	AcDbEntityPointer pEnt(entId,AcDb::kForRead);
+	AcDbEntityPointer pEnt(entId, AcDb::kForRead);
 
-	if((es = pEnt.openStatus()) != Acad::eOk)
+	if ((es = pEnt.openStatus()) != Acad::eOk)
 		return es;
 
-	if(pEnt->isKindOf(AcDbBlockReference::desc()))
+	if (pEnt->isKindOf(AcDbBlockReference::desc()))
 	{
 		return getClosestEdgeSubEntPathBref(entId, entPt, closestPath, pMinDist);
 	}
 
 	// Get the Protocol extension associated with the entity
-	AcDbAssocPersSubentIdPE* const pAssocPersSubentIdPE = 
+	AcDbAssocPersSubentIdPE* const pAssocPersSubentIdPE =
 		AcDbAssocPersSubentIdPE::cast(pEnt->queryX(AcDbAssocPersSubentIdPE::desc()));
 
 	AcDbFullSubentPathArray aPathsTemp;
 	AdnAssocSampleUtils::getFullSubentPaths(pEnt, AcDb::kEdgeSubentType, aPathsTemp);
 
-	if(aPathsTemp.length() == 0)
+	if (aPathsTemp.length() == 0)
 		return Acad::eInvalidInput;
 
 	double minDist = -1.0;
 
-	for(int i=0; i < aPathsTemp.length(); ++i)
+	for (int i = 0; i < aPathsTemp.length(); ++i)
 	{
 		AcGeCurve3d *edgeCurve = NULL;
 
-		if( (es = pAssocPersSubentIdPE->getEdgeSubentityGeometry(
+		if ((es = pAssocPersSubentIdPE->getEdgeSubentityGeometry(
 			pEnt, aPathsTemp[i].subentId(), edgeCurve)) != Acad::eOk)
 			return es;
 
 		double dist = edgeCurve->distanceTo(entPt);
 
-		if(dist < minDist || minDist < 0.0)
+		if (dist < minDist || minDist < 0.0)
 		{
 			minDist = dist;
 			closestPath = aPathsTemp[i];
 
-			if(pClosestPt)
+			if (pClosestPt)
 			{
 				*pClosestPt = edgeCurve->closestPointTo(entPt);
 			}
 		}
-		
+
 		delete edgeCurve;
 	}
 
 	// Need output min distance for 
 	// AdnAssocSampleUtils::getClosestEdgeSubEntPathBref
-	if(pMinDist)
+	if (pMinDist)
 	{
 		*pMinDist = minDist;
 	}
@@ -446,8 +446,8 @@ Acad::ErrorStatus AdnAssocSampleUtils::getClosestEdgeSubEntPath(
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AdnAssocSampleUtils::getClosestEdgeSubEntPathBref(
-	const AcDbObjectId& brefId, 
-	const AcGePoint3d& entPt, 
+	const AcDbObjectId& brefId,
+	const AcGePoint3d& entPt,
 	AcDbFullSubentPath &closestPath,
 	double* pMinDist)
 {
@@ -455,17 +455,17 @@ Acad::ErrorStatus AdnAssocSampleUtils::getClosestEdgeSubEntPathBref(
 
 	AcDbObjectPointer<AcDbBlockReference> pBref(brefId, kForRead);
 
-	if((es = pBref.openStatus()) != Acad::eOk)
+	if ((es = pBref.openStatus()) != Acad::eOk)
 		return es;
 
 	AcDbObjectPointer<AcDbBlockTableRecord> pBtr(pBref->blockTableRecord(), kForRead);
 
-	if((es = pBtr.openStatus()) != Acad::eOk)
+	if ((es = pBtr.openStatus()) != Acad::eOk)
 		return es;
 
 	AcDbBlockTableRecordIterator* pBtrIterator = NULL;
 
-	if ((es = pBtr->newIterator(pBtrIterator)) != Acad::eOk ) 
+	if ((es = pBtr->newIterator(pBtrIterator)) != Acad::eOk)
 		return es;
 
 	AcDbFullSubentPath closestPathInBlock;
@@ -476,7 +476,7 @@ Acad::ErrorStatus AdnAssocSampleUtils::getClosestEdgeSubEntPathBref(
 	double minDist = -1.0;
 
 	//Find the closest edge path in block
-	for (pBtrIterator->start (); !pBtrIterator->done () ; pBtrIterator->step ()) 
+	for (pBtrIterator->start(); !pBtrIterator->done(); pBtrIterator->step())
 	{
 		AcDbObjectId nestedId;
 		pBtrIterator->getEntityId(nestedId);
@@ -484,11 +484,11 @@ Acad::ErrorStatus AdnAssocSampleUtils::getClosestEdgeSubEntPathBref(
 		double dist;
 		AcDbFullSubentPath subEntPath;
 
-		if(AdnAssocSampleUtils::getClosestEdgeSubEntPath(
+		if (AdnAssocSampleUtils::getClosestEdgeSubEntPath(
 			nestedId, blockPoint, subEntPath, &dist) != Acad::eOk)
 			continue;
 
-		if(dist < minDist || minDist < 0)
+		if (dist < minDist || minDist < 0)
 		{
 			minDist = dist;
 			closestPathInBlock = subEntPath;
@@ -500,14 +500,14 @@ Acad::ErrorStatus AdnAssocSampleUtils::getClosestEdgeSubEntPathBref(
 	idArray.append(closestPathInBlock.objectIds());
 	closestPath = AcDbFullSubentPath(idArray, closestPathInBlock.subentId());
 
-	if(pMinDist)
+	if (pMinDist)
 	{
 		*pMinDist = minDist;
 	}
 
 	delete pBtrIterator;
 
-	if(minDist < 0)
+	if (minDist < 0)
 		return Acad::eInvalidInput;
 
 	return es;
@@ -518,9 +518,9 @@ Acad::ErrorStatus AdnAssocSampleUtils::getClosestEdgeSubEntPathBref(
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AdnAssocSampleUtils::getClosestVertexInfo(
-	const AcDbObjectId& entId, 
-	const AcDbFullSubentPath& edgeSubentPath, 
-	const AcGePoint3d& pt, 
+	const AcDbObjectId& entId,
+	const AcDbFullSubentPath& edgeSubentPath,
+	const AcGePoint3d& pt,
 	AcGePoint3d& closestVertexPos,
 	AcDbFullSubentPath& closestVertexSubentPath)
 {
@@ -528,23 +528,23 @@ Acad::ErrorStatus AdnAssocSampleUtils::getClosestVertexInfo(
 
 	AcDbSmartObjectPointer <AcDbEntity> pEntity(entId, AcDb::kForRead);
 
-	if((es = pEntity.openStatus()) != Acad::eOk )
+	if ((es = pEntity.openStatus()) != Acad::eOk)
 		return es;
 
-	if(pEntity->isKindOf(AcDbBlockReference::desc()))
+	if (pEntity->isKindOf(AcDbBlockReference::desc()))
 	{
-		return AdnAssocSampleUtils::getClosestVertexInfoBref(entId, 
-			edgeSubentPath, 
-			pt, 
-			closestVertexPos, 
+		return AdnAssocSampleUtils::getClosestVertexInfoBref(entId,
+			edgeSubentPath,
+			pt,
+			closestVertexPos,
 			closestVertexSubentPath);
 	}
 
-	AcDbAssocPersSubentIdPE* const pAssocPersSubentIdPE = 
+	AcDbAssocPersSubentIdPE* const pAssocPersSubentIdPE =
 		AcDbAssocPersSubentIdPE::cast(pEntity->queryX(AcDbAssocPersSubentIdPE::desc()));
 
 	AcArray<AcDbSubentId> vertexSubentIds;
-	
+
 	if (pEntity->isKindOf(AcDbSpline::desc()))
 	{
 		AcDbSubentId startVertexSubentId;
@@ -553,24 +553,24 @@ Acad::ErrorStatus AdnAssocSampleUtils::getClosestVertexInfo(
 		AcArray<AcDbSubentId> controlPointSubentIds;
 		AcArray<AcDbSubentId> fitPointSubentIds;
 
-		if((es = pAssocPersSubentIdPE->getSplineEdgeVertexSubentities(pEntity,
+		if ((es = pAssocPersSubentIdPE->getSplineEdgeVertexSubentities(pEntity,
 			AcDbSubentId(),
 			startVertexSubentId,
 			endVertexSubentId,
 			controlPointSubentIds,
 			fitPointSubentIds)) != Acad::eOk)
 			return es;
-		
+
 		vertexSubentIds.append(startVertexSubentId);
 		vertexSubentIds.append(endVertexSubentId);
 		vertexSubentIds.append(controlPointSubentIds);
 	}
 	else
-	{	
+	{
 		AcDbSubentId startVertexSubentId;
 		AcDbSubentId endVertexSubentId;
-		
-		if((es = pAssocPersSubentIdPE->getEdgeVertexSubentities(pEntity,
+
+		if ((es = pAssocPersSubentIdPE->getEdgeVertexSubentities(pEntity,
 			edgeSubentPath.subentId(),
 			startVertexSubentId,
 			endVertexSubentId,
@@ -585,19 +585,19 @@ Acad::ErrorStatus AdnAssocSampleUtils::getClosestVertexInfo(
 
 	AcDbSubentId closestId;
 
-	for(int i=0; i<vertexSubentIds.length(); ++i)
+	for (int i = 0; i < vertexSubentIds.length(); ++i)
 	{
 		AcGePoint3d vertexPos;
 
 		if ((es = pAssocPersSubentIdPE->getVertexSubentityGeometry(
-			pEntity, 
+			pEntity,
 			vertexSubentIds[i],
 			vertexPos)) != eOk)
 			return es;
 
 		double dist = vertexPos.distanceTo(pt);
 
-		if(minDist < 0 || dist < minDist)
+		if (minDist < 0 || dist < minDist)
 		{
 			minDist = dist;
 
@@ -617,18 +617,18 @@ Acad::ErrorStatus AdnAssocSampleUtils::getClosestVertexInfo(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AdnAssocSampleUtils::getClosestVertexPos(
-	const AcDbObjectId& entId, 
-	const AcDbFullSubentPath& edgeSubentId, 
-	const AcGePoint3d& pt, 
+	const AcDbObjectId& entId,
+	const AcDbFullSubentPath& edgeSubentId,
+	const AcGePoint3d& pt,
 	AcGePoint3d& closestVertexPos)
 {
 	AcDbFullSubentPath vertexPath;
 
 	return AdnAssocSampleUtils::getClosestVertexInfo(
-		entId, 
-		edgeSubentId, 
-		pt, 
-		closestVertexPos, 
+		entId,
+		edgeSubentId,
+		pt,
+		closestVertexPos,
 		vertexPath);
 }
 
@@ -637,9 +637,9 @@ Acad::ErrorStatus AdnAssocSampleUtils::getClosestVertexPos(
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AdnAssocSampleUtils::getClosestVertexInfoBref(
-	const AcDbObjectId& brefId, 
-	const AcDbFullSubentPath& edgeSubentPath, 
-	const AcGePoint3d& pt, 
+	const AcDbObjectId& brefId,
+	const AcDbFullSubentPath& edgeSubentPath,
+	const AcGePoint3d& pt,
 	AcGePoint3d& closestVertexPos,
 	AcDbFullSubentPath& closestVertexSubentPath)
 {
@@ -651,24 +651,24 @@ Acad::ErrorStatus AdnAssocSampleUtils::getClosestVertexInfoBref(
 
 	AcDbObjectPointer<AcDbBlockReference> pBref(lastBrefId, kForRead);
 
-	if((es = pBref.openStatus()) != Acad::eOk)
+	if ((es = pBref.openStatus()) != Acad::eOk)
 		return es;
 
 	AcDbObjectPointer<AcDbBlockTableRecord> pBtr(pBref->blockTableRecord(), kForRead);
 
-	if((es = pBtr.openStatus()) != Acad::eOk)
+	if ((es = pBtr.openStatus()) != Acad::eOk)
 		return es;
 
 	AcDbBlockTableRecordIterator* pBtrIterator = NULL;
 
-	if ((es = pBtr->newIterator(pBtrIterator)) != Acad::eOk ) 
+	if ((es = pBtr->newIterator(pBtrIterator)) != Acad::eOk)
 		return es;
 
 	AcDbObjectId targetId = edgeSubentPath.objectIds()[len - 1];
 
 	AcDbCompoundObjectId compoundId = AcDbCompoundObjectId(
 		targetId, edgeSubentPath.objectIds(), NULL);
-  
+
 	AcGeMatrix3d compoundTransfo;
 	compoundId.getTransform(compoundTransfo);
 
@@ -678,23 +678,23 @@ Acad::ErrorStatus AdnAssocSampleUtils::getClosestVertexInfoBref(
 	AcGePoint3d closestVertexPosInBlock;
 	AcDbFullSubentPath closestVertexSubentPathInBlock;
 
-	for (pBtrIterator->start (); !pBtrIterator->done () ; pBtrIterator->step ()) 
+	for (pBtrIterator->start(); !pBtrIterator->done(); pBtrIterator->step())
 	{
 		AcDbObjectId nestedId;
 		pBtrIterator->getEntityId(nestedId);
 
-		if(nestedId != targetId)
+		if (nestedId != targetId)
 			continue;
 
 		AcDbFullSubentPath edgeSubentPathBtr(targetId, edgeSubentPath.subentId());
 
-		if((es = AdnAssocSampleUtils::getClosestVertexInfo(targetId, 
-			edgeSubentPathBtr, 
-			blockPoint, 
-			closestVertexPosInBlock, 
+		if ((es = AdnAssocSampleUtils::getClosestVertexInfo(targetId,
+			edgeSubentPathBtr,
+			blockPoint,
+			closestVertexPosInBlock,
 			closestVertexSubentPathInBlock)) != Acad::eOk)
 
-			return es;					
+			return es;
 	}
 
 	closestVertexPos = closestVertexPosInBlock;
@@ -706,7 +706,7 @@ Acad::ErrorStatus AdnAssocSampleUtils::getClosestVertexInfoBref(
 	idArray.append(closestVertexSubentPathInBlock.objectIds());
 
 	closestVertexSubentPath = AcDbFullSubentPath(
-		idArray, 
+		idArray,
 		closestVertexSubentPathInBlock.subentId());
 
 	return es;
@@ -718,8 +718,8 @@ Acad::ErrorStatus AdnAssocSampleUtils::getClosestVertexInfoBref(
 // to revisit this and bring it in line with Acad impl
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool AdnAssocSampleUtils::isEntityValidForConstraint(
-	const AcDbObjectId& entId, 
-	const AcGePoint3d& entPt, 
+	const AcDbObjectId& entId,
+	const AcGePoint3d& entPt,
 	AcGeomConstraint::GeomConstraintType constraintType)
 {
 	Acad::ErrorStatus es;
@@ -728,12 +728,12 @@ bool AdnAssocSampleUtils::isEntityValidForConstraint(
 
 	AcDbFullSubentPath edgeSubent;
 
-	if((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId, entPt, edgeSubent)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId, entPt, edgeSubent)) != Acad::eOk)
 		return false;
 
 	AcGeCurve3d* pCurve = AdnAssocSampleUtils::getCurveForEdgeSubentity(entId, edgeSubent);
 
-	if(!pCurve)
+	if (!pCurve)
 		return false;
 
 	AcGe::EntityId curveType = pCurve->type();
@@ -742,85 +742,85 @@ bool AdnAssocSampleUtils::isEntityValidForConstraint(
 
 	switch (constraintType)
 	{
-		case AcGeomConstraint::kConcentric:
-			
-			if(curveType == AcGe::kCircArc3d || 
-			   curveType == AcGe::kEllipArc3d)
-			{
-				return true;
-			}
-			break;
+	case AcGeomConstraint::kConcentric:
 
-		case AcGeomConstraint::kHorizontal:
-		case AcGeomConstraint::kVertical :
-		case AcGeomConstraint::kParallel:
-		case AcGeomConstraint::kPerpendicular:
-		case AcGeomConstraint::kColinear:
-		
-			if(curveType == AcGe::kLinearEnt3d ||
-			   curveType == AcGe::kLineSeg3d ||
-			   curveType == AcGe::kRay3d ||
-			   curveType == AcGe::kLine3d)
-			{
-				return true;
-			}
-			break;
-		
-		case AcGeomConstraint::kCoincident:
-		case AcGeomConstraint::kFix:
-		case AcGeomConstraint::kSymmetric:
+		if (curveType == AcGe::kCircArc3d ||
+			curveType == AcGe::kEllipArc3d)
+		{
+			return true;
+		}
+		break;
 
-			if(curveType == AcGe::kCircArc3d || 
-			   curveType == AcGe::kEllipArc3d || 
-			   curveType == AcGe::kLinearEnt3d ||
-			   curveType == AcGe::kLineSeg3d ||
-			   curveType == AcGe::kRay3d ||
-			   curveType == AcGe::kLine3d ||
-			   curveType == AcGe::kNurbCurve3d)
-			{
-				return true;
-			}
-			break;
+	case AcGeomConstraint::kHorizontal:
+	case AcGeomConstraint::kVertical:
+	case AcGeomConstraint::kParallel:
+	case AcGeomConstraint::kPerpendicular:
+	case AcGeomConstraint::kColinear:
 
-		case AcGeomConstraint::kTangent:
+		if (curveType == AcGe::kLinearEnt3d ||
+			curveType == AcGe::kLineSeg3d ||
+			curveType == AcGe::kRay3d ||
+			curveType == AcGe::kLine3d)
+		{
+			return true;
+		}
+		break;
 
-			if(curveType == AcGe::kCircArc3d || 
-			   curveType == AcGe::kEllipArc3d || 
-			   curveType == AcGe::kLinearEnt3d ||
-			   curveType == AcGe::kLineSeg3d ||
-			   curveType == AcGe::kRay3d ||
-			   curveType == AcGe::kLine3d)
-			{
-				return true;
-			}
-			break;
-			
-		case AcGeomConstraint::kEqualLength:
-		case AcGeomConstraint::kEqualRadius:
+	case AcGeomConstraint::kCoincident:
+	case AcGeomConstraint::kFix:
+	case AcGeomConstraint::kSymmetric:
 
-			if(curveType == AcGe::kLinearEnt3d ||
-			   curveType == AcGe::kLineSeg3d ||
-			   curveType == AcGe::kLine3d ||
-			   curveType == AcGe::kCircArc3d)
-			{
-				return true;
-			}
-			break;
+		if (curveType == AcGe::kCircArc3d ||
+			curveType == AcGe::kEllipArc3d ||
+			curveType == AcGe::kLinearEnt3d ||
+			curveType == AcGe::kLineSeg3d ||
+			curveType == AcGe::kRay3d ||
+			curveType == AcGe::kLine3d ||
+			curveType == AcGe::kNurbCurve3d)
+		{
+			return true;
+		}
+		break;
 
-		case AcGeomConstraint::kG2Smooth:
-			
-			if(curveType == AcGe::kSplineEnt3d ||
-			   curveType == AcGe::kCircArc3d   ||
-			   curveType == AcGe::kLinearEnt3d ||
-			   curveType == AcGe::kLineSeg3d ||
-			   curveType == AcGe::kLine3d ||
-			   curveType == AcGe::kNurbCurve3d)
-			{
-				return true;
-			}
-			break;
+	case AcGeomConstraint::kTangent:
 
-		default: break;
+		if (curveType == AcGe::kCircArc3d ||
+			curveType == AcGe::kEllipArc3d ||
+			curveType == AcGe::kLinearEnt3d ||
+			curveType == AcGe::kLineSeg3d ||
+			curveType == AcGe::kRay3d ||
+			curveType == AcGe::kLine3d)
+		{
+			return true;
+		}
+		break;
+
+	case AcGeomConstraint::kEqualLength:
+	case AcGeomConstraint::kEqualRadius:
+
+		if (curveType == AcGe::kLinearEnt3d ||
+			curveType == AcGe::kLineSeg3d ||
+			curveType == AcGe::kLine3d ||
+			curveType == AcGe::kCircArc3d)
+		{
+			return true;
+		}
+		break;
+
+	case AcGeomConstraint::kG2Smooth:
+
+		if (curveType == AcGe::kSplineEnt3d ||
+			curveType == AcGe::kCircArc3d ||
+			curveType == AcGe::kLinearEnt3d ||
+			curveType == AcGe::kLineSeg3d ||
+			curveType == AcGe::kLine3d ||
+			curveType == AcGe::kNurbCurve3d)
+		{
+			return true;
+		}
+		break;
+
+	default: break;
 	}
 
 	return false;
@@ -830,12 +830,12 @@ bool AdnAssocSampleUtils::isEntityValidForConstraint(
 //  
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-AcGeCurve3d* AdnAssocSampleUtils::getCurveForEdgeSubentity(const AcDbObjectId& entId, 
-														   const AcDbFullSubentPath& edgeSubent)
+AcGeCurve3d* AdnAssocSampleUtils::getCurveForEdgeSubentity(const AcDbObjectId& entId,
+	const AcDbFullSubentPath& edgeSubent)
 {
 	AcDbEntityPointer pEntity(entId, AcDb::kForRead);
 
-	if(pEntity.openStatus() != Acad::eOk)
+	if (pEntity.openStatus() != Acad::eOk)
 		return NULL;
 
 	AcDbAssocPersSubentIdPE* const pAssocPersSubentIdPE
@@ -843,7 +843,7 @@ AcGeCurve3d* AdnAssocSampleUtils::getCurveForEdgeSubentity(const AcDbObjectId& e
 
 	AcGeCurve3d* pCurve = NULL;
 
-	if(pAssocPersSubentIdPE->getEdgeSubentityGeometry(pEntity.object(), edgeSubent.subentId(), pCurve) != Acad::eOk)
+	if (pAssocPersSubentIdPE->getEdgeSubentityGeometry(pEntity.object(), edgeSubent.subentId(), pCurve) != Acad::eOk)
 		return NULL;
 
 	return pCurve;
@@ -854,9 +854,9 @@ AcGeCurve3d* AdnAssocSampleUtils::getCurveForEdgeSubentity(const AcDbObjectId& e
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AdnAssocSampleUtils::getValidVertexSubentities(const AcDbEntity* pEntity,
-																 const AcDbSubentId& edgeSubentId,
-																 AcArray<AcDbSubentId>& vertexSubentIds,
-																 AcArray<AcDbSubentId>& fixedVertexSubentIds)
+	const AcDbSubentId& edgeSubentId,
+	AcArray<AcDbSubentId>& vertexSubentIds,
+	AcArray<AcDbSubentId>& fixedVertexSubentIds)
 {
 	Acad::ErrorStatus es;
 
@@ -878,7 +878,7 @@ Acad::ErrorStatus AdnAssocSampleUtils::getValidVertexSubentities(const AcDbEntit
 		AcDbSubentId startVertexSubentId, endVertexSubentId;
 		AcArray<AcDbSubentId> controlPointSubentIds, fitPointSubentIds;
 
-		if(( es = pAssocPersSubentIdPE->getSplineEdgeVertexSubentities(pEntity,
+		if ((es = pAssocPersSubentIdPE->getSplineEdgeVertexSubentities(pEntity,
 			AcDbSubentId(),
 			startVertexSubentId,
 			endVertexSubentId,
@@ -907,11 +907,11 @@ Acad::ErrorStatus AdnAssocSampleUtils::getValidVertexSubentities(const AcDbEntit
 	}
 	else if (edgeSubentId != kNullSubentId)
 	{
-		AcDbSubentId startVertexSubentId; 
+		AcDbSubentId startVertexSubentId;
 		AcDbSubentId endVertexSubentId;
 		AcArray<AcDbSubentId> otherVertexSubentIds;
-		
-		if((es = pAssocPersSubentIdPE->getEdgeVertexSubentities(pEntity,
+
+		if ((es = pAssocPersSubentIdPE->getEdgeVertexSubentities(pEntity,
 			edgeSubentId,
 			startVertexSubentId,
 			endVertexSubentId,
@@ -921,7 +921,7 @@ Acad::ErrorStatus AdnAssocSampleUtils::getValidVertexSubentities(const AcDbEntit
 			fixedVertexSubentIds.setLogicalLength(0);
 			return es;
 		}
-	
+
 		if (startVertexSubentId != kNullSubentId)
 			fixedVertexSubentIds.append(startVertexSubentId);
 
@@ -935,7 +935,7 @@ Acad::ErrorStatus AdnAssocSampleUtils::getValidVertexSubentities(const AcDbEntit
 	}
 	else
 	{
-		if((es = pAssocPersSubentIdPE->getAllSubentities(pEntity,
+		if ((es = pAssocPersSubentIdPE->getAllSubentities(pEntity,
 			AcDb::kVertexSubentType,
 			vertexSubentIds)) != Acad::eOk)
 		{
@@ -960,11 +960,11 @@ bool AdnAssocSampleUtils::isInsertionPointBasedEntity(const AcDbObjectId& entity
 		return false;
 
 	return (pEntity &&
-		(pEntity->isKindOf(AcDbBlockReference::desc())       ||
-		 pEntity->isKindOf(AcDbMText::desc())                ||
-		 pEntity->isKindOf(AcDbText::desc())                 ||
-		 pEntity->isKindOf(AcDbAttributeDefinition::desc())  ||
-		 pEntity->isKindOf(AcDbAttribute::desc())));
+		(pEntity->isKindOf(AcDbBlockReference::desc()) ||
+			pEntity->isKindOf(AcDbMText::desc()) ||
+			pEntity->isKindOf(AcDbText::desc()) ||
+			pEntity->isKindOf(AcDbAttributeDefinition::desc()) ||
+			pEntity->isKindOf(AcDbAttribute::desc())));
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -982,21 +982,21 @@ AcGeMatrix3d UcsMatrix()
 // 
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Acad::ErrorStatus AdnAssocSampleUtils::postToDatabase (AcDbEntity* pEntity,  
-													   AcDbDatabase* pDb, 
-													   const AcDbObjectId& spaceId) 
+Acad::ErrorStatus AdnAssocSampleUtils::postToDatabase(AcDbEntity* pEntity,
+	AcDbDatabase* pDb,
+	const AcDbObjectId& spaceId)
 {
 	AcDbBlockTablePointer blkTable(pDb, AcDb::kForRead);
 
-	if(blkTable.openStatus() != Acad::eOk)
+	if (blkTable.openStatus() != Acad::eOk)
 		return blkTable.openStatus();
 
-	if(!blkTable->has(spaceId))
+	if (!blkTable->has(spaceId))
 		return Acad::eInvalidInput;
 
 	AcDbBlockTableRecordPointer btr(spaceId, AcDb::kForWrite);
 
-	if(btr.openStatus() != Acad::eOk)
+	if (btr.openStatus() != Acad::eOk)
 		return btr.openStatus();
 
 	return btr->appendAcDbEntity(pEntity);
@@ -1008,11 +1008,11 @@ Acad::ErrorStatus AdnAssocSampleUtils::postToDatabase (AcDbEntity* pEntity,
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void AdnAssocSampleUtils::doCleanUp(AcDbObjectIdArray& cleanupObjectIds)
 {
-	for(int i=0; i<cleanupObjectIds.length(); ++i)
+	for (int i = 0; i < cleanupObjectIds.length(); ++i)
 	{
 		AcDbSmartObjectPointer<AcDbObject> pObject(cleanupObjectIds[i], kForWrite);
 
-		if(pObject.openStatus() == Acad::eOk)
+		if (pObject.openStatus() == Acad::eOk)
 			pObject->erase(true);
 	}
 }
@@ -1021,13 +1021,13 @@ void AdnAssocSampleUtils::doCleanUp(AcDbObjectIdArray& cleanupObjectIds)
 // 
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Acad::ErrorStatus AdnAssocSampleUtils::createAlignedDim(const AcGePoint3d& entPt1, 
-													    const AcGePoint3d& entPt2, 
-													    const AcGePoint3d& dimPos, 
-													    AcDbObjectId& dimId,
-													    const AcDbObjectId& dimStyleId,
-													    AcDbDatabase* pDb,
-													    const AcDbObjectId& spaceId)
+Acad::ErrorStatus AdnAssocSampleUtils::createAlignedDim(const AcGePoint3d& entPt1,
+	const AcGePoint3d& entPt2,
+	const AcGePoint3d& dimPos,
+	AcDbObjectId& dimId,
+	const AcDbObjectId& dimStyleId,
+	AcDbDatabase* pDb,
+	const AcDbObjectId& spaceId)
 {
 	Acad::ErrorStatus es;
 
@@ -1038,17 +1038,17 @@ Acad::ErrorStatus AdnAssocSampleUtils::createAlignedDim(const AcGePoint3d& entPt
 	AcGePoint3d dimPt2(entPt2);
 	AcGePoint3d dimTxt(dimPos);
 
-	AcDbAlignedDimension* dim =  new AcDbAlignedDimension ();
+	AcDbAlignedDimension* dim = new AcDbAlignedDimension();
 
-	dim->setDatabaseDefaults ();
-	
+	dim->setDatabaseDefaults();
+
 	dim->setXLine1Point(dimPt1.transformBy(ucsMatrixInv));
 	dim->setXLine2Point(dimPt2.transformBy(ucsMatrixInv));
 	dim->setTextPosition(dimTxt.transformBy(ucsMatrixInv));
 
 	dim->transformBy(ucsMatrix);
 
-	if(dimStyleId != AcDbObjectId::kNull)
+	if (dimStyleId != AcDbObjectId::kNull)
 	{
 		dim->setDimensionStyle(dimStyleId);
 	}
@@ -1056,9 +1056,9 @@ Acad::ErrorStatus AdnAssocSampleUtils::createAlignedDim(const AcGePoint3d& entPt
 	{
 		dim->setDimensionStyle(pDb->textstyle());
 	}
-	
-	es = AdnAssocSampleUtils::postToDatabase (dim, pDb, spaceId);
-	
+
+	es = AdnAssocSampleUtils::postToDatabase(dim, pDb, spaceId);
+
 	dimId = dim->objectId();
 	dim->close();
 
@@ -1069,39 +1069,39 @@ Acad::ErrorStatus AdnAssocSampleUtils::createAlignedDim(const AcGePoint3d& entPt
 // 
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Acad::ErrorStatus AdnAssocSampleUtils::getLinearEdgeData(const AcDbObjectId& entId,  
-													     const AcGePoint3d& entPt,
-													     AcDbFullSubentPath& edgeEntPath, 
-													     AcGePoint3d& startPoint,
-													     AcGePoint3d& endPoint)
+Acad::ErrorStatus AdnAssocSampleUtils::getLinearEdgeData(const AcDbObjectId& entId,
+	const AcGePoint3d& entPt,
+	AcDbFullSubentPath& edgeEntPath,
+	AcGePoint3d& startPoint,
+	AcGePoint3d& endPoint)
 {
 	Acad::ErrorStatus es;
 
-	if((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId, entPt, edgeEntPath))!= Acad::eOk )
+	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId, entPt, edgeEntPath)) != Acad::eOk)
 		return es;
 
 	AcDbSmartObjectPointer <AcDbEntity> pEntity(entId, AcDb::kForRead);
 
-	if((es = pEntity.openStatus()) != Acad::eOk )
+	if ((es = pEntity.openStatus()) != Acad::eOk)
 		return es;
 
-	AcDbAssocPersSubentIdPE* const pAssocPersSubentIdPE = 
+	AcDbAssocPersSubentIdPE* const pAssocPersSubentIdPE =
 		AcDbAssocPersSubentIdPE::cast(pEntity->queryX(AcDbAssocPersSubentIdPE::desc()));
 
 	AcGeCurve3d* segment = NULL;
-	if((es = pAssocPersSubentIdPE->getEdgeSubentityGeometry(pEntity, edgeEntPath.subentId(), segment))!= Acad::eOk )
+	if ((es = pAssocPersSubentIdPE->getEdgeSubentityGeometry(pEntity, edgeEntPath.subentId(), segment)) != Acad::eOk)
 		return es;
 
-	if(!(segment->type() == AcGe::kLineSeg3d || segment->type() == AcGe::kLinearEnt3d))
+	if (!(segment->type() == AcGe::kLineSeg3d || segment->type() == AcGe::kLinearEnt3d))
 		return Acad::eInvalidInput;
 
-	if(!segment->hasStartPoint(startPoint))
+	if (!segment->hasStartPoint(startPoint))
 	{
 		delete segment;
 		return Acad::eInvalidInput;
 	}
 
-	if(!segment->hasEndPoint(endPoint))
+	if (!segment->hasEndPoint(endPoint))
 	{
 		delete segment;
 		return Acad::eInvalidInput;
@@ -1115,16 +1115,16 @@ Acad::ErrorStatus AdnAssocSampleUtils::getLinearEdgeData(const AcDbObjectId& ent
 // 
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Acad::ErrorStatus 
+Acad::ErrorStatus
 AdnAssocSampleUtils::create2LinesAngularDim(const AcGePoint3d& startPoint1,
-										    const AcGePoint3d& endPoint1, 
-										    const AcGePoint3d& startPoint2,
-										    const AcGePoint3d& endPoint2, 
-										    const AcGePoint3d& dimPos, 
-										    AcDbObjectId& dimId,
-										    const AcDbObjectId& dimStyleId,
-										    AcDbDatabase* pDb,
-										    const AcDbObjectId& spaceId)
+	const AcGePoint3d& endPoint1,
+	const AcGePoint3d& startPoint2,
+	const AcGePoint3d& endPoint2,
+	const AcGePoint3d& dimPos,
+	AcDbObjectId& dimId,
+	const AcDbObjectId& dimStyleId,
+	AcDbDatabase* pDb,
+	const AcDbObjectId& spaceId)
 {
 	Acad::ErrorStatus es;
 
@@ -1133,21 +1133,21 @@ AdnAssocSampleUtils::create2LinesAngularDim(const AcGePoint3d& startPoint1,
 
 	AcGePoint3d dimStart1(startPoint1);
 	AcGePoint3d dimEnd1(endPoint1);
-	
+
 	AcGePoint3d dimStart2(startPoint2);
 	AcGePoint3d dimEnd2(endPoint2);
 
 	AcGePoint3d dimTxt(dimPos);
 
-	AcDb2LineAngularDimension* dim = new AcDb2LineAngularDimension(dimStart1.transformBy(ucsMatrixInv), 
-																   dimEnd1.transformBy(ucsMatrixInv), 
-																   dimStart2.transformBy(ucsMatrixInv), 
-																   dimEnd2.transformBy(ucsMatrixInv), 
-																   dimTxt.transformBy(ucsMatrixInv));
-	
+	AcDb2LineAngularDimension* dim = new AcDb2LineAngularDimension(dimStart1.transformBy(ucsMatrixInv),
+		dimEnd1.transformBy(ucsMatrixInv),
+		dimStart2.transformBy(ucsMatrixInv),
+		dimEnd2.transformBy(ucsMatrixInv),
+		dimTxt.transformBy(ucsMatrixInv));
+
 	dim->transformBy(ucsMatrix);
 
-	if(dimStyleId != AcDbObjectId::kNull)
+	if (dimStyleId != AcDbObjectId::kNull)
 	{
 		dim->setDimensionStyle(dimStyleId);
 	}
@@ -1160,9 +1160,11 @@ AdnAssocSampleUtils::create2LinesAngularDim(const AcGePoint3d& startPoint1,
 		delete pDimStyle;
 	}
 
-	es = AdnAssocSampleUtils::postToDatabase (dim, pDb, spaceId);
-	
+	es = AdnAssocSampleUtils::postToDatabase(dim, pDb, spaceId);
+
 	dimId = dim->objectId();
+	//dim->setConstraintDynamic(true);
+	//dim->setDynamicDimension(true);
 
 	dim->close();
 	return es;
@@ -1172,15 +1174,15 @@ AdnAssocSampleUtils::create2LinesAngularDim(const AcGePoint3d& startPoint1,
 // 
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Acad::ErrorStatus 
-AdnAssocSampleUtils::createArcAngularDim(const AcGePoint3d& centerPoint, 
-										 const AcGePoint3d& xLine1Point, 
-										 const AcGePoint3d& xLine2Point, 
-										 const AcGePoint3d& arcPoint, 
-										 AcDbObjectId& dimId,
-										 const AcDbObjectId& dimStyleId,
-										 AcDbDatabase* pDb,
-										 const AcDbObjectId& spaceId)
+Acad::ErrorStatus
+AdnAssocSampleUtils::createArcAngularDim(const AcGePoint3d& centerPoint,
+	const AcGePoint3d& xLine1Point,
+	const AcGePoint3d& xLine2Point,
+	const AcGePoint3d& arcPoint,
+	AcDbObjectId& dimId,
+	const AcDbObjectId& dimStyleId,
+	AcDbDatabase* pDb,
+	const AcDbObjectId& spaceId)
 {
 	Acad::ErrorStatus es;
 
@@ -1192,14 +1194,14 @@ AdnAssocSampleUtils::createArcAngularDim(const AcGePoint3d& centerPoint,
 	AcGePoint3d dimxLine2(xLine1Point);
 	AcGePoint3d dimArc(arcPoint);
 
-	AcDbArcDimension* dim = new AcDbArcDimension(dimCenter.transformBy(ucsMatrixInv), 
-												 dimxLine1.transformBy(ucsMatrixInv), 
-												 dimxLine2.transformBy(ucsMatrixInv),
-												 dimArc.transformBy(ucsMatrixInv));
-	
+	AcDbArcDimension* dim = new AcDbArcDimension(dimCenter.transformBy(ucsMatrixInv),
+		dimxLine1.transformBy(ucsMatrixInv),
+		dimxLine2.transformBy(ucsMatrixInv),
+		dimArc.transformBy(ucsMatrixInv));
+
 	dim->transformBy(ucsMatrix);
 
-	if(dimStyleId != AcDbObjectId::kNull)
+	if (dimStyleId != AcDbObjectId::kNull)
 	{
 		dim->setDimensionStyle(dimStyleId);
 	}
@@ -1212,8 +1214,8 @@ AdnAssocSampleUtils::createArcAngularDim(const AcGePoint3d& centerPoint,
 		delete pDimStyle;
 	}
 
-	es = AdnAssocSampleUtils::postToDatabase (dim, pDb, spaceId);
-	
+	es = AdnAssocSampleUtils::postToDatabase(dim, pDb, spaceId);
+
 	dimId = dim->objectId();
 	dim->close();
 
@@ -1224,15 +1226,15 @@ AdnAssocSampleUtils::createArcAngularDim(const AcGePoint3d& centerPoint,
 // 
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Acad::ErrorStatus 
-AdnAssocSampleUtils::create3PointAngularDim(const AcGePoint3d& centerPoint, 
-											const AcGePoint3d& xLine1Point, 
-											const AcGePoint3d& xLine2Point, 
-											const AcGePoint3d& arcPoint, 
-											AcDbObjectId& dimId,
-											const AcDbObjectId& dimStyleId,
-											AcDbDatabase* pDb,
-											const AcDbObjectId& spaceId)
+Acad::ErrorStatus
+AdnAssocSampleUtils::create3PointAngularDim(const AcGePoint3d& centerPoint,
+	const AcGePoint3d& xLine1Point,
+	const AcGePoint3d& xLine2Point,
+	const AcGePoint3d& arcPoint,
+	AcDbObjectId& dimId,
+	const AcDbObjectId& dimStyleId,
+	AcDbDatabase* pDb,
+	const AcDbObjectId& spaceId)
 {
 	Acad::ErrorStatus es;
 
@@ -1244,14 +1246,14 @@ AdnAssocSampleUtils::create3PointAngularDim(const AcGePoint3d& centerPoint,
 	AcGePoint3d dimxLine2(xLine1Point);
 	AcGePoint3d dimArc(arcPoint);
 
-	AcDb3PointAngularDimension* dim = new AcDb3PointAngularDimension(dimCenter.transformBy(ucsMatrixInv), 
-																	 dimxLine1.transformBy(ucsMatrixInv), 
-																	 dimxLine2.transformBy(ucsMatrixInv),
-																	 dimArc.transformBy(ucsMatrixInv));
-	
+	AcDb3PointAngularDimension* dim = new AcDb3PointAngularDimension(dimCenter.transformBy(ucsMatrixInv),
+		dimxLine1.transformBy(ucsMatrixInv),
+		dimxLine2.transformBy(ucsMatrixInv),
+		dimArc.transformBy(ucsMatrixInv));
+
 	dim->transformBy(ucsMatrix);
 
-	if(dimStyleId != AcDbObjectId::kNull)
+	if (dimStyleId != AcDbObjectId::kNull)
 	{
 		dim->setDimensionStyle(dimStyleId);
 	}
@@ -1264,8 +1266,8 @@ AdnAssocSampleUtils::create3PointAngularDim(const AcGePoint3d& centerPoint,
 		delete pDimStyle;
 	}
 
-	es = AdnAssocSampleUtils::postToDatabase (dim, pDb, spaceId);
-	
+	es = AdnAssocSampleUtils::postToDatabase(dim, pDb, spaceId);
+
 	dimId = dim->objectId();
 	dim->close();
 
@@ -1276,15 +1278,15 @@ AdnAssocSampleUtils::create3PointAngularDim(const AcGePoint3d& centerPoint,
 // 
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Acad::ErrorStatus 
+Acad::ErrorStatus
 AdnAssocSampleUtils::createRadialDim(const AcDbObjectId& /*entId*/,
-								     const AcGePoint3d& centerPt, 
-								     const AcGePoint3d& chordPt,
-									 const double leaderLength,
-								     AcDbObjectId& dimId,
-									 const AcDbObjectId& dimStyleId,
-								     AcDbDatabase* pDb,
-								     const AcDbObjectId& spaceId)
+	const AcGePoint3d& centerPt,
+	const AcGePoint3d& chordPt,
+	const double leaderLength,
+	AcDbObjectId& dimId,
+	const AcDbObjectId& dimStyleId,
+	AcDbDatabase* pDb,
+	const AcDbObjectId& spaceId)
 {
 	Acad::ErrorStatus es;
 
@@ -1293,14 +1295,14 @@ AdnAssocSampleUtils::createRadialDim(const AcDbObjectId& /*entId*/,
 
 	AcGePoint3d dimCenter(centerPt);
 	AcGePoint3d dimChord(chordPt);
-	
-	AcDbRadialDimension* dim = new AcDbRadialDimension(dimCenter.transformBy(ucsMatrixInv), 
-													   dimChord.transformBy(ucsMatrixInv), 
-													   leaderLength);
-	
+
+	AcDbRadialDimension* dim = new AcDbRadialDimension(dimCenter.transformBy(ucsMatrixInv),
+		dimChord.transformBy(ucsMatrixInv),
+		leaderLength);
+
 	dim->transformBy(ucsMatrix);
 
-	if(dimStyleId != AcDbObjectId::kNull)
+	if (dimStyleId != AcDbObjectId::kNull)
 	{
 		dim->setDimensionStyle(dimStyleId);
 	}
@@ -1313,8 +1315,8 @@ AdnAssocSampleUtils::createRadialDim(const AcDbObjectId& /*entId*/,
 		delete pDimStyle;
 	}
 
-	es = AdnAssocSampleUtils::postToDatabase (dim, pDb, spaceId);
-	
+	es = AdnAssocSampleUtils::postToDatabase(dim, pDb, spaceId);
+
 	dimId = dim->objectId();
 	dim->close();
 
@@ -1325,16 +1327,16 @@ AdnAssocSampleUtils::createRadialDim(const AcDbObjectId& /*entId*/,
 // 
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Acad::ErrorStatus 
+Acad::ErrorStatus
 AdnAssocSampleUtils::createDiametricDim(const AcDbObjectId& /*entId*/,
-								        const AcGePoint3d& chordPt, 
-									    const AcGePoint3d& farChordPt,
-										const AcGePoint3d& dimPos, 
-										const double leaderLength, 
-										AcDbObjectId& dimId,
-										const AcDbObjectId& dimStyleId,
-										AcDbDatabase* pDb,
-										const AcDbObjectId& spaceId)
+	const AcGePoint3d& chordPt,
+	const AcGePoint3d& farChordPt,
+	const AcGePoint3d& dimPos,
+	const double leaderLength,
+	AcDbObjectId& dimId,
+	const AcDbObjectId& dimStyleId,
+	AcDbDatabase* pDb,
+	const AcDbObjectId& spaceId)
 {
 	Acad::ErrorStatus es;
 
@@ -1344,17 +1346,17 @@ AdnAssocSampleUtils::createDiametricDim(const AcDbObjectId& /*entId*/,
 	AcGePoint3d dimChord(chordPt);
 	AcGePoint3d dimFarChord(farChordPt);
 	AcGePoint3d dimTxt(dimPos);
-	
+
 	AcDbDiametricDimension* dim = new AcDbDiametricDimension(dimChord.transformBy(ucsMatrixInv),
-															 dimFarChord.transformBy(ucsMatrixInv), 
-															 leaderLength);
-	
+		dimFarChord.transformBy(ucsMatrixInv),
+		leaderLength);
+
 	dim->useSetTextPosition();
 	dim->setTextPosition(dimTxt.transformBy(ucsMatrixInv));
 
 	dim->transformBy(ucsMatrix);
 
-	if(dimStyleId != AcDbObjectId::kNull)
+	if (dimStyleId != AcDbObjectId::kNull)
 	{
 		dim->setDimensionStyle(dimStyleId);
 	}
@@ -1367,8 +1369,8 @@ AdnAssocSampleUtils::createDiametricDim(const AcDbObjectId& /*entId*/,
 		delete pDimStyle;
 	}
 
-	es = AdnAssocSampleUtils::postToDatabase (dim, pDb, spaceId);
-	
+	es = AdnAssocSampleUtils::postToDatabase(dim, pDb, spaceId);
+
 	dimId = dim->objectId();
 	dim->close();
 
@@ -1379,19 +1381,19 @@ AdnAssocSampleUtils::createDiametricDim(const AcDbObjectId& /*entId*/,
 // 
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Acad::ErrorStatus 
+Acad::ErrorStatus
 AdnAssocSampleUtils::createRotatedDim(const AcDbObjectId& /*entId1*/,
-									  const AcGePoint3d& entPt1, 
-									  const AcDbFullSubentPath& /*edgeEntPath1*/,
-									  const AcDbObjectId& /*entId2*/,
-									  const AcGePoint3d& entPt2,
-									  const AcDbFullSubentPath& /*edgeEntPath2*/,
-									  const AcGePoint3d& dimPos, 
-									  double rotation,
-									  AcDbObjectId& dimId,
-									  const AcDbObjectId& dimStyleId,
-									  AcDbDatabase* pDb,
-									  const AcDbObjectId& spaceId)
+	const AcGePoint3d& entPt1,
+	const AcDbFullSubentPath& /*edgeEntPath1*/,
+	const AcDbObjectId& /*entId2*/,
+	const AcGePoint3d& entPt2,
+	const AcDbFullSubentPath& /*edgeEntPath2*/,
+	const AcGePoint3d& dimPos,
+	double rotation,
+	AcDbObjectId& dimId,
+	const AcDbObjectId& dimStyleId,
+	AcDbDatabase* pDb,
+	const AcDbObjectId& spaceId)
 {
 	Acad::ErrorStatus es;
 
@@ -1402,15 +1404,15 @@ AdnAssocSampleUtils::createRotatedDim(const AcDbObjectId& /*entId1*/,
 	AcGePoint3d dimPt2(entPt2);
 	AcGePoint3d dimTxt(dimPos);
 
-	AcDbRotatedDimension* dim =  new AcDbRotatedDimension(rotation, 
-		dimPt1.transformBy(ucsMatrixInv), 
-		dimPt2.transformBy(ucsMatrixInv), 
+	AcDbRotatedDimension* dim = new AcDbRotatedDimension(rotation,
+		dimPt1.transformBy(ucsMatrixInv),
+		dimPt2.transformBy(ucsMatrixInv),
 		dimTxt.transformBy(ucsMatrixInv));
 
-	dim->setDatabaseDefaults ();
+	dim->setDatabaseDefaults();
 	dim->transformBy(ucsMatrix);
-	
-	if(dimStyleId != AcDbObjectId::kNull)
+
+	if (dimStyleId != AcDbObjectId::kNull)
 	{
 		dim->setDimensionStyle(dimStyleId);
 	}
@@ -1422,8 +1424,8 @@ AdnAssocSampleUtils::createRotatedDim(const AcDbObjectId& /*entId1*/,
 		dim->setDimstyleData(pDimStyle);
 		delete pDimStyle;
 	}
-	
-	if((es = AdnAssocSampleUtils::postToDatabase (dim, pDb, spaceId)) == Acad::eOk)
+
+	if ((es = AdnAssocSampleUtils::postToDatabase(dim, pDb, spaceId)) == Acad::eOk)
 	{
 		dimId = dim->objectId();
 		dim->close();
@@ -1438,10 +1440,10 @@ AdnAssocSampleUtils::createRotatedDim(const AcDbObjectId& /*entId1*/,
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus
 AdnAssocSampleUtils::getNameAndExpressionFromDimension(const AcDbObjectId& networkId,
-													   const AcDbObjectId& dimId,
-													   const AcDbAssocConstraintType& constraintType,
-													   AcString &name,
-													   AcString &expression)
+	const AcDbObjectId& dimId,
+	const AcDbAssocConstraintType& constraintType,
+	AcString &name,
+	AcString &expression)
 {
 	Acad::ErrorStatus err = eOk;
 
@@ -1501,18 +1503,18 @@ AdnAssocSampleUtils::getNameAndExpressionFromDimension(const AcDbObjectId& netwo
 			}
 		}
 
-		if((err = pDim->measurement(measurement)) != Acad::eOk)
+		if ((err = pDim->measurement(measurement)) != Acad::eOk)
 			return err;
 
 		isAngular = pDim->isKindOf(AcDb2LineAngularDimension::desc()) || pDim->isKindOf(AcDb3PointAngularDimension::desc());
 	}
 
 	// Extract the dimension name and expression given the entity text
-	err = AcDbAssocDimDependencyBodyBase::getNameAndExpressionFromEntityText(dimensionText, 
-		true, 
-		measurement, 
-		isAngular, 
-		dfltName, 
+	err = AcDbAssocDimDependencyBodyBase::getNameAndExpressionFromEntityText(dimensionText,
+		true,
+		measurement,
+		isAngular,
+		dfltName,
 		dfltExpression);
 
 	assert(!dfltExpression.isEmpty());
@@ -1521,7 +1523,7 @@ AdnAssocSampleUtils::getNameAndExpressionFromDimension(const AcDbObjectId& netwo
 	if (dfltName.isEmpty())
 	{
 		AcDbObjectPointer<AcDbAssocNetwork> pNetwork(networkId, kForRead);
-		
+
 		if (pNetwork.openStatus() != eOk)
 		{
 			assert(!ACRX_T("Cannot open an Assoc Network"));
@@ -1570,8 +1572,8 @@ AdnAssocSampleUtils::getNameAndExpressionFromDimension(const AcDbObjectId& netwo
 		dfltName += buf;
 	}
 
-	name		 = dfltName;
-	expression	 = dfltExpression;
+	name = dfltName;
+	expression = dfltExpression;
 
 	return err;
 }
@@ -1582,58 +1584,58 @@ AdnAssocSampleUtils::getNameAndExpressionFromDimension(const AcDbObjectId& netwo
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus
 AdnAssocSampleUtils::addNewVariableToAssocNetwork(const AcDbObjectId& networkId,
-												  const AcString& name,
-												  const AcString& expression,
-												  AcDbObjectId& varId)
+	const AcString& name,
+	const AcString& expression,
+	AcDbObjectId& varId)
 {
 	Acad::ErrorStatus es = eOk;
 	varId = AcDbObjectId::kNull;
-	
+
 	AcDbObjectPointer<AcDbAssocNetwork> pNetwork(networkId, kForWrite);
-	
-	if((es = pNetwork.openStatus()) != Acad::eOk)
+
+	if ((es = pNetwork.openStatus()) != Acad::eOk)
 		return es;
 
 	{
 		AcDbAssocVariable* const pVar = new AcDbAssocVariable();
 
-		if((es = pNetwork->database()->addAcDbObject(varId, pVar)) != Acad::eOk)
+		if ((es = pNetwork->database()->addAcDbObject(varId, pVar)) != Acad::eOk)
 			return es;
-		
+
 		pVar->close();
 
-		if((es = pNetwork->addAction(varId, true)) != Acad::eOk)
+		if ((es = pNetwork->addAction(varId, true)) != Acad::eOk)
 			return es;
 	}
 
-	AcDbObjectPointer<AcDbAssocVariable> pAssocVar (varId, kForWrite);
+	AcDbObjectPointer<AcDbAssocVariable> pAssocVar(varId, kForWrite);
 
 	AcString errMsgValidate(L"Name or Expression invalid");
 
-	if((es = pAssocVar->validateNameAndExpression(name, L"1.0", errMsgValidate)) != Acad::eOk)
+	if ((es = pAssocVar->validateNameAndExpression(name, L"1.0", errMsgValidate)) != Acad::eOk)
 		return es;
-   
-	if((es = pAssocVar->setName(name, true)) != Acad::eOk)
+
+	if ((es = pAssocVar->setName(name, true)) != Acad::eOk)
 		return es;
-	
+
 	pAssocVar->setValue(AcDbEvalVariant(1.0));
 
-	if((es = pAssocVar->setExpression(expression, 
-		EXPRESSION_EVALUATOR_DEFAULT, 
-		true, 
+	if ((es = pAssocVar->setExpression(expression,
+		EXPRESSION_EVALUATOR_DEFAULT,
+		true,
 		true)) != Acad::eOk)
 		return es;
 
 	AcString errMsgEval(L"Expression evaluation failed");
-	
+
 	AcDbEvalVariant evaluatedExpressionValue;
 
-	if((es = pAssocVar->evaluateExpression(evaluatedExpressionValue, errMsgEval)) != Acad::eOk)
+	if ((es = pAssocVar->evaluateExpression(evaluatedExpressionValue, errMsgEval)) != Acad::eOk)
 		return es;
 
-	if((pAssocVar->setValue(evaluatedExpressionValue)) != Acad::eOk)
+	if ((pAssocVar->setValue(evaluatedExpressionValue)) != Acad::eOk)
 		return es;
-	
+
 	return es;
 }
 
@@ -1643,28 +1645,28 @@ AdnAssocSampleUtils::addNewVariableToAssocNetwork(const AcDbObjectId& networkId,
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus
 AdnAssocSampleUtils::addValueDependency(const AcDbObjectId& networkId,
-										const AcDbObjectId& varId,
-										AcDbObjectId& varDepId)
+	const AcDbObjectId& varId,
+	AcDbObjectId& varDepId)
 {
 	Acad::ErrorStatus es = eOk;
 
 	varDepId = AcDbObjectId::kNull;
 
 	AcDbAssocValueDependency* pValDep = new AcDbAssocValueDependency();
-	
-	if((es = networkId.database()->addAcDbObject(varDepId, pValDep)) != Acad::eOk)
+
+	if ((es = networkId.database()->addAcDbObject(varDepId, pValDep)) != Acad::eOk)
 	{
 		delete pValDep;
 		return es;
 	}
 
-	if((es = pValDep->attachToObject(AcDbCompoundObjectId(varId))) != Acad::eOk)
+	if ((es = pValDep->attachToObject(AcDbCompoundObjectId(varId))) != Acad::eOk)
 		return es;
 
-	if((es = pValDep->close()) != Acad::eOk)
+	if ((es = pValDep->close()) != Acad::eOk)
 		return es;
 
-	if(varId.isNull() || varDepId.isNull())
+	if (varId.isNull() || varDepId.isNull())
 		return Acad::eNullObjectId;
 
 	return es;
@@ -1692,28 +1694,28 @@ AcGeMatrix3d AdnAssocSampleUtils::getConstraintGroupCoordSysInv(AcDbAssoc2dConst
 // 
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Acad::ErrorStatus AdnAssocSampleUtils::getClosestConstrainedPoint(AcConstrainedGeometry*& pConsGeom, 
-																  const AcGePoint3d& entPtInConstGrp, 
-																  AcConstrainedPoint*& point)
+Acad::ErrorStatus AdnAssocSampleUtils::getClosestConstrainedPoint(AcConstrainedGeometry*& pConsGeom,
+	const AcGePoint3d& entPtInConstGrp,
+	AcConstrainedPoint*& point)
 {
 	if (!pConsGeom->isKindOf(AcConstrainedCurve::desc()))
 		return eInvalidInput;
-	
+
 	AcConstrainedCurve* pConstrainedCurve = AcConstrainedCurve::cast(pConsGeom);
-	
+
 	AcArray<AcConstrainedImplicitPoint*> apImplicitPoints;
-	
+
 	pConstrainedCurve->getConstrainedImplicitPoints(apImplicitPoints);
 
 	point = apImplicitPoints[0];
-	
+
 	double distMin = entPtInConstGrp.distanceTo(apImplicitPoints[0]->point());
 
 	for (int i = 1; i < apImplicitPoints.length(); ++i)
-	{	
+	{
 		double dist = entPtInConstGrp.distanceTo(apImplicitPoints[i]->point());
-	
-		if( dist < distMin)
+
+		if (dist < distMin)
 		{
 			distMin = dist;
 			point = apImplicitPoints[i];
@@ -1728,26 +1730,26 @@ Acad::ErrorStatus AdnAssocSampleUtils::getClosestConstrainedPoint(AcConstrainedG
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AdnAssocSampleUtils::createDistanceConstraint(const AcDbObjectId& varDepId,
-																const AcDbObjectId& dimDepId,
-																AcConstrainedGeometry*& pConsGeom1,
-																const AcGePoint3d& entPt1,
-																AcConstrainedGeometry*& pConsGeom2,
-																const AcGePoint3d& entPt2,
-																const AcGeVector3d* pFixedDirection,
-																AcDbDatabase* pDb,
-																const AcDbObjectId& spaceId,
-																AcDistanceConstraint** ppNewDisConstraint)
+	const AcDbObjectId& dimDepId,
+	AcConstrainedGeometry*& pConsGeom1,
+	const AcGePoint3d& entPt1,
+	AcConstrainedGeometry*& pConsGeom2,
+	const AcGePoint3d& entPt2,
+	const AcGeVector3d* pFixedDirection,
+	AcDbDatabase* pDb,
+	const AcDbObjectId& spaceId,
+	AcDistanceConstraint** ppNewDisConstraint)
 {
 	ErrorStatus es;
-	
+
 	AcDbObjectId consGrpId = AdnAssocSampleUtils::getConstraintGroup(spaceId, true);
 
-	if(consGrpId.isNull())
+	if (consGrpId.isNull())
 		return Acad::eNullObjectId;
 
 	AcDbObjectPointer<AcDbAssoc2dConstraintGroup> p2dConstrGrp(consGrpId, kForWrite);
-	
-	if((es = p2dConstrGrp.openStatus()) != Acad::eOk)
+
+	if ((es = p2dConstrGrp.openStatus()) != Acad::eOk)
 		return es;
 
 	AcGeMatrix3d coordSysInv(AdnAssocSampleUtils::getConstraintGroupCoordSysInv(p2dConstrGrp));
@@ -1758,7 +1760,7 @@ Acad::ErrorStatus AdnAssocSampleUtils::createDistanceConstraint(const AcDbObject
 
 	AcConstrainedPoint* point1;
 
-	if((es = AdnAssocSampleUtils::getClosestConstrainedPoint(pConsGeom1, entPt1InConstGrp, point1)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestConstrainedPoint(pConsGeom1, entPt1InConstGrp, point1)) != Acad::eOk)
 		return es;
 
 	//Get closest constrained point2
@@ -1767,17 +1769,17 @@ Acad::ErrorStatus AdnAssocSampleUtils::createDistanceConstraint(const AcDbObject
 
 	AcConstrainedPoint* point2;
 
-	if((es = AdnAssocSampleUtils::getClosestConstrainedPoint(pConsGeom2, entPt2InConstGrp, point2)) != Acad::eOk)
+	if ((es = AdnAssocSampleUtils::getClosestConstrainedPoint(pConsGeom2, entPt2InConstGrp, point2)) != Acad::eOk)
 		return es;
-											
-	if((es = p2dConstrGrp->addDistanceConstraint(point1,
-												 point2,
-												 (pFixedDirection != NULL ? AcDistanceConstraint::kFixedDirection : AcDistanceConstraint::kNotDirected),
-												 varDepId,
-												 dimDepId, 
-												 pFixedDirection,
-												 NULL,
-												 ppNewDisConstraint)) != Acad::eOk)
+
+	if ((es = p2dConstrGrp->addDistanceConstraint(point1,
+		point2,
+		(pFixedDirection != NULL ? AcDistanceConstraint::kFixedDirection : AcDistanceConstraint::kNotDirected),
+		varDepId,
+		dimDepId,
+		pFixedDirection,
+		NULL,
+		ppNewDisConstraint)) != Acad::eOk)
 		return es;
 
 	AcDbObjectId networkId = AcDbAssocNetwork::getInstanceFromDatabase(pDb, true, DICTIONARYKEY);
@@ -1792,43 +1794,43 @@ Acad::ErrorStatus AdnAssocSampleUtils::createDistanceConstraint(const AcDbObject
 // 
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Acad::ErrorStatus 
+Acad::ErrorStatus
 AdnAssocSampleUtils::create2LineAngleConstraint(const AcDbObjectId& varDepId,
-											    const AcDbObjectId& dimDepId,
-											    AcConstrainedGeometry*& pConsGeom1,
-											    AcConstrainedGeometry*& pConsGeom2,
-											    AcAngleConstraint::SectorType sectorType,
-											    AcDbDatabase* pDb,
-												const AcDbObjectId& spaceId,
-											    AcAngleConstraint** ppNewAngConstraint)
+	const AcDbObjectId& dimDepId,
+	AcConstrainedGeometry*& pConsGeom1,
+	AcConstrainedGeometry*& pConsGeom2,
+	AcAngleConstraint::SectorType sectorType,
+	AcDbDatabase* pDb,
+	const AcDbObjectId& spaceId,
+	AcAngleConstraint** ppNewAngConstraint)
 {
 	ErrorStatus es;
-	
+
 	AcDbObjectId consGrpId = AdnAssocSampleUtils::getConstraintGroup(spaceId, true);
 
-	if(consGrpId.isNull())
+	if (consGrpId.isNull())
 		return Acad::eNullObjectId;
 
 	AcDbObjectPointer<AcDbAssoc2dConstraintGroup> p2dConstrGrp(consGrpId, kForWrite);
-	
-	if((es = p2dConstrGrp.openStatus()) != Acad::eOk)
+
+	if ((es = p2dConstrGrp.openStatus()) != Acad::eOk)
 		return es;
-	
+
 	if (!pConsGeom1->isKindOf(AcConstrainedLine::desc()))
 		return eInvalidInput;
 
 	if (!pConsGeom2->isKindOf(AcConstrainedLine::desc()))
 		return eInvalidInput;
-	
+
 	AcConstrainedLine* pConsLine1 = AcConstrainedLine::cast(pConsGeom1);
 	AcConstrainedLine* pConsLine2 = AcConstrainedLine::cast(pConsGeom2);
-	
-	if((es = p2dConstrGrp->addAngleConstraint(pConsLine1, 
-											  pConsLine2, 
-											  sectorType,
-											  varDepId, 
-											  dimDepId, 
-											  ppNewAngConstraint) ) != Acad::eOk)
+
+	if ((es = p2dConstrGrp->addAngleConstraint(pConsLine1,
+		pConsLine2,
+		sectorType,
+		varDepId,
+		dimDepId,
+		ppNewAngConstraint)) != Acad::eOk)
 		return es;
 
 	AcDbObjectId networkId = AcDbAssocNetwork::getInstanceFromDatabase(pDb, true, DICTIONARYKEY);
@@ -1843,32 +1845,32 @@ AdnAssocSampleUtils::create2LineAngleConstraint(const AcDbObjectId& varDepId,
 // 
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Acad::ErrorStatus 
+Acad::ErrorStatus
 AdnAssocSampleUtils::create3PointAngleConstraint(const AcDbObjectId& varDepId,
-												 const AcDbObjectId& dimDepId,
-												 AcConstrainedGeometry*& pConsGeom1,
-												 const AcGePoint3d& entPt1,
-												 AcConstrainedGeometry*& pConsGeom2,
-												 const AcGePoint3d& entPt2,
-												 AcConstrainedGeometry*& pConsGeom3,
-												 const AcGePoint3d& entPt3,
-												 AcAngleConstraint::SectorType sectorType,
-												 AcDbDatabase* pDb,
-												 const AcDbObjectId& spaceId,
-												 Ac3PointAngleConstraint** ppNewAngConstraint)
+	const AcDbObjectId& dimDepId,
+	AcConstrainedGeometry*& pConsGeom1,
+	const AcGePoint3d& entPt1,
+	AcConstrainedGeometry*& pConsGeom2,
+	const AcGePoint3d& entPt2,
+	AcConstrainedGeometry*& pConsGeom3,
+	const AcGePoint3d& entPt3,
+	AcAngleConstraint::SectorType sectorType,
+	AcDbDatabase* pDb,
+	const AcDbObjectId& spaceId,
+	Ac3PointAngleConstraint** ppNewAngConstraint)
 {
 	ErrorStatus es;
-	
+
 	AcDbObjectId consGrpId = AdnAssocSampleUtils::getConstraintGroup(spaceId, true);
 
-	if(consGrpId.isNull())
+	if (consGrpId.isNull())
 		return Acad::eNullObjectId;
 
 	AcDbObjectPointer<AcDbAssoc2dConstraintGroup> p2dConstrGrp(consGrpId, kForWrite);
-	
-	if((es = p2dConstrGrp.openStatus()) != Acad::eOk)
+
+	if ((es = p2dConstrGrp.openStatus()) != Acad::eOk)
 		return es;
-	
+
 	AcGeMatrix3d coordSysInv(AdnAssocSampleUtils::getConstraintGroupCoordSysInv(p2dConstrGrp));
 
 	//Get closest constrained point1
@@ -1877,7 +1879,7 @@ AdnAssocSampleUtils::create3PointAngleConstraint(const AcDbObjectId& varDepId,
 
 	AcConstrainedPoint* point1;
 
-	if((es = getClosestConstrainedPoint(pConsGeom1, entPt1InConstGrp, point1)) != Acad::eOk)
+	if ((es = getClosestConstrainedPoint(pConsGeom1, entPt1InConstGrp, point1)) != Acad::eOk)
 		return es;
 
 	//Get closest constrained point2
@@ -1886,7 +1888,7 @@ AdnAssocSampleUtils::create3PointAngleConstraint(const AcDbObjectId& varDepId,
 
 	AcConstrainedPoint* point2;
 
-	if((es = getClosestConstrainedPoint(pConsGeom2, entPt2InConstGrp, point2)) != Acad::eOk)
+	if ((es = getClosestConstrainedPoint(pConsGeom2, entPt2InConstGrp, point2)) != Acad::eOk)
 		return es;
 
 	//Get closest constrained point3
@@ -1895,16 +1897,16 @@ AdnAssocSampleUtils::create3PointAngleConstraint(const AcDbObjectId& varDepId,
 
 	AcConstrainedPoint* point3;
 
-	if((es = getClosestConstrainedPoint(pConsGeom3, entPt3InConstGrp, point3)) != Acad::eOk)
+	if ((es = getClosestConstrainedPoint(pConsGeom3, entPt3InConstGrp, point3)) != Acad::eOk)
 		return es;
-	
-	if((es = p2dConstrGrp->add3PointAngleConstraint(point1, 
-													 point2,
-												     point3, 
-												     sectorType,
-												     varDepId, 
-												     dimDepId, 
-												     ppNewAngConstraint) ) != Acad::eOk)
+
+	if ((es = p2dConstrGrp->add3PointAngleConstraint(point1,
+		point2,
+		point3,
+		sectorType,
+		varDepId,
+		dimDepId,
+		ppNewAngConstraint)) != Acad::eOk)
 		return es;
 
 	AcDbObjectId networkId = AcDbAssocNetwork::getInstanceFromDatabase(pDb, true, DICTIONARYKEY);
@@ -1919,31 +1921,31 @@ AdnAssocSampleUtils::create3PointAngleConstraint(const AcDbObjectId& varDepId,
 // 
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Acad::ErrorStatus 
+Acad::ErrorStatus
 AdnAssocSampleUtils::createRadiusDiameterConstraint(const AcDbObjectId& varDepId,
-												    const AcDbObjectId& dimDepId,
-												    AcConstrainedGeometry*& pConsGeom,
-												    AcRadiusDiameterConstraint::RadiusDiameterConstrType constrType,
-												    AcDbDatabase* pDb,
-													const AcDbObjectId& spaceId,
-												    AcRadiusDiameterConstraint** ppNewRadDiaConstraint)
+	const AcDbObjectId& dimDepId,
+	AcConstrainedGeometry*& pConsGeom,
+	AcRadiusDiameterConstraint::RadiusDiameterConstrType constrType,
+	AcDbDatabase* pDb,
+	const AcDbObjectId& spaceId,
+	AcRadiusDiameterConstraint** ppNewRadDiaConstraint)
 {
 	ErrorStatus es;
-	
+
 	AcDbObjectId consGrpId = AdnAssocSampleUtils::getConstraintGroup(spaceId, true);
 
-	if(consGrpId.isNull())
+	if (consGrpId.isNull())
 		return Acad::eNullObjectId;
 
 	AcDbObjectPointer<AcDbAssoc2dConstraintGroup> p2dConstrGrp(consGrpId, kForWrite);
-	
-	if((es = p2dConstrGrp.openStatus()) != Acad::eOk)
+
+	if ((es = p2dConstrGrp.openStatus()) != Acad::eOk)
 		return es;
-	
+
 	if (!pConsGeom->isKindOf(AcConstrainedCircle::desc()))
 		return eInvalidInput;
 
-	if((es = p2dConstrGrp->addRadiusDiameterConstraint(pConsGeom, constrType, varDepId, dimDepId, ppNewRadDiaConstraint)) != Acad::eOk)
+	if ((es = p2dConstrGrp->addRadiusDiameterConstraint(pConsGeom, constrType, varDepId, dimDepId, ppNewRadDiaConstraint)) != Acad::eOk)
 		return es;
 
 	AcDbObjectId networkId = AcDbAssocNetwork::getInstanceFromDatabase(pDb, true, DICTIONARYKEY);
