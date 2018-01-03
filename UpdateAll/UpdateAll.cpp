@@ -31,7 +31,11 @@ namespace sstd {
 			CopyFilePathToClipboard::main();
 			{
 				auto DB = acdbHostApplicationServices()->workingDatabase();
-				DB->setDimAssoc(2);
+				DB->setDimAssoc(2)/*标注关联*/;
+				DB->setAuprec(2)/*角度精度*/;
+				DB->setLuprec(2)/*线性精度*/;
+				DB->setLunits(2)/*线性小数*/;
+				DB->setAunits(0)/*十进制角度*/;
 			}
 			auto varCD = acDocManager->curDocument();
 			if (varCD) {

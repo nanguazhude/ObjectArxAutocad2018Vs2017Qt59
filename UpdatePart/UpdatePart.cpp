@@ -32,6 +32,10 @@ namespace sstd {
 			{
 				auto DB = acdbHostApplicationServices()->workingDatabase();
 				DB->setDimAssoc(2);
+				DB->setAuprec(2);
+				DB->setLuprec(2);
+				DB->setLunits(2);
+				DB->setAunits(0);
 			}
 			auto varCD = acDocManager->curDocument();
 			if (varCD) {
