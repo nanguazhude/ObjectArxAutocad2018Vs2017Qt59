@@ -29,6 +29,10 @@ namespace sstd {
 			UpdateTitleBlockTime::main();
 			UpdateLayer::main();
 			CopyFilePathToClipboard::main();
+			{
+				auto DB = acdbHostApplicationServices()->workingDatabase();
+				DB->setDimAssoc(2);
+			}
 			auto varCD = acDocManager->curDocument();
 			if (varCD) {
 				acDocManager->sendStringToExecute(
