@@ -162,6 +162,47 @@ namespace sstd {
 			return std::move(varAns);
 		}
 
+		/**  
+		http://adndevblog.typepad.com/autocad/2013/01/creating-a-linetype-using-arx.html
+		**/
+		inline bool _p_update_linetype(AcDbDatabase * argDB) {
+
+			/*获得线型表*/
+			sstd::ArxClosePointer< AcDbLinetypeTable > varLinetypeTable;
+			if (Acad::eOk != argDB->getLinetypeTable(
+				varLinetypeTable, AcDb::kForWrite)) {
+				acutPrintf(LR"(获得线型失败
+)");
+				return false;
+			}
+
+			if (varLinetypeTable->has(LR"(_点划线_)")==false) {
+				sstd::ArxClosePointer< AcDbLinetypeTableRecord > var{new AcDbLinetypeTableRecord };
+				var->setName(LR"(_点划线_)");
+				var->setComments(LR"(- . )");
+				var->setPatternLength(14.5);
+				var->setNumDashes(4);
+				var->setDashLengthAt(0, 10);
+				var->setDashLengthAt(1, -2);
+				var->setDashLengthAt(2, 0.5);
+				var->setDashLengthAt(3, -2);
+				varLinetypeTable->add(var);
+			}
+
+			if (varLinetypeTable->has(LR"(_虚线_)") == false) {
+				sstd::ArxClosePointer< AcDbLinetypeTableRecord > var{ new AcDbLinetypeTableRecord };
+				var->setName(LR"(_虚线_)");
+				var->setComments(LR"(- -)");
+				var->setPatternLength(12);
+				var->setNumDashes(2);
+				var->setDashLengthAt(0, 10);
+				var->setDashLengthAt(1, -2);
+				varLinetypeTable->add(var);
+			}
+
+			return true;
+		}
+
 		template<unsigned long long Version>
 		inline void _p_update_layer(AcDbDatabase * argDB) {
 			if (nullptr == argDB) { return; }
@@ -171,6 +212,9 @@ namespace sstd {
 			argDB->loadLineTypeFile(LR"(CENTER2)", LR"(acad.lin)");
 			argDB->loadLineTypeFile(LR"(PHANTOM2)", LR"(acad.lin)");
 			argDB->loadLineTypeFile(LR"(DASHEDX2)", LR"(acad.lin)");
+
+			/*增加线型*/
+			if (false == _p_update_linetype(argDB)) { return; }
 
 			/*获得线型表*/
 			sstd::ArxClosePointer< AcDbLinetypeTable > varLinetypeTable;

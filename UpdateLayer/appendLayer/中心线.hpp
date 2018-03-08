@@ -18,10 +18,10 @@
 	std::optional<AcDbObjectId> varLTypeID;
 	{
 		AcDbObjectId varLTypeIDTmp;
-		if (Acad::eOk == argLTT->getAt(LR"(CENTER2)", varLTypeIDTmp)) {
+		if (Acad::eOk == argLTT->getAt(LR"(_点划线_)", varLTypeIDTmp)) {
 			varLTypeID = varLTypeIDTmp;
 		}else {
-			acutPrintf(LR"(找不到线型：CENTER2
+			acutPrintf(LR"(找不到线型：_点划线_
 )");
 		}
 	}

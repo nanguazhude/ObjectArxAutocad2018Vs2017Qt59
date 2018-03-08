@@ -16,14 +16,14 @@
 	varLTP.setAlphaPercent(1.0)/*1.0代表不透明，0.0代表透明*/;
 	/*初始化线型*****************************************************/
 	std::optional<AcDbObjectId> varLTypeID;
-	if (varLocalLTR) {
+	/*if (varLocalLTR)*/ {
 		{
 			AcDbObjectId varLTypeIDTmp;
-			if (Acad::eOk == argLTT->getAt(LR"(DASHEDX2)", varLTypeIDTmp)) {
+			if (Acad::eOk == argLTT->getAt(LR"(_虚线_)", varLTypeIDTmp)) {
 				varLTypeID = varLTypeIDTmp;
 			}
 			else {
-				acutPrintf(LR"(找不到线型：DASHEDX2
+				acutPrintf(LR"(找不到线型：_虚线_
 )");
 			}
 		}

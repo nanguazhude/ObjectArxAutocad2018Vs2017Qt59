@@ -52,6 +52,10 @@ namespace sstd {
 						$BlockSearchDir = LR"(E:\Duty\Duty\template\blocks\)"s;
 						return;
 					}
+					else if (QFileInfo::exists(VQLS(R"(C:/ProgramFiles/autocad_template/blocks)"))) {
+						$BlockSearchDir = LR"(C:\ProgramFiles\autocad_template\blocks\)"s;
+						return;
+					}
 				}
 				QtApplication qapp;
 				QString varDir = QFileDialog::getExistingDirectory();
