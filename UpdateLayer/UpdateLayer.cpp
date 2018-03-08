@@ -183,10 +183,10 @@ namespace sstd {
 				var->setComments(LR"(- . )");
 				var->setPatternLength(14.5);
 				var->setNumDashes(4);
-				var->setDashLengthAt(0, 10);
-				var->setDashLengthAt(1, -2);
+				var->setDashLengthAt(0, 10.);
+				var->setDashLengthAt(1, -2.);
 				var->setDashLengthAt(2, 0.5);
-				var->setDashLengthAt(3, -2);
+				var->setDashLengthAt(3, -2.);
 				varLinetypeTable->add(var);
 			}
 
@@ -194,10 +194,10 @@ namespace sstd {
 				sstd::ArxClosePointer< AcDbLinetypeTableRecord > var{ new AcDbLinetypeTableRecord };
 				var->setName(LR"(_虚线_)");
 				var->setComments(LR"(- -)");
-				var->setPatternLength(12);
+				var->setPatternLength(12.);
 				var->setNumDashes(2);
-				var->setDashLengthAt(0, 10);
-				var->setDashLengthAt(1, -2);
+				var->setDashLengthAt(0, 10.);
+				var->setDashLengthAt(1, -2.);
 				varLinetypeTable->add(var);
 			}
 
