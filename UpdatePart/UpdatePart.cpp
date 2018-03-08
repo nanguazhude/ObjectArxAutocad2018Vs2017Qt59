@@ -36,6 +36,8 @@ namespace sstd {
 				DB->setLuprec(2);
 				DB->setLunits(2);
 				DB->setAunits(0);
+				DB->setPdmode(35);
+				DB->setPdsize(3);
 			}
 			auto varCD = acDocManager->curDocument();
 			if (varCD) {

@@ -36,6 +36,8 @@ namespace sstd {
 				DB->setLuprec(2)/*线性精度*/;
 				DB->setLunits(2)/*线性小数*/;
 				DB->setAunits(0)/*十进制角度*/;
+				DB->setPdmode(35)/*设置点样式*/;
+				DB->setPdsize(3)/*设置点样式*/;
 			}
 			auto varCD = acDocManager->curDocument();
 			if (varCD) {
