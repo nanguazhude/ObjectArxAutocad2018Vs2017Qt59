@@ -38,6 +38,39 @@ namespace sstd {
 				DB->setAunits(0)/*十进制角度*/;
 				DB->setPdmode(35)/*设置点样式*/;
 				DB->setPdsize(3)/*设置点样式*/;
+				{/**
+				 http://jprdintprev.autodesk.com/adn/servlet/devnote?siteID=4814862&id=5414556&preview=1&linkID=4900509
+				 **/
+					AcDbDatabaseSummaryInfo *varInfo = nullptr;
+					acdbGetSummaryInfo(DB, varInfo);
+					auto varCTime = DB->tdcreate();
+
+					auto toWstring = [](short arg) {
+						return std::to_wstring(arg);
+					};								
+
+					if (varInfo) {
+						{/*设置关键字*/
+							wchar_t * varInfoValue = nullptr;
+							varInfo->getKeywords(varInfoValue);
+							if ((varInfoValue == nullptr) || (0 == std::wcslen(varInfoValue))) {
+								std::wstring varDataTime;
+								varDataTime = toWstring(varCTime.year());
+								varDataTime += LR"(-)"sv;
+								varDataTime += toWstring(varCTime.month());
+								varDataTime += LR"(-)"sv;
+								varDataTime += toWstring(varCTime.day());
+								varInfo->setKeywords(varDataTime.c_str());
+							}
+							acutDelString(varInfoValue);
+						}
+						{/*设置作者*/
+							varInfo->setAuthor(LR"(LZLT)");
+						}
+					}
+					
+					acdbPutSummaryInfo(varInfo);
+				}
 			}
 			auto varCD = acDocManager->curDocument();
 			if (varCD) {
