@@ -34,6 +34,7 @@
 	argLTR->setIsLocked(false)/*锁定*/;
 	argLTR->setColor(varLColor)/*颜色*/;
 	argLTR->setIsPlottable(false)/*打印*/;
+	argLTR->setPlotStyleName(LR"(Style 1)");
 	
 	if (varLTypeID) {
 		argLTR->setLinetypeObjectId(*varLTypeID)/*设置线型*/;
