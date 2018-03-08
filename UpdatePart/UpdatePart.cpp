@@ -22,11 +22,11 @@ namespace sstd {
 			inline void UpdatePart();
 		};
 		inline void ThisFunction::UpdatePart() {
+			UpdateLayer::main_do_not_change_text_height();
 			UpdateTextStyle::main_do_not_change_text_height();
 			UpdateBlockFromOtherFile::main();
 			UpdateDimStyle::main_do_not_change_text_height();
 			UpdateMLeaderStyle::main_do_not_change_text_height();
-			UpdateLayer::main_do_not_change_text_height();
 			UpdateTitleBlockTime::main();
 			CopyFilePathToClipboard::main();
 			{
@@ -47,6 +47,7 @@ namespace sstd {
 )"
 				);
 			}
+			UpdateLayer::main_do_not_change_text_height();
 		}
 	}/*namespace*/
 }/*namespace sstd*/

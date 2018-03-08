@@ -14,7 +14,7 @@ namespace sstd {
 	}
 
 	namespace {
-#define simple_code_args const std::wstring_view & argNM , AcDbLayerTable * argLT, AcDbLinetypeTable * argLTT , AcDbLayerTableRecord * argLTR
+#define simple_code_args bool argIsPlotNS , const std::wstring_view & argNM , AcDbLayerTable * argLT, AcDbLinetypeTable * argLTT , AcDbLayerTableRecord * argLTR
 		using ApplyLayerType = void(*)(simple_code_args);
 		using ApplyMaps = std::map<std::wstring_view, std::pair<ApplyLayerType, bool> >;
 		inline ApplyMaps _p_createFunctions() {
@@ -54,7 +54,7 @@ namespace sstd {
 				argLTR->setIsLocked(false)/*锁定*/;
 				argLTR->setColor(varLColor)/*颜色*/;
 				argLTR->setIsPlottable(true)/*打印*/;
-				//argLTR->setPlotStyleName(LR"(Style 1)");
+				if(argIsPlotNS /*||varLocalLTR*/ )argLTR->setPlotStyleName(LR"(Style 1)");
 
 				if (varLTypeID) {
 					argLTR->setLinetypeObjectId(*varLTypeID)/*设置线型*/;
@@ -110,9 +110,10 @@ namespace sstd {
 				argLTR->setIsLocked(false)/*锁定*/;
 				argLTR->setColor(varLColor)/*颜色*/;
 				argLTR->setIsPlottable(false)/*打印*/;
-				
+				if(argIsPlotNS /*||varLocalLTR*/ )argLTR->setPlotStyleName(LR"(Style 1)");
+
 				if (varLTypeID) {
-					if (Acad::eOk!= argLTR->setLinetypeObjectId(*varLTypeID)/*设置线型*/) {
+					if (Acad::eOk != argLTR->setLinetypeObjectId(*varLTypeID)/*设置线型*/) {
 						acutPrintf(LR"(设置线型失败
 )");
 					}
@@ -162,7 +163,7 @@ namespace sstd {
 			return std::move(varAns);
 		}
 
-		/**  
+		/**
 		http://adndevblog.typepad.com/autocad/2013/01/creating-a-linetype-using-arx.html
 		**/
 		inline bool _p_update_linetype(AcDbDatabase * argDB) {
@@ -176,8 +177,8 @@ namespace sstd {
 				return false;
 			}
 
-			if (varLinetypeTable->has(LR"(_点划线_)")==false) {
-				sstd::ArxClosePointer< AcDbLinetypeTableRecord > var{new AcDbLinetypeTableRecord };
+			if (varLinetypeTable->has(LR"(_点划线_)") == false) {
+				sstd::ArxClosePointer< AcDbLinetypeTableRecord > var{ new AcDbLinetypeTableRecord };
 				var->setName(LR"(_点划线_)");
 				var->setComments(LR"(- . )");
 				var->setPatternLength(14.5);
@@ -206,7 +207,9 @@ namespace sstd {
 		template<unsigned long long Version>
 		inline void _p_update_layer(AcDbDatabase * argDB) {
 			if (nullptr == argDB) { return; }
-
+			
+		    const bool varIsNotPlotStyleMode = !argDB->plotStyleMode();
+			
 			/*加载线型*/
 			argDB->loadLineTypeFile(LR"(Continuous)", LR"(acad.lin)");
 			argDB->loadLineTypeFile(LR"(CENTER2)", LR"(acad.lin)");
@@ -254,12 +257,12 @@ namespace sstd {
 				for (varIt->start(); !varIt->done(); varIt->step()) {
 					sstd::ArxClosePointer< AcDbLayerTableRecord > varLTR;
 					if (Acad::eOk == varIt->getRecord(varLTR, AcDb::kForWrite)) {
-						ArxString varName ;
+						ArxString varName;
 						if (Acad::eOk == varLTR->getName(varName)) {
 							auto varCPos = varFunctions.find(varName.pointer());
 							if (varCPos == varFNoPos) { continue; }
 
-							if constexpr(Version == 0 ) {
+							if constexpr(Version == 0) {
 								acutPrintf(LR"(已有图层样式：)");
 								acutPrintf(varName);
 								acutPrintf(LR"(
@@ -267,7 +270,8 @@ namespace sstd {
 							}
 
 							varCPos->second.second = true;
-							varCPos->second.first(varCPos->first,
+							varCPos->second.first(varIsNotPlotStyleMode,
+								varCPos->first,
 								varLayerTable,
 								varLinetypeTable,
 								varLTR
@@ -281,13 +285,14 @@ namespace sstd {
 			for (auto & varI : varFunctions) {
 				if (varI.second.second == false) {
 					varI.second.second = true;
-					varI.second.first(varI.first,
+					varI.second.first(varIsNotPlotStyleMode,
+						varI.first,
 						varLayerTable,
 						varLinetypeTable,
 						nullptr);
 				}
 			}
-			
+
 		}
 	}/*namespace*/
 
@@ -295,7 +300,7 @@ namespace sstd {
 		_p_update_layer<0>(acdbHostApplicationServices()->workingDatabase());
 	}
 
-	void UpdateLayer::main_do_not_change_text_height(){
+	void UpdateLayer::main_do_not_change_text_height() {
 		_p_update_layer<1>(acdbHostApplicationServices()->workingDatabase());
 	}
 

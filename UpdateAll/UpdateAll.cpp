@@ -22,12 +22,12 @@ namespace sstd {
 			inline void updateAll();
 		};
 		inline void ThisFunction::updateAll() {
+			UpdateLayer::main();
 			UpdateTextStyle::main();
 			UpdateBlockFromOtherFile::main();
 			UpdateDimStyle::main();
 			UpdateMLeaderStyle::main();
 			UpdateTitleBlockTime::main();
-			UpdateLayer::main();
 			CopyFilePathToClipboard::main();
 			{
 				auto DB = acdbHostApplicationServices()->workingDatabase();
@@ -80,6 +80,7 @@ namespace sstd {
 )"
 				);
 			}
+			UpdateLayer::main();
 		}
 	}/*namespace*/
 }/*namespace sstd*/
