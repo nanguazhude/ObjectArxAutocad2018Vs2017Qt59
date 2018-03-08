@@ -18,10 +18,10 @@
 	std::optional<AcDbObjectId> varLTypeID;
 	{
 		AcDbObjectId varLTypeIDTmp;
-		if (Acad::eOk == argLTT->getAt(LR"(PHANTOM2)", varLTypeIDTmp)) {
+		if (Acad::eOk == argLTT->getAt(LR"(_双点划线_)", varLTypeIDTmp)) {
 			varLTypeID = varLTypeIDTmp;
 		}else {
-			acutPrintf(LR"(找不到线型：PHANTOM2
+			acutPrintf(LR"(找不到线型：_双点划线_
 )");
 		}
 	}

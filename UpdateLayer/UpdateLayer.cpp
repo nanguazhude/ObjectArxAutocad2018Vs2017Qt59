@@ -201,6 +201,21 @@ namespace sstd {
 				varLinetypeTable->add(var);
 			}
 
+			if (varLinetypeTable->has(LR"(_双点划线_)") == false) {
+				sstd::ArxClosePointer< AcDbLinetypeTableRecord > var{ new AcDbLinetypeTableRecord };
+				var->setName(LR"(_双点划线_)");
+				var->setComments(LR"(- . . )");
+				var->setPatternLength(17.);
+				var->setNumDashes(6);
+				var->setDashLengthAt(0, 10.);
+				var->setDashLengthAt(1, -2.);
+				var->setDashLengthAt(2, 0.5);
+				var->setDashLengthAt(3, -2.);
+				var->setDashLengthAt(4, 0.5);
+				var->setDashLengthAt(5, -2.);
+				varLinetypeTable->add(var);
+			}
+
 			return true;
 		}
 
