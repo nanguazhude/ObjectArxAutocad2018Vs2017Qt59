@@ -28,7 +28,7 @@ DEF_FILE += $$PWD/AcRxDefault.def
 ##########################################################################
 #cplusplus version
 #CONFIG += c++17
-QMAKE_CXXFLAGS += /std:c++latest
+#QMAKE_CXXFLAGS += /std:c++latest
 
 #use md dll
 QMAKE_CXXFLAGS += /MD
@@ -43,6 +43,7 @@ DEFINES -= _DEBUG
 QT       += core
 QT       += gui
 QT       += widgets
+QT       += qml
 #CONFIG += suppress_vcproj_warnings
 
 #Qt project template

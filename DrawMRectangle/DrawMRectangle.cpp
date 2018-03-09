@@ -4,6 +4,7 @@
 #include <optional>
 #include "../ThirdPart/ADN/ADNAssocCreateConstraint.hpp"
 #include "DrawMRectangle.hpp"
+#include <QtQml/QtQml>
 
 namespace sstd {
 
@@ -62,8 +63,7 @@ namespace sstd {
 			}
 
 			inline bool _p_select_file(PrivatePack * arg) try {
-				std::unique_ptr< QtApplication > varQApp{ new QtApplication };
-
+				
 				QString varFileNameQ;
 				{
 					const wchar_t * varFileName
@@ -93,33 +93,59 @@ namespace sstd {
 			32
 			*/
 			inline bool _p_update_data(PrivatePack * arg) try {
+				
 				std::list<double> w;
 				std::list<double> h;
 				{
+					QJSEngine varJSEngine;
 					QFile varFile{ arg->$FileName };
 					if (false == varFile.open(QFile::ReadOnly)) {
 						throw 1;
 					}
 					QTextStream varStream{ &varFile };
-					bool varHRead = false;
-					bool varWRead = false;
-					bool varIsH = false;
+					//bool varHRead = false;
+					//bool varWRead = false;
+					int varIsH = -10;
+					/* 0:H 1:W 2:J */
 
 					while (varStream.atEnd() == false) {
 						const QString varLine = varStream
 							.readLine()
 							.trimmed()
 							.toLower();
+
+						/*空值跳过*/
 						if (varLine.isEmpty()) { continue; }
-						if (varLine.startsWith(QChar('h'))) {
-							varIsH = true; varHRead = true; continue;
+
+						if (varLine.startsWith( QStringLiteral(R"(:h)") ) ) {
+							varIsH = 0 ; 
+							//varHRead = true; 
+							continue;
 						}
-						else if (varLine.startsWith(QChar('w'))) {
-							varIsH = false; varWRead = true; continue;
+						else if ( varLine.startsWith( QStringLiteral(R"(:w)") ) ) {
+							varIsH = 1 ; 
+							//varWRead = true; 
+							continue;
 						}
-						const double varValue = varLine.toDouble();
-						if (varIsH) { h.push_back(varValue); }
-						else { w.push_back(varValue); }
+						else if (varLine.startsWith( QStringLiteral(R"(:j)") ) ) {
+							varIsH = 2;
+							continue;
+						}
+
+						if (2==varIsH) {
+							varJSEngine.evaluate(varLine);
+							continue;
+						}
+
+						const auto varValue =
+							varJSEngine.evaluate(varLine).toNumber();
+
+						if (0 == varIsH) {
+							h.push_back(varValue);
+						}
+						else if(1 == varIsH ){ 
+							w.push_back(varValue);
+						}
 					}
 				}
 				if (w.size() != h.size()) { throw 2; }
@@ -326,6 +352,8 @@ namespace sstd {
 
 
 	void DrawMRectangle::main() {
+		std::unique_ptr< QtApplication > varQApp{ new QtApplication };
+
 		using namespace _p000_;
 		PrivatePack varData;
 		/*construc pack*/
