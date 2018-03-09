@@ -80,7 +80,8 @@ SOURCES += \
         $$PWD/DrawMultiCircles/DrawMultiCircles.cpp \
         $$PWD/ThirdPart/ADN/ADNAssocCreateConstraint.cpp \
         $$PWD/ThirdPart/ADN/ADNAssocSampleUtils.cpp \
-        $$PWD/ThirdPart/ADN/AdnConstraintEvaluationCallback.cpp
+        $$PWD/ThirdPart/ADN/AdnConstraintEvaluationCallback.cpp \
+        $$PWD/DrawMRectangle/DrawMRectangle.cpp
 
 
 #.h .hpp source
@@ -110,7 +111,8 @@ HEADERS += \
         $$PWD/ThirdPart/ADN/AdnAssocConstraintAPI.hpp \
         $$PWD/ThirdPart/ADN/ADNAssocCreateConstraint.hpp \
         $$PWD/ThirdPart/ADN/ADNAssocSampleUtils.hpp \
-        $$PWD/ThirdPart/ADN/AdnConstraintEvaluationCallback.hpp
+        $$PWD/ThirdPart/ADN/AdnConstraintEvaluationCallback.hpp \
+        $$PWD/DrawMRectangle/DrawMRectangle.hpp
 
 SOURCES += $$PWD/object_arx_global.cpp \
     $$PWD/ARXApplication.cpp \
