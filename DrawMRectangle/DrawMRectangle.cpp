@@ -23,13 +23,13 @@ namespace sstd {
 				AcGePoint3d res(ucsPoint);
 				return res.transformBy(ucs);
 			}
-
+						
 			class Rect {
 			public:
-				double $Width ;
-				double $Height ;
-				Rect(double a,double b):$Width(a),$Height(b) {}
-				Rect() :$Width(0),$Height(0){}
+				double $Width;
+				double $Height;
+				Rect(double a, double b) :$Width(a), $Height(b) {}
+				Rect() :$Width(0), $Height(0) {}
 			};
 
 			class PrivatePack {
@@ -51,18 +51,18 @@ namespace sstd {
 				return true;
 			}
 
-			inline bool _p_select_point(PrivatePack * arg) try{
+			inline bool _p_select_point(PrivatePack * arg) try {
 				arg->$Error = acedGetPoint(nullptr, LR"(请输入起始中心<0,0>：)", &(arg->$StartPoint.x));
 				if (RTNONE == arg->$Error) { arg->$StartPoint = { 0.0,0.0,0.0 }; }
-				else { check_error(arg,RTNORM); }
+				else { check_error(arg, RTNORM); }
 				return true;
 			}
 			catch (...) {
 				return false;
 			}
 
-			inline bool _p_select_file(PrivatePack * arg) try{
-				std::unique_ptr< QtApplication > varQApp{new QtApplication };
+			inline bool _p_select_file(PrivatePack * arg) try {
+				std::unique_ptr< QtApplication > varQApp{ new QtApplication };
 
 				QString varFileNameQ;
 				{
@@ -75,7 +75,7 @@ namespace sstd {
 				}
 				arg->$FileName = QFileDialog::getOpenFileName(nullptr, {},
 					QFileInfo(varFileNameQ).absolutePath());
-				if (arg->$FileName.isEmpty()) { 
+				if (arg->$FileName.isEmpty()) {
 					throw 0;
 				}
 				return true;
@@ -84,7 +84,7 @@ namespace sstd {
 				return false;
 			}
 
-			/* 
+			/*
 			w
 			123
 			45
@@ -92,7 +92,7 @@ namespace sstd {
 			78
 			32
 			*/
-			inline bool _p_update_data(PrivatePack * arg) try{
+			inline bool _p_update_data(PrivatePack * arg) try {
 				std::list<double> w;
 				std::list<double> h;
 				{
@@ -129,8 +129,8 @@ namespace sstd {
 				auto varBw = w.begin();
 				auto varE = w.end();
 				auto varBh = h.begin();
-				for (;varE!=varBw;++varBw,++varBh) {
-					arg->$Rects.emplace_back(*varBw,*varBh);
+				for (; varE != varBw; ++varBw, ++varBh) {
+					arg->$Rects.emplace_back(*varBw, *varBh);
 				}
 				return true;
 			}
@@ -166,86 +166,88 @@ namespace sstd {
 				AcDbObjectId varID4;
 				AcDbObjectId varID5;
 
-			 
+				std::vector<AcDbObjectId> varCObjecs;
 			};
 
 			inline auto add_scale_half(const double & a, const double &b) {
-				return (a+b)*0.5;
+				return (a + b)*0.5;
 			}
 
-			inline void _p_draw_a_rect(const Rect & argR, 
-				DrawARectPack & argP, 
-				PrivatePack & arg)try{
-				
-				{
+			inline auto mid(const AcGePoint3d & x, const AcGePoint3d &y) {
+				return AcGePoint3d(add_scale_half(x.x, y.x),
+					add_scale_half(x.y, y.y),
+					0.
+				);
+			}
+
+			inline void _p_draw_a_rect(const Rect & argR,
+				DrawARectPack & argP,
+				PrivatePack & arg) {
+
+					{
 						arg.$Error = arg.$DB->getBlockTable(argP.varBlockTable, AcDb::kForRead);
-						check_error(&arg,eOk);
-						arg.$Error = argP.varBlockTable->getAt(ACDB_MODEL_SPACE,argP.varBlockTableRecord,
+						check_error(&arg, eOk);
+						arg.$Error = argP.varBlockTable->getAt(ACDB_MODEL_SPACE, argP.varBlockTableRecord,
 							AcDb::kForWrite);
 						check_error(&arg, eOk);
-				}
+					}										
 
-				auto mid=[](const AcGePoint3d & x,const AcGePoint3d &y) {
-					return AcGePoint3d(add_scale_half(x.x,y.x),
-						add_scale_half(x.y, y.y),
-						0.
-					);
-				};
+					const auto & varW = argR.$Width;
+					const double varHH = argR.$Height*0.5;
 
-				const auto & varW = argR.$Width;
-				const double varHH = argR.$Height*0.5;
+					argP.varKeyPoint0 = arg.$StartPoint;
+					argP.varKeyPoint1 = arg.$StartPoint;
+					argP.varKeyPoint1.y += varHH;
+					argP.varKeyPoint2 = argP.varKeyPoint1;
+					argP.varKeyPoint2.x -= varW;
+					argP.varKeyPoint3 = arg.$StartPoint;
+					argP.varKeyPoint3.x = argP.varKeyPoint2.x;
+					argP.varKeyPoint4 = argP.varKeyPoint3;
+					argP.varKeyPoint4.y -= varHH;
+					argP.varKeyPoint5 = argP.varKeyPoint4;
+					argP.varKeyPoint5.x = argP.varKeyPoint0.x;
 
-				argP.varKeyPoint0 = arg.$StartPoint;
-				argP.varKeyPoint1 = arg.$StartPoint;
-				argP.varKeyPoint1.y += varHH;
-				argP.varKeyPoint2 = argP.varKeyPoint1;
-				argP.varKeyPoint2.x -= varW;
-				argP.varKeyPoint3 = arg.$StartPoint;
-				argP.varKeyPoint3.x = argP.varKeyPoint2.x;
-				argP.varKeyPoint4 = argP.varKeyPoint3;
-				argP.varKeyPoint4.y -= varHH;
-				argP.varKeyPoint5 = argP.varKeyPoint4;
-				argP.varKeyPoint5.x = argP.varKeyPoint0.x;
+					argP.varLines[0] = { new AcDbLine{ argP.varKeyPoint0 ,argP.varKeyPoint1 } };
+					argP.varLines[1] = { new AcDbLine{ argP.varKeyPoint1 ,argP.varKeyPoint2 } };
+					argP.varLines[2] = { new AcDbLine{ argP.varKeyPoint2 ,argP.varKeyPoint3 } };
+					argP.varLines[3] = { new AcDbLine{ argP.varKeyPoint3 ,argP.varKeyPoint4 } };
+					argP.varLines[4] = { new AcDbLine{ argP.varKeyPoint4 ,argP.varKeyPoint5 } };
+					argP.varLines[5] = { new AcDbLine{ argP.varKeyPoint5 ,argP.varKeyPoint0 } };
 
-				argP.varLines[0] = { new AcDbLine{ argP.varKeyPoint0 ,argP.varKeyPoint1 } };
-				argP.varLines[1] = { new AcDbLine{ argP.varKeyPoint1 ,argP.varKeyPoint2 } };
-				argP.varLines[2] = { new AcDbLine{ argP.varKeyPoint2 ,argP.varKeyPoint3 } };
-				argP.varLines[3] = { new AcDbLine{ argP.varKeyPoint3 ,argP.varKeyPoint4 } };
-				argP.varLines[4] = { new AcDbLine{ argP.varKeyPoint4 ,argP.varKeyPoint5 } };
-				argP.varLines[5] = { new AcDbLine{ argP.varKeyPoint5 ,argP.varKeyPoint0 } };
+					argP.varKeyPoint0_1 = mid(argP.varKeyPoint0, argP.varKeyPoint1);
+					argP.varKeyPoint1_2 = mid(argP.varKeyPoint1, argP.varKeyPoint2);
+					argP.varKeyPoint2_3 = mid(argP.varKeyPoint2, argP.varKeyPoint3);
+					argP.varKeyPoint3_4 = mid(argP.varKeyPoint3, argP.varKeyPoint4);
+					argP.varKeyPoint4_5 = mid(argP.varKeyPoint4, argP.varKeyPoint5);
+					argP.varKeyPoint5_0 = mid(argP.varKeyPoint5, argP.varKeyPoint0);
 
-				argP.varKeyPoint0_1 = mid(argP.varKeyPoint0, argP.varKeyPoint1);
-				argP.varKeyPoint1_2 = mid(argP.varKeyPoint1, argP.varKeyPoint2);
-				argP.varKeyPoint2_3 = mid(argP.varKeyPoint2, argP.varKeyPoint3);
-				argP.varKeyPoint3_4 = mid(argP.varKeyPoint3, argP.varKeyPoint4);
-				argP.varKeyPoint4_5 = mid(argP.varKeyPoint4, argP.varKeyPoint5);
-				argP.varKeyPoint5_0 = mid(argP.varKeyPoint5, argP.varKeyPoint0);
-
-				/*添加线到数据库*/
-				{
-					int i = 0;
-					for (auto & varI : argP.varLines) {
-						switch (i) {
-						case 0:argP.varBlockTableRecord->appendAcDbEntity(argP.varID0, varI); break;
-						case 1:argP.varBlockTableRecord->appendAcDbEntity(argP.varID1, varI); break;
-						case 2:argP.varBlockTableRecord->appendAcDbEntity(argP.varID2, varI); break;
-						case 3:argP.varBlockTableRecord->appendAcDbEntity(argP.varID3, varI); break;
-						case 4:argP.varBlockTableRecord->appendAcDbEntity(argP.varID4, varI); break;
-						case 5:argP.varBlockTableRecord->appendAcDbEntity(argP.varID5, varI); break;
+					/*添加线到数据库*/
+					{
+						int i = 0;
+						for (auto & varI : argP.varLines) {
+							switch (i) {
+							case 0: {
+								argP.varBlockTableRecord->appendAcDbEntity(argP.varID0, varI);
+								argP.varCObjecs.push_back(argP.varID0);
+							} break;
+							case 1:argP.varBlockTableRecord->appendAcDbEntity(argP.varID1, varI); break;
+							case 2:argP.varBlockTableRecord->appendAcDbEntity(argP.varID2, varI); break;
+							case 3:argP.varBlockTableRecord->appendAcDbEntity(argP.varID3, varI); break;
+							case 4:argP.varBlockTableRecord->appendAcDbEntity(argP.varID4, varI); break;
+							case 5:argP.varBlockTableRecord->appendAcDbEntity(argP.varID5, varI); break;
+							}
+							++i;
 						}
-						++i;
 					}
-				}
 
-				for (auto & varI:argP.varLines) {
-					varI->close();
-				}
-				argP.varBlockTableRecord->close();
-				argP.varBlockTable->close();
-								 
-			}
-			catch (...) {
-				return;
+					/*close */
+					for (auto & varI : argP.varLines) {
+						varI->setLayer(LR"(Defpoints)");
+						varI = {};
+					}
+					argP.varBlockTableRecord = {};
+					argP.varBlockTable = {};
+
 			}
 
 			inline void _p_constraint(DrawARectPack & argP) {
@@ -263,30 +265,60 @@ namespace sstd {
 				argP.varKeyPoint4_5 = UcsToWorld(argP.varKeyPoint4_5);
 				argP.varKeyPoint5_0 = UcsToWorld(argP.varKeyPoint5_0);
 				/*添加重合约束*/
-				//AcDbAssoc2dConstraintAPI::createCoincidentConstraint(argP.varID0, argP.varID1, argP.varKeyPoint1, argP.varKeyPoint1);
-				//AcDbAssoc2dConstraintAPI::createCoincidentConstraint(argP.varID0, argP.varID2, argP.varKeyPoint1, argP.varKeyPoint1);
-				//AcDbAssoc2dConstraintAPI::createCoincidentConstraint(argP.varID0, argP.varID3, argP.varKeyPoint1, argP.varKeyPoint1);
-				//AcDbAssoc2dConstraintAPI::createCoincidentConstraint(argP.varID0, argP.varID4, argP.varKeyPoint1, argP.varKeyPoint1);
-				//AcDbAssoc2dConstraintAPI::createCoincidentConstraint(argP.varID0, argP.varID5, argP.varKeyPoint1, argP.varKeyPoint1);
-				//AcDbAssoc2dConstraintAPI::createCoincidentConstraint(argP.varID0, argP.varID0, argP.varKeyPoint1, argP.varKeyPoint1);
+				AcDbAssoc2dConstraintAPI::createCoincidentConstraint(argP.varID0, argP.varID1, argP.varKeyPoint1, argP.varKeyPoint1);
+				AcDbAssoc2dConstraintAPI::createCoincidentConstraint(argP.varID1, argP.varID2, argP.varKeyPoint2, argP.varKeyPoint2);
+				AcDbAssoc2dConstraintAPI::createCoincidentConstraint(argP.varID2, argP.varID3, argP.varKeyPoint3, argP.varKeyPoint3);
+				AcDbAssoc2dConstraintAPI::createCoincidentConstraint(argP.varID3, argP.varID4, argP.varKeyPoint4, argP.varKeyPoint4);
+				AcDbAssoc2dConstraintAPI::createCoincidentConstraint(argP.varID4, argP.varID5, argP.varKeyPoint5, argP.varKeyPoint5);
+				AcDbAssoc2dConstraintAPI::createCoincidentConstraint(argP.varID5, argP.varID0, argP.varKeyPoint0, argP.varKeyPoint0);
 
 				/*添加水平，垂直约束*/
-				AcDbAssoc2dConstraintAPI::createHorizontalConstraint(argP.varID0, argP.varKeyPoint1);
-				//AcDbAssoc2dConstraintAPI::createHorizontalConstraint(argP.varID1, argP.varKeyPoint4);
-				//AcDbAssoc2dConstraintAPI::createVerticalConstraint(argP.varID1,argP.varKeyPoint0);
-				//AcDbAssoc2dConstraintAPI::createVerticalConstraint(argP.varID1, argP.varKeyPoint5);
-				//AcDbAssoc2dConstraintAPI::createVerticalConstraint(argP.varID1, argP.varKeyPoint2);
-				//AcDbAssoc2dConstraintAPI::createVerticalConstraint(argP.varID1, argP.varKeyPoint3);
+				AcDbAssoc2dConstraintAPI::createHorizontalConstraint(argP.varID1, argP.varKeyPoint1_2);
+				AcDbAssoc2dConstraintAPI::createHorizontalConstraint(argP.varID4, argP.varKeyPoint4_5);
+				AcDbAssoc2dConstraintAPI::createVerticalConstraint(argP.varID0, argP.varKeyPoint0_1);
+				AcDbAssoc2dConstraintAPI::createVerticalConstraint(argP.varID2, argP.varKeyPoint2_3);
+				AcDbAssoc2dConstraintAPI::createVerticalConstraint(argP.varID3, argP.varKeyPoint3_4);
+				AcDbAssoc2dConstraintAPI::createVerticalConstraint(argP.varID5, argP.varKeyPoint5_0);
+
+				/*添加相同约束*/
+				AcDbAssoc2dConstraintAPI::createEqualLengthConstraint(argP.varID0, argP.varID5, argP.varKeyPoint0_1, argP.varKeyPoint5_0);
+				AcDbAssoc2dConstraintAPI::createEqualLengthConstraint(argP.varID2, argP.varID3, argP.varKeyPoint2_3, argP.varKeyPoint3_4);
 
 				/*添加尺寸约束*/
+				AcDbObjectId varTmp;
+				const auto varCPosR = mid(argP.varKeyPoint1, argP.varKeyPoint4);
+				AcGePoint3d varCPos = varCPosR;
+				AcDbAssoc2dConstraintAPI::createHorizontalDimConstraint(argP.varID0, argP.varID2,
+					argP.varKeyPoint0_1, argP.varKeyPoint2_3, varCPos, varTmp);
+				varCPos = varCPosR;
+				AcDbAssoc2dConstraintAPI::createVerticalDimConstraint(argP.varID1, argP.varID4,
+					argP.varKeyPoint1_2, argP.varKeyPoint4_5, varCPos, varTmp);
 			}
 
 			inline void _p_draw(PrivatePack * arg) {
-				for ( const auto &varI : arg->$Rects ) {
-					std::unique_ptr<DrawARectPack> varDAP{ new DrawARectPack };
-					_p_draw_a_rect( varI,*varDAP, *arg );
+				std::unique_ptr<DrawARectPack> varDAP{ new DrawARectPack };
+				varDAP->varCObjecs.reserve(arg->$Rects.size());
+				const auto varPosS = UcsToWorld(arg->$StartPoint);
+
+				for (const auto &varI : arg->$Rects) try {
+					_p_draw_a_rect(varI, *varDAP, *arg);
 					_p_constraint(*varDAP);
 				}
+				catch (...) {
+					return;
+				}
+
+				auto varPos0 = varDAP->varCObjecs.begin();
+				auto varPos1 = varPos0 + 1;
+				auto varEnd = varDAP->varCObjecs.end();
+
+				for (; varPos1 != varEnd; varPos0 = varPos1++) {
+					AcDbAssoc2dConstraintAPI::createCoincidentConstraint(*varPos0,
+						*varPos1,
+						varPosS,
+						varPosS);
+				}
+
 			}
 
 		}/*namespace _p000_*/
@@ -312,6 +344,21 @@ namespace sstd {
 		if (false == _p_update_data(&varData)) {
 			return;
 		}
+
+		class Lock {
+			PrivatePack * d;
+			AcDbObjectId layerID;
+		public:
+			Lock(PrivatePack *v) :d(v) {
+				layerID = d->$DB->clayer();
+				d->$DB->setClayer(d->$DB->layerZero());
+			}
+			~Lock() {
+				d->$DB->setClayer(layerID);
+			}
+		};
+		Lock __lock{ &varData };
+
 		/*draw*/
 		_p_draw(&varData);
 	}

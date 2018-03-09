@@ -195,6 +195,7 @@ namespace sstd {
 				}
 			}
 
+
 			$BlockTableRecord.close();
 			$BlockTable.close();
 		}
@@ -318,6 +319,21 @@ namespace sstd {
 	void DrawMultiCircles::main() try {
 		std::unique_ptr<ThisMain>thisMain{
 			new ThisMain{ acdbHostApplicationServices()->workingDatabase() } };
+
+		class Lock {
+			ThisMain * d;
+			AcDbObjectId layerID;
+		public:
+			Lock(ThisMain *v) :d(v) {
+				layerID = d->$DB->clayer();
+				d->$DB->setClayer(d->$DB->layerZero());
+			}
+			~Lock() {
+				d->$DB->setClayer(layerID);
+			}
+		};
+		Lock __lock{ thisMain.get() };
+
 		thisMain->update_layer();
 		thisMain->update_this();
 		thisMain->check_this();
