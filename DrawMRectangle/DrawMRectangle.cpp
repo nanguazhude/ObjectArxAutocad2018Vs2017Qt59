@@ -237,6 +237,9 @@ namespace sstd {
 					}
 				}
 
+				for (auto & varI:argP.varLines) {
+					varI->close();
+				}
 				argP.varBlockTableRecord->close();
 				argP.varBlockTable->close();
 								 
@@ -282,7 +285,7 @@ namespace sstd {
 				for ( const auto &varI : arg->$Rects ) {
 					std::unique_ptr<DrawARectPack> varDAP{ new DrawARectPack };
 					_p_draw_a_rect( varI,*varDAP, *arg );
-					//_p_constraint(*varDAP);
+					_p_constraint(*varDAP);
 				}
 			}
 
