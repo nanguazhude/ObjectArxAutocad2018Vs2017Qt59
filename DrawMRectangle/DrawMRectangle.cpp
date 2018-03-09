@@ -193,6 +193,7 @@ namespace sstd {
 				AcDbObjectId varID5;
 
 				std::vector<AcDbObjectId> varCObjecs;
+				AcCmColor varColor;
 			};
 
 			inline auto add_scale_half(const double & a, const double &b) {
@@ -209,6 +210,10 @@ namespace sstd {
 			inline void _p_draw_a_rect(const Rect & argR,
 				DrawARectPack & argP,
 				PrivatePack & arg) {
+
+				argP.varColor.setRGB(154 + std::rand() % (245 - 154),
+					50 + std::rand() % (80 - 50),
+					200 + std::rand() % (250 - 200));
 
 					{
 						arg.$Error = arg.$DB->getBlockTable(argP.varBlockTable, AcDb::kForRead);
@@ -269,6 +274,7 @@ namespace sstd {
 					/*close */
 					for (auto & varI : argP.varLines) {
 						varI->setLayer(LR"(Defpoints)");
+						varI->setColor(argP.varColor);
 						varI = {};
 					}
 					argP.varBlockTableRecord = {};
