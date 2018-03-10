@@ -180,14 +180,14 @@ namespace {
 			{
 				AcGeMatrix3d ucs;
 				acedGetCurrentUCS(ucs);
-				for (auto & varI: $VirtualLines ) {
-					varI.$EndPoint = UcsToWorld(varI.$EndPoint,ucs);
+				for (auto & varI : $VirtualLines) {
+					varI.$EndPoint = UcsToWorld(varI.$EndPoint, ucs);
 					varI.$MidPoint = UcsToWorld(varI.$MidPoint, ucs);
 					varI.$StartPoint = UcsToWorld(varI.$StartPoint, ucs);
 				}
 			}
 			/*增加水平垂直约束*/
-			for (auto & varI:$VirtualLines) {
+			for (auto & varI : $VirtualLines) {
 				if (varI.isDx) {
 					AcDbAssoc2dConstraintAPI::createHorizontalConstraint(varI.$ID, varI.$MidPoint);
 				}
@@ -200,14 +200,14 @@ namespace {
 				const auto varE = $VirtualLines.end();
 				auto varP = $VirtualLines.begin();
 				auto varL = varP + 1;
-				for (;varL!=varE;varP=varL++) {
-					AcDbAssoc2dConstraintAPI::createCoincidentConstraint(varP->$ID,varL->$ID,varP->$EndPoint, varP->$EndPoint);
+				for (; varL != varE; varP = varL++) {
+					AcDbAssoc2dConstraintAPI::createCoincidentConstraint(varP->$ID, varL->$ID, varP->$EndPoint, varP->$EndPoint);
 				}
 			}
 			/*增加水平，垂直尺寸约束*/
 			{
 				AcDbObjectId varTmp;
-				AcGePoint3d varCPos ;
+				AcGePoint3d varCPos;
 				const auto varE = $VirtualLines.end();
 				auto varP = $VirtualLines.begin();
 				auto varSLineID = varP->$ID;
@@ -215,18 +215,46 @@ namespace {
 				auto varL = varP + 1;
 				for (; varL != varE; varP = varL++) {
 					if (varL->isDx) {/*垂直尺寸约束*/
-						varCPos = mid(varL->$MidPoint,varSPoint);
+						varCPos = mid(varL->$MidPoint, varSPoint);
 						AcDbAssoc2dConstraintAPI::createVerticalDimConstraint(
-							varL->$ID,varSLineID,
-							varL->$MidPoint,varSPoint,
-							varCPos,varTmp
+							varL->$ID, varSLineID,
+							varL->$MidPoint, varSPoint,
+							varCPos, varTmp
 						);
+						{
+							AcString varName;
+							AcDbEvalVariant varValue;
+							AcString varExpression;
+							AcString varEvaluatorId;
+							AcString varErrorString;
+							/*getVariableValue*/
+							AcDbAssoc2dConstraintAPI::getVariableValue(
+								varTmp,
+								varName,
+								varValue,
+								varExpression,
+								varEvaluatorId
+							);
+							/**/
+							{
+								const QString Expression_ = QString::number(varL->$Length) +
+									QLatin1String(R"(/2)", 2);
+								const auto varTS = Expression_.toStdWString();
+								varExpression = AcString{ varTS.c_str() };
+							}
+							/*setVariableValue*/
+							AcDbAssoc2dConstraintAPI::setVariableValue(varTmp,
+								varValue,
+								varExpression,
+								varEvaluatorId, 
+								varErrorString);
+						}
 					}
 					else {/*水平尺寸约束*/
 						varCPos = mid(varL->$MidPoint, varSPoint);
 						AcDbAssoc2dConstraintAPI::createHorizontalDimConstraint(
-							varSLineID,varL->$ID,
-							varSPoint,varL->$MidPoint,
+							varSLineID, varL->$ID,
+							varSPoint, varL->$MidPoint,
 							varCPos, varTmp
 						);
 					}
@@ -275,7 +303,7 @@ namespace {
 						varValue.$EndPoint = varValue.$StartPoint;
 						varValue.$Length = 0.5*varPrePos->value;
 						varValue.$EndPoint.y += varValue.$Length;
-						varValue.$Length = std::abs(varValue.$Length);
+						varValue.$Length = std::abs(varPrePos->value);
 						varValue.isDx = false;
 					}
 				}
