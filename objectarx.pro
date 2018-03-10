@@ -82,7 +82,8 @@ SOURCES += \
         $$PWD/ThirdPart/ADN/ADNAssocCreateConstraint.cpp \
         $$PWD/ThirdPart/ADN/ADNAssocSampleUtils.cpp \
         $$PWD/ThirdPart/ADN/AdnConstraintEvaluationCallback.cpp \
-        $$PWD/DrawMRectangle/DrawMRectangle.cpp
+        $$PWD/DrawMRectangle/DrawMRectangle.cpp \
+        $$PWD/DrawMSteps/DrawMSteps.cpp
 
 
 #.h .hpp source
@@ -113,7 +114,8 @@ HEADERS += \
         $$PWD/ThirdPart/ADN/ADNAssocCreateConstraint.hpp \
         $$PWD/ThirdPart/ADN/ADNAssocSampleUtils.hpp \
         $$PWD/ThirdPart/ADN/AdnConstraintEvaluationCallback.hpp \
-        $$PWD/DrawMRectangle/DrawMRectangle.hpp
+        $$PWD/DrawMRectangle/DrawMRectangle.hpp \
+        $$PWD/DrawMSteps/DrawMSteps.hpp
 
 SOURCES += $$PWD/object_arx_global.cpp \
     $$PWD/ARXApplication.cpp \

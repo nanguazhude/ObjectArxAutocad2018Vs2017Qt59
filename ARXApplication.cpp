@@ -24,7 +24,8 @@ namespace sstd {
 	extern void loadCopyFilePathToClipboard();
 	extern void loadPrintFontsInformation();
 	extern void loadDrawMultiCircles();
-    extern void loadDrawMRectangle();
+	extern void loadDrawMRectangle();
+	extern void loadDrawMStep();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -50,7 +51,8 @@ namespace sstd {
 			{ &sstd::loadCopyFilePathToClipboard },
 			{ &sstd::loadPrintFontsInformation },
 			{ &sstd::loadDrawMultiCircles },
-            { &sstd::loadDrawMRectangle },
+			{ &sstd::loadDrawMRectangle },
+			{ &sstd::loadDrawMStep },
 		};
 	}
 

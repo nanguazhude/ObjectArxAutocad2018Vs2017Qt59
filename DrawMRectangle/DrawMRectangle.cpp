@@ -24,7 +24,7 @@ namespace sstd {
 				AcGePoint3d res(ucsPoint);
 				return res.transformBy(ucs);
 			}
-						
+
 			class Rect {
 			public:
 				double $Width;
@@ -63,7 +63,7 @@ namespace sstd {
 			}
 
 			inline bool _p_select_file(PrivatePack * arg) try {
-				
+
 				QString varFileNameQ;
 				{
 					const wchar_t * varFileName
@@ -93,7 +93,7 @@ namespace sstd {
 			32
 			*/
 			inline bool _p_update_data(PrivatePack * arg) try {
-				
+
 				std::list<double> w;
 				std::list<double> h;
 				{
@@ -117,22 +117,22 @@ namespace sstd {
 						/*空值跳过*/
 						if (varLine.isEmpty()) { continue; }
 
-						if (varLine.startsWith( QStringLiteral(R"(:h)") ) ) {
-							varIsH = 0 ; 
+						if (varLine.startsWith(QStringLiteral(R"(:h)"))) {
+							varIsH = 0;
 							//varHRead = true; 
 							continue;
 						}
-						else if ( varLine.startsWith( QStringLiteral(R"(:w)") ) ) {
-							varIsH = 1 ; 
+						else if (varLine.startsWith(QStringLiteral(R"(:w)"))) {
+							varIsH = 1;
 							//varWRead = true; 
 							continue;
 						}
-						else if (varLine.startsWith( QStringLiteral(R"(:j)") ) ) {
+						else if (varLine.startsWith(QStringLiteral(R"(:j)"))) {
 							varIsH = 2;
 							continue;
 						}
 
-						if (2==varIsH) {
+						if (2 == varIsH) {
 							varJSEngine.evaluate(varLine);
 							continue;
 						}
@@ -143,7 +143,7 @@ namespace sstd {
 						if (0 == varIsH) {
 							h.push_back(varValue);
 						}
-						else if(1 == varIsH ){ 
+						else if (1 == varIsH) {
 							w.push_back(varValue);
 						}
 					}
@@ -215,70 +215,70 @@ namespace sstd {
 					50 + std::rand() % (80 - 50),
 					200 + std::rand() % (250 - 200));
 
-					{
-						arg.$Error = arg.$DB->getBlockTable(argP.varBlockTable, AcDb::kForRead);
-						check_error(&arg, eOk);
-						arg.$Error = argP.varBlockTable->getAt(ACDB_MODEL_SPACE, argP.varBlockTableRecord,
-							AcDb::kForWrite);
-						check_error(&arg, eOk);
-					}										
+				{
+					arg.$Error = arg.$DB->getBlockTable(argP.varBlockTable, AcDb::kForRead);
+					check_error(&arg, eOk);
+					arg.$Error = argP.varBlockTable->getAt(ACDB_MODEL_SPACE, argP.varBlockTableRecord,
+						AcDb::kForWrite);
+					check_error(&arg, eOk);
+				}
 
-					const auto & varW = argR.$Width;
-					const double varHH = argR.$Height*0.5;
+				const auto & varW = argR.$Width;
+				const double varHH = argR.$Height*0.5;
 
-					argP.varKeyPoint0 = arg.$StartPoint;
-					argP.varKeyPoint1 = arg.$StartPoint;
-					argP.varKeyPoint1.y += varHH;
-					argP.varKeyPoint2 = argP.varKeyPoint1;
-					argP.varKeyPoint2.x -= varW;
-					argP.varKeyPoint3 = arg.$StartPoint;
-					argP.varKeyPoint3.x = argP.varKeyPoint2.x;
-					argP.varKeyPoint4 = argP.varKeyPoint3;
-					argP.varKeyPoint4.y -= varHH;
-					argP.varKeyPoint5 = argP.varKeyPoint4;
-					argP.varKeyPoint5.x = argP.varKeyPoint0.x;
+				argP.varKeyPoint0 = arg.$StartPoint;
+				argP.varKeyPoint1 = arg.$StartPoint;
+				argP.varKeyPoint1.y += varHH;
+				argP.varKeyPoint2 = argP.varKeyPoint1;
+				argP.varKeyPoint2.x -= varW;
+				argP.varKeyPoint3 = arg.$StartPoint;
+				argP.varKeyPoint3.x = argP.varKeyPoint2.x;
+				argP.varKeyPoint4 = argP.varKeyPoint3;
+				argP.varKeyPoint4.y -= varHH;
+				argP.varKeyPoint5 = argP.varKeyPoint4;
+				argP.varKeyPoint5.x = argP.varKeyPoint0.x;
 
-					argP.varLines[0] = { new AcDbLine{ argP.varKeyPoint0 ,argP.varKeyPoint1 } };
-					argP.varLines[1] = { new AcDbLine{ argP.varKeyPoint1 ,argP.varKeyPoint2 } };
-					argP.varLines[2] = { new AcDbLine{ argP.varKeyPoint2 ,argP.varKeyPoint3 } };
-					argP.varLines[3] = { new AcDbLine{ argP.varKeyPoint3 ,argP.varKeyPoint4 } };
-					argP.varLines[4] = { new AcDbLine{ argP.varKeyPoint4 ,argP.varKeyPoint5 } };
-					argP.varLines[5] = { new AcDbLine{ argP.varKeyPoint5 ,argP.varKeyPoint0 } };
+				argP.varLines[0] = { new AcDbLine{ argP.varKeyPoint0 ,argP.varKeyPoint1 } };
+				argP.varLines[1] = { new AcDbLine{ argP.varKeyPoint1 ,argP.varKeyPoint2 } };
+				argP.varLines[2] = { new AcDbLine{ argP.varKeyPoint2 ,argP.varKeyPoint3 } };
+				argP.varLines[3] = { new AcDbLine{ argP.varKeyPoint3 ,argP.varKeyPoint4 } };
+				argP.varLines[4] = { new AcDbLine{ argP.varKeyPoint4 ,argP.varKeyPoint5 } };
+				argP.varLines[5] = { new AcDbLine{ argP.varKeyPoint5 ,argP.varKeyPoint0 } };
 
-					argP.varKeyPoint0_1 = mid(argP.varKeyPoint0, argP.varKeyPoint1);
-					argP.varKeyPoint1_2 = mid(argP.varKeyPoint1, argP.varKeyPoint2);
-					argP.varKeyPoint2_3 = mid(argP.varKeyPoint2, argP.varKeyPoint3);
-					argP.varKeyPoint3_4 = mid(argP.varKeyPoint3, argP.varKeyPoint4);
-					argP.varKeyPoint4_5 = mid(argP.varKeyPoint4, argP.varKeyPoint5);
-					argP.varKeyPoint5_0 = mid(argP.varKeyPoint5, argP.varKeyPoint0);
+				argP.varKeyPoint0_1 = mid(argP.varKeyPoint0, argP.varKeyPoint1);
+				argP.varKeyPoint1_2 = mid(argP.varKeyPoint1, argP.varKeyPoint2);
+				argP.varKeyPoint2_3 = mid(argP.varKeyPoint2, argP.varKeyPoint3);
+				argP.varKeyPoint3_4 = mid(argP.varKeyPoint3, argP.varKeyPoint4);
+				argP.varKeyPoint4_5 = mid(argP.varKeyPoint4, argP.varKeyPoint5);
+				argP.varKeyPoint5_0 = mid(argP.varKeyPoint5, argP.varKeyPoint0);
 
-					/*添加线到数据库*/
-					{
-						int i = 0;
-						for (auto & varI : argP.varLines) {
-							switch (i) {
-							case 0: {
-								argP.varBlockTableRecord->appendAcDbEntity(argP.varID0, varI);
-								argP.varCObjecs.push_back(argP.varID0);
-							} break;
-							case 1:argP.varBlockTableRecord->appendAcDbEntity(argP.varID1, varI); break;
-							case 2:argP.varBlockTableRecord->appendAcDbEntity(argP.varID2, varI); break;
-							case 3:argP.varBlockTableRecord->appendAcDbEntity(argP.varID3, varI); break;
-							case 4:argP.varBlockTableRecord->appendAcDbEntity(argP.varID4, varI); break;
-							case 5:argP.varBlockTableRecord->appendAcDbEntity(argP.varID5, varI); break;
-							}
-							++i;
-						}
-					}
-
-					/*close */
+				/*添加线到数据库*/
+				{
+					int i = 0;
 					for (auto & varI : argP.varLines) {
-						varI->setLayer(LR"(Defpoints)");
-						varI->setColor(argP.varColor);
-						varI = {};
+						switch (i) {
+						case 0: {
+							argP.varBlockTableRecord->appendAcDbEntity(argP.varID0, varI);
+							argP.varCObjecs.push_back(argP.varID0);
+						} break;
+						case 1:argP.varBlockTableRecord->appendAcDbEntity(argP.varID1, varI); break;
+						case 2:argP.varBlockTableRecord->appendAcDbEntity(argP.varID2, varI); break;
+						case 3:argP.varBlockTableRecord->appendAcDbEntity(argP.varID3, varI); break;
+						case 4:argP.varBlockTableRecord->appendAcDbEntity(argP.varID4, varI); break;
+						case 5:argP.varBlockTableRecord->appendAcDbEntity(argP.varID5, varI); break;
+						}
+						++i;
 					}
-					argP.varBlockTableRecord = {};
-					argP.varBlockTable = {};
+				}
+
+				/*close */
+				for (auto & varI : argP.varLines) {
+					varI->setLayer(LR"(Defpoints)");
+					varI->setColor(argP.varColor);
+					varI = {};
+				}
+				argP.varBlockTableRecord = {};
+				argP.varBlockTable = {};
 
 			}
 
