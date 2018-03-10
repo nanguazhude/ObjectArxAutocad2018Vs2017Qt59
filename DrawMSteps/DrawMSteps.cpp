@@ -164,6 +164,7 @@ namespace {
 			bool isDx = false;
 		};
 		std::vector< VirtualLine > $VirtualLines;
+		std::vector< VirtualLine > $MirVirtualLines;
 		inline void construct() {
 			_p_get_point();
 			_p_get_file_mane();
@@ -176,10 +177,29 @@ namespace {
 				throw 10;
 			}
 			_make_virtual_lines();
+			_p_make_mirror_virtual_lines();
 			_draw_();
 			_p_constraint();
+
 		}
 	private:
+		inline void _p_make_mirror_virtual_lines() {
+			$MirVirtualLines.clear();
+			$MirVirtualLines.reserve($VirtualLines.size());
+			auto varB = $VirtualLines.begin();
+			const auto varSPoint = varB->$StartPoint;
+			std::unique_ptr<AcGePlane>  varMirrorPlane;
+			const bool isMirrorH = varB->isDx?false:true ;
+			if (isMirrorH) {
+				varMirrorPlane.reset(new AcGePlane{ varSPoint, AcGeVector3d{ 0,1,0 } });
+			}
+			else {
+				varMirrorPlane.reset(new AcGePlane{ varSPoint, AcGeVector3d{ 1,0,0 } });
+			}
+			const auto varE = $VirtualLines.end();
+			for (;;) {}
+		}
+
 		inline void _p_constraint() {
 			{
 				AcGeMatrix3d ucs;
@@ -242,7 +262,7 @@ namespace {
 							/**/
 							{
 								const QString Expression_ = QString::number(std::abs(
-									varSPoint.y-(varL->$StartPoint.y))*2.) +
+									varSPoint.y - (varL->$StartPoint.y))*2.) +
 									QLatin1String(R"(/2)", 2);
 								const auto varTS = Expression_.toStdWString();
 								varExpression = AcString{ varTS.c_str() };
@@ -253,7 +273,7 @@ namespace {
 							AcDbAssoc2dConstraintAPI::setVariableValue(varTmp,
 								varValue,
 								varExpression,
-								varEvaluatorId, 
+								varEvaluatorId,
 								varErrorString);
 						}
 					}
