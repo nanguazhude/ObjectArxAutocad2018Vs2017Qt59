@@ -20,6 +20,14 @@ namespace sstd {
 	}
 
 	namespace {
+
+		static inline AcGePoint3d UcsToWorld(const AcGePoint3d& ucsPoint) {
+			AcGeMatrix3d ucs;
+			acedGetCurrentUCS(ucs);
+			AcGePoint3d res(ucsPoint);
+			return res.transformBy(ucs);
+		}
+
 		class ThisMain {
 		public:
 			AcDbDatabase * const $DB;
@@ -107,6 +115,7 @@ namespace sstd {
 			$Error = acedGetPoint(nullptr, LR"(请输入圆的中心<0,0>：)", &($C.x));
 			if (RTNONE == $Error) { $C = { 0.0,0.0,0.0 }; }
 			else { check_error(RTNORM); }
+			$C = UcsToWorld($C);
 		}
 
 		template<typename T, typename U>
@@ -198,14 +207,7 @@ namespace sstd {
 
 			$BlockTableRecord.close();
 			$BlockTable.close();
-		}
-
-		static inline AcGePoint3d UcsToWorld(const AcGePoint3d& ucsPoint) {
-			AcGeMatrix3d ucs;
-			acedGetCurrentUCS(ucs);
-			AcGePoint3d res(ucsPoint);
-			return res.transformBy(ucs);
-		}
+		}			
 
 		inline void ThisMain::update_constraint() {
 			AcDbObjectId varDimID;
@@ -217,17 +219,17 @@ namespace sstd {
 			int varIndexLast = -1;
 			int varIndexCurrent = 0;
 
-			$C = UcsToWorld($C);
-			for (auto & varI : $CircleItems) {
+			/*for (auto & varI : $CircleItems) {
 				auto & varK0 = varI.$KPoints[0];
 				auto & varK1 = varI.$KPoints[1];
 				auto & varK2 = varI.$KPoints[2];
+				
 				varI.$CPoint = UcsToWorld(varI.$CPoint);
 				varI.$CKPoint = UcsToWorld(varI.$CKPoint);
 				varK0 = UcsToWorld(varK0);
 				varK1 = UcsToWorld(varK1);
 				varK2 = UcsToWorld(varK2);
-			}
+			}*/
 
 			for (; varIndexCurrent < varNSub1; ) {
 				varIndexLast = varIndexCurrent;

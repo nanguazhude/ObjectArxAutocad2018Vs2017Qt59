@@ -40,6 +40,19 @@ namespace sstd {
 
 namespace {
 
+	static inline AcGePoint3d UcsToWorld(const AcGePoint3d& ucsPoint,
+		const AcGeMatrix3d &ucs) {
+		AcGePoint3d res(ucsPoint);
+		return res.transformBy(ucs);
+	}
+
+	static inline AcGePoint3d UcsToWorld(const AcGePoint3d& ucsPoint) {
+		AcGeMatrix3d ucs;
+		acedGetCurrentUCS(ucs);
+		AcGePoint3d res(ucsPoint);
+		return res.transformBy(ucs);
+	}
+
 	class DrawLayerLock {
 		AcDbDatabase * d;
 		AcDbObjectId l;
@@ -144,13 +157,7 @@ namespace {
 			return true;
 		}
 		catch (...) { return false; }
-	};
-
-	static inline AcGePoint3d UcsToWorld(const AcGePoint3d& ucsPoint,
-		const AcGeMatrix3d &ucs) {
-		AcGePoint3d res(ucsPoint);
-		return res.transformBy(ucs);
-	}
+	};	
 
 	class Main {
 	public:
@@ -192,7 +199,7 @@ namespace {
 		}
 	private:
 		inline void _p_constraint_mirror() {
-			{
+			/*{
 				AcGeMatrix3d ucs;
 				acedGetCurrentUCS(ucs);
 				for (auto & varI : $MirVirtualLines) {
@@ -200,7 +207,7 @@ namespace {
 					varI.$MidPoint = UcsToWorld(varI.$MidPoint, ucs);
 					varI.$StartPoint = UcsToWorld(varI.$StartPoint, ucs);
 				}
-			}
+			}*/
 
 			/*增加水平垂直约束*/
 			for (auto & varI : $MirVirtualLines) {
@@ -313,7 +320,7 @@ namespace {
 		}
 
 		inline void _p_constraint() {
-			{
+			/*{
 				AcGeMatrix3d ucs;
 				acedGetCurrentUCS(ucs);
 				for (auto & varI : $VirtualLines) {
@@ -321,7 +328,7 @@ namespace {
 					varI.$MidPoint = UcsToWorld(varI.$MidPoint, ucs);
 					varI.$StartPoint = UcsToWorld(varI.$StartPoint, ucs);
 				}
-			}
+			}*/
 			/*增加水平垂直约束*/
 			for (auto & varI : $VirtualLines) {
 				if (varI.isDx) {
@@ -513,6 +520,7 @@ namespace {
 				if (varError == RTNORM)return;
 				throw varError;
 			}
+			$StartPoint = UcsToWorld($StartPoint);
 		}
 		inline void _p_get_file_mane() {
 			QString varFileNameQ;
