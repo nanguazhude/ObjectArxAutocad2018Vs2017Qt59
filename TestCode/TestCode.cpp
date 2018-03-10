@@ -37,6 +37,12 @@ namespace sstd {
 	}/*namespace*/
 
 	void TestCode::main() {
+
+		{
+			auto db = acdbHostApplicationServices()->workingDatabase();
+			(void)db;
+		}
+
 		const auto varStartTime = std::chrono::high_resolution_clock::now();
 
 		auto varCurrentDocument = acDocManager->curDocument();
