@@ -83,7 +83,8 @@ SOURCES += \
         $$PWD/ThirdPart/ADN/ADNAssocSampleUtils.cpp \
         $$PWD/ThirdPart/ADN/AdnConstraintEvaluationCallback.cpp \
         $$PWD/DrawMRectangle/DrawMRectangle.cpp \
-        $$PWD/DrawMSteps/DrawMSteps.cpp
+        $$PWD/DrawMSteps/DrawMSteps.cpp \
+        $$PWD/RandomColor/RandomColor.cpp
 
 
 #.h .hpp source
