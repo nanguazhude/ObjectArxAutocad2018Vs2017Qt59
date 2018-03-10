@@ -436,7 +436,7 @@ namespace {
 			$VirtualLines.clear();
 			if (bool($FileReader) == false) { throw 2; }
 			$VirtualLines.reserve($FileReader->$Result.size());
-			
+
 			{
 				/*更新EndPoints*/
 				auto varPrePos = $FileReader->$Result.begin();
@@ -516,8 +516,9 @@ namespace {
 				$StartPoint = { 0.0,0.0,0.0 };
 			}
 			else {
-				if (varError == RTNORM) return;
-				throw varError;
+				if (varError != RTNORM) {
+					throw varError;
+				}
 			}
 
 			$StartPoint = UcsToWorld($StartPoint);
