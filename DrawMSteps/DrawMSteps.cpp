@@ -178,26 +178,134 @@ namespace {
 			}
 			_make_virtual_lines();
 			_p_make_mirror_virtual_lines();
+
 			_draw_();
+			_draw_mirror();
+
 			_p_constraint();
+			_p_constraint_mirror();
 
 		}
 	private:
+		inline void _p_constraint_mirror() {
+			{
+				AcGeMatrix3d ucs;
+				acedGetCurrentUCS(ucs);
+				for (auto & varI : $MirVirtualLines) {
+					varI.$EndPoint = UcsToWorld(varI.$EndPoint, ucs);
+					varI.$MidPoint = UcsToWorld(varI.$MidPoint, ucs);
+					varI.$StartPoint = UcsToWorld(varI.$StartPoint, ucs);
+				}
+			}
+
+			/*增加水平垂直约束*/
+			for (auto & varI : $MirVirtualLines) {
+				if (varI.isDx) {
+					AcDbAssoc2dConstraintAPI::createHorizontalConstraint(varI.$ID, varI.$MidPoint);
+				}
+				else {
+					AcDbAssoc2dConstraintAPI::createVerticalConstraint(varI.$ID, varI.$MidPoint);
+				}
+			}
+			/*增加重合约束*/
+			{
+				const auto varE = $MirVirtualLines.end();
+				auto varP = $MirVirtualLines.begin();
+				auto varL = varP + 1;
+				for (; varL != varE; varP = varL++) {
+					AcDbAssoc2dConstraintAPI::createCoincidentConstraint(varP->$ID, varL->$ID, varP->$EndPoint, varP->$EndPoint);
+				}
+			}
+
+			{
+				/*增加镜像相关约束*/
+				AcDbAssoc2dConstraintAPI::createCoincidentConstraint($MirVirtualLines[0].$ID, $VirtualLines[0].$ID,
+					$MirVirtualLines[0].$StartPoint, $VirtualLines[0].$StartPoint);
+				auto varMB = $MirVirtualLines.begin();
+				const auto varME = $MirVirtualLines.end();
+				auto varB = $VirtualLines.begin();
+				for (; varMB != varME; ++varMB, ++varB) {
+					AcDbAssoc2dConstraintAPI::createEqualLengthConstraint(
+						varMB->$ID, varB->$ID, varMB->$MidPoint, varB->$MidPoint
+					);
+				}
+
+			}
+		}
+
+		inline void _draw_mirror() {
+			sstd::ArxClosePointer<AcDbBlockTable> varBlockTable;
+			sstd::ArxClosePointer<AcDbBlockTableRecord> varBlockTableRecord;
+			std::vector< sstd::ArxClosePointer< AcDbLine > > varLines;
+			varLines.reserve($VirtualLines.size());
+			{
+				auto varE = $DB->getBlockTable(varBlockTable, AcDb::kForRead);
+				if (varE != eOk) { throw varE; }
+				varE = varBlockTable->getAt(ACDB_MODEL_SPACE,
+					varBlockTableRecord,
+					AcDb::kForWrite);
+				if (varE != eOk) { throw varE; }
+			}
+
+			{
+				AcCmColor varColor;
+				const auto varRColor = sstd::randColr();
+				varColor.setRGB(varRColor[0], varRColor[1], varRColor[2]);
+				for (auto & varI : $MirVirtualLines) {
+					auto & varV = varLines.emplace_back(new AcDbLine{ varI.$StartPoint,varI.$EndPoint });
+					varBlockTableRecord->appendAcDbEntity(varI.$ID, varV);
+					varV->setLayer(LR"(Defpoints)");
+					/**set object color****************************/
+					varV->setColor(varColor);
+				}
+			}
+		}
+
 		inline void _p_make_mirror_virtual_lines() {
 			$MirVirtualLines.clear();
 			$MirVirtualLines.reserve($VirtualLines.size());
-			auto varB = $VirtualLines.begin();
+			auto varB = $VirtualLines.cbegin();
 			const auto varSPoint = varB->$StartPoint;
 			std::unique_ptr<AcGePlane>  varMirrorPlane;
-			const bool isMirrorH = varB->isDx?false:true ;
+			const bool isMirrorH = varB->isDx ? false : true;
 			if (isMirrorH) {
 				varMirrorPlane.reset(new AcGePlane{ varSPoint, AcGeVector3d{ 0,1,0 } });
 			}
 			else {
 				varMirrorPlane.reset(new AcGePlane{ varSPoint, AcGeVector3d{ 1,0,0 } });
 			}
-			const auto varE = $VirtualLines.end();
-			for (;;) {}
+			const auto varE = $VirtualLines.cend();
+			for (; varB != varE; ++varB) {
+				auto & varI = $MirVirtualLines.emplace_back();
+				varI.$EndPoint = varB->$EndPoint; 
+				varI.$EndPoint.mirror(*varMirrorPlane);
+				varI.$StartPoint = varB->$StartPoint; 
+				varI.$StartPoint.mirror(*varMirrorPlane);
+				varI.$MidPoint = varB->$MidPoint; 
+				varI.$MidPoint.mirror(*varMirrorPlane);
+				varI.isDx = varB->isDx;
+			}
+
+			/*{
+				QFile varLogFile{ QString::fromUtf8(u8R"(C:\Users\b\Desktop\test\log2.txt)") };
+				varLogFile.open(QIODevice::WriteOnly);
+				QTextStream varStream{ &varLogFile };
+
+				for (auto & varI : $MirVirtualLines) {
+
+					varStream << " sx:" << varI.$StartPoint.x
+						<< " sy:" << varI.$StartPoint.y
+						<< " sz:" << varI.$StartPoint.z;
+					varStream << " mx:" << varI.$MidPoint.x
+						<< " my:" << varI.$MidPoint.y
+						<< " mz:" << varI.$MidPoint.z;
+					varStream << " ex:" << varI.$EndPoint.x
+						<< " ey:" << varI.$EndPoint.y
+						<< " ez:" << varI.$EndPoint.z;
+					varStream << endl;
+				}
+			}*/
+
 		}
 
 		inline void _p_constraint() {
@@ -316,6 +424,7 @@ namespace {
 				}
 			}
 		}
+
 		inline void _make_virtual_lines() {
 			$VirtualLines.clear();
 			if (bool($FileReader) == false) { throw 2; }
@@ -371,7 +480,7 @@ namespace {
 			}
 
 			/*{
-				QFile varLogFile{ QString::fromUtf8(u8R"(C:\Users\admin\Desktop\test\log1.txt)") };
+				QFile varLogFile{ QString::fromUtf8(u8R"(C:\Users\b\Desktop\test\log1.txt)") };
 				varLogFile.open(QIODevice::WriteOnly);
 				QTextStream varStream{ &varLogFile };
 

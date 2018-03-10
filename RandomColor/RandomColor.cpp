@@ -24,7 +24,7 @@ namespace sstd {
 		/*0 to 255*/
 		while (false==isSOk) {
 			S = std::rand() & 255;
-			if (S>70) {
+			if ((S>125)&&(S<215)) {
 				isSOk = true;
 			}
 		}
