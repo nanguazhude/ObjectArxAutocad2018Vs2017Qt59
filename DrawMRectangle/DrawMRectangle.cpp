@@ -243,6 +243,13 @@ namespace sstd {
 				argP.varKeyPoint5 = argP.varKeyPoint4;
 				argP.varKeyPoint5.x = argP.varKeyPoint0.x;
 
+				argP.varKeyPoint0 = UcsToWorld(argP.varKeyPoint0);
+				argP.varKeyPoint1 = UcsToWorld(argP.varKeyPoint1);
+				argP.varKeyPoint2 = UcsToWorld(argP.varKeyPoint2);
+				argP.varKeyPoint3 = UcsToWorld(argP.varKeyPoint3);
+				argP.varKeyPoint4 = UcsToWorld(argP.varKeyPoint4);
+				argP.varKeyPoint5 = UcsToWorld(argP.varKeyPoint5);
+
 				argP.varLines[0] = { new AcDbLine{ argP.varKeyPoint0 ,argP.varKeyPoint1 } };
 				argP.varLines[1] = { new AcDbLine{ argP.varKeyPoint1 ,argP.varKeyPoint2 } };
 				argP.varLines[2] = { new AcDbLine{ argP.varKeyPoint2 ,argP.varKeyPoint3 } };
@@ -289,18 +296,20 @@ namespace sstd {
 
 			inline void _p_constraint(DrawARectPack & argP) {
 				/*添加约束*/
-				argP.varKeyPoint0 = UcsToWorld(argP.varKeyPoint0);
-				argP.varKeyPoint1 = UcsToWorld(argP.varKeyPoint1);
-				argP.varKeyPoint2 = UcsToWorld(argP.varKeyPoint2);
-				argP.varKeyPoint3 = UcsToWorld(argP.varKeyPoint3);
-				argP.varKeyPoint4 = UcsToWorld(argP.varKeyPoint4);
-				argP.varKeyPoint5 = UcsToWorld(argP.varKeyPoint5);
-				argP.varKeyPoint0_1 = UcsToWorld(argP.varKeyPoint0_1);
-				argP.varKeyPoint1_2 = UcsToWorld(argP.varKeyPoint1_2);
-				argP.varKeyPoint2_3 = UcsToWorld(argP.varKeyPoint2_3);
-				argP.varKeyPoint3_4 = UcsToWorld(argP.varKeyPoint3_4);
-				argP.varKeyPoint4_5 = UcsToWorld(argP.varKeyPoint4_5);
-				argP.varKeyPoint5_0 = UcsToWorld(argP.varKeyPoint5_0);
+				//argP.varKeyPoint0 = UcsToWorld(argP.varKeyPoint0);
+				//argP.varKeyPoint1 = UcsToWorld(argP.varKeyPoint1);
+				//argP.varKeyPoint2 = UcsToWorld(argP.varKeyPoint2);
+				//argP.varKeyPoint3 = UcsToWorld(argP.varKeyPoint3);
+				//argP.varKeyPoint4 = UcsToWorld(argP.varKeyPoint4);
+				//argP.varKeyPoint5 = UcsToWorld(argP.varKeyPoint5);
+
+				//argP.varKeyPoint0_1 = UcsToWorld(argP.varKeyPoint0_1);
+				//argP.varKeyPoint1_2 = UcsToWorld(argP.varKeyPoint1_2);
+				//argP.varKeyPoint2_3 = UcsToWorld(argP.varKeyPoint2_3);
+				//argP.varKeyPoint3_4 = UcsToWorld(argP.varKeyPoint3_4);
+				//argP.varKeyPoint4_5 = UcsToWorld(argP.varKeyPoint4_5);
+				//argP.varKeyPoint5_0 = UcsToWorld(argP.varKeyPoint5_0);
+
 				/*添加重合约束*/
 				AcDbAssoc2dConstraintAPI::createCoincidentConstraint(argP.varID0, argP.varID1, argP.varKeyPoint1, argP.varKeyPoint1);
 				AcDbAssoc2dConstraintAPI::createCoincidentConstraint(argP.varID1, argP.varID2, argP.varKeyPoint2, argP.varKeyPoint2);
@@ -387,17 +396,17 @@ namespace sstd {
 		class Lock {
 			PrivatePack * d;
 			AcDbObjectId layerID;
-			AcGeMatrix3d ucs;
+			//AcGeMatrix3d ucs;
 		public:
 			Lock(PrivatePack *v) :d(v) {
 				layerID = d->$DB->clayer();
 				d->$DB->setClayer(d->$DB->layerZero());
-				acedGetCurrentUCS(ucs);
-				acedSetCurrentUCS(AcGeMatrix3d{});
+				//acedGetCurrentUCS(ucs);
+				//acedSetCurrentUCS(AcGeMatrix3d{});
 			}
 			~Lock() {
 				d->$DB->setClayer(layerID);
-				acedSetCurrentUCS(ucs);
+				//acedSetCurrentUCS(ucs);
 			}
 		};
 		Lock __lock{ &varData };

@@ -43,6 +43,7 @@ namespace sstd {
 			//acedGetCurrentUCS
 			//acedSetCurrentUCS
 			//AcGeMatrix3d
+			//acdbUcs2Wcs
 			(void)db;
 		}
 

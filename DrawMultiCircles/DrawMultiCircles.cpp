@@ -323,17 +323,17 @@ namespace sstd {
 		class Lock {
 			ThisMain * d;
 			AcDbObjectId layerID;
-			AcGeMatrix3d ucs;
+			//AcGeMatrix3d ucs;
 		public:
 			Lock(ThisMain *v) :d(v) {
 				layerID = d->$DB->clayer();
 				d->$DB->setClayer(d->$DB->layerZero());
-				acedGetCurrentUCS(ucs);
-				acedSetCurrentUCS(AcGeMatrix3d{});
+				//acedGetCurrentUCS(ucs);
+				//acedSetCurrentUCS(AcGeMatrix3d{});
 			}
 			~Lock() {
 				d->$DB->setClayer(layerID);
-				acedSetCurrentUCS(ucs);
+				//acedSetCurrentUCS(ucs);
 			}
 		};
 		Lock __lock{ thisMain.get() };
