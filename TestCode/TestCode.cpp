@@ -40,6 +40,9 @@ namespace sstd {
 
 		{
 			auto db = acdbHostApplicationServices()->workingDatabase();
+			//acedGetCurrentUCS
+			//acedSetCurrentUCS
+			//AcGeMatrix3d
 			(void)db;
 		}
 

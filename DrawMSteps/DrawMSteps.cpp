@@ -43,13 +43,17 @@ namespace {
 	class DrawLayerLock {
 		AcDbDatabase * d;
 		AcDbObjectId l;
+		AcGeMatrix3d ucs;
 	public:
 		inline DrawLayerLock(AcDbDatabase * a) :d(a) {
 			l = d->clayer();
 			d->setClayer(d->layerZero());
+			acedGetCurrentUCS(ucs);
+			acedSetCurrentUCS(AcGeMatrix3d{});
 		}
 		inline ~DrawLayerLock() {
 			d->setClayer(l);
+			acedSetCurrentUCS(ucs);
 		}
 	};
 

@@ -387,13 +387,17 @@ namespace sstd {
 		class Lock {
 			PrivatePack * d;
 			AcDbObjectId layerID;
+			AcGeMatrix3d ucs;
 		public:
 			Lock(PrivatePack *v) :d(v) {
 				layerID = d->$DB->clayer();
 				d->$DB->setClayer(d->$DB->layerZero());
+				acedGetCurrentUCS(ucs);
+				acedSetCurrentUCS(AcGeMatrix3d{});
 			}
 			~Lock() {
 				d->$DB->setClayer(layerID);
+				acedSetCurrentUCS(ucs);
 			}
 		};
 		Lock __lock{ &varData };
