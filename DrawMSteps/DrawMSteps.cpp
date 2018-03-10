@@ -241,10 +241,13 @@ namespace {
 							);
 							/**/
 							{
-								const QString Expression_ = QString::number(varL->$Length) +
+								const QString Expression_ = QString::number(std::abs(
+									varSPoint.y-(varL->$StartPoint.y))*2.) +
 									QLatin1String(R"(/2)", 2);
 								const auto varTS = Expression_.toStdWString();
 								varExpression = AcString{ varTS.c_str() };
+								//acutPrintf(varTS.c_str());
+								//acutPrintf(L"\n");
 							}
 							/*setVariableValue*/
 							AcDbAssoc2dConstraintAPI::setVariableValue(varTmp,
