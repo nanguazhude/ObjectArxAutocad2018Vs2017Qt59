@@ -6,6 +6,10 @@
 #include "../ThirdPart/ADN/ADNAssocCreateConstraint.hpp"
 #include "DrawMSteps.hpp"
 
+namespace sstd {
+	extern std::array<std::uint8_t, 3> randColr();
+}
+
 namespace {
 	inline auto add_scale_half(const double & a, const double &b) {
 		return (a + b)*0.5;
@@ -276,10 +280,17 @@ namespace {
 				if (varE != eOk) { throw varE; }
 			}
 
-			for (auto & varI : $VirtualLines) {
-				auto & varV = varLines.emplace_back(new AcDbLine{ varI.$StartPoint,varI.$EndPoint });
-				varBlockTableRecord->appendAcDbEntity(varI.$ID, varV);
-				varV->setLayer(LR"(Defpoints)");
+			{
+				AcCmColor varColor;
+				const auto varRColor = sstd::randColr();
+				varColor.setRGB(varRColor[0], varRColor[1], varRColor[2]);
+				for (auto & varI : $VirtualLines) {
+					auto & varV = varLines.emplace_back(new AcDbLine{ varI.$StartPoint,varI.$EndPoint });
+					varBlockTableRecord->appendAcDbEntity(varI.$ID, varV);
+					varV->setLayer(LR"(Defpoints)");
+					/**set object color****************************/
+					varV->setColor(varColor);
+				}
 			}
 		}
 		inline void _make_virtual_lines() {

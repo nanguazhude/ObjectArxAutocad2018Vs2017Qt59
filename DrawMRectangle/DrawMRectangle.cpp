@@ -7,6 +7,10 @@
 #include <QtQml/QtQml>
 
 namespace sstd {
+	extern std::array<std::uint8_t, 3> randColr();
+}
+
+namespace sstd {
 
 	DrawMRectangle::DrawMRectangle() {
 
@@ -211,9 +215,10 @@ namespace sstd {
 				DrawARectPack & argP,
 				PrivatePack & arg) {
 
-				argP.varColor.setRGB(154 + std::rand() % (245 - 154),
-					50 + std::rand() % (80 - 50),
-					200 + std::rand() % (250 - 200));
+					{
+						auto varRC = sstd::randColr();
+						argP.varColor.setRGB(varRC[0], varRC[1], varRC[2]);
+					}
 
 				{
 					arg.$Error = arg.$DB->getBlockTable(argP.varBlockTable, AcDb::kForRead);
