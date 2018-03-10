@@ -90,4 +90,43 @@ namespace sstd {
 }/*namespace sstd*/
 
 
+/**
+https://my.oschina.net/u/2930533/blog/1618956
+void ZffCHAP4AddEntInUcs()
+{
+// 转换坐标系的标记
+struct resbuf wcs, ucs;
+wcs.restype = RTSHORT;
+wcs.resval.rint = 0;
+ucs.restype = RTSHORT;
+ucs.resval.rint = 1;
+
+// 提示用户输入直线的起点和终点
+ads_point pt1, pt2;
+if (acedGetPoint(NULL, "拾取直线的起点：", pt1) != RTNORM)
+return;
+if (acedGetPoint(pt1, "拾取直线的终点：", pt2) != RTNORM)
+return;
+
+// 将起点和终点坐标转换到WCS
+acedTrans(pt1, &ucs, &wcs, 0, pt1);
+acedTrans(pt2, &ucs, &wcs, 0, pt2);
+
+// 创建直线
+AcDbLine *pLine = new AcDbLine(asPnt3d(pt1), asPnt3d(pt2));
+AcDbBlockTable *pBlkTbl = NULL;
+acdbHostApplicationServices()->workingDatabase()->getBlockTable(pBlkTbl, AcDb::kForRead);
+AcDbBlockTableRecord *pBlkTblRcd= NULL;
+pBlkTbl->getAt(ACDB_MODEL_SPACE, pBlkTblRcd,AcDb::kForWrite);
+pBlkTbl->close();
+pBlkTblRcd->appendAcDbEntity(pLine);
+pLine->close();
+pBlkTblRcd->close();
+}
+
+acdbWcs2Ucs
+acdbUcs2Wcs
+
+**/
+
 

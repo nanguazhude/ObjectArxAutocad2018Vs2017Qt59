@@ -1,5 +1,6 @@
 ﻿#include "object_arx_global.hpp"
 #include "ARXApplication.hpp"
+#include <thread>
 
 namespace sstd {
 
@@ -73,4 +74,32 @@ namespace sstd {
 }/*namespace sstd*/
 
 /********************************/
+
+namespace sstd {
+
+	extern void UCS2WCS(const double * i, double *o) {
+
+		static class V {
+		public:
+			struct resbuf wcs, ucs;
+			V() {
+				wcs.rbnext = nullptr;
+				wcs.restype = RTSHORT;
+				wcs.resval.rint = 0;
+
+				ucs.rbnext = nullptr;
+				ucs.restype = RTSHORT;
+				ucs.resval.rint = 1;
+			}
+		}var;
+
+		ads_point pt1;
+		pt1[0] = *i++;
+		pt1[1] = *i++;
+		pt1[2] = *i++;
+
+		acedTrans(pt1, &var.ucs, &var.wcs, 0, o);
+
+	}
+}/*sstd*/
 

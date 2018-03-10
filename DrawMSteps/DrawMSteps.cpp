@@ -37,36 +37,28 @@ namespace sstd {
 	}
 }/*namespace sstd*/
 
+namespace sstd {
+	extern void UCS2WCS(const double * i, double *o);
+}
 
 namespace {
 
-	static inline AcGePoint3d UcsToWorld(const AcGePoint3d& ucsPoint,
-		const AcGeMatrix3d &ucs) {
-		AcGePoint3d res(ucsPoint);
-		return res.transformBy(ucs);
-	}
-
 	static inline AcGePoint3d UcsToWorld(const AcGePoint3d& ucsPoint) {
-		AcGeMatrix3d ucs;
-		acedGetCurrentUCS(ucs);
-		AcGePoint3d res(ucsPoint);
-		return res.transformBy(ucs);
+		AcGePoint3d varAns;
+		sstd::UCS2WCS(&ucsPoint.x, &varAns.x);
+		return varAns;
 	}
 
 	class DrawLayerLock {
 		AcDbDatabase * d;
 		AcDbObjectId l;
-		//AcGeMatrix3d ucs;
 	public:
 		inline DrawLayerLock(AcDbDatabase * a) :d(a) {
 			l = d->clayer();
 			d->setClayer(d->layerZero());
-			//acedGetCurrentUCS(ucs);
-			//acedSetCurrentUCS(AcGeMatrix3d{});
 		}
 		inline ~DrawLayerLock() {
 			d->setClayer(l);
-			//acedSetCurrentUCS(ucs);
 		}
 	};
 
@@ -157,7 +149,7 @@ namespace {
 			return true;
 		}
 		catch (...) { return false; }
-	};	
+	};
 
 	class Main {
 	public:
@@ -184,9 +176,11 @@ namespace {
 			$FileReader = std::unique_ptr<FileReader>{
 				new FileReader
 			};
+
 			if ($FileReader->read($FileName) == false) {
 				throw 10;
 			}
+
 			_make_virtual_lines();
 			_p_make_mirror_virtual_lines();
 
@@ -288,11 +282,11 @@ namespace {
 			const auto varE = $VirtualLines.cend();
 			for (; varB != varE; ++varB) {
 				auto & varI = $MirVirtualLines.emplace_back();
-				varI.$EndPoint = varB->$EndPoint; 
+				varI.$EndPoint = varB->$EndPoint;
 				varI.$EndPoint.mirror(*varMirrorPlane);
-				varI.$StartPoint = varB->$StartPoint; 
+				varI.$StartPoint = varB->$StartPoint;
 				varI.$StartPoint.mirror(*varMirrorPlane);
-				varI.$MidPoint = varB->$MidPoint; 
+				varI.$MidPoint = varB->$MidPoint;
 				varI.$MidPoint.mirror(*varMirrorPlane);
 				varI.isDx = varB->isDx;
 			}
@@ -413,6 +407,7 @@ namespace {
 			sstd::ArxClosePointer<AcDbBlockTableRecord> varBlockTableRecord;
 			std::vector< sstd::ArxClosePointer< AcDbLine > > varLines;
 			varLines.reserve($VirtualLines.size());
+
 			{
 				auto varE = $DB->getBlockTable(varBlockTable, AcDb::kForRead);
 				if (varE != eOk) { throw varE; }
@@ -434,19 +429,21 @@ namespace {
 					varV->setColor(varColor);
 				}
 			}
+
 		}
 
 		inline void _make_virtual_lines() {
 			$VirtualLines.clear();
 			if (bool($FileReader) == false) { throw 2; }
 			$VirtualLines.reserve($FileReader->$Result.size());
+			
 			{
 				/*更新EndPoints*/
 				auto varPrePos = $FileReader->$Result.begin();
 				auto varEndPos = $FileReader->$Result.end();
 				for (; varPrePos != varEndPos; ++varPrePos) {
 					auto & varValue = $VirtualLines.emplace_back();
-					varValue.$StartPoint = $StartPoint;
+					varValue.$StartPoint = this->$StartPoint;
 					if (varPrePos->isDx) {
 						varValue.$EndPoint = varValue.$StartPoint;
 						varValue.$EndPoint.x += varPrePos->value;
@@ -510,18 +507,23 @@ namespace {
 				}
 			}*/
 		}
+
 		inline void _p_get_point() {
 			const auto varError =
 				acedGetPoint(nullptr, LR"(请输入起始中心<0,0>：)", &($StartPoint.x));
+
 			if (RTNONE == varError) {
 				$StartPoint = { 0.0,0.0,0.0 };
 			}
 			else {
-				if (varError == RTNORM)return;
+				if (varError == RTNORM) return;
 				throw varError;
 			}
+
 			$StartPoint = UcsToWorld($StartPoint);
+
 		}
+
 		inline void _p_get_file_mane() {
 			QString varFileNameQ;
 			{

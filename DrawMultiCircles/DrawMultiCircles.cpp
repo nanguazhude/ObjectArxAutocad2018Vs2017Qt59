@@ -6,6 +6,10 @@
 #include "DrawMultiCircles.hpp"
 
 namespace sstd {
+	extern void UCS2WCS(const double * i, double *o);
+}
+
+namespace sstd {
 
 	extern void loadDrawMultiCircles() {
 		DrawMultiCircles::load();
@@ -22,10 +26,9 @@ namespace sstd {
 	namespace {
 
 		static inline AcGePoint3d UcsToWorld(const AcGePoint3d& ucsPoint) {
-			AcGeMatrix3d ucs;
-			acedGetCurrentUCS(ucs);
-			AcGePoint3d res(ucsPoint);
-			return res.transformBy(ucs);
+			AcGePoint3d varAns;
+			sstd::UCS2WCS(&ucsPoint.x, &varAns.x);
+			return varAns;
 		}
 
 		class ThisMain {
