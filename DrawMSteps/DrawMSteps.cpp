@@ -6,6 +6,12 @@
 #include "../ThirdPart/ADN/ADNAssocCreateConstraint.hpp"
 #include "DrawMSteps.hpp"
 
+namespace {
+	inline constexpr const wchar_t * const _this_layerName() {
+		return LR"(参考线)";
+	}
+}
+
 namespace sstd {
 	extern std::array<std::uint8_t, 3> randColr();
 }
@@ -259,7 +265,7 @@ namespace {
 				for (auto & varI : $MirVirtualLines) {
 					auto & varV = varLines.emplace_back(new AcDbLine{ varI.$StartPoint,varI.$EndPoint });
 					varBlockTableRecord->appendAcDbEntity(varI.$ID, varV);
-					varV->setLayer(LR"(Defpoints)");
+					varV->setLayer(_this_layerName());
 					/**set object color****************************/
 					varV->setColor(varColor);
 				}
@@ -424,7 +430,7 @@ namespace {
 				for (auto & varI : $VirtualLines) {
 					auto & varV = varLines.emplace_back(new AcDbLine{ varI.$StartPoint,varI.$EndPoint });
 					varBlockTableRecord->appendAcDbEntity(varI.$ID, varV);
-					varV->setLayer(LR"(Defpoints)");
+					varV->setLayer(_this_layerName());
 					/**set object color****************************/
 					varV->setColor(varColor);
 				}

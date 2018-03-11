@@ -6,6 +6,12 @@
 #include "DrawMRectangle.hpp"
 #include <QtQml/QtQml>
 
+namespace {
+	inline constexpr const wchar_t * const _this_layerName() {
+		return LR"(参考线)";
+	}
+}
+
 namespace sstd {
 	extern void UCS2WCS(const double * i, double *o);
 }
@@ -288,7 +294,7 @@ namespace sstd {
 
 				/*close */
 				for (auto & varI : argP.varLines) {
-					varI->setLayer(LR"(Defpoints)");
+					varI->setLayer(_this_layerName());
 					varI->setColor(argP.varColor);
 					varI = {};
 				}
