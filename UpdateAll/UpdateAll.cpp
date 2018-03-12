@@ -16,9 +16,9 @@ sstd::UpdateAll::UpdateAll() {
 namespace sstd {
 	namespace {
 		class ThisFunction {
-			AcDbDatabase * const $DB;
 		public:
-			inline ThisFunction( AcDbDatabase * arg ):$DB(arg) {}
+			AcDbDatabase * const $DB;
+			inline ThisFunction(AcDbDatabase * arg) :$DB(arg) {}
 			inline void updateAll();
 		};
 		inline void ThisFunction::updateAll() {
@@ -47,7 +47,7 @@ namespace sstd {
 
 					auto toWstring = [](short arg) {
 						return std::to_wstring(arg);
-					};								
+					};
 
 					if (varInfo) {
 						{/*设置关键字*/
@@ -68,7 +68,7 @@ namespace sstd {
 							varInfo->setAuthor(LR"(LZLT)");
 						}
 					}
-					
+
 					acdbPutSummaryInfo(varInfo);
 				}
 			}
@@ -78,7 +78,7 @@ namespace sstd {
 					varCD,
 					LR"(vvvvvvattsyngriducsicon
 )"
-				);
+);
 			}
 			UpdateLayer::main();
 		}
@@ -90,8 +90,16 @@ void sstd::UpdateAll::load() {
 }
 
 void sstd::UpdateAll::main() {
-	ThisFunction varFunction( acdbHostApplicationServices()->workingDatabase() );
+	ThisFunction varFunction(acdbHostApplicationServices()->workingDatabase());
 	varFunction.updateAll();
+	{
+		/**************************************************/
+		sstd::ArxClosePointer< AcDbLayerTable > varLayerTable;
+		AcDbObjectId varID;
+		varFunction.$DB->getLayerTable(varLayerTable);
+		varLayerTable->getIdAt(LR"(不打印)", varID);
+		if (false == varID.isNull())varFunction.$DB->setClayer(varID);
+	}
 }
 
 namespace sstd {
