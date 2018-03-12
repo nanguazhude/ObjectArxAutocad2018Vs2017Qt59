@@ -77,6 +77,7 @@ namespace sstd {
 				acDocManager->sendStringToExecute(
 					varCD,
 					LR"(vvvvvvattsyngriducsicon
+(setvar "clayer" "不打印")
 )"
 );
 			}
@@ -92,14 +93,16 @@ void sstd::UpdateAll::load() {
 void sstd::UpdateAll::main() {
 	ThisFunction varFunction(acdbHostApplicationServices()->workingDatabase());
 	varFunction.updateAll();
-	{
-		/**************************************************/
-		sstd::ArxClosePointer< AcDbLayerTable > varLayerTable;
-		AcDbObjectId varID;
-		varFunction.$DB->getLayerTable(varLayerTable);
-		varLayerTable->getIdAt(LR"(不打印)", varID);
-		if (false == varID.isNull())varFunction.$DB->setClayer(varID);
-	}
+	//{
+	//	/**************************************************/
+	//	AcDbObjectId varID; 
+	//	{
+	//		sstd::ArxClosePointer< AcDbLayerTable > varLayerTable;
+	//		varFunction.$DB->getLayerTable(varLayerTable);
+	//		(eOk == varLayerTable->getAt(LR"(不打印)", varID))?acutPrintf(LR"(OK)"):acutPrintf(LR"(Fail)");
+	//		varFunction.$DB->setClayer(varID);
+	//	}
+	//}
 }
 
 namespace sstd {
