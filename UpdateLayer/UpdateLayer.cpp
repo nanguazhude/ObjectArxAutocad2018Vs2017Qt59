@@ -30,7 +30,7 @@ namespace sstd {
 
 				/*初始化颜色*****************************************************/
 				AcCmColor varLColor;
-				varLColor.setColorIndex(211);
+				varLColor.setRGB(210,230,190);
 				/*初始化线宽*****************************************************/
 				AcDb::LineWeight varLWeight = AcDb::kLnWt030;
 				/*设置透明度*****************************************************/
