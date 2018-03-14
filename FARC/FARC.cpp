@@ -33,6 +33,24 @@ namespace sstd {
 		/*获得数据库*/
 		auto varDB = acdbHostApplicationServices()
 			->workingDatabase();
+		class LockMain{
+		public:
+			AcDbDatabase * db;
+			AcDbObjectId lid;
+			LockMain(AcDbDatabase *a):db(a) {
+				lid = a->clayer();
+				{
+					AcDbObjectId llid;
+					sstd::ArxClosePointer<AcDbLayerTable>t;
+					a->getLayerTable(t);
+					t->getAt(LR"(粗实线)",llid);
+					if(llid.isNull()==false)a->setClayer(llid);
+				}
+			}
+			~LockMain() {
+				db->setClayer(lid);
+			}
+		}____{ varDB };
 
 		AcGePoint3d $EndPoint;
 		AcGePoint3d $StartPoint;
