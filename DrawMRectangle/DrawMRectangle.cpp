@@ -124,39 +124,48 @@ namespace sstd {
 					while (varStream.atEnd() == false) {
 						const QString varLine = varStream
 							.readLine()
-							.trimmed()
-							.toLower();
+							.trimmed();// .toLower();
 
 						/*空值跳过*/
 						if (varLine.isEmpty()) { continue; }
 
-						if (varLine.startsWith(QStringLiteral(R"(:h)"))) {
-							varIsH = 0;
-							//varHRead = true; 
-							continue;
+						if (varLine.startsWith(QChar(':'))) {
+							varIsH = -10;
+
+							if (varLine.startsWith(QStringLiteral(R"(:h)"),Qt::CaseInsensitive )) {
+								varIsH = 0;
+								//varHRead = true; 
+								continue;
+							}
+							else if (varLine.startsWith(QStringLiteral(R"(:w)"), Qt::CaseInsensitive)) {
+								varIsH = 1;
+								//varWRead = true; 
+								continue;
+							}
+							else if (varLine.startsWith(QStringLiteral(R"(:j)"), Qt::CaseInsensitive)) {
+								varIsH = 2;
+								continue;
+							}
+
 						}
-						else if (varLine.startsWith(QStringLiteral(R"(:w)"))) {
-							varIsH = 1;
-							//varWRead = true; 
-							continue;
-						}
-						else if (varLine.startsWith(QStringLiteral(R"(:j)"))) {
-							varIsH = 2;
+
+						if (varIsH<0) {/*无法识别的标识符*/
 							continue;
 						}
 
-						if (2 == varIsH) {
+						if (2 == varIsH) {/*java script*/
 							varJSEngine.evaluate(varLine);
 							continue;
 						}
 
-						const auto varValue =
-							varJSEngine.evaluate(varLine).toNumber();
-
 						if (0 == varIsH) {
+							const auto varValue =
+								varJSEngine.evaluate(varLine).toNumber();
 							h.push_back(varValue);
 						}
 						else if (1 == varIsH) {
+							const auto varValue =
+								varJSEngine.evaluate(varLine).toNumber();
 							w.push_back(varValue);
 						}
 					}

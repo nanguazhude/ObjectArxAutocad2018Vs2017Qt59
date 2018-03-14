@@ -91,8 +91,7 @@ namespace {
 					}
 					{
 						QTextStream varStream{ &varF };
-						$FileData = varStream.readAll()
-							.toLower();
+						$FileData = varStream.readAll();
 						if ($FileData.isEmpty()) {
 							throw 3;
 						}
@@ -114,17 +113,22 @@ namespace {
 						continue;
 					}
 
-					if (varLine.startsWith(QStringLiteral(R"(:x)"))) {
-						varType = RunType::X;
-						continue;
-					}
-					else if (varLine.startsWith(QStringLiteral(R"(:y)"))) {
-						varType = RunType::Y;
-						continue;
-					}
-					else if (varLine.startsWith(QStringLiteral(R"(:j)"))) {
-						varType = RunType::J;
-						continue;
+					if (varLine.startsWith(QChar(':'))) {
+						varType = RunType::None;
+
+						if (varLine.startsWith(QStringLiteral(R"(:x)") , Qt::CaseInsensitive)) {
+							varType = RunType::X;
+							continue;
+						}
+						else if (varLine.startsWith(QStringLiteral(R"(:y)"), Qt::CaseInsensitive)) {
+							varType = RunType::Y;
+							continue;
+						}
+						else if (varLine.startsWith(QStringLiteral(R"(:j)"), Qt::CaseInsensitive)) {
+							varType = RunType::J;
+							continue;
+						}
+
 					}
 
 					switch (varType) {
