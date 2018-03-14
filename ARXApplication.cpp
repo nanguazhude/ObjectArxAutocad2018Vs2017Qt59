@@ -27,6 +27,7 @@ namespace sstd {
 	extern void loadDrawMultiCircles();
 	extern void loadDrawMRectangle();
 	extern void loadDrawMStep();
+    extern void loadFARC();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -54,6 +55,7 @@ namespace sstd {
 			{ &sstd::loadDrawMultiCircles },
 			{ &sstd::loadDrawMRectangle },
 			{ &sstd::loadDrawMStep },
+            { &sstd::loadFARC },
 		};
 	}
 
