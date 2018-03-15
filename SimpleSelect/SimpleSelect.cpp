@@ -126,7 +126,7 @@ namespace sstd {
 
 				// get topmost blockreference
 				acdbOpenAcDbEntity(pTMBlockRef, 
-					 Inserts[numInserts-1],
+					 Inserts[numInserts-2],
 					AcDb::kForRead);
 
 				// xform and pt3d are not used in case of AcDb3dSolid
@@ -135,10 +135,10 @@ namespace sstd {
 				err = pTMBlockRef->getSubentPathsAtGsMarker(
 					AcDb::kEdgeSubentType,
 					marker, 
-					//point, 
-					//matrix, 
-					pt3d, 
-					xform, 
+					point, 
+					matrix, 
+					//pt3d, 
+					//xform, 
 					numIds, 
 					subentIds, 
 					numInserts,
