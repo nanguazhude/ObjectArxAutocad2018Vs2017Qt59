@@ -83,6 +83,7 @@ namespace sstd {
 )");
 					return;//打开实体失败，返回  
 				}
+
 				if (pEnt->isKindOf(AcDbLine::desc())) {
 					AcDbLine * pLine = AcDbLine::cast(pEnt);
 					$LineStartPoint = pLine->startPoint();
@@ -121,6 +122,11 @@ namespace sstd {
 					acutPrintf(LR"(请选择直线
 )");
 				}
+			}
+			else {
+				acutPrintf(LR"(取消选择
+)");
+				return;
 			}
 		}
 
