@@ -43,7 +43,7 @@ namespace sstd {
 )");
 						return;//打开实体失败，返回  
 					}
-
+				 
 					if (pEnt->isKindOf(AcDbLine::desc())) {
 						AcDbLine * pLine = AcDbLine::cast(pEnt);
 						$LineStartPoint = pLine->startPoint();
