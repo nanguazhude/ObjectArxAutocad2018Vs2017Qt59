@@ -61,8 +61,9 @@ namespace sstd {
 		AcGePoint3d $X0Point;
 		AcGePoint3d $SPoint;
 		double $R = 1.6;
-		bool varLoop = true;
 
+#if 0
+		bool varLoop = true;
 		/*获得直线*/
 		while (varLoop) {
 			class Lock {
@@ -129,6 +130,39 @@ namespace sstd {
 				return;
 			}
 		}
+#endif
+
+		/*获得起点*/
+		{
+			const auto varError =
+				acedGetPoint(nullptr, LR"(请输入切线起点<0,0>：)", &($LineStartPoint.x));
+
+			if (RTNONE == varError) {
+				$LineStartPoint = { 0.0,0.0,0.0 };
+			}
+			else if (varError != RTNORM) {
+				throw varError;
+			}
+
+			$LineStartPoint = UcsToWorld($LineStartPoint);
+		}
+
+		/*获得直线上另一点*/
+		{
+			const auto varError =
+				acedGetPoint(nullptr, LR"(请输入切线终点<0,0>：)", &($LineEndPoint.x));
+
+			if (RTNONE == varError) {
+				$LineEndPoint = { 0.0,0.0,0.0 };
+			}
+			else if (varError != RTNORM) {
+				throw varError;
+			}
+
+			$LineEndPoint = UcsToWorld($LineEndPoint);
+		}
+
+		$SPoint = $LineStartPoint;
 
 		/*获得点*/
 		{
@@ -136,7 +170,7 @@ namespace sstd {
 				acedGetPoint(nullptr, LR"(请输入起始中心<0,0>：)", &($X0Point.x));
 
 			if (RTNONE == varError) {
-				$EndPoint = { 0.0,0.0,0.0 };
+				$X0Point = { 0.0,0.0,0.0 };
 			}
 			else if (varError != RTNORM) {
 				throw varError;
