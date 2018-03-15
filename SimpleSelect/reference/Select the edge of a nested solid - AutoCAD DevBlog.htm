@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <!-- head-common-bootstrap-individual -->
+     <meta charset="utf-8">
+     <meta name="generator" content="http://www.typepad.com/">
+     <meta name="description" content="By Augusto Goncalves The answer to this question is a combination of two requirements: 1. Selecting a subentity 2. Selecting a nested entity 1. Selecting a subentity First we should clarify what a subentity is: A subentity is a pseudo entity which is a logical part of a real entity....">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta property="og:title" content="Select the edge of a nested solid">
+<meta property="og:site_name" content="AutoCAD DevBlog">
+<meta property="og:type" content="blog">
+<meta property="og:url" content="http://adndevblog.typepad.com/autocad/2013/01/select-the-edge-of-a-nested-solid.html">
+<meta property="og:description" content="By Augusto Goncalves The answer to this question is a combination of two requirements: 1. Selecting a subentity 2. Selecting a nested entity 1. Selecting a subentity First we should clarify what a subentity is: A subentity is a pseudo entity which is a logical part of a real entity....">
+<meta property="fb:admins" content="">
+
+
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="">
+<meta name="twitter:creator" content="">
+<meta name="twitter:title" content="Select the edge of a nested solid">
+<meta name="twitter:description" content="By Augusto Goncalves The answer to this question is a combination of two requirements: 1. Selecting a subentity 2. Selecting a nested entity 1. Selecting a subentity First we should clarify what a subentity is: A subentity is a pseudo entity which is a logical part of a real entity....">
+<meta name="twitter:image" content="">
+
+
+     <!-- Custom fonts for this template -->
+
+    <!-- Bootstrap core CSS -->
+    <link href="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/bootstrap.css" rel="stylesheet">
+
+    <!-- Bootstrap bridge -->
+    <link href="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/bootstrap-bridge.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link rel="stylesheet" href="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/styles.css" type="text/css" media="screen">
+    <style>.navbar-header, .nav { display:block !important; }</style>
+
+        <link rel="stylesheet" href="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/print.css" type="text/css" media="print">
+        <link rel="alternate" type="application/atom+xml" title="Posts on 'AutoCAD DevBlog' (Atom)" href="http://adndevblog.typepad.com/autocad/atom.xml">
+        <link rel="alternate" type="application/rss+xml" title="Posts on 'AutoCAD DevBlog' (RSS 1.0)" href="http://adndevblog.typepad.com/autocad/index.rdf">
+        <link rel="alternate" type="application/rss+xml" title="Posts on 'AutoCAD DevBlog' (RSS 2.0)" href="http://adndevblog.typepad.com/autocad/rss.xml">
+
+    <script src="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/rules-p-fcYWUmj5YbYKM.js" async=""></script><script type="text/javascript" async="" src="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/ga.js"></script><script async="" src="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/analytics.js"></script><script src="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/jquery.js"></script>
+
+        <script type="text/javascript">
+                var TPApp = {};
+                TPApp.app_uri = "http://www.typepad.com/";
+        </script>
+        <script type="text/javascript" src="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/flyouts-min.js"></script>
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-225723-36', 'auto', {'name': 'Typepad'}, {'allowLinker': true} );  // Separate tracker for Typepad.
+ga('Typepad.require', 'linker');
+ga('Typepad.linker:autoLink', ['none']);
+ga('Typepad.set', 'dimension1', '6a0167607c2431970b0162ffdc445e970d');
+ga('Typepad.set', 'dimension2', 'Individual');
+ga('Typepad.send', 'pageview');
+</script>
+
+
+
+
+
+        <link rel="alternate" type="application/atom+xml" title="Comments on 'Select the edge of a nested solid' (Atom)" href="http://adndevblog.typepad.com/autocad/2013/01/select-the-edge-of-a-nested-solid/comments/atom.xml">
+        <link rel="alternate" type="application/rss+xml" title="Comments on 'Select the edge of a nested solid' (RSS 2.0)" href="http://adndevblog.typepad.com/autocad/2013/01/select-the-edge-of-a-nested-solid/comments/rss.xml">
+        <title>Select the edge of a nested solid - AutoCAD DevBlog</title>
+        <link rel="start" href="http://adndevblog.typepad.com/autocad/" title="Home">
+        <link rel="prev" href="http://adndevblog.typepad.com/autocad/2013/01/insert-a-wmf-file-multiple-times.html?no_prefetch=1" title="Insert A WMF File Multiple Times">
+        <link rel="next" href="http://adndevblog.typepad.com/autocad/2013/01/getclosestpointto-on-a-blockreference-returns-which-coordinate-system-in-autocad-using-objectarx.html?no_prefetch=1" title="GetClosestPointTo() on a BlockReference returns which coordinate system in AutoCAD using ObjectARX">
+
+    <script src="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/jquery-1.js"></script>
+<link rel="stylesheet" href="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/screen.css" type="text/css" media="screen"><link rel="stylesheet" href="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/flyout-types.css" type="text/css" media="screen"><link href="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/sharethis.css" rel="stylesheet" type="text/css"></head>
+
+
+
+<body class="layout-two-column-right post" onclick="if(SHARETHIS.buttonClicked==false){SHARETHIS.stopClosing=false;SHARETHIS.openDuration=0;stClose(100);}">
+	
+	<div id="container" class="container">
+		<div id="container-inner" class="pkg">
+			
+                <div class="row">
+     
+
+
+<a id="home"></a>
+   
+
+              <div id="banner" class="jumbotron" style="height: 290px; visibility: visible;">
+                <h1><a href="http://adndevblog.typepad.com/autocad/" accesskey="1">AutoCAD DevBlog</a></h1>
+                <h2></h2>
+              </div>
+
+     
+     
+      <div id="autocollapse" class="navbar navbar-default navbar-fixed-top">
+
+<div class="navbar-inner">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="icon-bar"></span>
+          </button>
+         <a class="navbar-brand" href="http://adndevblog.typepad.com/autocad/">Home</a>
+        </div>
+
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+<li><a href="http://adndevblog.typepad.com/autocad/archives.html">Archives</a></li>
+<li><a href="http://profile.typepad.com/stephenpreston">Profile</a></li>
+<li><a href="http://feeds.feedburner.com/AutocadDevblog">Subscribe</a></li>
+<li><a href="http://www.twitter.com/autocaddevblog">Follow</a></li>
+<li><a href="http://adndevblog.typepad.com/autocad/useful-links.html">Useful Links</a></li>
+<li><a href="http://www.autodesk.com/">Autodesk</a></li>
+<li><a href="http://adndevblog.typepad.com/autocad/about-this-blog.html">About this Blog</a></li>
+
+          </ul><!-- end main navbar -->
+        </div><!--/.nav-collapse-->
+</div><!--/.navbar-inner-->
+
+      </div><!--/.navbar-->
+
+     
+
+
+
+			<div id="pagebody">
+
+
+				<div id="pagebody-inner" class="pkg">
+                                        <div id="alpha" class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
+						<div id="alpha-inner" class="pkg">
+							<!-- the plain version removes the extra jquery -->
+<!-- content nav -->
+<p class="content-nav">
+	<a class="content-nav-prev" href="http://adndevblog.typepad.com/autocad/2013/01/insert-a-wmf-file-multiple-times.html">« Insert A WMF File Multiple Times</a> |
+	<a class="content-nav-main" href="http://adndevblog.typepad.com/autocad/">Main</a>
+	| <a class="content-nav-next" href="http://adndevblog.typepad.com/autocad/2013/01/getclosestpointto-on-a-blockreference-returns-which-coordinate-system-in-autocad-using-objectarx.html">GetClosestPointTo() on a BlockReference returns which coordinate system in AutoCAD using ObjectARX »</a>
+</p>
+<script type="text/javascript">
+   $(function(){
+       var query = window.location.search.substring(1);
+       if( query == "pintix=1" ) {
+          var e=document.createElement('script');e.setAttribute('type','text/javascript');e.setAttribute('charset','UTF-8');e.setAttribute('src','http://static.typepad.com/.shared:v6bc83ba:typepad:en_us//js/pinmarklet.js?r='+Math.random()*99999999);document.body.appendChild(e);
+       }
+   });
+</script>
+<script type="text/javascript">
+    window.ZemantaBlogSettings = "";
+    window.ZemantaPostSettings = "";
+</script>
+<script type="text/javascript" src="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/recommend.js"></script>
+<input name="zemanta-related" val="" type="hidden">
+<!-- entry -->
+
+	<h2 class="date-header">01/30/2013</h2>
+
+
+<div class="entry-category-augusto_goncalves entry-category-autocad entry-category-objectarx entry-author-augusto_goncalves entry-type-post entry" id="entry-6a0167607c2431970b017d4099ad94970c">
+   <div class="entry-inner">
+			<h3 class="entry-header">Select the edge of a nested solid</h3>
+	
+
+
+
+	<div class="entry-content">
+		<div class="entry-body">
+			<p>By <a href="http://adndevblog.typepad.com/autocad/augusto-goncalves.html">Augusto Goncalves</a></p>  <p>The answer to this question is a combination of two requirements:    <br>1. Selecting a subentity     <br>2. Selecting a nested entity</p>  <p><u><strong>1. Selecting a subentity</strong></u></p>  <p>First we should clarify what a subentity is:    <br>A
+ subentity is a pseudo entity which is a logical part of a real entity. 
+In our sample drawing the solid is the real entity (AcDb3dSolid) and the
+ edge is the pseudo entity (there is no AcDbEdge class). In AutoCAD we 
+rely on IDs called GS (short for graphics system) markers to get to 
+these subentities.</p>  <p>The ObjectARX help file contains a small 
+piece of sample code showing how to highlight one of a solid's internal 
+edges. Unfortunately, it does not work in shaded mode - the face will 
+always be selected - and it will not find the subentity in the case of a
+ nested entity.</p>  <p><u><strong>2. Selecting a nested entity</strong></u></p>  <p>Again, let's start by defining things:</p>  <p>For
+ the purposes of this article, we are defining a nested entity as an 
+entity that is placed inside a block (AcDbBlockTableRecord) other than 
+one of the internal layout blocks (e.g. Model Space).</p>  <p>We can use
+ a standard function such as acedNEntSelP() to select a nested entity, 
+which gives back the bottommost selected entity and all its nesting 
+entities - you can find information about it in the ObjectARX help file.
+ But what about the GS markers we need?</p>  <p><strong><u>3. The two combined</u></strong></p>  <p>We
+ really need a function that can select the bottommost nested entity and
+ also gives back the correct GS marker of the subentity.</p>  <p>Fortunately,
+ there is such a function, the undocumented brother of acedNEntSelP(). 
+It does exactly what we need and is called acedNEntSelPEx(). It gives 
+back the correct GS marker (even in shaded mode), provides the list of 
+nesting entities and gives back the selected bottommost nested entity. 
+Not only does it select edges and return the GS marker as we have seen, 
+it also picks through spaces. e.g. say you are in paper space with no 
+model space selected, from that mode you can use this function to select
+ an entity in model space.</p>  <p>In the attached drawing we have the following structure:</p>  <p>SolidBlock2 -&gt; SolidBlock -&gt; Solid</p>  <p>(SolidBlock2 contains a reference to SolidBlock, which contains the Solid entity).</p>  <p>When
+ using acedNEntSelPEx() (or acedNEntSelP), we will get back a result 
+buffer that contains the selected entity's nesting entities in the same 
+order as getSubentPathsAtGsMarker() needs them - starting from the 
+directly nesting entity going upwards until we reach the top-most 
+nesting entity that contains all the others. In case where we select the
+ solid in SolidBlock2 in our sample drawing, the path is:</p>  <ol>   <li>SolidBlock reference </li>    <li>SolidBlock2 reference [which contains SolidBlock] </li> </ol>  <p>Now we just have to create an array filled with the above entities in the same order, but starting with the solid entity itself:</p>  <ol>   <li>Solid entity </li>    <li>SolidBlock reference </li>    <li>SolidBlock2 reference </li> </ol>  <p>We
+ call the getSubentPathsAtGsMarker() function of the topmost nesting 
+entity (SolidBlock2 reference) with the GS marker and the array we just 
+created. From this we get the correct subentity path that we need to 
+highlight the subentity.</p>  <p>The following highlightTest sample 
+function demonstrate it. This is based on the help file code under 
+"HelpfileSelect" command help topic.</p>  <div style="font-family: ; background: white">   <div style="font-family: ; background: white">     <p style="margin: 0px"><span><font face="Courier New"><font style="font-size: 8pt" color="#008000">// declare this undocumented function on your header files</font></font></span><font face="Courier New"><span><font color="#0000ff"><font style="font-size: 8pt">                <br><span><font face="Courier New"><font style="font-size: 8pt" color="#008000">// more information <a href="http://adndevblog.typepad.com/autocad/2012/12/selecting-objects-from-paperspace-into-modelspace-without-pre-selecting-a-viewport-using-objectarx.html">here</a></font></font></span>                <br>extern</font></font></span><font style="font-size: 8pt"><font color="#000000"> </font><span><font color="#0000ff">int</font></span><font color="#000000"> acedNEntSelPEx(</font><span><font color="#0000ff">const</font></span><font color="#000000"> TCHAR *str, ads_name entres, </font></font></font></p>   </div>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ads_point ptres, </font></font><font style="font-size: 8pt"><span><font color="#0000ff">int</font></span><font color="#000000"> pickflag,</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ads_matrix xformres,</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">struct</font></span><font color="#000000"> resbuf **refstkres,</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">unsigned</font></span><font color="#000000"> </font><span><font color="#0000ff">int</font></span><font color="#000000"> uTransSpaceFlag,</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">int</font></span><font color="#000000">* gsmarker);</font></font></font></p>    <p style="margin: 0px"><font color="#000000" face="Courier New"></font></p>    <p style="margin: 0px"><font color="#000000" face="Courier New"></font></p>    <div style="font-family: ; background: white">     <p style="margin: 0px"><span><font face="Courier New"><font style="font-size: 8pt" color="#008000">// call this function from a custom command              <br></font></font></span><font face="Courier New"><span><font color="#0000ff"><font style="font-size: 8pt">static</font></font></span><font style="font-size: 8pt"><font color="#000000"> </font></font><span><font style="font-size: 8pt" color="#0000ff">void </font></span></font><font face="Courier New"><font style="font-size: 8pt" color="#000000">highlightTest()            <br></font></font><font face="Courier New"><font style="font-size: 8pt" color="#000000">{</font></font></p>   </div> </div>  <div style="font-family: ; background: white">   <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; AcDbObjectId objId;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; AcGePoint3d pt3d;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">int</font></span><font color="#000000"> marker;</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; ads_matrix mx;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// contains the nesting blockreferences</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; resbuf* rbChain = NULL; </font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">if</font></span><font color="#000000"> (getObjectAndGsMarker(objId, pt3d, mx, rbChain, marker)</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; != Acad::eOk)</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">return</font></span><font color="#000000">;</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; highlightEdge(objId, pt3d, mx, rbChain, marker);</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; ads_free(rbChain);</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">}</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><span><font color="#0000ff"><font style="font-size: 8pt">static</font></font></span><font style="font-size: 8pt" color="#000000"> Acad::ErrorStatus</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; getObjectAndGsMarker(</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; AcDbObjectId&amp; objId,</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; AcGePoint3d&amp; pt3d,</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; ads_matrix&amp; mx,</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; resbuf*&amp; rbChain,</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">int</font></span><font color="#000000">&amp; marker)</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">{</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; ads_name ename;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; ads_point pt;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">unsigned</font></span><font color="#000000"> </font><span><font color="#0000ff">int</font></span><font color="#000000"> uTransSpaceFlag = 1;</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// set uTransSpaceFlag to 0, if the current layout</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// is in model space</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">struct</font></span><font color="#000000"> resbuf rb;</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; acedGetVar(L</font></font><font style="font-size: 8pt"><span><font color="#a31515">"CVPORT"</font></span><font color="#000000">, &amp;rb);</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">if</font></span><font color="#000000"> (rb.resval.rint != 1)</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; uTransSpaceFlag = 0; </font></font><span><font style="font-size: 8pt" color="#008000">// Model space</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// this function will give back the marker that</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// is needed for subentity selection and the </font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// nesting entities of the selected entity</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">if</font></span><font color="#000000"> (acedNEntSelPEx(L</font><span><font color="#a31515">"\nPick edge : "</font></span><font color="#000000">, ename,</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; pt, NULL, mx, &amp;rbChain, uTransSpaceFlag,</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; &amp;marker) != RTNORM) {</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; acutPrintf(L</font></font><font style="font-size: 8pt"><span><font color="#a31515">"\nacedNEntSelPEx has failed"</font></span><font color="#000000">);</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">return</font></span><font color="#000000"> Acad::eInvalidAdsName;</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; }</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; pt3d.x = pt[0];</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; pt3d.y = pt[1];</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; pt3d.z = pt[2];</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; acdbGetObjectId(objId, ename);</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">return</font></span><font color="#000000"> Acad::eOk;</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">}</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><span><font color="#0000ff"><font style="font-size: 8pt">static</font></font></span><font style="font-size: 8pt"><font color="#000000"> </font><span><font color="#0000ff">void</font></span><font color="#000000"> highlightEdge(</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">const</font></span><font color="#000000"> AcDbObjectId&amp; objId,</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; AcGePoint3d&amp; pt3d,</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; ads_matrix&amp; mx,</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; resbuf*&amp; rbChain,</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">const</font></span><font color="#000000"> </font><span><font color="#0000ff">int</font></span><font color="#000000"> marker)</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">{</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// the solid object</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; AcDbEntity *pSolid = NULL; </font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// topmost blockreference - if there is one</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; AcDbEntity* pTMBlockRef = NULL; </font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// it's either the solid or the block reference that contains it</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; AcDbEntity* pEntHighlight = NULL; </font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// open the solid</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; acdbOpenAcDbEntity(pSolid, objId, AcDb::kForRead);</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// Get the subentity ID for the edge that is picked</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">//</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; AcGeMatrix3d xform;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">int</font></span><font color="#000000"> numIds;</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; AcDbFullSubentPath* subentIds;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; xform.setCoordSystem(</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; (</font></font><font style="font-size: 8pt"><span><font color="#0000ff">const</font></span><font color="#000000"> AcGePoint3d&amp;)AcGePoint3d(mx[0][0], mx[0][1], mx[0][2]), </font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; (</font></font><font style="font-size: 8pt"><span><font color="#0000ff">const</font></span><font color="#000000"> AcGeVector3d&amp;)AcGeVector3d(mx[1][0], mx[1][1], mx[1][2]), </font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; (</font></font><font style="font-size: 8pt"><span><font color="#0000ff">const</font></span><font color="#000000"> AcGeVector3d&amp;)AcGeVector3d(mx[2][0], mx[2][1], mx[2][2]), </font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; (</font></font><font style="font-size: 8pt"><span><font color="#0000ff">const</font></span><font color="#000000"> AcGeVector3d&amp;)AcGeVector3d(mx[3][0], mx[3][1], mx[3][2]));</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// count containing block references </font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">int</font></span><font color="#000000"> numInserts = 0;</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// should be one less than the total number of</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// entries in entAndInsertStack&nbsp; because the first </font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// entry is the entity itself, which is not a BlockReference</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">for</font></span><font color="#000000"> (resbuf* currentInsert = rbChain; currentInsert != NULL;</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; currentInsert = currentInsert-&gt;rbnext)</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; numInserts++;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; Acad::ErrorStatus err;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// it is inside a block </font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">if</font></span><font color="#000000"> (numInserts &gt; 0)</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; {</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// create an array</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; AcDbObjectId* Inserts = </font></font><font style="font-size: 8pt"><span><font color="#0000ff">new</font></span><font color="#000000"> AcDbObjectId[numInserts + 1];</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; Inserts[0] = objId;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// we need to fill up the list going from the direct block</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// reference that contains the solid </font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// to the topmost block reference</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">int</font></span><font color="#000000"> currNumber = 1;</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">for</font></span><font color="#000000"> (resbuf* current = rbChain;</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; current != NULL;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; current = current-&gt;rbnext, currNumber++)</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; acdbGetObjectId(Inserts[currNumber],</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; current-&gt;resval.rlname);;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// get topmost blockreference</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; acdbOpenAcDbEntity(pTMBlockRef, Inserts[numInserts],</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AcDb::kForRead);</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// xform and pt3d are not used in case of AcDb3dSolid</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; AcGePoint3d point;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; AcGeMatrix3d matrix;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; err = pTMBlockRef-&gt;getSubentPathsAtGsMarker</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (AcDb::kEdgeSubentType,</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; marker, point, matrix, </font></font><font style="font-size: 8pt"><span><font color="#008000">/*pt3d, xform, */</font></span><font color="#000000">numIds, subentIds,</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; numInserts, Inserts);</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// as an extra check let's highlight the topmost</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// blockreference as well</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; pEntHighlight = pTMBlockRef;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; }</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#0000ff">else</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; {</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// xform and pt3d are not used in case of AcDb3dSolid</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; err = pSolid-&gt;getSubentPathsAtGsMarker(AcDb::kEdgeSubentType,</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; marker, pt3d, xform, numIds, subentIds);</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; pEntHighlight = pSolid;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; }</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// At this point the subentId's variable contains the</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// address of an array of AcDbFullSubentPath objects.</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// The array should be one element long, so the picked</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// edge's AcDbFullSubentPath is in subentIds[0].</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">//</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// For objects with no edges (such as a sphere), the</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// code to highlight an edge is meaningless and must</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// be skipped.</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">//</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">if</font></span><font color="#000000"> (numIds &gt; 0) </font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; {</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; ACHAR dummy[133]; </font></font><span><font style="font-size: 8pt" color="#008000">// space for acedGetString pauses below</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// Highlights the edge on the solid in the right block</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; pEntHighlight-&gt;highlight(subentIds[0]); </font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// Pause to let user see the effect.</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; acedGetString(0, </font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _T(</font></font><font style="font-size: 8pt"><span><font color="#a31515">"\nEdge is highlighted. Press &lt;RETURN&gt; to continue..."</font></span><font color="#000000">),</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dummy);</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; pEntHighlight-&gt;unhighlight(subentIds[0]);</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// highlights the entire block reference</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// - if the solid is inside one</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; pEntHighlight-&gt;highlight(); </font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// Pause to let user see the effect.</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; acedGetString(0, </font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _T(</font></font><font style="font-size: 8pt"><span><font color="#a31515">"\nTopmost nesting block reference is highlighted. Press &lt;RETURN&gt; to continue..."</font></span><font color="#000000">),</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dummy);</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; pEntHighlight-&gt;unhighlight();</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; }</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// delete temporary array</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">delete</font></span><font color="#000000"> []subentIds;</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// close opened entities</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; pSolid-&gt;close();</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">if</font></span><font color="#000000"> (pTMBlockRef)</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; pTMBlockRef-&gt;close();</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">}</font></font></p> </div>
+		</div>
+		
+
+                        <!-- SIGNATURE -->
+                        
+
+		
+	</div>
+
+	<div class="entry-footer">
+			<p class="entry-footer-info">
+				<span class="post-footers">Posted at 05:22 AM in <a href="http://adndevblog.typepad.com/autocad/augusto-goncalves/">Augusto Goncalves</a>, <a href="http://adndevblog.typepad.com/autocad/autocad/">AutoCAD</a>, <a href="http://adndevblog.typepad.com/autocad/objectarx/">ObjectARX</a> </span> <span class="separator">|</span> <a class="permalink" href="http://adndevblog.typepad.com/autocad/2013/01/select-the-edge-of-a-nested-solid.html">Permalink</a>
+			</p>
+		
+		<!-- technorati tags -->
+
+    
+
+
+		<!-- post footer links -->
+	<p class="entry-footer-share entry-footer-share-buttons">
+		<span class="entry-footer-links-reblog"><a href="#" class="share-link share-link-reblog" title="Grab this post for your own blog" onclick="b=document.body; TYPEPAD___bookmarklet_domain='http://www.typepad.com/'; TYPEPAD___reblog_entryxid='6a0167607c2431970b017d4099ad94970c'; TYPEPAD___is_reblog = 1; if (b &amp;&amp; !document.xmlVersion) { void ( z=document.createElement('script')); void(z.type='text/javascript'); void(z.src='http://static.typepad.com/.shared:v6bc83ba:typepad:en_us/js/qp/loader-combined-min.js'); void(b.appendChild(z));}else{}">Reblog
+ (0)
+</a>
+</span>
+	</p>
+
+
+	</div>
+   </div>
+</div>
+
+
+
+        
+        
+        <a id="comments"></a>
+        <div id="tpc-comments">
+        <h3 class="comments-header">Comments</h3>
+<div class="comments-content">
+        <div id="tpc_thread"><div id="tpe-content"><div id="comments-loading" class="hiddenBox"></div><div id="tpe-comments-content">
+
+    <a id="c6a0167607c2431970b01b8d1664e6c970c"></a>
+    <div class="comment font-entrybody comment-has-avatar first" id="comment-6a0167607c2431970b01b8d1664e6c970c">
+
+
+            
+            <div class="comment-avatar">
+                    <img id="comment-6a0167607c2431970b01b8d1664e6c970c-avatarimg" src="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/06-50si.gif" tpc:flyout-type="blogside-invite" width="50" height="50">
+            </div>
+        
+        <div class="comment-data">
+            <div class="comment-header" id="comment-6a0167607c2431970b01b8d1664e6c970c-header">
+                <span id="comment-header-6a0167607c2431970b01b8d1664e6c970c-left">
+                    Abhay Joshi said...
+                
+                </span>
+            </div>
+            <div class="comment-content">
+                <span id="comment-6a0167607c2431970b01b8d1664e6c970c-content">                        <p>I am getting linking error for 64 bit (AutoCAD 2014). Do I need to change something?</p>                </span>
+            </div>
+            <div class="clr"></div>
+            <div class="comment-footer" id="comment-6a0167607c2431970b01b8d1664e6c970c-footer">
+                
+                <span id="comment-6a0167607c2431970b01b8d1664e6c970c-footerlinks" class="comment-footerlinks">
+                    <a href="javascript:void%200" id="comment-6a0167607c2431970b01b8d1664e6c970c-reply" class="command-reply-comment" onclick="TPConnect.blogside.reply('6a0167607c2431970b01b8d1664e6c970c'); return false;">Reply</a>
+
+                </span>
+                
+                <span class="comment-datetime">
+                    <a rel="nofollow" href="http://adndevblog.typepad.com/autocad/2013/01/select-the-edge-of-a-nested-solid.html#comment-6a0167607c2431970b01b8d1664e6c970c"><span id="comment-6a0167607c2431970b01b8d1664e6c970c-datetime">10/11/2015 at 11:31 PM</span></a>
+                </span>
+            </div>
+        </div>
+        <div class="clr"></div>
+	</div>
+
+
+
+    <a id="c6a0167607c2431970b01bb0880fb6f970d"></a>
+    <div class="comment font-entrybody comment-has-avatar comment-reply-1" id="comment-6a0167607c2431970b01bb0880fb6f970d">
+
+
+            
+            <div class="comment-avatar">
+                    <img id="comment-6a0167607c2431970b01bb0880fb6f970d-avatarimg" src="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/6a0168e7e7c9dd970c016765984082970b-50si.jpg" onmouseover="TPConnect.blogside.prepFlyout('6a0167607c2431970b01bb0880fb6f970d');" tpc:userxid="6p0168e7e7c9dd970c" tpc:flyout-type="blogside-invite" width="50" height="50">
+            </div>
+        
+        <div class="comment-data">
+            <div class="comment-header" id="comment-6a0167607c2431970b01bb0880fb6f970d-header">
+                <span id="comment-header-6a0167607c2431970b01bb0880fb6f970d-left">
+                    <a rel="nofollow" target="_blank" title="http://profile.typepad.com/6p0168e7e7c9dd970c" href="http://profile.typepad.com/6p0168e7e7c9dd970c">Augusto Goncalves</a> said in reply to Abhay Joshi...
+                
+                </span>
+            </div>
+            <div class="comment-content">
+                <span id="comment-6a0167607c2431970b01bb0880fb6f970d-content">                        <p>Abhay,</p>
+
+<p>I don't believe this is related to the code, but most likely to your 
+project settings. Did you use the project template/wizard? What's the 
+error message?</p>
+
+<p>Regards,<br>
+Augusto Goncalves</p>                </span>
+            </div>
+            <div class="clr"></div>
+            <div class="comment-footer" id="comment-6a0167607c2431970b01bb0880fb6f970d-footer">
+                
+                <span id="comment-6a0167607c2431970b01bb0880fb6f970d-footerlinks" class="comment-footerlinks">
+                    <a href="javascript:void%200" id="comment-6a0167607c2431970b01bb0880fb6f970d-reply" class="command-reply-comment" onclick="TPConnect.blogside.reply('6a0167607c2431970b01bb0880fb6f970d'); return false;">Reply</a>
+
+                </span>
+                
+                <span class="comment-datetime">
+                    <a rel="nofollow" href="http://adndevblog.typepad.com/autocad/2013/01/select-the-edge-of-a-nested-solid.html#comment-6a0167607c2431970b01bb0880fb6f970d"><span id="comment-6a0167607c2431970b01bb0880fb6f970d-datetime">10/13/2015 at 07:07 AM</span></a>
+                </span>
+            </div>
+        </div>
+        <div class="clr"></div>
+	</div>
+
+
+
+    <a id="c6a0167607c2431970b01b7c7dd603a970b"></a>
+    <div class="comment font-entrybody comment-has-avatar comment-reply-1 last" id="comment-6a0167607c2431970b01b7c7dd603a970b">
+
+
+            
+            <div class="comment-avatar">
+                    <img id="comment-6a0167607c2431970b01b7c7dd603a970b-avatarimg" src="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/06-50si.gif" tpc:flyout-type="blogside-invite" width="50" height="50">
+            </div>
+        
+        <div class="comment-data">
+            <div class="comment-header" id="comment-6a0167607c2431970b01b7c7dd603a970b-header">
+                <span id="comment-header-6a0167607c2431970b01b7c7dd603a970b-left">
+                    Abhay Joshi said in reply to <a rel="nofollow" target="_blank" title="http://profile.typepad.com/6p0168e7e7c9dd970c" href="http://profile.typepad.com/6p0168e7e7c9dd970c">Augusto Goncalves</a>...
+                
+                </span>
+            </div>
+            <div class="comment-content">
+                <span id="comment-6a0167607c2431970b01b7c7dd603a970b-content">                        <p>It was my mistake. problem was for last parameter, integer pointer. I used below signature to work with 32 and 64 bit.</p>
+
+<pre>extern int acedNEntSelPEx(const ACHAR *str, ads_name entres,
+                           ads_point ptres, int pickflag,
+                           ads_matrix xformres,
+                           struct resbuf **refstkres,
+                           unsigned int uTransSpaceFlag,
+                           intptr_t* gsmarker);
+</pre>
+                </span>
+            </div>
+            <div class="clr"></div>
+            <div class="comment-footer" id="comment-6a0167607c2431970b01b7c7dd603a970b-footer">
+                
+                <span id="comment-6a0167607c2431970b01b7c7dd603a970b-footerlinks" class="comment-footerlinks">
+                    <a href="javascript:void%200" id="comment-6a0167607c2431970b01b7c7dd603a970b-reply" class="command-reply-comment" onclick="TPConnect.blogside.reply('6a0167607c2431970b01b7c7dd603a970b'); return false;">Reply</a>
+
+                </span>
+                
+                <span class="comment-datetime">
+                    <a rel="nofollow" href="http://adndevblog.typepad.com/autocad/2013/01/select-the-edge-of-a-nested-solid.html#comment-6a0167607c2431970b01b7c7dd603a970b"><span id="comment-6a0167607c2431970b01b7c7dd603a970b-datetime">10/14/2015 at 12:06 AM</span></a>
+                </span>
+            </div>
+        </div>
+        <div class="clr"></div>
+	</div>
+
+
+
+</div><div id="comments-pager" class="comments-pager hiddenBox"></div><div id="comments-signin">
+
+    
+<div class="login-list">
+    
+    <span class="first">Comment below or sign in with</span> <span class="typepad" style="background:url(http://static.typepad.com/.shared:v6bc83ba:typepad:zh_cn/images/profile/service_icons/typepad.png) top left no-repeat;padding-left:20px;"><a href="http://www.typepad.com/sitelogin?uri=http%3A%2F%2Fadndevblog.typepad.com%2Fautocad%2F2013%2F01%2Fselect-the-edge-of-a-nested-solid.html&amp;fp=2e7ade01d713e55d1afef8cb1cbf25c8&amp;view_uri=http%3A%2F%2Fprofile.typepad.com%2F&amp;via=blogside&amp;post_uri=http://adndevblog.typepad.com/autocad/2013/01/select-the-edge-of-a-nested-solid.html">Typepad</a></span> <span class="facebook" style="background:url(http://static.typepad.com/.shared:v6bc83ba:typepad:zh_cn/images/profile/service_icons/facebook.png) top left no-repeat;padding-left:20px;"><a href="http://www.typepad.com/sitelogin?uri=http%3A%2F%2Fadndevblog.typepad.com%2Fautocad%2F2013%2F01%2Fselect-the-edge-of-a-nested-solid.html&amp;fp=2e7ade01d713e55d1afef8cb1cbf25c8&amp;view_uri=http%3A%2F%2Fprofile.typepad.com%2F&amp;via=blogside&amp;service=facebook&amp;post_uri=http://adndevblog.typepad.com/autocad/2013/01/select-the-edge-of-a-nested-solid.html">Facebook</a></span> <span class="twitter" style="background:url(http://static.typepad.com/.shared:v6bc83ba:typepad:zh_cn/images/profile/service_icons/twitter.png) top left no-repeat;padding-left:20px;"><a href="http://www.typepad.com/sitelogin?uri=http%3A%2F%2Fadndevblog.typepad.com%2Fautocad%2F2013%2F01%2Fselect-the-edge-of-a-nested-solid.html&amp;fp=2e7ade01d713e55d1afef8cb1cbf25c8&amp;view_uri=http%3A%2F%2Fprofile.typepad.com%2F&amp;via=blogside&amp;service=twitter&amp;post_uri=http://adndevblog.typepad.com/autocad/2013/01/select-the-edge-of-a-nested-solid.html">Twitter</a></span> <span class="googleplus" style="background:url(http://static.typepad.com/.shared:v6bc83ba:typepad:zh_cn/images/profile/service_icons/googleplus.png) top left no-repeat;padding-left:20px;"><a href="http://www.typepad.com/sitelogin?uri=http%3A%2F%2Fadndevblog.typepad.com%2Fautocad%2F2013%2F01%2Fselect-the-edge-of-a-nested-solid.html&amp;fp=2e7ade01d713e55d1afef8cb1cbf25c8&amp;view_uri=http%3A%2F%2Fprofile.typepad.com%2F&amp;via=blogside&amp;service=gplus&amp;post_uri=http://adndevblog.typepad.com/autocad/2013/01/select-the-edge-of-a-nested-solid.html">Google+</a></span>   <span>and <a href="http://www.typepad.com/sitelogin?uri=http%3A%2F%2Fadndevblog.typepad.com%2Fautocad%2F2013%2F01%2Fselect-the-edge-of-a-nested-solid.html&amp;fp=2e7ade01d713e55d1afef8cb1cbf25c8&amp;view_uri=http%3A%2F%2Fprofile.typepad.com%2F&amp;via=blogside&amp;service=openid&amp;post_uri=http://adndevblog.typepad.com/autocad/2013/01/select-the-edge-of-a-nested-solid.html">more...</a></span>
+    
+</div>
+    
+
+</div><div id="comments-flyout"><iframe id="tpc-flyout" class="tpc-flyout hiddenBox" scrolling="no" frameborder="0"></iframe></div><div id="comments-post"><iframe id="comments-post-iframe" class="comments-post-iframe" scrolling="no" allowtransparency="true" src="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/post_comment.htm" width="770" height="440" frameborder="0"></iframe></div><div id="comments-action"><iframe id="action-iframe" width="0" height="0" frameborder="0"></iframe></div><div><a href="http://www.typepad.com/"><img style="margin-bottom:20px;border:none;" src="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/tp-powered-badge.png" alt="powered by Typepad"></a></div><script type="text/javascript" src="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/yahoo-dom-event.js"></script><script type="text/javascript" src="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/thread.js"></script></div></div>
+        <div style="display:none;" id="tpc_post_title">Select the edge of a nested solid</div>
+        <div style="display:none;" id="tpc_post_message"><p>By <a href="http://adndevblog.typepad.com/autocad/augusto-goncalves.html">Augusto Goncalves</a></p>  <p>The answer to this question is a combination of two requirements:    <br>1. Selecting a subentity     <br>2. Selecting a nested entity</p>  <p><u><strong>1. Selecting a subentity</strong></u></p>  <p>First we should clarify what a subentity is:    <br>A
+ subentity is a pseudo entity which is a logical part of a real entity. 
+In our sample drawing the solid is the real entity (AcDb3dSolid) and the
+ edge is the pseudo entity (there is no AcDbEdge class). In AutoCAD we 
+rely on IDs called GS (short for graphics system) markers to get to 
+these subentities.</p>  <p>The ObjectARX help file contains a small 
+piece of sample code showing how to highlight one of a solid's internal 
+edges. Unfortunately, it does not work in shaded mode - the face will 
+always be selected - and it will not find the subentity in the case of a
+ nested entity.</p>  <p><u><strong>2. Selecting a nested entity</strong></u></p>  <p>Again, let's start by defining things:</p>  <p>For
+ the purposes of this article, we are defining a nested entity as an 
+entity that is placed inside a block (AcDbBlockTableRecord) other than 
+one of the internal layout blocks (e.g. Model Space).</p>  <p>We can use
+ a standard function such as acedNEntSelP() to select a nested entity, 
+which gives back the bottommost selected entity and all its nesting 
+entities - you can find information about it in the ObjectARX help file.
+ But what about the GS markers we need?</p>  <p><strong><u>3. The two combined</u></strong></p>  <p>We
+ really need a function that can select the bottommost nested entity and
+ also gives back the correct GS marker of the subentity.</p>  <p>Fortunately,
+ there is such a function, the undocumented brother of acedNEntSelP(). 
+It does exactly what we need and is called acedNEntSelPEx(). It gives 
+back the correct GS marker (even in shaded mode), provides the list of 
+nesting entities and gives back the selected bottommost nested entity. 
+Not only does it select edges and return the GS marker as we have seen, 
+it also picks through spaces. e.g. say you are in paper space with no 
+model space selected, from that mode you can use this function to select
+ an entity in model space.</p>  <p>In the attached drawing we have the following structure:</p>  <p>SolidBlock2 -&gt; SolidBlock -&gt; Solid</p>  <p>(SolidBlock2 contains a reference to SolidBlock, which contains the Solid entity).</p>  <p>When
+ using acedNEntSelPEx() (or acedNEntSelP), we will get back a result 
+buffer that contains the selected entity's nesting entities in the same 
+order as getSubentPathsAtGsMarker() needs them - starting from the 
+directly nesting entity going upwards until we reach the top-most 
+nesting entity that contains all the others. In case where we select the
+ solid in SolidBlock2 in our sample drawing, the path is:</p>  <ol>   <li>SolidBlock reference </li>    <li>SolidBlock2 reference [which contains SolidBlock] </li> </ol>  <p>Now we just have to create an array filled with the above entities in the same order, but starting with the solid entity itself:</p>  <ol>   <li>Solid entity </li>    <li>SolidBlock reference </li>    <li>SolidBlock2 reference </li> </ol>  <p>We
+ call the getSubentPathsAtGsMarker() function of the topmost nesting 
+entity (SolidBlock2 reference) with the GS marker and the array we just 
+created. From this we get the correct subentity path that we need to 
+highlight the subentity.</p>  <p>The following highlightTest sample 
+function demonstrate it. This is based on the help file code under 
+"HelpfileSelect" command help topic.</p>  <div style="font-family: ; background: white">   <div style="font-family: ; background: white">     <p style="margin: 0px"><span><font face="Courier New"><font style="font-size: 8pt" color="#008000">// declare this undocumented function on your header files</font></font></span><font face="Courier New"><span><font color="#0000ff"><font style="font-size: 8pt">                <br><span><font face="Courier New"><font style="font-size: 8pt" color="#008000">// more information <a href="http://adndevblog.typepad.com/autocad/2012/12/selecting-objects-from-paperspace-into-modelspace-without-pre-selecting-a-viewport-using-objectarx.html">here</a></font></font></span>                <br>extern</font></font></span><font style="font-size: 8pt"><font color="#000000"> </font><span><font color="#0000ff">int</font></span><font color="#000000"> acedNEntSelPEx(</font><span><font color="#0000ff">const</font></span><font color="#000000"> TCHAR *str, ads_name entres, </font></font></font></p>   </div>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ads_point ptres, </font></font><font style="font-size: 8pt"><span><font color="#0000ff">int</font></span><font color="#000000"> pickflag,</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ads_matrix xformres,</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">struct</font></span><font color="#000000"> resbuf **refstkres,</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">unsigned</font></span><font color="#000000"> </font><span><font color="#0000ff">int</font></span><font color="#000000"> uTransSpaceFlag,</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">int</font></span><font color="#000000">* gsmarker);</font></font></font></p>    <p style="margin: 0px"><font color="#000000" face="Courier New"></font></p>    <p style="margin: 0px"><font color="#000000" face="Courier New"></font></p>    <div style="font-family: ; background: white">     <p style="margin: 0px"><span><font face="Courier New"><font style="font-size: 8pt" color="#008000">// call this function from a custom command              <br></font></font></span><font face="Courier New"><span><font color="#0000ff"><font style="font-size: 8pt">static</font></font></span><font style="font-size: 8pt"><font color="#000000"> </font></font><span><font style="font-size: 8pt" color="#0000ff">void </font></span></font><font face="Courier New"><font style="font-size: 8pt" color="#000000">highlightTest()            <br></font></font><font face="Courier New"><font style="font-size: 8pt" color="#000000">{</font></font></p>   </div> </div>  <div style="font-family: ; background: white">   <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; AcDbObjectId objId;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; AcGePoint3d pt3d;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">int</font></span><font color="#000000"> marker;</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; ads_matrix mx;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// contains the nesting blockreferences</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; resbuf* rbChain = NULL; </font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">if</font></span><font color="#000000"> (getObjectAndGsMarker(objId, pt3d, mx, rbChain, marker)</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; != Acad::eOk)</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">return</font></span><font color="#000000">;</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; highlightEdge(objId, pt3d, mx, rbChain, marker);</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; ads_free(rbChain);</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">}</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><span><font color="#0000ff"><font style="font-size: 8pt">static</font></font></span><font style="font-size: 8pt" color="#000000"> Acad::ErrorStatus</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; getObjectAndGsMarker(</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; AcDbObjectId&amp; objId,</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; AcGePoint3d&amp; pt3d,</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; ads_matrix&amp; mx,</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; resbuf*&amp; rbChain,</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">int</font></span><font color="#000000">&amp; marker)</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">{</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; ads_name ename;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; ads_point pt;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">unsigned</font></span><font color="#000000"> </font><span><font color="#0000ff">int</font></span><font color="#000000"> uTransSpaceFlag = 1;</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// set uTransSpaceFlag to 0, if the current layout</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// is in model space</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">struct</font></span><font color="#000000"> resbuf rb;</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; acedGetVar(L</font></font><font style="font-size: 8pt"><span><font color="#a31515">"CVPORT"</font></span><font color="#000000">, &amp;rb);</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">if</font></span><font color="#000000"> (rb.resval.rint != 1)</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; uTransSpaceFlag = 0; </font></font><span><font style="font-size: 8pt" color="#008000">// Model space</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// this function will give back the marker that</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// is needed for subentity selection and the </font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// nesting entities of the selected entity</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">if</font></span><font color="#000000"> (acedNEntSelPEx(L</font><span><font color="#a31515">"\nPick edge : "</font></span><font color="#000000">, ename,</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; pt, NULL, mx, &amp;rbChain, uTransSpaceFlag,</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; &amp;marker) != RTNORM) {</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; acutPrintf(L</font></font><font style="font-size: 8pt"><span><font color="#a31515">"\nacedNEntSelPEx has failed"</font></span><font color="#000000">);</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">return</font></span><font color="#000000"> Acad::eInvalidAdsName;</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; }</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; pt3d.x = pt[0];</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; pt3d.y = pt[1];</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; pt3d.z = pt[2];</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; acdbGetObjectId(objId, ename);</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">return</font></span><font color="#000000"> Acad::eOk;</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">}</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><span><font color="#0000ff"><font style="font-size: 8pt">static</font></font></span><font style="font-size: 8pt"><font color="#000000"> </font><span><font color="#0000ff">void</font></span><font color="#000000"> highlightEdge(</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">const</font></span><font color="#000000"> AcDbObjectId&amp; objId,</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; AcGePoint3d&amp; pt3d,</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; ads_matrix&amp; mx,</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; resbuf*&amp; rbChain,</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">const</font></span><font color="#000000"> </font><span><font color="#0000ff">int</font></span><font color="#000000"> marker)</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">{</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// the solid object</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; AcDbEntity *pSolid = NULL; </font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// topmost blockreference - if there is one</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; AcDbEntity* pTMBlockRef = NULL; </font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// it's either the solid or the block reference that contains it</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; AcDbEntity* pEntHighlight = NULL; </font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// open the solid</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; acdbOpenAcDbEntity(pSolid, objId, AcDb::kForRead);</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// Get the subentity ID for the edge that is picked</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">//</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; AcGeMatrix3d xform;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">int</font></span><font color="#000000"> numIds;</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; AcDbFullSubentPath* subentIds;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; xform.setCoordSystem(</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; (</font></font><font style="font-size: 8pt"><span><font color="#0000ff">const</font></span><font color="#000000"> AcGePoint3d&amp;)AcGePoint3d(mx[0][0], mx[0][1], mx[0][2]), </font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; (</font></font><font style="font-size: 8pt"><span><font color="#0000ff">const</font></span><font color="#000000"> AcGeVector3d&amp;)AcGeVector3d(mx[1][0], mx[1][1], mx[1][2]), </font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; (</font></font><font style="font-size: 8pt"><span><font color="#0000ff">const</font></span><font color="#000000"> AcGeVector3d&amp;)AcGeVector3d(mx[2][0], mx[2][1], mx[2][2]), </font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; (</font></font><font style="font-size: 8pt"><span><font color="#0000ff">const</font></span><font color="#000000"> AcGeVector3d&amp;)AcGeVector3d(mx[3][0], mx[3][1], mx[3][2]));</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// count containing block references </font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">int</font></span><font color="#000000"> numInserts = 0;</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// should be one less than the total number of</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// entries in entAndInsertStack&nbsp; because the first </font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// entry is the entity itself, which is not a BlockReference</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">for</font></span><font color="#000000"> (resbuf* currentInsert = rbChain; currentInsert != NULL;</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; currentInsert = currentInsert-&gt;rbnext)</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; numInserts++;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; Acad::ErrorStatus err;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// it is inside a block </font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">if</font></span><font color="#000000"> (numInserts &gt; 0)</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; {</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// create an array</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; AcDbObjectId* Inserts = </font></font><font style="font-size: 8pt"><span><font color="#0000ff">new</font></span><font color="#000000"> AcDbObjectId[numInserts + 1];</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; Inserts[0] = objId;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// we need to fill up the list going from the direct block</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// reference that contains the solid </font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// to the topmost block reference</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">int</font></span><font color="#000000"> currNumber = 1;</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">for</font></span><font color="#000000"> (resbuf* current = rbChain;</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; current != NULL;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; current = current-&gt;rbnext, currNumber++)</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; acdbGetObjectId(Inserts[currNumber],</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; current-&gt;resval.rlname);;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// get topmost blockreference</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; acdbOpenAcDbEntity(pTMBlockRef, Inserts[numInserts],</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; AcDb::kForRead);</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// xform and pt3d are not used in case of AcDb3dSolid</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; AcGePoint3d point;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; AcGeMatrix3d matrix;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; err = pTMBlockRef-&gt;getSubentPathsAtGsMarker</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (AcDb::kEdgeSubentType,</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; marker, point, matrix, </font></font><font style="font-size: 8pt"><span><font color="#008000">/*pt3d, xform, */</font></span><font color="#000000">numIds, subentIds,</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; numInserts, Inserts);</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// as an extra check let's highlight the topmost</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// blockreference as well</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; pEntHighlight = pTMBlockRef;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; }</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#0000ff">else</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; {</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// xform and pt3d are not used in case of AcDb3dSolid</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; err = pSolid-&gt;getSubentPathsAtGsMarker(AcDb::kEdgeSubentType,</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; marker, pt3d, xform, numIds, subentIds);</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; pEntHighlight = pSolid;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; }</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// At this point the subentId's variable contains the</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// address of an array of AcDbFullSubentPath objects.</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// The array should be one element long, so the picked</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// edge's AcDbFullSubentPath is in subentIds[0].</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">//</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// For objects with no edges (such as a sphere), the</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// code to highlight an edge is meaningless and must</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// be skipped.</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">//</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">if</font></span><font color="#000000"> (numIds &gt; 0) </font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; {</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; ACHAR dummy[133]; </font></font><span><font style="font-size: 8pt" color="#008000">// space for acedGetString pauses below</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// Highlights the edge on the solid in the right block</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; pEntHighlight-&gt;highlight(subentIds[0]); </font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// Pause to let user see the effect.</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; acedGetString(0, </font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _T(</font></font><font style="font-size: 8pt"><span><font color="#a31515">"\nEdge is highlighted. Press &lt;RETURN&gt; to continue..."</font></span><font color="#000000">),</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dummy);</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; pEntHighlight-&gt;unhighlight(subentIds[0]);</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// highlights the entire block reference</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// - if the solid is inside one</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; pEntHighlight-&gt;highlight(); </font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// Pause to let user see the effect.</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; acedGetString(0, </font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _T(</font></font><font style="font-size: 8pt"><span><font color="#a31515">"\nTopmost nesting block reference is highlighted. Press &lt;RETURN&gt; to continue..."</font></span><font color="#000000">),</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dummy);</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; pEntHighlight-&gt;unhighlight();</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; }</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// delete temporary array</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">delete</font></span><font color="#000000"> []subentIds;</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><span><font style="font-size: 8pt" color="#008000">// close opened entities</font></span></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp; pSolid-&gt;close();</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font color="#000000"><font style="font-size: 8pt">&nbsp; </font></font><font style="font-size: 8pt"><span><font color="#0000ff">if</font></span><font color="#000000"> (pTMBlockRef)</font></font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">&nbsp;&nbsp;&nbsp; pTMBlockRef-&gt;close();</font></font></p>    <p style="margin: 0px"><font face="Courier New"><font style="font-size: 8pt" color="#000000">}</font></font></p> </div></div>
+        <script type="text/javascript">
+            var TPConnect = {};
+                TPConnect.tpc_url = 'http://adndevblog.typepad.com/autocad/2013/01/select-the-edge-of-a-nested-solid.html';
+                TPConnect.tpc_title = document.getElementById('tpc_post_title').innerHTML;
+                TPConnect.tpc_message = document.getElementById('tpc_post_message').innerHTML;
+        </script>
+
+        <script type="text/javascript" src="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/embed.js"></script>
+    <script type="text/javascript" src="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/blogside.js"></script>
+        <noscript><a href="?asset_id=6a0167607c2431970b017d4099ad94970c">View the entire comment thread.</a>
+	<p>Please enable JavaScript if you would like to comment on this blog.</p>
+	</noscript>
+</div>
+       </div>
+
+        
+    
+
+
+
+
+						</div>
+					</div>
+                                        <div id="beta" class="well col-xs-12 col-sm-4 col-md-4 col-lg-4">
+						<div id="beta-inner" class="pkg">
+							
+<!-- sidebar -->
+
+
+<div class="module-search module">
+    <h2 class="module-header">Search</h2>
+    <div class="module-content">
+        <form id="search-blog" method="get" action="http://adndevblog.typepad.com/.services/blog/6a0167607c2431970b0162ffdc445e970d/search" class="form-search form-inline" role="search">
+            
+<div class="form-group"><input name="filter.q" results="5" class="form-control" placeholder="Search" type="search"></div><button type="submit" value="Search" class="btn btn-default">Submit</button>
+            
+        </form>
+    </div>
+</div>
+<!-- END Blog Search Module -->
+<div class="module-custom_html module">
+    <div class="module-content">
+<script type="text/javascript">
+
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-23725031-14']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+
+</script>
+
+    </div>
+</div>
+<div id="autocad_devbloggers" class="module-typelist module">
+<h2 class="module-header">AutoCAD DevBloggers</h2>
+	<div class="module-content">
+		<ul class="module-list">
+							<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/adam-nagy.html">Adam Nagy</a></li>
+							<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/augusto-goncalves.html">Augusto Goncalves</a></li>
+							<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/balaji-ramamoorthy.html">Balaji Ramamoorthy</a></li>
+							<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/barbara-han.html">Barbara Han</a></li>
+							<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/daniel-du.html">Daniel Du</a></li>
+							<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/deepak-nadig.html" target="_blank">Deepak Nadig</a></li>
+							<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/fenton-webb.html">Fenton Webb</a></li>
+							<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/gopinath-taget.html">Gopinath Taget</a></li>
+							<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/madhukar-moogala.html">Madhukar Moogala</a></li>
+							<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/marat-mirgaleev.html">Marat Mirgaleev</a></li>
+							<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/philippe-leefsma.html">Philippe Leefsma</a></li>
+							<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/stephen-preston.html">Stephen Preston</a></li>
+							<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/virupaksha-aithal.html">Virupaksha Aithal</a></li>
+							<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/wayne-brill.html">Wayne Brill</a></li>
+							<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/xiaodong-liang.html">Xiaodong Liang</a></li>
+			
+		</ul>
+	</div>
+</div>
+
+<div class="module-calendar module">
+	<h2 class="module-header">February 2018</h2>
+	<div class="module-content table-responsive">
+		<table class="table" summary="Monthly calendar with links to each day's posts">
+                        <tbody><tr>
+                                                                 <th>Sun</th>
+                                                                 <th>Mon</th>
+                                                                 <th>Tue</th>
+                                                                 <th>Wed</th>
+                                                                 <th>Thu</th>
+                                                                 <th>Fri</th>
+                                                                 <th>Sat</th>
+                                
+                        </tr>
+                                                   <tr>
+                                        <td>&nbsp;</td>
+                                
+                                                   
+                                        <td>&nbsp;</td>
+                                
+                                                   
+                                        <td>&nbsp;</td>
+                                
+                                                   
+                                        <td>&nbsp;</td>
+                                
+                                                   
+                                        <td>1</td>
+                                
+                                                   
+                                        <td>2</td>
+                                
+                                                   
+                                        <td>3</td>
+                                </tr>
+                                                   <tr>
+                                        <td>4</td>
+                                
+                                                   
+                                        <td>5</td>
+                                
+                                                   
+                                        <td>6</td>
+                                
+                                                   
+                                        <td>7</td>
+                                
+                                                   
+                                        <td>8</td>
+                                
+                                                   
+                                        <td>9</td>
+                                
+                                                   
+                                        <td>10</td>
+                                </tr>
+                                                   <tr>
+                                        <td>11</td>
+                                
+                                                   
+                                        <td>12</td>
+                                
+                                                   
+                                        <td>13</td>
+                                
+                                                   
+                                        <td>14</td>
+                                
+                                                   
+                                        <td>15</td>
+                                
+                                                   
+                                        <td>16</td>
+                                
+                                                   
+                                        <td>17</td>
+                                </tr>
+                                                   <tr>
+                                        <td>18</td>
+                                
+                                                   
+                                        <td>19</td>
+                                
+                                                   
+                                        <td>20</td>
+                                
+                                                   
+                                        <td>21</td>
+                                
+                                                   
+                                        <td>22</td>
+                                
+                                                   
+                                        <td>23</td>
+                                
+                                                   
+                                        <td><a href="http://adndevblog.typepad.com/autocad/2018/02/create-section-object-using-vlisp.html">24</a></td>
+                                </tr>
+                                                   <tr>
+                                        <td>25</td>
+                                
+                                                   
+                                        <td>26</td>
+                                
+                                                   
+                                        <td>27</td>
+                                
+                                                   
+                                        <td>28</td>
+                                
+                                                   
+                                        <td>&nbsp;</td>
+                                
+                                                   
+                                        <td>&nbsp;</td>
+                                
+                                                   
+                                        <td>&nbsp;</td>
+                                </tr>
+                        
+		</tbody></table>
+	</div>
+</div>
+<div id="autodesk_blogs" class="module-typelist module">
+<h2 class="module-header">Autodesk Blogs</h2>
+	<div class="module-content">
+		<ul class="module-list">
+							<li class="module-list-item"><a href="http://adndevblog.typepad.com/aec">ADN DevBlog - AEC</a><br>Our DevBlog for Revit, Navisworks, AEC and BIM technology APIs.</li>
+							<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad">ADN DevBlog - AutoCAD</a><br>Our DevBlog for AutoCAD and other platform technology APIs.</li>
+							<li class="module-list-item"><a href="https://forge.autodesk.com/blog">Forge Developer Blog</a><br>Our DevBlog for Cloud and Mobile technologies with a strong emphasis on the Autodesk Forge APIs.</li>
+							<li class="module-list-item"><a href="http://adndevblog.typepad.com/infrastructure">ADN DevBlog - Infrastructure Modeling</a><br>Our DevBlog for Infrastructure Modeling technology APIs.</li>
+							<li class="module-list-item"><a href="http://adndevblog.typepad.com/manufacturing">ADN DevBlog - Manufacturing</a><br>Our DevBlog for Design, Lifecycle and Simulation technologies.</li>
+							<li class="module-list-item"><a href="http://around-the-corner.typepad.com/">Around the Corner</a><br>Cyrille Fauvel's Maya platform developer blog - Autodesk Media and Entertainment technology.</li>
+							<li class="module-list-item"><a href="http://civilizeddevelopment.typepad.com/">Civilized Development</a><br>Isaac Rodriguez's AutoCAD Civil 3D developer blog</li>
+							<li class="module-list-item"><a href="http://dances-with-elephants.typepad.com/blog/">Dances with Elephants</a><br>Jim Quanci's blog on partnering with large companies.</li>
+							<li class="module-list-item"><a href="http://justonesandzeros.typepad.com/">It's All Just Ones and Zeros</a><br>Doug Redmond's Vault developer blog</li>
+							<li class="module-list-item"><a href="http://modthemachine.typepad.com/">Mod the Machine</a><br>Brian Ekins' and Adam Nagy's Inventor developer blog</li>
+							<li class="module-list-item"><a href="http://the360view.typepad.com/blog/">The 360 View </a><br>Mikako Harada's BIM 360 developer blog</li>
+							<li class="module-list-item"><a href="http://the3dwebcoder.typepad.com/">The 3D Web Coder</a><br>Jeremy Tammik's web and mobile programming blog</li>
+							<li class="module-list-item"><a href="http://thebuildingcoder.typepad.com/">The Building Coder</a><br>Jeremy Tammik's Revit developer blog</li>
+							<li class="module-list-item"><a href="http://through-the-interface.typepad.com/">Through the Interface</a><br>Kean Walmsley's AutoCAD developer blog</li>
+							<li class="module-list-item"><a href="http://blogs.autodesk.com/">Yet more on autodesk.com ...</a><br>Central blog list on autodesk.com</li>
+			
+		</ul>
+	</div>
+</div>
+
+<div id="share" class="module-typelist module">
+<h2 class="module-header">Share</h2>
+	<div class="module-content">
+		<ul class="module-list">
+							<li class="module-list-item"><a href=""></a><br><script type="text/javascript" src="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/sharethis.js"></script><span id="sharethis_0"><a class="stbutton stico_default" title="ShareThis via email, AIM, social bookmarking and networking sites, etc." href="javascript:void(0)" st_page="home"><span class="stbuttontext" st_page="home">ShareThis</span></a></span></li>
+			
+		</ul>
+	</div>
+</div>
+
+	<div class="module-archives module">
+		<h2 class="module-header">Recent Posts</h2>
+		<div class="module-content">
+			<ul class="module-list">
+				
+									<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/2018/02/create-section-object-using-vlisp.html">Create Section Object using VLISP</a></li>
+					
+				
+									<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/2018/01/set-layer-of-sub-entities-of-custom-object.html">set layer of sub entities of custom object</a></li>
+					
+				
+									<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/2017/12/how-to-get-list-of-autocad-commands.html">How To Get List of AutoCAD Commands</a></li>
+					
+				
+									<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/2017/12/celebrating-new-milestone-3-million-apps-downloaded-from-the-app-store.html">Celebrating new milestone - 3 million apps downloaded from the App Store</a></li>
+					
+				
+									<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/2017/10/check-if-solid3d-has-valid-shape-manger-object.html">Check If SOLID3D Has Valid Shape Manger Object</a></li>
+					
+				
+									<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/2017/10/realdwg-and-civil3d-object-enabler.html">RealDWG and Civil3d Object Enabler</a></li>
+					
+				
+									<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/2017/09/adn-team-is-hiring-devtech-engineer-cnet-in-bangalore-.html">ADN team is hiring DevTech engineer (C++,NET) in Bangalore </a></li>
+					
+				
+									<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/2017/09/how-to-retrieve-ordinals-for-aec-exported-functions.html">How To Retrieve Ordinals For AEC Exported Functions</a></li>
+					
+				
+									<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/2017/09/developing-for-autodesk-desktop-software-heres-why-you-should-care-about-forge-devcon-and-autodesk-u.html">Developing for Autodesk desktop software? Here’s why you should care about Forge DevCon (and Autodesk University)</a></li>
+					
+				
+									<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/2017/09/dissecting-mtext-format-codes.html">Dissecting MTEXT Format Codes</a></li>
+					
+				
+			</ul>
+		</div>
+	</div>
+
+<div class="module-recent-comments module">
+	<h2 class="module-header">Recent Comments</h2>
+	<div class="module-content">
+		<ul class="module-list">
+			<li class="module-list-item">
+				<a href="http://adndevblog.typepad.com/autocad/2017/12/how-to-get-list-of-autocad-commands.html?cid=6a0167607c2431970b01bb09f8c004970d#comment-6a0167607c2431970b01bb09f8c004970d">Pedro Aljinta</a> on <a href="http://adndevblog.typepad.com/autocad/2017/12/how-to-get-list-of-autocad-commands.html">How To Get List of AutoCAD Commands</a>
+			</li>
+			<li class="module-list-item">
+				<a href="http://adndevblog.typepad.com/autocad/2012/05/accessing-visible-entities-in-a-dynamic-block.html?cid=6a0167607c2431970b01b7c9518a98970b#comment-6a0167607c2431970b01b7c9518a98970b">Jürgen Becker</a> on <a href="http://adndevblog.typepad.com/autocad/2012/05/accessing-visible-entities-in-a-dynamic-block.html">Accessing visible entities in a dynamic block</a>
+			</li>
+			<li class="module-list-item">
+				<a href="http://adndevblog.typepad.com/autocad/2012/05/how-to-combine-a-net-jig-and-messagefilter-to-catch-user-input-such-as-right-click.html?cid=6a0167607c2431970b01b8d2d88c53970c#comment-6a0167607c2431970b01b8d2d88c53970c">Maria</a> on <a href="http://adndevblog.typepad.com/autocad/2012/05/how-to-combine-a-net-jig-and-messagefilter-to-catch-user-input-such-as-right-click.html">How to combine a .Net Jig and MessageFilter to catch user input such as Right Click?</a>
+			</li>
+			<li class="module-list-item">
+				<a href="http://adndevblog.typepad.com/autocad/2013/01/restore-hatch-boundaries-if-they-have-been-lost.html?cid=6a0167607c2431970b01b8d2d78d4b970c#comment-6a0167607c2431970b01b8d2d78d4b970c">Afiqah Ismail</a> on <a href="http://adndevblog.typepad.com/autocad/2013/01/restore-hatch-boundaries-if-they-have-been-lost.html">Restore hatch boundaries if they have been lost</a>
+			</li>
+			<li class="module-list-item">
+				<a href="http://adndevblog.typepad.com/autocad/2012/06/adding-a-new-layer-and-making-it-current-layer.html?cid=6a0167607c2431970b01b7c94bca96970b#comment-6a0167607c2431970b01b7c94bca96970b">Nikhil Ruikar</a> on <a href="http://adndevblog.typepad.com/autocad/2012/06/adding-a-new-layer-and-making-it-current-layer.html">Adding a new layer and making it current layer</a>
+			</li>
+			<li class="module-list-item">
+				<a href="http://adndevblog.typepad.com/autocad/2012/12/customizing-double-click-on-block-reference.html?cid=6a0167607c2431970b01b7c94a2af1970b#comment-6a0167607c2431970b01b7c94a2af1970b">BKSpurgeon</a> on <a href="http://adndevblog.typepad.com/autocad/2012/12/customizing-double-click-on-block-reference.html">Customizing double click on Block Reference</a>
+			</li>
+			<li class="module-list-item">
+				<a href="http://adndevblog.typepad.com/autocad/2012/06/using-e-transmit-api-in-net-to-find-external-references-in-a-drawing.html?cid=6a0167607c2431970b01b8d2d44072970c#comment-6a0167607c2431970b01b8d2d44072970c">Sam Shen</a> on <a href="http://adndevblog.typepad.com/autocad/2012/06/using-e-transmit-api-in-net-to-find-external-references-in-a-drawing.html">Using e-Transmit API in .Net to find external references in a drawing</a>
+			</li>
+			<li class="module-list-item">
+				<a href="http://adndevblog.typepad.com/autocad/2013/07/disable-task-dialogs-programmatically.html?cid=6a0167607c2431970b01b8d2d33254970c#comment-6a0167607c2431970b01b8d2d33254970c">Tim</a> on <a href="http://adndevblog.typepad.com/autocad/2013/07/disable-task-dialogs-programmatically.html">Disable Task Dialogs programmatically</a>
+			</li>
+			<li class="module-list-item">
+				<a href="http://adndevblog.typepad.com/autocad/2012/12/how-to-programmatically-create-a-new-text-style-with-truetype-fonts-in-lisp.html?cid=6a0167607c2431970b01b7c948b801970b#comment-6a0167607c2431970b01b7c948b801970b">Chris Schildmeier</a> on <a href="http://adndevblog.typepad.com/autocad/2012/12/how-to-programmatically-create-a-new-text-style-with-truetype-fonts-in-lisp.html">How to programmatically create a new text style (with truetype fonts) in lisp</a>
+			</li>
+			<li class="module-list-item">
+				<a href="http://adndevblog.typepad.com/autocad/2013/07/disable-task-dialogs-programmatically.html?cid=6a0167607c2431970b01b8d2d3074e970c#comment-6a0167607c2431970b01b8d2d3074e970c">Tim</a> on <a href="http://adndevblog.typepad.com/autocad/2013/07/disable-task-dialogs-programmatically.html">Disable Task Dialogs programmatically</a>
+			</li>
+		</ul>
+	</div>
+</div>
+	<div class="module-archives module">
+		<h2 class="module-header"><a href="http://adndevblog.typepad.com/autocad/archives.html">Archives</a></h2>
+		<div class="module-content">
+												<ul class="module-list">
+				
+				<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/2018/02/index.html">February 2018</a></li>
+				
+							
+				<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/2018/01/index.html">January 2018</a></li>
+				
+							
+				<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/2017/12/index.html">December 2017</a></li>
+				
+							
+				<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/2017/10/index.html">October 2017</a></li>
+				
+							
+				<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/2017/09/index.html">September 2017</a></li>
+				
+							
+				<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/2017/08/index.html">August 2017</a></li>
+				
+							
+				<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/2017/07/index.html">July 2017</a></li>
+				
+							
+				<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/2017/06/index.html">June 2017</a></li>
+				
+							
+				<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/2017/05/index.html">May 2017</a></li>
+				
+							
+				<li class="module-list-item"><a href="http://adndevblog.typepad.com/autocad/2017/04/index.html">April 2017</a></li>
+									</ul>
+									<p class="module-more"><a href="http://adndevblog.typepad.com/autocad/archives.html">More...</a></p>
+				
+				
+			
+		</div>
+	</div>
+
+
+
+
+
+
+						</div>
+					</div>
+				</div>
+			</div>
+</div> <!-- row -->
+			
+
+
+<!-- container-footer -->
+<div id="footer">
+<div class="row well"><div class="col-md-12">
+	<div id="footer-inner">
+		<ul class="footer-list pkg list-inline">
+			<li class="last-footer-list-item footer-list-item"><a href="http://adndevblog.typepad.com/autocad/">AutoCAD DevBlog</a></li>
+		</ul>
+	</div>
+</div></div>
+</div>
+
+		</div>
+	</div>
+	
+
+
+
+
+
+
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <script src="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/bootstrap.js"></script>
+
+<script type="text/javascript">
+     function autocollapse() {
+        var navbar = jQuery('#autocollapse'); navbar.removeClass('collapsed');
+            if(navbar.innerHeight() > 50) {
+               navbar.addClass('collapsed');
+               $('.navbar button').css("visibility","visible");
+             }
+     }
+autocollapse();
+
+$('.navbar-nav,.navbar-header').fadeIn('slow');
+jQuery(window).on('resize', autocollapse);
+</script>
+
+
+
+
+
+<script type="text/javascript">
+function resizebanner() {
+     var $div = $('#banner');
+     bg = $div.css('background-image');
+       if (bg) {
+         var src = bg.replace(/(^url\()|(\)$|[\"\'])/g, '');
+           $img = $('<img>').attr('src', src).on('load', function() {
+              var img = new Image;
+              img.src = src;
+              var imgW = img.width;
+              var imgH = img.height;             
+              var newW = $('#banner').width();
+              var newH = imgH / imgW * newW;
+       $('#banner').height(newH);
+       $('#banner').css('visibility', 'visible');
+      });//end when loaded
+  }//end if bg
+}//end 
+    (function($) {
+       $(document).on('ready', resizebanner);
+       $(window).on('resize', resizebanner);
+    })(jQuery);
+</script>
+
+
+
+<script type="text/javascript">
+<!--
+var extra_happy = Math.floor(1000000000 * Math.random());
+document.write('<img src="http://www.typepad.com/t/stats?blog_id=99923463260509965&amp;user_id=&amp;page=' + escape(location.href) + '&amp;referrer=' + escape(document.referrer) + '&amp;i=' + extra_happy + '" width="1" height="1" alt="" style="position: absolute; top: 0; left: 0;" />');
+// -->
+</script><img src="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/stats.gif" alt="" style="position: absolute; top: 0; left: 0;" width="1" height="1">
+
+
+<!-- Start Quantcast tag -->
+<script type="text/javascript" src="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/quant.js"></script>
+<script type="text/javascript">_qoptions = { tags:"typepad.core" }; _qacct="p-fcYWUmj5YbYKM"; quantserve();</script>
+<noscript>
+<a href="http://www.quantcast.com/p-fcYWUmj5YbYKM" target="_blank"><img src="http://pixel.quantserve.com/pixel/p-fcYWUmj5YbYKM.gif?tags=typepad.core" style="display: none" border="0" height="1" width="1" alt="Quantcast"/></a>
+</noscript>
+<!-- End Quantcast tag -->
+
+<script type="text/javascript" src="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/recaptcha_ajax.js"></script>
+<script type="text/javascript">
+var captchaImgAttempts = 0;
+var allowAnonComments = '0';
+var registrationRequired = 0;
+var registrationOptional = 1;
+var emailRequired = 0;
+var useAvatars = 1;
+
+var showSignInMessaging = 0;
+var jsonURL = "/.services/json-rpc";
+
+var captchaSrc = "/.services/captcha?code_encrypted=";
+var alertCommentCannotBeBlank = "You can not leave an empty comment. Please enter some text in the Comment field.";
+var alertEditingExpired = "Sorry, you're no longer allowed to edit this comment. You may have taken too much time before submitting your edit or someone may have already replied to it.";
+
+var alertAuthorCannotBeBlank = "Name must not be blank.";
+var alertEmailCannotBeBlank = "Email Address must not be blank.";
+var alertAuthorAndEmailCannotBeBlank = "Name and email address are both required!";
+var alertEmailIsInvalid = "The Email Address you entered is invalid. Please enter a valid email address.";
+var alertUnauthorizedAction = "The comments on this post are closed.";
+var msgPostReplyTo = "Reply to ";  
+var msgInReplyTo = "In reply to ";
+var msgPostAComment = "Post a comment ";
+var atpCommentsPath = "/.shared/js/atpcomments_yui.js?v=5";
+var hasChanged = 0;
+var hostName = ".typepad.com";
+var tp_comment_token = "1521113892-fd37d2b2d62adfb0a73f754dd5028f0f6368f4fc:iPlroayZViJJaf1h";
+
+var use_recaptcha = 1;
+var recaptcha_publickey = "6Ldg1s4SAAAAAEvvZX2ILFkWp7KB-jjdL4v0JV2e";
+var isPage = 0;
+var blog_xid = "6a0167607c2431970b0162ffdc445e970d";
+var xid = "";
+var injectCode = '<div id=\"comment-preview\" class=\"hiddenBox\">\n\t<h3 id=\"header-verify-comment\" class=\"comments-header font-entryheader  hiddenBox\">Verify your Comment<\/h3>\n    <h3 id=\"header-preview-comment\" class=\"comments-header font-entryheader  hiddenBox\">Previewing your Comment<\/h3>\n\t<div class=\"comments-content font-entrybody\">\n\t\t<div class=\"comment comment-has-avatar\">\n\t\t\t<div id=\"comment-preview-content\" class=\"comment-content\">\n\t\t\t<\/div>\n\t\t\t<p class=\"comment-footer\">\n\t\t\t\tPosted by: \n\t\t\t\t<span id=\"comment-preview-author\"><\/span>&nbsp;|&nbsp;<span id=\"comment-preview-datetime\"><\/span>\n\t\t\t<\/p>\n\t\t<\/div>\n\t<\/div>\n<\/div>\n<div id=\"comment-preview-confirmation\" class=\"font-entrybody hiddenBox yellowBox\">\n    <p>This is only a preview. Your comment has not yet been posted.<\/p>\n        <form id=\"comment-preview-form\"\n                method=\"post\"\n                onsubmit=\"atpComments.interceptPost(1); return false;\">\n                <input type=\"submit\" class=\"form-control font-entrybody\" name=\"post\" id=\"comment-confirm-post\" value=\"&nbsp;Post&nbsp;\" onclick=\"atpComments.interceptPost(1); return false;\"/>\n                <input type=\"submit\" class=\"form-control font-entrybody\"  name=\"edit\" id=\"comment-edit\" value=\"&nbsp;&nbsp;Edit&nbsp;&nbsp;\" onclick=\"atpComments.previewOnly(2); return false;\"/>\n        <span id=\"previewFormSpinner\" class=\"hiddenBox\"><img src=\"/.shared/images/spinner.gif\" alt=\"Working...\" /><\/span>\n        <\/form>\n<\/div>\n\n<div id=\"comment-error\" class=\"hiddenBox font-entrybody redBox\">\t    \n   Your comment could not be posted. Error type: <span id=\"comment-error-msg\"><\/span> \n<\/div>\t\n<div id=\"comment-complete\" class=\"hiddenBox font-entrybody  yellowGreenBox\">\n    Your comment has been posted. <a href=\"javascript:void 0;\" onclick=\"window.location.hash=\'#comment-form\';window.location.reload(false)\">Post another comment<\/a>\n<\/div>\t\n<div id=\"comment-captcha\" class=\"hiddenBox yellowBox font-entrybody\">\t\n    <div id=\"captchaText\">\n\t    <p id=\"captchaFailMsg\" class=\"captchaErrorText hiddenBox\">The letters and numbers you entered did not match the image. Please try again.<\/p>\t    \t        \n\t    <p>As a final step before posting your comment, enter the letters and numbers you see in the image below. This prevents automated programs from posting comments.<\/p>\n\t    <p><span id=\"comment-captcha-viewalt\">Having trouble reading this image? <a href=\"#comment-captcha\" onClick=\"atpComments.generateReCaptcha();\">View an alternate.<\/a><\/span><\/p>\n    <\/div>\n    <form id=\"comment-captcha-form\" \n\t\t  method=\"post\"\n\t\t  onsubmit=\"atpComments.submitWithReCaptcha(); return false;\">\n    <div id=\"recaptcha_content\">\n      <noscript>\n        <iframe src=\"6Ldg1s4SAAAAAEvvZX2ILFkWp7KB-jjdL4v0JV2e\" height=\"300\" width=\"500\" frameborder=\"0\"><\/iframe><br />\n        <textarea name=\"recaptcha_challenge_field\" rows=\"3\" cols=\"40\"><\/textarea>\n        <input type=\'hidden\' name=\'recaptcha_response_field\' value=\'manual_challenge\' />\n      <\/noscript>\n    <\/div>\n  <script type=\"text/javascript\">\n    $(document).ready(function() {\n        Recaptcha.create(\"6Ldg1s4SAAAAAEvvZX2ILFkWp7KB-jjdL4v0JV2e\",\n                         \"recaptcha_content\", {\n                             theme: \"red\",\n                             callback: Recaptcha.focus_response_field\n        });\n    });\n  <\/script>\n        <p>\n            <input type=\"submit\" name=\"continue\" id=\"captcha-continue\" value=\"&nbsp;Continue&nbsp;\" />\n            <span id=\"captchaFormSpinner\" class=\"commentSpinner hiddenBox\"><img src=\"/.shared/images/spinner.gif\" alt=\"Working...\" /><\/span>\n        <\/p>\n    <\/form>\n<\/div>\n'; 
+var entryPermalink = "http://adndevblog.typepad.com/autocad/2013/01/select-the-edge-of-a-nested-solid.html";
+var inlineReply = document.createElement("div");
+var commentFooterLinks;
+var commentHeader;
+var commentReplyXID;
+var commentReplyAuthor;
+var commentReplyComplete;
+var inlineReplyLoaded = 0;
+var commentFormNum = undefined; /* Deprecated but still exists in advanced template sets, so must be defined */
+
+function xidToCommentPermalink (entryUrl, xid) {
+    return entryUrl + "?cid=" + xid + "#comment-" + xid;
+}
+
+
+/* Deprecated advanced template functions */
+function handleSubmit() { return true; };
+function handleChange() { return true; };
+</script>
+<script type="text/javascript" src="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/yuiloader-beta-min.js"></script>
+<script type="text/javascript" src="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/atpcomments.js"></script>
+<!-- Begin comScore Tag -->
+<script>
+document.write(unescape("%3Cscript src='" + (document.location.protocol == "https:" ? "https://sb" : "http://b") + ".scorecardresearch.com/beacon.js'%3E%3C/script%3E"));
+</script><script src="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/beacon.js"></script>
+<script>
+COMSCORE.beacon({
+  c1: 2,
+  c2: "6035669",
+  c3: "",
+  c4: "http://adndevblog.typepad.com/autocad/2013/01/select-the-edge-of-a-nested-solid.html",
+  c5: "",
+  c6: "",
+  c15: ""
+});
+</script>
+<noscript>
+  <img src="http://b.scorecardresearch.com/b?c1=2&c2=6035669&c3=&c4=http%3A%2F%2Fadndevblog.typepad.com%2Fautocad%2F2013%2F01%2Fselect-the-edge-of-a-nested-solid.html&c5=&c6=&c15=&cv=1.3&cj=1" style="display:none" width="0" height="0" alt="" />
+</noscript>
+<!-- End comScore Tag -->
+<!-- Begin disqus Tag -->
+
+<!-- End disqus Tag -->
+
+
+
+
+<div id="stwrapper" class="stwrapper" style="visibility: hidden; top: -999px; left: -999px;"><div class="stclose"></div><iframe allowtransparency="true" id="stframe" class="stframe" name="stframe" scrolling="no" style="top: 0px; left: 0px;" src="Select%20the%20edge%20of%20a%20nested%20solid%20-%20AutoCAD%20DevBlog_files/index.htm" width="350px" height="450px" frameborder="0"></iframe></div></body></html>
+<!-- ph=1 -->

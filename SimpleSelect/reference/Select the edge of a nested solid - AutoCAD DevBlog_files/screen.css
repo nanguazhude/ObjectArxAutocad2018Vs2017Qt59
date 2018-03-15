@@ -1,0 +1,252 @@
+#tpc_thread .comments-post-iframe {
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+#tpc_thread .iframe-reply,
+#tpc_thread .signin-reply {
+    margin-left: 75px;
+}
+
+/* comment preview */
+
+#tpc_thread .comment-inline-edit,
+#tpc_thread .comment-inline-edit textarea,
+#tpc_thread .comment-inline-preview,
+#tpc_thread .comment-inline-preview p {
+    margin-bottom: 8px;
+}
+#tpc_thread .comment-inline-preview-buttons {
+    margin-top: 8px;
+}
+#tpc_thread .comment-preview {
+    margin-top: 20px;
+}
+#tpc_thread .comment-preview-content {
+    float: left;
+    clear: right;
+    margin-top: 8px;
+}
+#tpc_thread #comment-preview-confirmation {
+    margin-top: 0;
+}
+
+/* comment styles */
+
+#tpc_thread #tpe-comments-content {
+    /* border-bottom: 1px solid #ddd; */
+    margin-bottom: 15px;
+}
+#tpc_thread .comment {
+    padding: 15px 10px 5px;
+	background: none;
+	position: relative;
+}
+#tpc_thread #comment-preview .comment {
+    margin-bottom: 0;
+}
+#tpc_thread .comment-has-number {
+	padding-left: 35px;
+}
+#tpc_thread .comment-reply {
+	margin-left: 60px;
+}
+#tpc_thread .comment-reply-1 {
+	margin-left: 60px;
+}
+#tpc_thread .comment-reply-2 {
+	margin-left: 90px;
+}
+#tpc_thread .comment-reply-3 {
+	margin-left: 120px;
+}
+#tpc_thread .comment-reply-4 {
+	margin-left: 150px;
+}
+#tpc_thread .comment-reply-5 {
+	margin-left: 180px;
+}
+#tpc_thread #tpe-comments-content .even .comment-avatar {
+    position: relative;
+}
+#tpc_thread .comment-content {
+    background: none;
+}
+#tpc_thread #tpe-comments-content.no-avatar .comment-content {
+    margin-left: 10px;
+}
+#tpc_thread #comment-preview .comment-content {
+    height: 120px;
+    max-height: 120px;
+    overflow: auto;    
+}
+#tpc_thread #comment-preview .comment-content[class] {
+    height: auto;
+}
+#tpc_thread #comment-preview .comment-content {
+    width: 310px;
+}
+#tpc_thread .comment .comment-footer {
+	clear: both;
+}
+#tpc_thread .comment .comment-footer .comment-footerlinks {
+    float: left;
+}
+#tpc_thread .comment .comment-footer .comment-datetime {
+    float: right;
+    clear: right;
+}
+#tpc_thread .comment .comment-footer .command-edit-comment,
+#tpc_thread .comment .comment-footer .command-delete-comment {
+    font-weight: bold;
+}
+#tpc_thread .comment .comment-footer .comment-edit-expired {
+    color: red;
+    font-size: 11px;
+}
+#tpc_thread .comment-avatar {
+	float: left;
+	background: #fff;
+	border: 1px solid #ddd;
+	padding: 2px;
+}
+#tpc_thread .comment-number {
+	position: absolute;
+	left: 10px;
+	font-size: 90%;
+	color: #999;
+}
+#tpc_thread .comment-has-avatar .comment-data {
+	margin-left: 66px;
+}
+#tpc_thread .comment-footer:after {
+    content: " ";
+    display: block;
+    visibility: hidden;
+    clear: both;
+    height: 0.1px;
+    font-size: 0.1em;
+    line-height: 0;
+}
+#tpc_thread .comment-footer { display: inline-block; }
+/* no ie mac \*/
+* html #tpc_thread .comment-footer { height: 1%; }
+#tpc_thread .comment-footer { display: block; }
+
+/* comment notification boxes */
+.yellowBox,
+.yellowGreenBox,
+.redBox {
+	background: url(../../../images/atpcomment-gradient.png) top left repeat-x #ffffe6;
+	border: 1px solid;
+	margin: 10px 0 50px 0;
+	padding: 8px;
+	color: #000;
+}
+
+.lessBoxMargin {
+    margin: 20px 0px 25px 0px;
+}
+
+.commentCompleteMargin {
+    margin: 25px 0 20px 0px;
+}
+
+.yellowBox p,
+.yellowGreenBox p,
+.redBox p {
+	margin-top: 0px;
+	color: #000;
+}
+
+/* hiddenBox class */
+.hiddenBox {
+	display: none;
+}
+
+.visibilityHiddenBox {
+	visibility: hidden;
+}
+
+.comments-open label.hiddenBox {
+	display: none;
+}
+
+/* yellow/yellow prompt box */
+.yellowBox {
+	border: 1px solid #ffbb33;
+}
+
+/* yellow/green complete box */
+.yellowGreenBox {
+	border: 1px solid #669900;
+}
+
+/* red/red error box */
+.redBox {
+	border: 1px solid #cc2200;
+}
+
+.captchaErrorText {
+	background: url(../../images/atpcomment-error-icon.png) top left no-repeat;
+	padding-left: 20px;
+	font-weight: bold;
+}
+.comment-captcha-input {
+  float: left;
+  margin-right: 6px;
+}
+
+/* comment avatars */
+
+#comment-avatar-flyout {
+    position: absolute;
+    z-index: 1;
+}
+#comment-avatar-flyout-inner {
+    xpadding: 40px 40px 40px 10px;
+}
+#avatar-flyout-content {
+    width: 300px;
+    background-color: #fff;
+    color: #000;
+    border: 2px solid;
+    padding: 8px;
+}
+#avatar-flyout-content a {
+    color: #287098;
+}
+#avatar-flyout-img {
+    float: left;
+    border: 0;
+    margin-right: 4px;
+}
+#avatar-flyout-name {
+    font-weight: bold;
+    font-size: 14px;
+}
+#avatar-flyout-content .profileLink {
+    float: right;
+    font-weight: bold;
+}
+#comment-avatar-flyout .clearBoth {
+    clear: both;
+}
+#avatar-flyout-content #avatar-flyout-location, 
+#avatar-flyout-content .profileWebsite {
+    margin: 5px 0;
+}
+#avatar-flyout-counts .activityTitle {
+    margin: 5px 0 8px 0;
+    font-weight: bold;
+} 
+#avatar-flyout-counts .subTitle {
+    float: left;
+    width: 100px;
+}
+#avatar-flyout-counts #avatar-flyout-thisblog,
+#avatar-flyout-counts #avatar-flyout-overall {
+    float: left;
+}
+#tpc_thread #tpe-comments-content .newest-comment {
+    background: url(../../../images/tpc-new-comment-label.gif) no-repeat right 15px;
+}

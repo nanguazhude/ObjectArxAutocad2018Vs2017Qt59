@@ -1,0 +1,71 @@
+/* Base */
+@import url(http://static.typepad.com/.shared:v6bc83ba:typepad:en_us/themes/walt/styleless/theme.css);
+
+@import url(http://static.typepad.com/.shared:v6bc83ba:typepad:en_us/themes/common/bxslider.css);
+@import url(http://static.typepad.com/.shared:v6bc83ba:typepad:en_us/css/widgets.css);
+@import url(http://static.typepad.com/.shared:v6bc83ba:typepad:en_us/themes/common/recentpostsfancy.css);
+
+/* Tip Jar */
+@import url(http://static.typepad.com/.shared:v6bc83ba:typepad:en_us/themes/common/tipjar.css);
+
+/* Portal */
+
+/* Theme */
+@import url(http://static.typepad.com/.shared:v6bc83ba:typepad:en_us/themes/typepad/theme-responsive/black/black.css);
+
+
+
+
+
+
+body { padding-top: 50px; }
+
+
+
+
+/* Custom CSS */
+#banner
+{
+background: url(http://adndevblog.typepad.com/Acad_Banner_1200x200P.jpg) no-repeat;
+height: 200px;
+}
+ 
+#banner-inner { overflow: visible; padding: 0; }
+ 
+#banner-header
+{
+position: absolute;
+left: 0;
+top: 0;
+width: 100%;
+margin: 0;
+padding: 0;
+}
+ 
+#banner-header a
+{
+display: block;
+left: 0;
+top: 0;
+height: 200px;
+text-indent: -1000em;
+}
+ 
+#banner-description
+{
+overflow: hidden;
+width: 0;
+height: 0;
+margin: 0;
+padding: 0;
+text-indent: -1000em;
+}
+ 
+.jumbotron h1, .jumbotron h2 { display: none }
+
+
+
+
+
+
+/* ph=1 */

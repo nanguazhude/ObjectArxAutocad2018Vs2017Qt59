@@ -1,0 +1,56 @@
+/* TPC flyout iframe styling */
+
+.tpc-flyout {
+  position: absolute;
+  width: 254px;
+  border: 0;
+}
+
+/* Blogside height modifiers */
+
+.tpc-flyout-blogside-default {
+    height: 129px;
+}
+
+.tpc-flyout-blogside-default-stubprofile {
+    height: 109px;
+}
+
+.tpc-flyout-blogside-invite {
+    height: 155px;
+}
+
+.tpc-flyout-blogside-invite-stubprofile {
+    height: 135px;
+}
+
+/* Appside height modifiers */
+
+.tpc-flyout-appside-default { 
+    height: 129px;
+    _height: 132px; /* IE6 */
+}
+
+.tpc-flyout-appside-stubprofile {
+    height: 109px;
+}
+
+.tpc-flyout-appside-contacts {
+    height: 148px;
+    _height: 151px; /* IE6 */
+}
+
+.tpc-flyout-appside-cmanagement {
+    height: 194px;
+    _height: 197px; /* IE6 */
+}
+
+.tpc-flyout-appside-cmanagement-stubprofile {
+    height: 146px;
+    _height: 149px; /* IE6 */
+}
+
+.tpc-flyout-appside-anoncmanagement {
+    height: 126px;
+}
+
