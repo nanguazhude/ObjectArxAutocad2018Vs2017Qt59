@@ -73,7 +73,7 @@ namespace sstd {
 				}
 			}lock;
 			double varPoint[4];
-			AcDbObjectId varID;
+			AcDbObjectId varID;//acedNEntSelP
 			if (RTNORM == acedEntSel(LR"("选择直线:
 )", lock.ssName, varPoint)) {
 				acdbGetObjectId(varID, lock.ssName);   //获取实体id  
@@ -83,7 +83,7 @@ namespace sstd {
 )");
 					return;//打开实体失败，返回  
 				}
-
+				 
 				if (pEnt->isKindOf(AcDbLine::desc())) {
 					AcDbLine * pLine = AcDbLine::cast(pEnt);
 					$LineStartPoint = pLine->startPoint();
