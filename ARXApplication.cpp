@@ -28,6 +28,7 @@ namespace sstd {
 	extern void loadDrawMRectangle();
 	extern void loadDrawMStep();
     extern void loadFARC();
+	extern void loadSimpleSelect();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -56,6 +57,7 @@ namespace sstd {
 			{ &sstd::loadDrawMRectangle },
 			{ &sstd::loadDrawMStep },
             { &sstd::loadFARC },
+			{ &sstd::loadSimpleSelect },
 		};
 	}
 

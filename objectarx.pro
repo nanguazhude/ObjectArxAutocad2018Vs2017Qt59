@@ -85,7 +85,8 @@ SOURCES += \
         $$PWD/DrawMRectangle/DrawMRectangle.cpp \
         $$PWD/DrawMSteps/DrawMSteps.cpp \
         $$PWD/RandomColor/RandomColor.cpp \
-        $$PWD/FARC/FARC.cpp
+        $$PWD/FARC/FARC.cpp \
+        $$PWD/SimpleSelect/SimpleSelect.cpp
 
 
 #.h .hpp source
@@ -118,7 +119,8 @@ HEADERS += \
         $$PWD/ThirdPart/ADN/AdnConstraintEvaluationCallback.hpp \
         $$PWD/DrawMRectangle/DrawMRectangle.hpp \
         $$PWD/DrawMSteps/DrawMSteps.hpp \
-        $$PWD/FARC/FARC.hpp
+        $$PWD/FARC/FARC.hpp \
+        $$PWD/SimpleSelect/SimpleSelect.hpp
 
 SOURCES += $$PWD/object_arx_global.cpp \
     $$PWD/ARXApplication.cpp \
