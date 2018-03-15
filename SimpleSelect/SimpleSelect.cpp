@@ -20,218 +20,169 @@ namespace sstd {
 	SimpleSelect::SimpleSelect() {
 	}
 
-	void SimpleSelect::load() {
-		arx_add_main_command_usepickset<SimpleSelect>();
+	void SimpleSelect::load() {//ACRX_CMD_TRANSPARENT
+		//arx_add_main_command_usepickset<SimpleSelect>();
+		acedRegCmds->addCommand(arx_group_name(),
+			SimpleSelect::globalName(),
+			SimpleSelect::localName(),
+			ACRX_CMD_TRANSPARENT| ACRX_CMD_MODAL  ,
+			&SimpleSelect::main
+		);
 	}
 
 	namespace {
 
-		static inline void pressEnterToContinue(){
-			thread_local TCHAR tempBuf[256];
-			acedGetString(0, L"\nPress <ENTER> to continue.", tempBuf);
+		static Acad::ErrorStatus
+			getObjectAndGsMarker(AcDbObjectId& objId, AcGePoint3d& pt3d, ads_matrix& mx, resbuf*& rbChain, intptr_t& marker)
+		{
+			ads_name ename;
+			ads_point pt;
+			unsigned int uTransSpaceFlag = 1;
+
+			// set uTransSpaceFlag to 0, if the current layout is in model space
+			struct resbuf rb;
+			acedGetVar(L"CVPORT", &rb);
+			if (rb.resval.rint != 1)
+				uTransSpaceFlag = 0; // Model space
+
+									 // this function will give back the marker that is needed for subentity selection and the nesting entities of the 
+									 // selected entity
+			if (acedNEntSelPEx(L"\nPick edge : ", ename, pt, NULL, mx, &rbChain, uTransSpaceFlag, &marker) != RTNORM) {
+				acutPrintf(L"\nacedNEntSelPEx has failed");
+				return Acad::eInvalidAdsName;
+			}
+
+			pt3d.x = pt[0];
+			pt3d.y = pt[1];
+			pt3d.z = pt[2];
+
+			acdbGetObjectId(objId, ename);
+
+			return Acad::eOk;
 		}
-		
-		class SelectALine {
-		public:
-			static inline int extractEntityInfo(
-				struct resbuf *rb,
-				int&          sel_method,
-				ads_name      ename,
-				ads_name      subname,
-				short&        marker,
-				AcGePoint3d&  pickpnt,
-				AcGeVector3d& pickvec) {
-				constexpr const auto  CONTINUE = 1;
-				constexpr const auto  CANCEL = 0;
-				constexpr const auto  PICK_METH = 1;
-				constexpr const auto  FENCE_METH = 4;
 
-				if (rb == nullptr || rb->restype != RTLB) {
-					return 0;
-				}
+		static void
+			highlightEdge(const AcDbObjectId& objId, AcGePoint3d& pt3d, ads_matrix& mx, resbuf*& rbChain, const int marker)
+		{
+			AcDbEntity *pSolid = NULL; // the solid object
+			AcDbEntity* pTMBlockRef = NULL; // topmost blockreference - if there is one
+			AcDbEntity* pEntHighlight = NULL; // it's either the solid or the block reference that contains it
 
-				// Get the selection method.
-				//
-				rb = rb->rbnext;  // Bump up to the selection method, always after RTLB.
-				sel_method = rb->resval.rint;
+											  // open the solid
+			acdbOpenAcDbEntity(pSolid, objId, AcDb::kForRead);
 
-				// Get the first ename (could be either the actual entity name or
-				// subentity name).
-				//
-				rb = rb->rbnext;  // Bump up to the first name, always after sel method.
-				ename[0] = rb->resval.rlname[0];
-				ename[1] = rb->resval.rlname[1];
-				subname[0] = rb->resval.rlname[0];
-				subname[1] = rb->resval.rlname[1];
+			// Get the subentity ID for the edge that is picked
+			//
+			AcGeMatrix3d xform;
+			int numIds;
+			AcDbFullSubentPath* subentIds;
 
-				// Get marker info.
-				//
-				rb = rb->rbnext;
-				marker = rb->resval.rint;
+			xform.setCoordSystem(
+				(const AcGePoint3d&)AcGePoint3d(mx[0][0], mx[0][1], mx[0][2]),
+				(const AcGeVector3d&)AcGeVector3d(mx[1][0], mx[1][1], mx[1][2]),
+				(const AcGeVector3d&)AcGeVector3d(mx[2][0], mx[2][1], mx[2][2]),
+				(const AcGeVector3d&)AcGeVector3d(mx[3][0], mx[3][1], mx[3][2]));
 
-				// Get the pick location and vector, only for PICK and FENCE.  For FENCE,
-				// we take the first intersection with the entity as the pick location.
-				//
-				if (sel_method == PICK_METH ||
-					sel_method == FENCE_METH) {
-					rb = rb->rbnext;  // Skip to RTLB for pick location.
-					rb = rb->rbnext;  // Skip to point description info.
-					rb = rb->rbnext;  // Skip to the pick location.
-					pickpnt.set(rb->resval.rpoint[0],
-						rb->resval.rpoint[1],
-						rb->resval.rpoint[2]);
+			// count containing block references 
+			int numInserts = 0;
+			// should be one less than the total number of entries in entAndInsertStack 
+			// because the first entry is the entity itself, which is not a BlockReference
+			for (resbuf* currentInsert = rbChain; currentInsert != NULL; currentInsert = currentInsert->rbnext)
+				numInserts++;
 
-					rb = rb->rbnext;  // Will be normal vector if we're not in XY view.
-									  // Otherwise, it'll be an RTLE for pick location.
+			Acad::ErrorStatus err;
 
-					if (rb->restype == RT3DPOINT) {
-						pickvec.set(rb->resval.rpoint[0],
-							rb->resval.rpoint[1],
-							rb->resval.rpoint[2]);
-						rb = rb->rbnext;  // Make it point to the RTLE for the pick location.
-					}
-				}
+			// it is inside a block 
+			if (numInserts > 0)
+			{
+				// create an array
+				AcDbObjectId* Inserts = new AcDbObjectId[numInserts + 1];
+				Inserts[0] = objId;
 
-				return CONTINUE;
+				// we need to fill up the list going from the direct block reference that contains the solid 
+				// to the topmost block reference
+				int currNumber = 1;
+				for (resbuf* current = rbChain; current != NULL; current = current->rbnext, currNumber++)
+					acdbGetObjectId(Inserts[currNumber], current->resval.rlname);;
+
+				// get topmost blockreference
+				acdbOpenAcDbEntity(pTMBlockRef, Inserts[numInserts], AcDb::kForRead);
+
+				// xform and pt3d are not used in case of AcDb3dSolid
+				AcGePoint3d point;
+				AcGeMatrix3d matrix;
+				err = pTMBlockRef->getSubentPathsAtGsMarker(AcDb::kEdgeSubentType,
+					marker, point, matrix, /*pt3d, xform, */numIds, subentIds, numInserts, Inserts);
+
+				// as an extra check let's highlight the topmost blockreference as well
+				pEntHighlight = pTMBlockRef;
+			}
+			else
+			{
+				// xform and pt3d are not used in case of AcDb3dSolid
+				err = pSolid->getSubentPathsAtGsMarker(AcDb::kEdgeSubentType,
+					marker, pt3d, xform, numIds, subentIds);
+
+				pEntHighlight = pSolid;
 			}
 
-			class SSetLock {
-				ads_name sset = {};
-			public:
-				~SSetLock() { acedSSFree(sset); }
-				operator intptr_t * () { return sset; }
-			};
+			// At this point the subentId's variable contains the
+			// address of an array of AcDbFullSubentPath objects.
+			// The array should be one element long, so the picked
+			// edge's AcDbFullSubentPath is in subentIds[0].
+			//
+			// For objects with no edges (such as a sphere), the
+			// code to highlight an edge is meaningless and must
+			// be skipped.
+			//
+			if (numIds > 0)
+			{
+				ACHAR dummy[133]; // space for acedGetString pauses below
 
-			static inline void _p_select_a_line() {
+								  // Highlight the edge.
+								  //
+				pEntHighlight->highlight(subentIds[0]); // Highlights the edge on the solid in the right block
+														// Pause to let user see the effect.
+														//
+				acedGetString(0, L"\nEdge is highlighted. Press <RETURN> to continue...",
+					dummy);
+				pEntHighlight->unhighlight(subentIds[0]);
 
-				SSetLock sset;
-				/*获取选择集*/
-				if (RTNORM != acedSSGet(LR"(:S)", nullptr, nullptr, nullptr, sset)) {
-					return;
-				} 							
-
-				int            sel_method;
-				ads_name       subname;
-				short          marker;
-				AcGePoint3d    pickpnt;
-				AcGeVector3d   pickvec;
-				ads_name       ename;
-
-				{
-					/*获得选择集信息*/
-					struct resbuf *rb;
-					if (acedSSNameX(&rb, sset, 0) != RTNORM) {
-						return;
-					}
-
-					if (!extractEntityInfo(rb,
-						sel_method,
-						ename,
-						subname,
-						marker,
-						pickpnt,
-						pickvec)) {
-						return;
-					}
-
-				}
-
-				AcDbObjectId polyId;
-				acdbGetObjectId(polyId, ename);
-
-				sstd::ArxClosePointer<AcDbEntity>  ent  ;
-				if (acdbOpenAcDbEntity(ent, polyId, AcDb::kForRead) != Acad::eOk) {
-					return;
-				}
-
-				union {
-					AcDbBlockReference *  blRef;
-				};
-
-				blRef = AcDbBlockReference::cast(ent);
-
-				if (blRef == nullptr) {
-
-				}
-				else {/*this is a 块*/
-					struct resbuf *insStack;
-					ads_point pickpoint;
-					ads_matrix adsmat;
-
-					pickpoint[0] = pickpnt[0];
-					pickpoint[1] = pickpnt[1];
-					pickpoint[2] = pickpnt[2];
-
-					// Now get details on the entity that was
-					// selected.
-					// 
-					if (acedNEntSelP(nullptr, 
-						ename, 
-						pickpoint, 
-						TRUE,
-						adsmat, 
-						&insStack) != RTNORM){
-						acutPrintf(L"\nFailure in acedNEntSelP");
-						return;
-					}
-
-					AcDbObjectId objectId;
-					acdbGetObjectId(objectId, ename);
-
-					sstd::ArxClosePointer<AcDbEntity> ent2;
-					if (acdbOpenAcDbEntity(ent2, objectId, AcDb::kForRead) != Acad::eOk) {
-						return;
-					}
-
-					std::vector<AcDbObjectId> idArray;
-					int count = 0;////////////////
-					struct resbuf *rbIter = insStack;
-					AcDbObjectId objId;
-					acdbGetObjectId(objId, ename);
-					idArray.push_back(objId);
-					count++;
-
-					while (rbIter != nullptr) {
-						ename[0] = rbIter->resval.rlname[0];
-						ename[1] = rbIter->resval.rlname[1];
-						acdbGetObjectId(objId, ename);
-						idArray.push_back(objId);
-						count++;
-						rbIter = rbIter->rbnext;
-					}
-					count--;
-
-					acutRelRb(insStack);////////////////
-
-					int                  numPaths;
-					AcDbFullSubentPath  *subentPaths;
-					AcGeMatrix3d         xform;
-					if (Acad::eOk != blRef->getSubentPathsAtGsMarker(
-						AcDb::kEdgeSubentType,
-						marker,
-						pickpnt,
-						xform,
-						numPaths,
-						subentPaths,
-						count,
-						idArray.data())){
-						acutPrintf(L"\nError obtaining subentity paths for Block Reference");
-						return;
-					}
-
-					acutPrintf(L"\nHighlighting the first edge.");
-					blRef->highlight(subentPaths[0]);
-					pressEnterToContinue();
-				    blRef->unhighlight(subentPaths[0]);
-
-				}/*this is a 块*/
-
+				pEntHighlight->highlight(); // highlights the entire block reference - if the solid is inside one
+											// Pause to let user see the effect.
+											//
+				acedGetString(0, L"\nTopmost nesting block reference is highlighted. Press <RETURN> to continue...",
+					dummy);
+				pEntHighlight->unhighlight();
 			}
-		};
+
+			// delete temporary array
+			delete[]subentIds;
+
+			// close opened entities
+			pSolid->close();
+			if (pTMBlockRef)
+				pTMBlockRef->close();
+		}
+
+		void _p_select_a_line() {
+			AcDbObjectId objId;
+			AcGePoint3d pt3d;
+			intptr_t marker;
+			ads_matrix mx;
+			resbuf* rbChain = NULL; // contains the nesting blockreferences
+
+			if (getObjectAndGsMarker(objId, pt3d, mx, rbChain, marker) != Acad::eOk)
+				return;
+
+			highlightEdge(objId, pt3d, mx, rbChain, marker);
+
+			ads_free(rbChain);
+		}
 	}
 
 	void SimpleSelect::main() {
-		SelectALine::_p_select_a_line();
+		_p_select_a_line();
 		//int varFlag = -1;
 		/*  */
 //		acutPrintf(LR"(
