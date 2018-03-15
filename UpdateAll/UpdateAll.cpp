@@ -78,6 +78,7 @@ namespace sstd {
 					varCD,
 					LR"(vvvvvvattsyngriducsicon
 (setvar "clayer" "不打印")
+(setvar "PARAMETERCOPYMODE" 3)
 )"
 );
 			}
