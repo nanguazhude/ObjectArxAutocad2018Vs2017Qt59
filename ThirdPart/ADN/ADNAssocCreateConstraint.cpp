@@ -2,6 +2,17 @@
 #include "ADNAssocCreateConstraint.hpp"
 #include "AdnAssocSampleUtils.hpp"
 
+inline void change_dim_style_to_dynammic(const AcDbObjectId & dimId) {
+	sstd::ArxClosePointer< AcDbDimension > varDimX;
+	if (kOk == acdbOpenObject(varDimX.pointer(), dimId, AcDb::kForWrite)) {
+		varDimX->setConstraintDynamic(true);
+	}
+	else {
+		acutPrintf(LR"(can not open AcDbAssocVariable object!
+)");
+	}
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 
 //
@@ -779,7 +790,9 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createAlignedDimConstraint(
 			throw err;
 
 		AcDbAssocDimDependencyBodyBase::setEraseDimensionIfDependencyIsErased(bPreviousValue);
-
+		/*******************************************************************/
+		change_dim_style_to_dynammic(dimId);
+		/*******************************************************************/
 		return err;
 	}
 	catch (Acad::ErrorStatus err)
@@ -958,9 +971,11 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::create2LineAngularDimConstraint(
 			spaceId,
 			ppNewAngConstraint)) != Acad::eOk)
 			throw err;
-		
-		AcDbAssocDimDependencyBodyBase::setEraseDimensionIfDependencyIsErased(bPreviousValue);
 
+		AcDbAssocDimDependencyBodyBase::setEraseDimensionIfDependencyIsErased(bPreviousValue);
+		/*******************************************************************/
+		change_dim_style_to_dynammic(dimId);
+		/*******************************************************************/
 		return err;
 	}
 	catch (Acad::ErrorStatus err)
@@ -1167,6 +1182,10 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::create3PointAngularDimConstraint(
 
 		AcDbAssocDimDependencyBodyBase::setEraseDimensionIfDependencyIsErased(bPreviousValue);
 
+		/*******************************************************************/
+		change_dim_style_to_dynammic(dimId);
+		/*******************************************************************/
+
 		return err;
 	}
 	catch (Acad::ErrorStatus err)
@@ -1323,6 +1342,10 @@ Acad::ErrorStatus createRadialOrDiamDimConstraint(
 
 		AcDbAssocDimDependencyBodyBase::setEraseDimensionIfDependencyIsErased(bPreviousValue);
 
+		/*******************************************************************/
+		change_dim_style_to_dynammic(dimId);
+		/*******************************************************************/
+
 		return err;
 	}
 	catch (Acad::ErrorStatus err)
@@ -1366,8 +1389,8 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createDiamDimConstraint(
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//  
 // 
-//
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus createRotatedDimConstraint(
 	AcDbObjectId& entId1,
@@ -1435,7 +1458,7 @@ Acad::ErrorStatus createRotatedDimConstraint(
 			edgeEntPath2,
 			dimPos,
 			rotation,
-			dimId,
+			dimId,/*dim id */
 			dimStyleId,
 			pDb,
 			spaceId)) != Acad::eOk)
@@ -1491,6 +1514,10 @@ Acad::ErrorStatus createRotatedDimConstraint(
 			throw err;
 
 		AcDbAssocDimDependencyBodyBase::setEraseDimensionIfDependencyIsErased(bPreviousValue);
+
+		/*******************************************************************/
+		change_dim_style_to_dynammic(dimId);
+		/*******************************************************************/
 
 		return err;
 	}

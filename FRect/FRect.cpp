@@ -261,6 +261,7 @@ namespace sstd {
 		AcGePoint3d varCPos = varCPosR;
 		AcDbAssoc2dConstraintAPI::createHorizontalDimConstraint(argP.varID0, argP.varID2,
 			argP.varKeyPoint0_1, argP.varKeyPoint2_3, varCPos, varTmp);
+		
 		varCPos = varCPosR;
 		AcDbAssoc2dConstraintAPI::createVerticalDimConstraint(argP.varID1, argP.varID4,
 			argP.varKeyPoint1_2, argP.varKeyPoint4_5, varCPos, varTmp);
@@ -278,6 +279,21 @@ namespace sstd {
 		if (false == _p_construct_pack(&varData)) {
 			return;
 		}
+
+		class Lock {
+			PrivatePack * d;
+			AcDbObjectId layerID;
+			//AcGeMatrix3d ucs;
+		public:
+			Lock(PrivatePack *v) :d(v) {
+				layerID = d->$DB->clayer();
+				d->$DB->setClayer(d->$DB->layerZero());
+			}
+			~Lock() {
+				d->$DB->setClayer(layerID);
+			}
+		};
+		Lock __lock{ &varData };				
 
 		/*select point*/
 		if (false == _p_select_point(&varData)) {

@@ -1,4 +1,4 @@
-﻿
+﻿/** Dimension **/
 #include "AdnAssocSampleUtils.hpp"
 #include "AdnConstraintEvaluationCallback.hpp"
 
@@ -1037,7 +1037,7 @@ Acad::ErrorStatus AdnAssocSampleUtils::createAlignedDim(const AcGePoint3d& entPt
 	AcGePoint3d dimPt1(entPt1);
 	AcGePoint3d dimPt2(entPt2);
 	AcGePoint3d dimTxt(dimPos);
-
+	/******************************************************/
 	AcDbAlignedDimension* dim = new AcDbAlignedDimension();
 
 	dim->setDatabaseDefaults();
