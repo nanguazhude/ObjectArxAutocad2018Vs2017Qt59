@@ -29,6 +29,7 @@ namespace sstd {
 	extern void loadDrawMStep();
     extern void loadFARC();
 	extern void loadSimpleSelect();
+	extern void loadFRect();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -58,6 +59,7 @@ namespace sstd {
 			{ &sstd::loadDrawMStep },
             { &sstd::loadFARC },
 			{ &sstd::loadSimpleSelect },
+			{ &sstd::loadFRect }
 		};
 	}
 

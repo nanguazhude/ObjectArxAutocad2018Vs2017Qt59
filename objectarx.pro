@@ -86,7 +86,8 @@ SOURCES += \
         $$PWD/DrawMSteps/DrawMSteps.cpp \
         $$PWD/RandomColor/RandomColor.cpp \
         $$PWD/FARC/FARC.cpp \
-        $$PWD/SimpleSelect/SimpleSelect.cpp
+        $$PWD/SimpleSelect/SimpleSelect.cpp \
+        $$PWD/FRect/FRect.cpp
 
 
 #.h .hpp source
@@ -120,7 +121,8 @@ HEADERS += \
         $$PWD/DrawMRectangle/DrawMRectangle.hpp \
         $$PWD/DrawMSteps/DrawMSteps.hpp \
         $$PWD/FARC/FARC.hpp \
-        $$PWD/SimpleSelect/SimpleSelect.hpp
+        $$PWD/SimpleSelect/SimpleSelect.hpp \
+        $$PWD/FRect/FRect.hpp
 
 SOURCES += $$PWD/object_arx_global.cpp \
     $$PWD/ARXApplication.cpp \
