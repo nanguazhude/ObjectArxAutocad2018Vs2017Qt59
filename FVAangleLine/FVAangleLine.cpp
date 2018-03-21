@@ -61,7 +61,6 @@ namespace sstd {
 				AcGePoint3d $StartPoint;
 				int $Error = 0;
 
-				std::array<AcGePoint3d, 9> $Points;
 				enum : int {
 					StartPoint = 0,
 					StartPointHigh = 1,
@@ -74,7 +73,13 @@ namespace sstd {
 					EndPoint = 6,
 					EndPointHigh = 7,
 					EndPointLow = 8,
+
+					BoundHigh = 9,
+					BoundLow = 10,
+
+					SizeOfPoints
 				};
+				std::array<AcGePoint3d, SizeOfPoints > $Points;
 
 				AcDbObjectId $S_SH;
 				AcDbObjectId $S_SL;
@@ -88,6 +93,9 @@ namespace sstd {
 				AcDbObjectId $ML_EL;
 				AcDbObjectId $SH_MH;
 				AcDbObjectId $SL_ML;
+				AcDbObjectId $B_H;
+				AcDbObjectId $B_L;
+				AcDbObjectId $B_V;
 
 				AcCmColor $Color;
 
@@ -209,6 +217,10 @@ namespace sstd {
 					$Points[MiddlePointLow] = $Points[MiddlePoint];
 					$Points[MiddlePointHigh].y = $Points[EndPointHigh].y;
 					$Points[MiddlePointLow].y = $Points[EndPointLow].y;
+					$Points[BoundHigh] = $Points[EndPoint];
+					$Points[BoundLow] = $Points[EndPoint];
+					$Points[BoundHigh].y = $Points[StartPointHigh].y;
+					$Points[BoundLow].y = $Points[StartPointLow].y;
 				}
 				else {
 					$Points[MiddlePoint] = $Points[EndPoint];
@@ -217,6 +229,10 @@ namespace sstd {
 					$Points[MiddlePointLow] = $Points[MiddlePoint];
 					$Points[MiddlePointHigh].y = $Points[StartPointHigh].y;
 					$Points[MiddlePointLow].y = $Points[StartPointLow].y;
+					$Points[BoundHigh] = $Points[StartPoint];
+					$Points[BoundLow] = $Points[StartPoint];
+					$Points[BoundHigh].y = $Points[EndPointHigh].y;
+					$Points[BoundLow].y = $Points[EndPointLow].y;
 				}
 
 				/******************************************/
@@ -247,6 +263,7 @@ namespace sstd {
 			}
 
 			inline void Main::draw() {
+				const bool V1BV2 = $VDist1 > $VDist2;
 				sstd::ArxClosePointer<AcDbBlockTable> varBlockTable;
 				sstd::ArxClosePointer<AcDbBlockTableRecord> varBlockTableRecord;
 				std::vector< sstd::ArxClosePointer< AcDbLine > > varLines;
@@ -259,6 +276,47 @@ namespace sstd {
 						varBlockTableRecord,
 						AcDb::kForWrite);
 					if (varE != eOk) { throw varE; }
+				}
+
+				if (V1BV2) {
+					{
+						auto & varLine =
+							varLines.emplace_back(new AcDbLine($Points[StartPointHigh], $Points[BoundHigh]));
+						varBlockTableRecord->appendAcDbEntity($B_H, varLine);
+						set_line_r(varLine, $Color);
+					}
+					{
+						auto & varLine =
+							varLines.emplace_back(new AcDbLine($Points[StartPointLow], $Points[BoundLow]));
+						varBlockTableRecord->appendAcDbEntity($B_L, varLine);
+						set_line_r(varLine, $Color);
+					}
+					{
+						auto & varLine =
+							varLines.emplace_back(new AcDbLine($Points[BoundHigh], $Points[BoundLow]));
+						varBlockTableRecord->appendAcDbEntity($B_V, varLine);
+						set_line_r(varLine, $Color);
+					}
+				}
+				else {
+					{
+						auto & varLine =
+							varLines.emplace_back(new AcDbLine($Points[EndPointHigh], $Points[BoundHigh]));
+						varBlockTableRecord->appendAcDbEntity($B_H, varLine);
+						set_line_r(varLine, $Color);
+					}
+					{
+						auto & varLine =
+							varLines.emplace_back(new AcDbLine($Points[EndPointLow], $Points[BoundLow]));
+						varBlockTableRecord->appendAcDbEntity($B_L, varLine);
+						set_line_r(varLine, $Color);
+					}
+					{
+						auto & varLine =
+							varLines.emplace_back(new AcDbLine($Points[BoundHigh], $Points[BoundLow]));
+						varBlockTableRecord->appendAcDbEntity($B_V, varLine);
+						set_line_r(varLine, $Color);
+					}
 				}
 
 				{
@@ -349,11 +407,25 @@ namespace sstd {
 			}
 
 			inline void Main::constraint() {
+				const bool V1BV2 = $VDist1 > $VDist2;
 				/*重合约束*/
 				{
 					auto f = [](const auto & l1, const auto & l2, const auto & p1) {
 						AcDbAssoc2dConstraintAPI::createCoincidentConstraint(l1, l2, p1, p1);
 					};
+
+					if (V1BV2) {
+						f($S_SH, $B_H, $Points[StartPointHigh]);
+						f($S_SL, $B_L, $Points[StartPointLow]);
+					}
+					else {
+						f($E_EH, $B_H, $Points[EndPointHigh]);
+						f($E_EL, $B_L, $Points[EndPointLow]);
+					}
+
+					f($B_H, $B_V, $Points[BoundHigh]);
+					f($B_L, $B_V, $Points[BoundLow]);
+
 					f($S_SH, $S_M, $Points[StartPoint]);
 					f($S_SL, $S_M, $Points[StartPoint]);
 
@@ -385,6 +457,7 @@ namespace sstd {
 						AcDbAssoc2dConstraintAPI::createVerticalConstraint(l, p);
 					};
 
+					v($B_V, $Points[BoundHigh]);
 					v($S_SH, $Points[StartPoint]);
 					v($S_SL, $Points[StartPoint]);
 					v($M_MH, $Points[MiddlePoint]);
@@ -393,6 +466,26 @@ namespace sstd {
 					v($E_EL, $Points[EndPoint]);
 					h($S_M, $Points[MiddlePoint]);
 					h($M_E, $Points[MiddlePoint]);
+					h($B_H, $Points[BoundHigh]);
+					h($B_L, $Points[BoundLow]);
+					if (V1BV2) {
+						h($ML_EL, $Points[EndPointLow]);
+					}
+					else {
+						h($SL_ML, $Points[StartPointLow]);
+					}
+				}
+				/*共线约束*/
+				{
+					auto f = [](const auto & l1, const auto & l2, const auto & p) {
+						AcDbAssoc2dConstraintAPI::createColinearConstraint(l1, l2, p, p);
+					};
+					if (V1BV2) {
+						f($E_EH, $B_V, $Points[EndPoint]);
+					}
+					else {
+						f($S_SH, $B_V, $Points[StartPoint]);
+					}
 				}
 				/*相等约束*/
 				{
@@ -435,42 +528,45 @@ namespace sstd {
 					}
 				}
 
-				///*线性约束*/
-				//{
-				//	auto f = [&varTmp, &varDimPos](const auto & l, const auto &p0, const auto & p1) {
-				//		AcDbAssoc2dConstraintAPI::createAlignedDimConstraint(l, p0, p1, varDimPos, varTmp);
-				//		AcString varName;
-				//		AcDbEvalVariant varValue;
-				//		AcString varExpression;
-				//		AcString varEvaluatorId;
-				//		AcString varErrorString;
-				//		AcDbAssoc2dConstraintAPI::getVariableValue(
-				//			varTmp,
-				//			varName,
-				//			varValue,
-				//			varExpression,
-				//			varEvaluatorId
-				//		);
+				/*线性约束*/
+				{
+					AcDbObjectId varTmp;
+					AcGePoint3d varCPos;
+					auto f = [&varTmp, &varCPos](const auto & l1, const auto &p1,
+						const auto &l2, const auto &p2) {
+						AcDbAssoc2dConstraintAPI::createVerticalDimConstraint(
+							l1, l2, p1, p2,
+							varCPos, varTmp);
+					};
 
-				//		{
-				//			const auto Expression_ = QString::number(std::abs(
-				//				p0.y - p1.y)*2.) +
-				//				QLatin1String(R"(/2)", 2);
-				//			const auto varTS = Expression_.toStdWString();
-				//			varExpression = AcString{ varTS.c_str() };
-				//		}
-
-				//		AcDbAssoc2dConstraintAPI::setVariableValue(varTmp,
-				//			varValue,
-				//			varExpression,
-				//			varEvaluatorId,
-				//			varErrorString);
-
-				//	};
-
-				//	f($S_SH, $Points[StartPoint], $Points[StartPointHigh]);
-				//	f($S_SL, $Points[StartPoint], $Points[StartPointLow]);
-				//}
+					if (V1BV2) {
+						varCPos = $Points[MiddlePointHigh];
+						varCPos.x += $Points[EndPointLow].x;
+						varCPos.y += $Points[EndPointLow].y;
+						varCPos.x *= 0.5;
+						varCPos.y *= 0.5;
+						f($MH_EH, $Points[MiddlePointHigh], $ML_EL, $Points[MiddlePointLow]);
+						varCPos = $Points[StartPointLow];
+						varCPos.x += $Points[BoundHigh].x;
+						varCPos.y += $Points[BoundHigh].y;
+						varCPos.x *= 0.5;
+						varCPos.y *= 0.5;
+					}
+					else {
+						varCPos = $Points[MiddlePointHigh];
+						varCPos.x += $Points[StartPointLow].x;
+						varCPos.y += $Points[StartPointLow].y;
+						varCPos.x *= 0.5;
+						varCPos.y *= 0.5;
+						f($SH_MH, $Points[MiddlePointHigh], $SL_ML, $Points[MiddlePointLow]);
+						varCPos = $Points[EndPointLow];
+						varCPos.x += $Points[BoundHigh].x;
+						varCPos.y += $Points[BoundHigh].y;
+						varCPos.x *= 0.5;
+						varCPos.y *= 0.5;
+					}
+					f($B_H, $Points[BoundHigh], $B_L, $Points[BoundLow]);
+				}
 			}
 		}/*namespace _ns_pp0*/
 	}/*namespace*/
