@@ -28,7 +28,7 @@ DEF_FILE += $$PWD/AcRxDefault.def
 ##########################################################################
 #cplusplus version
 #CONFIG += c++17
-#QMAKE_CXXFLAGS += /std:c++latest
+QMAKE_CXXFLAGS += /std:c++latest
 
 #use md dll
 QMAKE_CXXFLAGS += /MD
