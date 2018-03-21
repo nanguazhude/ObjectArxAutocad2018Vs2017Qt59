@@ -993,10 +993,10 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::create2LineAngularDimConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createArcAngularDimConstraint(
-	AcDbObjectId& entId,
-	AcGePoint3d& entPt,
-	AcGePoint3d& dimPos,
-	AcDbObjectId& varDimId)
+    const AcDbObjectId &entId,
+    const AcGePoint3d &entPt,
+    const AcGePoint3d &dimPos,
+    AcDbObjectId& varDimId)
 {
 	Acad::ErrorStatus err = Acad::eOk;
 
@@ -1054,13 +1054,13 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createArcAngularDimConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::create3PointAngularDimConstraint(
-	AcDbObjectId& entId1,
-	AcDbObjectId& entId2,
-	AcDbObjectId& entId3,
-	AcGePoint3d& entPt1,
-	AcGePoint3d& entPt2,
-	AcGePoint3d& entPt3,
-	AcGePoint3d& dimPos,
+    const AcDbObjectId& entId1,
+    const AcDbObjectId& entId2,
+    const AcDbObjectId& entId3,
+    const AcGePoint3d& entPt1,
+    const AcGePoint3d& entPt2,
+    const AcGePoint3d& entPt3,
+    const AcGePoint3d& dimPos,
 	AcDbObjectId& varDimId)
 {
 	AcDbObjectIdArray cleanupObjectIds;
@@ -1362,11 +1362,10 @@ Acad::ErrorStatus createRadialOrDiamDimConstraint(
 // 
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createRadialDimConstraint(
-	AcDbObjectId& entId,
-	AcGePoint3d& entPt,
-	AcGePoint3d& dimPos,
-	AcDbObjectId& varDimId)
+Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createRadialDimConstraint(const AcDbObjectId &entId,
+    const AcGePoint3d &entPt,
+    const AcGePoint3d &dimPos,
+    AcDbObjectId& varDimId)
 {
 	bool isRadial = true;
 
@@ -1393,11 +1392,11 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createDiamDimConstraint(
 // 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus createRotatedDimConstraint(
-	AcDbObjectId& entId1,
-	AcGePoint3d& entPt1,
-	AcDbObjectId& entId2,
-	AcGePoint3d& entPt2,
-	AcGePoint3d& dimPos,
+	const AcDbObjectId& entId1,
+	const AcGePoint3d& entPt1,
+	const AcDbObjectId& entId2,
+	const AcGePoint3d& entPt2,
+	const AcGePoint3d& dimPos,
 	double rotation,
 	const AcGeVector3d& fixedDirection,
 	AcDbObjectId& varDimId)
@@ -1536,12 +1535,12 @@ Acad::ErrorStatus createRotatedDimConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createHorizontalDimConstraint(
-	AcDbObjectId& entId1,
-	AcDbObjectId& entId2,
-	AcGePoint3d& entPt1,
-	AcGePoint3d& entPt2,
-	AcGePoint3d& dimPos,
-	AcDbObjectId& varDimId)
+    const AcDbObjectId &entId1,
+    const AcDbObjectId &entId2,
+    const AcGePoint3d &entPt1,
+    const AcGePoint3d &entPt2,
+    const AcGePoint3d &dimPos,
+    AcDbObjectId& varDimId)
 {
 	double rotation = 0.0;
 
@@ -1555,12 +1554,12 @@ Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createHorizontalDimConstraint(
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createVerticalDimConstraint(
-	AcDbObjectId& entId1,
-	AcDbObjectId& entId2,
-	AcGePoint3d& entPt1,
-	AcGePoint3d& entPt2,
-	AcGePoint3d& dimPos,
-	AcDbObjectId& varDimId)
+    const AcDbObjectId &entId1,
+    const AcDbObjectId &entId2,
+    const AcGePoint3d &entPt1,
+    const AcGePoint3d &entPt2,
+    const AcGePoint3d &dimPos,
+    AcDbObjectId& varDimId)
 {
 	double rotation = 2.0 * atan(1.0); // 2.0 * atan(1.0) = Pi/2
 

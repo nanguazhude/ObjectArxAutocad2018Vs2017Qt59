@@ -228,9 +228,9 @@ public:
 	// 圆弧角度
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static Acad::ErrorStatus createArcAngularDimConstraint(
-		AcDbObjectId& entId,	// ObjectID of arc based entity
-		AcGePoint3d& entPt,		// Point on arc based entity
-		AcGePoint3d& dimPos,	// Location of the dimension
+        const AcDbObjectId& entId,	// ObjectID of arc based entity
+        const AcGePoint3d& entPt,		// Point on arc based entity
+        const AcGePoint3d& dimPos,	// Location of the dimension
 		AcDbObjectId& varDimId	// ObjectId of the associated AssocVariable created (dimemsion parameter)
 	);
 
@@ -239,13 +239,13 @@ public:
 	// 3点角度
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static Acad::ErrorStatus create3PointAngularDimConstraint(
-		AcDbObjectId& entId1,	// ObjectID of first entity for angular dimension
-		AcDbObjectId& entId2,	// ObjectID of second entity for angular dimension
-		AcDbObjectId& entId3,	// ObjectID of third entity for angular dimension
-		AcGePoint3d& entPt1,	// Point on first entity used to determine point sub entity for the angular dimension
-		AcGePoint3d& entPt2,	// Point on second entity used to determine second point sub entity for the angular dimension
-		AcGePoint3d& entPt3,	// Point on third entity used to determine third point sub entity for the angular dimension
-		AcGePoint3d& dimPos,	// Location of the dimension
+        const AcDbObjectId& entId1,	// ObjectID of first entity for angular dimension
+        const AcDbObjectId& entId2,	// ObjectID of second entity for angular dimension
+        const AcDbObjectId& entId3,	// ObjectID of third entity for angular dimension
+        const AcGePoint3d& entPt1,	// Point on first entity used to determine point sub entity for the angular dimension
+        const AcGePoint3d& entPt2,	// Point on second entity used to determine second point sub entity for the angular dimension
+        const AcGePoint3d& entPt3,	// Point on third entity used to determine third point sub entity for the angular dimension
+        const AcGePoint3d& dimPos,	// Location of the dimension
 		AcDbObjectId& varDimId	// ObjectId of the associated AssocVariable created (dimemsion parameter)
 	);
 
@@ -254,9 +254,9 @@ public:
 	// 半径
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static Acad::ErrorStatus createRadialDimConstraint(
-		AcDbObjectId& entId,	// ObjectID of entity for radial dimension
-		AcGePoint3d& entPt,		// Point on first entity used to determine arc sub entity for the radial dimension
-		AcGePoint3d& dimPos,	// Location of the dimension
+        const AcDbObjectId& entId,	// ObjectID of entity for radial dimension
+        const AcGePoint3d& entPt,		// Point on first entity used to determine arc sub entity for the radial dimension
+        const AcGePoint3d& dimPos,	// Location of the dimension
 		AcDbObjectId& varDimId	// ObjectId of the associated AssocVariable created (dimemsion parameter)
 	);
 
@@ -276,11 +276,11 @@ public:
 	// 水平线性尺寸
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static Acad::ErrorStatus createHorizontalDimConstraint(
-		AcDbObjectId& entId1,	// ObjectID of first entity for horizontal dimension
-		AcDbObjectId& entId2,	// ObjectID of second entity for horizontal dimension
-		AcGePoint3d& entPt1,	// Point on first entity used to determine point sub entity for the horizontal dimension
-		AcGePoint3d& entPt2,	// Point on second entity used to determine point sub entity for the horizontal dimension
-		AcGePoint3d& dimPos,	// Location of the dimension
+        const AcDbObjectId& entId1,	// ObjectID of first entity for horizontal dimension
+        const AcDbObjectId& entId2,	// ObjectID of second entity for horizontal dimension
+        const AcGePoint3d& entPt1,	// Point on first entity used to determine point sub entity for the horizontal dimension
+        const AcGePoint3d& entPt2,	// Point on second entity used to determine point sub entity for the horizontal dimension
+        const AcGePoint3d& dimPos,	// Location of the dimension
 		AcDbObjectId& varDimId	// ObjectId of the associated AssocVariable created (dimemsion parameter)
 	);
 
@@ -289,11 +289,11 @@ public:
 	// 垂直线型尺寸
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	static Acad::ErrorStatus createVerticalDimConstraint(
-		AcDbObjectId& entId1,	// ObjectID of first entity for vertical dimension
-		AcDbObjectId& entId2,	// ObjectID of second entity for vertical dimension
-		AcGePoint3d& entPt1,	// Point on first entity used to determine point sub entity for the vertical dimension
-		AcGePoint3d& entPt2,	// Point on second entity used to determine point sub entity for the vertical dimension
-		AcGePoint3d& dimPos,	// Location of the dimension
+        const AcDbObjectId& entId1,	// ObjectID of first entity for vertical dimension
+        const AcDbObjectId& entId2,	// ObjectID of second entity for vertical dimension
+        const AcGePoint3d& entPt1,	// Point on first entity used to determine point sub entity for the vertical dimension
+        const AcGePoint3d& entPt2,	// Point on second entity used to determine point sub entity for the vertical dimension
+        const AcGePoint3d& dimPos,	// Location of the dimension
 		AcDbObjectId& varDimId	// ObjectId of the associated AssocVariable created (dimemsion parameter)
 	);
 
