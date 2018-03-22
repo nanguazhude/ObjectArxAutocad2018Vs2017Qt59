@@ -31,231 +31,244 @@ namespace sstd {
 	}
 
 	void FARC::main() try {
-		/*获得数据库*/
-		auto varDB = acdbHostApplicationServices()
-			->workingDatabase();
-		class LockMain {
-		public:
-			AcDbDatabase * db;
-			AcDbObjectId lid;
-			LockMain(AcDbDatabase *a) :db(a) {
-				lid = a->clayer();
-				{
-					AcDbObjectId llid;
-					sstd::ArxClosePointer<AcDbLayerTable>t;
-					a->getLayerTable(t);
-					t->getAt(LR"(粗实线)", llid);
-					if (llid.isNull() == false)a->setClayer(llid);
-				}
-			}
-			~LockMain() {
-				db->setClayer(lid);
-			}
-		}____{ varDB };
-
+		AcDbObjectId varAID;
 		AcGePoint3d $EndPoint;
 		AcGePoint3d $StartPoint;
 		AcGePoint3d $CenterPoint;
-
-		AcGePoint3d $LineStartPoint;
-		AcGePoint3d $LineEndPoint;
-		AcGePoint3d $X0Point;
-		AcGePoint3d $SPoint;
 		double $R = 1.6;
+		{
+			/*获得数据库*/
+			auto varDB = acdbHostApplicationServices()
+				->workingDatabase();
+			class LockMain {
+			public:
+				AcDbDatabase * db;
+				AcDbObjectId lid;
+				LockMain(AcDbDatabase *a) :db(a) {
+					lid = a->clayer();
+					{
+						AcDbObjectId llid;
+						sstd::ArxClosePointer<AcDbLayerTable>t;
+						a->getLayerTable(t);
+						t->getAt(LR"(粗实线)", llid);
+						if (llid.isNull() == false)a->setClayer(llid);
+					}
+				}
+				~LockMain() {
+					db->setClayer(lid);
+				}
+			}____{ varDB };
+
+			AcGePoint3d $LineStartPoint;
+			AcGePoint3d $LineEndPoint;
+			AcGePoint3d $X0Point;
+			AcGePoint3d $SPoint;
 
 #if 0
-		bool varLoop = true;
-		/*获得直线*/
-		while (varLoop) {
-			class Lock {
-			public:
-				ads_name ssName = {};
-				~Lock() {
-					acedSSFree(ssName);
-				}
-			}lock;
-			double varPoint[4];
-			AcDbObjectId varID;//acedNEntSelP
-			if (RTNORM == acedEntSel(LR"("选择直线:
+			bool varLoop = true;
+			/*获得直线*/
+			while (varLoop) {
+				class Lock {
+				public:
+					ads_name ssName = {};
+					~Lock() {
+						acedSSFree(ssName);
+					}
+				}lock;
+				double varPoint[4];
+				AcDbObjectId varID;//acedNEntSelP
+				if (RTNORM == acedEntSel(LR"("选择直线:
 )", lock.ssName, varPoint)) {
-				acdbGetObjectId(varID, lock.ssName);   //获取实体id  
-				sstd::ArxClosePointer< AcDbEntity > pEnt;
-				if (Acad::eOk != acdbOpenObject(pEnt, varID, AcDb::kForRead)) {
-					acutPrintf(LR"(打开实体失败
+					acdbGetObjectId(varID, lock.ssName);   //获取实体id  
+					sstd::ArxClosePointer< AcDbEntity > pEnt;
+					if (Acad::eOk != acdbOpenObject(pEnt, varID, AcDb::kForRead)) {
+						acutPrintf(LR"(打开实体失败
 )");
-					return;//打开实体失败，返回  
-				}
+						return;//打开实体失败，返回  
+					}
 
-				if (pEnt->isKindOf(AcDbLine::desc())) {
-					AcDbLine * pLine = AcDbLine::cast(pEnt);
-					$LineStartPoint = pLine->startPoint();
-					$LineEndPoint = pLine->endPoint();
-					$SPoint.x = varPoint[0];
-					$SPoint.y = varPoint[1];
-					$SPoint.z = 0;
-					$SPoint = UcsToWorld($SPoint);
-					varLoop = false;
+					if (pEnt->isKindOf(AcDbLine::desc())) {
+						AcDbLine * pLine = AcDbLine::cast(pEnt);
+						$LineStartPoint = pLine->startPoint();
+						$LineEndPoint = pLine->endPoint();
+						$SPoint.x = varPoint[0];
+						$SPoint.y = varPoint[1];
+						$SPoint.z = 0;
+						$SPoint = UcsToWorld($SPoint);
+						varLoop = false;
 
-					/*************************************/
-					/*QString test;
-					test += ":x:";
-					test += QString::number($SPoint.x);
-					test += ":y:";
-					test += QString::number($SPoint.y);
-					test += "\n";
+						/*************************************/
+						/*QString test;
+						test += ":x:";
+						test += QString::number($SPoint.x);
+						test += ":y:";
+						test += QString::number($SPoint.y);
+						test += "\n";
 
-					test += ":x:";
-					test += QString::number($LineStartPoint.x);
-					test += ":y:";
-					test += QString::number($LineStartPoint.y);
-					test += "\n";
+						test += ":x:";
+						test += QString::number($LineStartPoint.x);
+						test += ":y:";
+						test += QString::number($LineStartPoint.y);
+						test += "\n";
 
-					test += ":x:";
-					test += QString::number($LineEndPoint.x);
-					test += ":y:";
-					test += QString::number($LineEndPoint.y);
-					test += "\n";
+						test += ":x:";
+						test += QString::number($LineEndPoint.x);
+						test += ":y:";
+						test += QString::number($LineEndPoint.y);
+						test += "\n";
 
-					auto j = test.toStdWString();
-					acutPrintf(j.c_str());*/
-					/*************************************/
+						auto j = test.toStdWString();
+						acutPrintf(j.c_str());*/
+						/*************************************/
+					}
+					else {
+						acutPrintf(LR"(请选择直线
+)");
+					}
 				}
 				else {
-					acutPrintf(LR"(请选择直线
+					acutPrintf(LR"(取消选择
 )");
+					return;
 				}
 			}
-			else {
-				acutPrintf(LR"(取消选择
-)");
-				return;
-			}
-		}
 #endif
 
-		/*获得起点*/
-		{
-			const auto varError =
-				acedGetPoint(nullptr, LR"(请输入切线起点<0,0>：)", &($LineStartPoint.x));
+			/*获得起点*/
+			{
+				const auto varError =
+					acedGetPoint(nullptr, LR"(请输入切线起点<0,0>：)", &($LineStartPoint.x));
 
-			if (RTNONE == varError) {
-				$LineStartPoint = { 0.0,0.0,0.0 };
-			}
-			else if (varError != RTNORM) {
-				throw varError;
-			}
+				if (RTNONE == varError) {
+					$LineStartPoint = { 0.0,0.0,0.0 };
+				}
+				else if (varError != RTNORM) {
+					throw varError;
+				}
 
-			$LineStartPoint = UcsToWorld($LineStartPoint);
-		}
-
-		/*获得直线上另一点*/
-		{
-			const auto varError =
-				acedGetPoint(nullptr, LR"(请输入切线终点<0,0>：)", &($LineEndPoint.x));
-
-			if (RTNONE == varError) {
-				$LineEndPoint = { 0.0,0.0,0.0 };
-			}
-			else if (varError != RTNORM) {
-				throw varError;
+				$LineStartPoint = UcsToWorld($LineStartPoint);
 			}
 
-			$LineEndPoint = UcsToWorld($LineEndPoint);
-		}
+			/*获得直线上另一点*/
+			{
+				const auto varError =
+					acedGetPoint(nullptr, LR"(请输入切线终点<0,0>：)", &($LineEndPoint.x));
 
-		$SPoint = $LineStartPoint;
+				if (RTNONE == varError) {
+					$LineEndPoint = { 0.0,0.0,0.0 };
+				}
+				else if (varError != RTNORM) {
+					throw varError;
+				}
 
-		/*获得点*/
-		{
-			const auto varError =
-				acedGetPoint(nullptr, LR"(请输入起始中心<0,0>：)", &($X0Point.x));
-
-			if (RTNONE == varError) {
-				$X0Point = { 0.0,0.0,0.0 };
-			}
-			else if (varError != RTNORM) {
-				throw varError;
+				$LineEndPoint = UcsToWorld($LineEndPoint);
 			}
 
-			$X0Point = UcsToWorld($X0Point);
-		}
+			$SPoint = $LineStartPoint;
 
-		/*指定半径*/
-		do {
-			int varReturn = acedGetReal(LR"(请输入边长<1.6>：)", &$R);
-			if (RTNONE == varReturn) {
-				$R = 1.6;
-				break;
+			/*获得点*/
+			{
+				const auto varError =
+					acedGetPoint(nullptr, LR"(请输入起始中心<0,0>：)", &($X0Point.x));
+
+				if (RTNONE == varError) {
+					$X0Point = { 0.0,0.0,0.0 };
+				}
+				else if (varError != RTNORM) {
+					throw varError;
+				}
+
+				$X0Point = UcsToWorld($X0Point);
 			}
-			else if ((RTNORM == varReturn) &&
-				($R > std::numeric_limits<double>::epsilon())) {
-				break;
-			}
 
-			acutPrintf(LR"(您输入了一个无效值
-)");
-			return;
-		} while (false);
+			/*指定半径*/
+			do {
+				int varReturn = acedGetReal(LR"(请输入半径<1.6>：)", &$R);
+				if (RTNONE == varReturn) {
+					$R = 1.6;
+					break;
+				}
+				else if ((RTNORM == varReturn) &&
+					($R > std::numeric_limits<double>::epsilon())) {
+					break;
+				}
 
-		/*计算*/
-		{
-			double varTmpData[6];
-			if (false == sstd::_private_FARC_ALG_HPP::eval<double>(
-				$LineStartPoint.x, $LineStartPoint.y,
-				$LineEndPoint.x, $LineEndPoint.y,
-				$X0Point.x, $X0Point.y,
-				$SPoint.x, $SPoint.y,
-				$R,
-				varTmpData)) {
-				acutPrintf(LR"(计算失败
+				acutPrintf(LR"(您输入了一个无效值
 )");
 				return;
-			}
-			else {
-				$CenterPoint.x = varTmpData[0];
-				$CenterPoint.y = varTmpData[1];
+			} while (false);
 
-				$StartPoint.x = varTmpData[2];
-				$StartPoint.y = varTmpData[3];
-
-				$EndPoint.x = varTmpData[4];
-				$EndPoint.y = varTmpData[5];
-			}
-		}
-
-		AcDbObjectId varAID;
-		/*绘图*/
-		{
-			sstd::ArxClosePointer<AcDbBlockTable> varBlockTable;
-			sstd::ArxClosePointer<AcDbBlockTableRecord> varBlockTableRecord;
-
+			/*计算*/
 			{
-				auto varE = varDB->getBlockTable(varBlockTable, AcDb::kForRead);
-				if (varE != eOk) { throw varE; }
-				varE = varBlockTable->getAt(ACDB_MODEL_SPACE,
-					varBlockTableRecord,
-					AcDb::kForWrite);
-				if (varE != eOk) { throw varE; }
+				double varTmpData[6];
+				if (false == sstd::_private_FARC_ALG_HPP::eval<double>(
+					$LineStartPoint.x, $LineStartPoint.y,
+					$LineEndPoint.x, $LineEndPoint.y,
+					$X0Point.x, $X0Point.y,
+					$SPoint.x, $SPoint.y,
+					$R,
+					varTmpData)) {
+					acutPrintf(LR"(计算失败
+)");
+					return;
+				}
+				else {
+					$CenterPoint.x = varTmpData[0];
+					$CenterPoint.y = varTmpData[1];
+
+					$StartPoint.x = varTmpData[2];
+					$StartPoint.y = varTmpData[3];
+
+					$EndPoint.x = varTmpData[4];
+					$EndPoint.y = varTmpData[5];
+				}
 			}
 
-			sstd::ArxClosePointer< AcDbArc > varArc{
-				new AcDbArc{ $CenterPoint,
-				$R,
-				std::atan2($StartPoint.y - $CenterPoint.y,$StartPoint.x - $CenterPoint.x),
-				std::atan2($EndPoint.y - $CenterPoint.y,$EndPoint.x - $CenterPoint.x)
-			} };
+			/*绘图*/
+			{
+				sstd::ArxClosePointer<AcDbBlockTable> varBlockTable;
+				sstd::ArxClosePointer<AcDbBlockTableRecord> varBlockTableRecord;
 
-			varBlockTableRecord->appendAcDbEntity(varAID, varArc);
+				{
+					auto varE = varDB->getBlockTable(varBlockTable, AcDb::kForRead);
+					if (varE != eOk) { throw varE; }
+					varE = varBlockTable->getAt(ACDB_MODEL_SPACE,
+						varBlockTableRecord,
+						AcDb::kForWrite);
+					if (varE != eOk) { throw varE; }
+				}
 
+				sstd::ArxClosePointer< AcDbArc > varArc{
+					new AcDbArc{ $CenterPoint,
+					$R,
+					std::atan2($StartPoint.y - $CenterPoint.y,$StartPoint.x - $CenterPoint.x),
+					std::atan2($EndPoint.y - $CenterPoint.y,$EndPoint.x - $CenterPoint.x)
+				} };
+
+				varBlockTableRecord->appendAcDbEntity(varAID, varArc);
+
+			}
 		}
 
 		/*添加约束*/
 		{
 			AcDbObjectId varTmp;
+			AcGePoint3d varMiddlePoint = $EndPoint;
+			varMiddlePoint.x += $StartPoint.x;
+			varMiddlePoint.y += $StartPoint.y;
+			{
+				auto dx = varMiddlePoint.x - $CenterPoint.x;
+				auto dy = varMiddlePoint.y - $CenterPoint.y;
+				const auto l = std::hypot(dx, dy);
+				dx /= l;
+				dy /= l;
+				varMiddlePoint.x = std::fma(dx, $R, $CenterPoint.x);
+				varMiddlePoint.y = std::fma(dy, $R, $CenterPoint.y);
+			}
 			AcDbAssoc2dConstraintAPI::createRadialDimConstraint(
 				varAID,
-				$EndPoint,
-				$CenterPoint,
+				varMiddlePoint,
+				{ 0.5*($CenterPoint.x + varMiddlePoint.x),0.5*(varMiddlePoint.y + $CenterPoint.y),0 },
 				varTmp);
 		}
 
