@@ -160,6 +160,7 @@ namespace sstd {
 /*26*/#include "appendLayer/临时图形.hpp"
 /*27*/#include "appendLayer/隐藏层.hpp"
 /*28*/#include "appendLayer/TEXT.hpp"
+/*29*/#include "appendLayer/区域覆盖图层.hpp"
 			return std::move(varAns);
 		}
 
