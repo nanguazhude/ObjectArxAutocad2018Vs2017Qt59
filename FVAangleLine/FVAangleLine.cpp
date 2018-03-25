@@ -12,6 +12,7 @@ namespace sstd {
 
 namespace sstd {
 	extern std::array<std::uint8_t, 3> randColr();
+	extern AcCmColor smallChange(const AcCmColor &);
 }
 
 namespace {
@@ -26,7 +27,7 @@ namespace {
 	}
 	inline void set_line_r(AcDbLine * l, const AcCmColor&c) {
 		l->setLayer(_ref_layerName());
-		l->setColor(c);
+		l->setColor(sstd::smallChange(c) );
 	}
 }
 

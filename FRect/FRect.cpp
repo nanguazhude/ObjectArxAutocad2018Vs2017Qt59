@@ -10,6 +10,7 @@ namespace sstd {
 
 namespace sstd {
 	extern std::array<std::uint8_t, 3> randColr();
+	extern AcCmColor smallChange(const AcCmColor &);
 }
 
 namespace {
@@ -209,7 +210,7 @@ namespace sstd {
 					/*close */
 					for (auto & varI : argP.varLines) {
 						varI->setLayer(_this_layerName());
-						varI->setColor(argP.varColor);
+						varI->setColor(sstd::smallChange( argP.varColor) );
 						varI = {};
 					}
 					argP.varBlockTableRecord = {};

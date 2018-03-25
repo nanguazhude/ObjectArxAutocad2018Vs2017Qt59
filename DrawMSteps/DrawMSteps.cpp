@@ -14,6 +14,7 @@ namespace {
 
 namespace sstd {
 	extern std::array<std::uint8_t, 3> randColr();
+	extern AcCmColor smallChange(const AcCmColor & );
 }
 
 namespace {
@@ -271,7 +272,7 @@ namespace {
 					varBlockTableRecord->appendAcDbEntity(varI.$ID, varV);
 					varV->setLayer(_this_layerName());
 					/**set object color****************************/
-					varV->setColor(varColor);
+					varV->setColor(sstd::smallChange(varColor));
 				}
 			}
 		}
@@ -436,7 +437,7 @@ namespace {
 					varBlockTableRecord->appendAcDbEntity(varI.$ID, varV);
 					varV->setLayer(_this_layerName());
 					/**set object color****************************/
-					varV->setColor(varColor);
+					varV->setColor( sstd::smallChange(varColor) );
 				}
 			}
 
