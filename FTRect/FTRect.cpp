@@ -15,8 +15,8 @@ namespace sstd {
 		throw arg;
 	}
 
-	void FTRect::main() try {
-
+	template<bool S>
+	inline void _p_FTRect_main() {
 		double xywh[4];
 
 		{
@@ -31,13 +31,23 @@ namespace sstd {
 			if (RTNONE == $Error) { xywh1[0] = 0; xywh1[1] = 0; }
 			check_error($Error, RTNORM);
 
-			xywh[2] = xywh[0] - xywh1[0];
-			xywh[3] = xywh1[1] - xywh[1];
+			if constexpr(S) {
+				xywh[2] = xywh[0] - xywh1[0];
+				xywh[3] = xywh1[1] - xywh[1];
+				xywh[1] = (xywh[1] + xywh1[1])*0.5;
+			}
+			else {
+				xywh[2] = xywh[0] - xywh1[0];
+				xywh[3] = 2*(xywh1[1] - xywh[1]);
+			}
 
-			xywh[1] = (xywh[1] + xywh1[1])*0.5;
 		}
 
 		sstd::FRect::ftrect_main(xywh[0], xywh[1], xywh[2], xywh[3]);
+	}
+
+	void FTRect::main() try {
+		_p_FTRect_main<true>();
 	}
 	catch (...) {
 		return;
@@ -45,6 +55,26 @@ namespace sstd {
 
 	extern void loadFTRect() {
 		FTRect::load();
+	}
+
+	namespace {
+		class FCTRect {
+		public:
+			FCTRect()=default;
+			static void load() {
+				arx_add_main_command<FCTRect>();
+			}
+			static void main() try{
+				_p_FTRect_main<false>();
+			}
+			catch (...) { return; }
+			DEFINE_ARX_NAME(LR"(_fctrect)")
+		};
+	}
+
+
+	extern void loadFCTRect() {
+		FCTRect::load();
 	}
 
 }
