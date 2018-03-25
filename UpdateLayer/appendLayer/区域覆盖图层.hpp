@@ -9,11 +9,11 @@
 	/*初始化颜色*****************************************************/
 	AcCmColor varLColor;
 	varLColor.setRGB(
-				std::uint8_t(117), 
-				std::uint8_t(101), 
-				std::uint8_t(82));
+				std::uint8_t(255), 
+				std::uint8_t(255), 
+				std::uint8_t(255));
 	/*初始化线宽*****************************************************/
-	AcDb::LineWeight varLWeight = AcDb::kLnWt015;
+	AcDb::LineWeight varLWeight = AcDb::kLnWt005;
 	/*设置透明度*****************************************************/
 	AcCmTransparency varLTP;
 	varLTP.setAlphaPercent(1.0)/*1.0代表不透明，0.0代表透明*/;
@@ -34,7 +34,7 @@
 	argLTR->setIsLocked(false)/*锁定*/;
 	argLTR->setColor(varLColor)/*颜色*/;
 	argLTR->setIsPlottable(true)/*打印*/;
-	if(argIsPlotNS /*||varLocalLTR*/ )argLTR->setPlotStyleName(LR"(样式_区域覆盖图层)");
+	if(argIsPlotNS /*||varLocalLTR*/ )argLTR->setPlotStyleName(LR"(Normal)");
 	
 	if (varLTypeID) {
 		argLTR->setLinetypeObjectId(*varLTypeID)/*设置线型*/;
