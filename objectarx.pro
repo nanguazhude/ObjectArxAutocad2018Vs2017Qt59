@@ -89,7 +89,8 @@ SOURCES += \
         $$PWD/SimpleSelect/SimpleSelect.cpp \
         $$PWD/FRect/FRect.cpp \
         $$PWD/FVAangleLine/FVAangleLine.cpp \
-        $$PWD/FTRect/FTRect.cpp
+        $$PWD/FTRect/FTRect.cpp \
+        $$PWD/HideLayer/HideLayer.cpp
 
 
 #.h .hpp source
@@ -126,7 +127,8 @@ HEADERS += \
         $$PWD/SimpleSelect/SimpleSelect.hpp \
         $$PWD/FRect/FRect.hpp \
         $$PWD/FVAangleLine/FVAangleLine.hpp \
-        $$PWD/FTRect/FTRect.hpp
+        $$PWD/FTRect/FTRect.hpp \
+        $$PWD/HideLayer/HideLayer.hpp
 
 SOURCES += $$PWD/object_arx_global.cpp \
     $$PWD/ARXApplication.cpp \

@@ -72,7 +72,6 @@ namespace sstd {
 		};
 	}
 
-
 	extern void loadFCTRect() {
 		FCTRect::load();
 	}
