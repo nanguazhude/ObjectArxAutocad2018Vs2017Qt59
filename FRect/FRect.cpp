@@ -50,8 +50,8 @@ namespace sstd {
 
 			class PrivatePack {
 			public:
-				AcGePoint3d $StartPoint;
 				AcDbDatabase * $DB = nullptr;
+				AcGePoint3d $StartPoint;
 				int $Error = 0;
 				Rect $Rects;
 			};
@@ -217,6 +217,7 @@ namespace sstd {
 
 			}
 
+			template<bool S>
 			inline void _p_constraint(DrawARectPack & argP) {
 
 				/*添加重合约束*/
@@ -239,29 +240,24 @@ namespace sstd {
 				AcDbAssoc2dConstraintAPI::createEqualLengthConstraint(argP.varID0, argP.varID5, argP.varKeyPoint0_1, argP.varKeyPoint5_0);
 				AcDbAssoc2dConstraintAPI::createEqualLengthConstraint(argP.varID2, argP.varID3, argP.varKeyPoint2_3, argP.varKeyPoint3_4);
 
-				/*添加尺寸约束*/
-				AcDbObjectId varTmp;
-				const auto varCPosR = mid(argP.varKeyPoint1, argP.varKeyPoint4);
-				const AcGePoint3d & varCPos = varCPosR;
-				AcDbAssoc2dConstraintAPI::createHorizontalDimConstraint(argP.varID0, argP.varID2,
-					argP.varKeyPoint0_1, argP.varKeyPoint2_3, varCPos, varTmp);
-				AcDbAssoc2dConstraintAPI::createVerticalDimConstraint(argP.varID1, argP.varID4,
-					argP.varKeyPoint1_2, argP.varKeyPoint4_5, varCPos, varTmp);
+				if constexpr (S) {
+					/*添加尺寸约束*/
+					AcDbObjectId varTmp;
+					const auto varCPosR = mid(argP.varKeyPoint1, argP.varKeyPoint4);
+					const AcGePoint3d & varCPos = varCPosR;
+					AcDbAssoc2dConstraintAPI::createHorizontalDimConstraint(argP.varID0, argP.varID2,
+						argP.varKeyPoint0_1, argP.varKeyPoint2_3, varCPos, varTmp);
+					AcDbAssoc2dConstraintAPI::createVerticalDimConstraint(argP.varID1, argP.varID4,
+						argP.varKeyPoint1_2, argP.varKeyPoint4_5, varCPos, varTmp);
+				}
 			}
 
 		}
 	}/*namespace*/
 
-	void FRect::main() try {
+	template<bool S >
+	void _p_FRect_main(_p000_::PrivatePack&varData) try {
 		using namespace _p000_;
-
-		PrivatePack varData;
-
-		/*construc pack*/
-		if (false == _p_construct_pack(&varData)) {
-			return;
-		}
-
 		class Lock {
 			PrivatePack * d;
 			AcDbObjectId layerID;
@@ -277,19 +273,63 @@ namespace sstd {
 		};
 		Lock __lock{ &varData };
 
-		/*select point*/
-		if (false == _p_select_point(&varData)) {
-			return;
+		if constexpr(S) {
+			/*select point*/
+			if (false == _p_select_point(&varData)) {
+				return;
+			}
+			/*get width*/
+			_p_get_y(&varData);
+			/*get height*/
+			_p_get_x(&varData);
 		}
-
-		/*get width*/
-		_p_get_y(&varData);
-		/*get height*/
-		_p_get_x(&varData);
 
 		DrawARectPack varPackD;
 		_p_draw_a_rect(varData.$Rects, varPackD, varData);
-		_p_constraint(varPackD);
+		_p_constraint<S>(varPackD);
+	}
+	catch (...) {
+		return;
+	}
+
+	void FRect::main() try {
+		using namespace _p000_;
+
+		PrivatePack varData;
+
+		/*construc pack*/
+		if (false == _p_construct_pack(&varData)) {
+			return;
+		}
+
+		_p_FRect_main<true>(varData);
+
+	}
+	catch (...) {
+		return;
+	}
+
+	void  FRect::ftrect_main(
+		double argx/*x*/,
+		double argy/*y*/,
+		double argw/*w*/,
+		double argh/*h*/) try {
+		using namespace _p000_;
+
+		PrivatePack varData;
+
+		/*construc pack*/
+		if (false == _p_construct_pack(&varData)) {
+			return;
+		}
+
+		varData.$Rects.$Height = argh;
+		varData.$Rects.$Width = argw;
+		varData.$StartPoint.x = argx;
+		varData.$StartPoint.y = argy;
+
+		_p_FRect_main<false>(varData);
+
 	}
 	catch (...) {
 		return;

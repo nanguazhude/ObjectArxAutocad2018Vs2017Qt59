@@ -1,4 +1,4 @@
-﻿#pragma once
+﻿//#pragma once
 
 #ifndef OBJECT_ARX_GLOBAL_HXX_
 #define OBJECT_ARX_GLOBAL_HXX_

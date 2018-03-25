@@ -3,15 +3,16 @@
 
 #include <object_arx_global.hpp>
 
-namespace sstd{
-class FRect{
-public:
-    FRect();
+namespace sstd {
+	class FRect {
+	public:
+		FRect();
 
-    static void load();
-    static void main();
-    DEFINE_ARX_NAME(LR"(_frect)")
-};
+		static void load();
+		static void main();
+		static void ftrect_main(double/*x*/, double/*y*/, double/*w*/, double/*h*/);
+		DEFINE_ARX_NAME(LR"(_frect)")
+	};
 }/*namespace*/
 
 #endif // FRECT_HPP

@@ -28,6 +28,7 @@ DEF_FILE += $$PWD/AcRxDefault.def
 ##########################################################################
 #cplusplus version
 #CONFIG += c++17
+CONFIG += suppress_vcproj_warnings
 QMAKE_CXXFLAGS += /std:c++latest
 
 #use md dll
@@ -44,7 +45,6 @@ QT       += core
 QT       += gui
 QT       += widgets
 QT       += qml
-#CONFIG += suppress_vcproj_warnings
 
 #Qt project template
 TEMPLATE = lib
@@ -88,7 +88,8 @@ SOURCES += \
         $$PWD/FARC/FARC.cpp \
         $$PWD/SimpleSelect/SimpleSelect.cpp \
         $$PWD/FRect/FRect.cpp \
-        $$PWD/FVAangleLine/FVAangleLine.cpp
+        $$PWD/FVAangleLine/FVAangleLine.cpp \
+        $$PWD/FTRect/FTRect.cpp
 
 
 #.h .hpp source
@@ -124,7 +125,8 @@ HEADERS += \
         $$PWD/FARC/FARC.hpp \
         $$PWD/SimpleSelect/SimpleSelect.hpp \
         $$PWD/FRect/FRect.hpp \
-        $$PWD/FVAangleLine/FVAangleLine.hpp
+        $$PWD/FVAangleLine/FVAangleLine.hpp \
+        $$PWD/FTRect/FTRect.hpp
 
 SOURCES += $$PWD/object_arx_global.cpp \
     $$PWD/ARXApplication.cpp \
