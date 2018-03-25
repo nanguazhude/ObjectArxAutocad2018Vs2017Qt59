@@ -33,6 +33,7 @@ namespace sstd {
 	extern void loadFVAngleLine();
 	extern void loadFTRect();
 	extern void loadFCTRect();
+	extern void loadHideLayer();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -66,6 +67,7 @@ namespace sstd {
 			{ &sstd::loadFVAngleLine },
 		    { &sstd::loadFTRect },
 		    { &sstd::loadFCTRect },
+		    { &sstd::loadHideLayer }
 		};
 	}
 
