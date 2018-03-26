@@ -1,6 +1,8 @@
 ﻿/** Dimension **/
 #include "AdnAssocSampleUtils.hpp"
 #include "AdnConstraintEvaluationCallback.hpp"
+#include <set>
+#include <string>
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 
@@ -1447,7 +1449,9 @@ AdnAssocSampleUtils::getNameAndExpressionFromDimension(const AcDbObjectId& netwo
 {
 	Acad::ErrorStatus err = eOk;
 
-	AcString namePrefix, dfltName, dfltExpression;
+	AcString namePrefix/*前缀*/;
+	AcString dfltName/*   */;
+	AcString dfltExpression/*  */;
 
 	name.setEmpty();
 	expression.setEmpty();
@@ -1458,22 +1462,22 @@ AdnAssocSampleUtils::getNameAndExpressionFromDimension(const AcDbObjectId& netwo
 	case kDistanceAssocConstraintType:
 	case kHorizontalDistanceAssocConstraintType:
 	case kVerticalDistanceAssocConstraintType:
-		namePrefix = ACRX_T("d");
+		namePrefix = ACRX_T("wddd_");
 		break;
 
 	case kAngle0AssocConstraintType:
 	case kAngle1AssocConstraintType:
 	case kAngle2AssocConstraintType:
 	case kAngle3AssocConstraintType:
-		namePrefix = ACRX_T("ang");
+		namePrefix = ACRX_T("xang_");
 		break;
 
 	case kRadiusAssocConstraintType:
-		namePrefix = ACRX_T("rad");
+		namePrefix = ACRX_T("yrad_");
 		break;
 
 	case kDiameterAssocConstraintType:
-		namePrefix = ACRX_T("dia");
+		namePrefix = ACRX_T("zdia_");
 		break;
 
 	default:
@@ -1497,8 +1501,9 @@ AdnAssocSampleUtils::getNameAndExpressionFromDimension(const AcDbObjectId& netwo
 			LPTSTR pDimText = pDim->dimensionText();
 			if (pDimText)
 			{
-				if (*pDimText)
+				if (*pDimText) {
 					dimensionText = pDimText;
+				}
 				free(pDimText);
 			}
 		}
@@ -1531,33 +1536,51 @@ AdnAssocSampleUtils::getNameAndExpressionFromDimension(const AcDbObjectId& netwo
 		}
 
 		AcDbAssocNetworkIterator iter(pNetwork);
-		AcArray<int> suffixArray;
+		std::set<int> suffixArray;
 
-		while (iter.moveNext())
-		{
+		/*
+		生成一个名字
+		*/
+		while (iter.moveNext()) {
+
 			AcDbObjectPointer<AcDbAssocVariable> pVar(iter.current(), kForRead, true);
 
-			if (pVar.openStatus() != eOk)
+			if (pVar.openStatus() != eOk) {
 				continue;
+			}
 
 			const AcString varName = pVar->name();
 
-			if (varName.matchNoCase(namePrefix) == namePrefix.length())
-			{
+			if (varName.matchNoCase(namePrefix) == namePrefix.length()) {
 				const AcString number = varName.substr(namePrefix.length(), -1);
-				int val = number.asDeci(10);
-				if (val >= 0)
-				{
-					suffixArray.append(val);
+				int val = number.asDeci(10)/*将字符串转为十进制数字*/;
+				if (val >= 0) {
+					suffixArray.insert(val);
 				}
 			}
 		}
 
 		int index = 1;
-		while (suffixArray.find(index) != -1)
-		{
-			if (index < 0)
-			{
+		do {/*给index一个初始值*/
+			if ( static_cast<int>(suffixArray.size()) == (*suffixArray.rbegin())) {
+				index = (*suffixArray.rbegin()) + 1;
+				break;
+			}
+			if (false == suffixArray.empty()) {
+				auto var1 = suffixArray.begin();
+				if ((*var1) > 1) { break; }
+				auto var0 = var1++;
+				const auto varE = suffixArray.end();
+				for (; var1 != varE; var0 = var1++) {
+					if (((*var1) - (*var0)) < 2) { continue; }
+					break;
+				}
+				index = (*var0) + 1;
+			}
+		} while (false);
+
+		while (suffixArray.count(index) > 0) {
+			if (index < 0) {
 				assert(!"Interger overflow");
 				return eInvalidInput;
 			}
@@ -1565,11 +1588,16 @@ AdnAssocSampleUtils::getNameAndExpressionFromDimension(const AcDbObjectId& netwo
 		}
 
 		dfltName = namePrefix;
-		const int kBufSize = 20;
-		wchar_t buf[kBufSize];
-		const errno_t err = _itow_s(index, buf, kBufSize, 10);
-		assert(err == 0);
-		dfltName += buf;
+
+		const auto buf = std::to_wstring(index);
+		switch (buf.size()) {
+		case 1:dfltName += L"00"; break;
+		case 2:dfltName += L"0"; break;
+		//case 3:dfltName += L"000"; break;
+		//case 4:dfltName += L"00"; break;
+		//case 5:dfltName += L"0"; break;
+		}
+		dfltName += buf.c_str();
 	}
 
 	name = dfltName;
