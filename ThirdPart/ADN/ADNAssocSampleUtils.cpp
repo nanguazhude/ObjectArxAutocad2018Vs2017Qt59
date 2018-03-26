@@ -1569,7 +1569,10 @@ AdnAssocSampleUtils::getNameAndExpressionFromDimension(const AcDbObjectId& netwo
 					break;
 				}
 				auto var1 = suffixArray.begin();
-				if ((*var1) > 1) { break; }
+				if ((*var1) > 1) { 
+					index = (*var1) - 1;
+					break; 
+				}
 				auto var0 = var1++;
 				const auto varE = suffixArray.end();
 				for (; var1 != varE; var0 = var1++) {

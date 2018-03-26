@@ -16,10 +16,10 @@ INCLUDEPATH += "C:/ObjectARX 2018/inc-x64"
 
 #rxapi.lib; acdb21.lib; acge21.lib; acad.lib; ac1st21.lib; accore.lib;
 LIBS+= -L"C:/ObjectARX 2018/lib-x64" -lrxapi
-LIBS+= -L"C:/ObjectARX 2018/lib-x64" -lacdb23
-LIBS+= -L"C:/ObjectARX 2018/lib-x64" -lacge23
+LIBS+= -L"C:/ObjectARX 2018/lib-x64" -lacdb22
+LIBS+= -L"C:/ObjectARX 2018/lib-x64" -lacge22
 LIBS+= -L"C:/ObjectARX 2018/lib-x64" -lacad
-LIBS+= -L"C:/ObjectARX 2018/lib-x64" -lac1st23
+LIBS+= -L"C:/ObjectARX 2018/lib-x64" -lac1st22
 LIBS+= -L"C:/ObjectARX 2018/lib-x64" -laccore
 
 #DEF_FILE
