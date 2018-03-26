@@ -1563,7 +1563,8 @@ AdnAssocSampleUtils::getNameAndExpressionFromDimension(const AcDbObjectId& netwo
 		int index = 1;
 		do {/*给index一个初始值*/
 			if (false == suffixArray.empty()) {
-				if (static_cast<int>(suffixArray.size()) == (*suffixArray.rbegin())) {
+				if (static_cast<int>(suffixArray.size()) ==
+					(1 + (*suffixArray.rbegin()) - (*suffixArray.begin()))) {
 					index = (*suffixArray.rbegin()) + 1;
 					break;
 				}
@@ -1593,9 +1594,9 @@ AdnAssocSampleUtils::getNameAndExpressionFromDimension(const AcDbObjectId& netwo
 		switch (buf.size()) {
 		case 1:dfltName += L"00"; break;
 		case 2:dfltName += L"0"; break;
-		//case 3:dfltName += L"000"; break;
-		//case 4:dfltName += L"00"; break;
-		//case 5:dfltName += L"0"; break;
+			//case 3:dfltName += L"000"; break;
+			//case 4:dfltName += L"00"; break;
+			//case 5:dfltName += L"0"; break;
 		}
 		dfltName += buf.c_str();
 	}
