@@ -1562,11 +1562,11 @@ AdnAssocSampleUtils::getNameAndExpressionFromDimension(const AcDbObjectId& netwo
 
 		int index = 1;
 		do {/*给index一个初始值*/
-			if ( static_cast<int>(suffixArray.size()) == (*suffixArray.rbegin())) {
-				index = (*suffixArray.rbegin()) + 1;
-				break;
-			}
 			if (false == suffixArray.empty()) {
+				if (static_cast<int>(suffixArray.size()) == (*suffixArray.rbegin())) {
+					index = (*suffixArray.rbegin()) + 1;
+					break;
+				}
 				auto var1 = suffixArray.begin();
 				if ((*var1) > 1) { break; }
 				auto var0 = var1++;
