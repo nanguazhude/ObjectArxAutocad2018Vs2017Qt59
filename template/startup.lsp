@@ -224,6 +224,7 @@
     (progn (setvar "pickstyle" 1) )
     )
 )
+(defun c:zgs() (c:zps) )
 
 (defun c:zshowallobject()
   (command "layon" )
@@ -538,6 +539,15 @@
 (defun c:zml()
    (command "centerline" pause)
   )
+
+(defun c:zsa( / varV )
+  ( setq varV (getvar "pickadd") )
+  (if (/= varV 2)
+    (progn (setvar "pickadd" 2) )
+    (progn (setvar "pickadd" 0) )
+  )
+)
+
 ;;;;
 ;pickadd
 ;;;;
