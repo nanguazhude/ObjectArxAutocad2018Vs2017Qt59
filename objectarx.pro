@@ -90,7 +90,8 @@ SOURCES += \
         $$PWD/FRect/FRect.cpp \
         $$PWD/FVAangleLine/FVAangleLine.cpp \
         $$PWD/FTRect/FTRect.cpp \
-        $$PWD/HideLayer/HideLayer.cpp
+        $$PWD/HideLayer/HideLayer.cpp \
+        $$PWD/MakeDimstyle/MakeDimstyle.cpp
 
 
 #.h .hpp source
@@ -128,7 +129,8 @@ HEADERS += \
         $$PWD/FRect/FRect.hpp \
         $$PWD/FVAangleLine/FVAangleLine.hpp \
         $$PWD/FTRect/FTRect.hpp \
-        $$PWD/HideLayer/HideLayer.hpp
+        $$PWD/HideLayer/HideLayer.hpp \
+        $$PWD/MakeDimstyle/MakeDimstyle.hpp
 
 SOURCES += $$PWD/object_arx_global.cpp \
     $$PWD/ARXApplication.cpp \
