@@ -337,10 +337,10 @@ namespace sstd {
 				/*主单位**************************/
 				{
 					argR->setDimlunit(2)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-2ECDF7CF-6EEA-4174-B50C-8630D5002C20-htm.html */;
-					argR->setDimdec(2)/*小数0.00*/;
+					argR->setDimdec(3)/*小数0.000*/;
 					argR->setDimdsep(wchar_t('.'))/*小数分隔符*/;
 					argR->setDimaunit(0)/*十进制度数*/;
-					argR->setDimadec(2)/*0.00*/;
+					argR->setDimadec(3)/*0.000*/;
 					argR->setDimzin(8)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-A1860981-FE1C-4947-927B-7CD6B8CEF8EE-htm.html*/;
 					argR->setDimazin(2)/*https://knowledge.autodesk.com/zh-hans/support/autocad/learn-explore/caas/CloudHelp/cloudhelp/2018/CHS/AutoCAD-Core/files/GUID-69E9BFD3-06A4-468D-88F0-7C9741407194-htm.html*/;
 				}
@@ -350,7 +350,7 @@ namespace sstd {
 				/*公差*/
 				{
 					argR->setDimtol(false)/*不显示公差*/;
-					argR->setDimtdec(2)/*小数0.00*/;
+					argR->setDimtdec(3)/*小数0.000*/;
 					argR->setDimtfac(1)/*公差高度比*/;
 					argR->setDimtp(0.4)/*公差最大值*/;
 					argR->setDimtm(0.4)/*公差最小值*/;

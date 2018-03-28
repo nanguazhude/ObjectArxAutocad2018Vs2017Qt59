@@ -32,8 +32,8 @@ namespace sstd {
 			{
 				auto DB = acdbHostApplicationServices()->workingDatabase();
 				DB->setDimAssoc(2)/*标注关联*/;
-				DB->setAuprec(2)/*角度精度*/;
-				DB->setLuprec(2)/*线性精度*/;
+				DB->setAuprec(3)/*角度精度*/;
+				DB->setLuprec(3)/*线性精度*/;
 				DB->setLunits(2)/*线性小数*/;
 				DB->setAunits(0)/*十进制角度*/;
 				DB->setPdmode(35)/*设置点样式*/;
