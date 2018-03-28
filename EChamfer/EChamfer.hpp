@@ -1,12 +1,18 @@
 ﻿#ifndef ECHAMFER_HPP
 #define ECHAMFER_HPP
 
-namespace sstd{
+#include <object_arx_global.hpp>
 
-class EChamfer{
-public:
-    EChamfer();
-};
+namespace sstd {
+
+	class EChamfer {
+	public:
+		EChamfer();
+
+		static void load();
+		static void main();
+		DEFINE_ARX_NAME(LR"(_echamfer)")
+	};
 
 }/*namespace sstd*/
 
