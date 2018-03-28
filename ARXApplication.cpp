@@ -35,6 +35,7 @@ namespace sstd {
 	extern void loadFCTRect();
 	extern void loadHideLayer();
 	extern void loadMakeDimStyle();
+	extern void loadEChamfer();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -70,6 +71,7 @@ namespace sstd {
 		    { &sstd::loadFCTRect },
 		    { &sstd::loadHideLayer },
 		    { &sstd::loadMakeDimStyle },
+		    { &sstd::loadEChamfer },
 		};
 	}
 
