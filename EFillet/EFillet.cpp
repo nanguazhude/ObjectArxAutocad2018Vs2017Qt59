@@ -331,7 +331,7 @@ namespace sstd {
 					varTmp);
 			}
 
-			if constexpr(false) {
+			{
 				class Lock {
 				public:
 					ads_name ss = {};
