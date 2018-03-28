@@ -125,7 +125,7 @@ namespace sstd {
 				AcDbObjectId varID6;
 				AcDbObjectId varID7;
 
-				std::vector<AcDbObjectId> varCObjecs;
+				//std::vector<AcDbObjectId> varCObjecs;
 				AcCmColor varColor;
 			};
 
@@ -162,7 +162,7 @@ namespace sstd {
 					const double varHH = argR.$Height*0.5;
 					const double varHW = argR.$Width*0.5;
 
-					arg.$StartPoint= UcsToWorld(arg.$StartPoint);
+					arg.$StartPoint = UcsToWorld(arg.$StartPoint);
 
 					//0
 					argP.varKeyPoint0 = arg.$StartPoint;
@@ -171,7 +171,7 @@ namespace sstd {
 					argP.varKeyPoint1.y += varHH;
 					//2
 					argP.varKeyPoint2 = argP.varKeyPoint1;
-					argP.varKeyPoint2.x -= varHW ;
+					argP.varKeyPoint2.x -= varHW;
 					//3
 					argP.varKeyPoint3 = argP.varKeyPoint1;
 					argP.varKeyPoint3.x -= varW;
@@ -213,7 +213,7 @@ namespace sstd {
 							switch (i) {
 							case 0: {
 								argP.varBlockTableRecord->appendAcDbEntity(argP.varID0, varI);
-								argP.varCObjecs.push_back(argP.varID0);
+								//argP.varCObjecs.push_back(argP.varID0);
 							} break;
 							case 1:argP.varBlockTableRecord->appendAcDbEntity(argP.varID1, varI); break;
 							case 2:argP.varBlockTableRecord->appendAcDbEntity(argP.varID2, varI); break;
@@ -230,7 +230,7 @@ namespace sstd {
 					/*close */
 					for (auto & varI : argP.varLines) {
 						varI->setLayer(_this_layerName());
-						varI->setColor(sstd::smallChange( argP.varColor) );
+						varI->setColor(sstd::smallChange(argP.varColor));
 						varI = {};
 					}
 					argP.varBlockTableRecord = {};
@@ -271,11 +271,18 @@ namespace sstd {
 					/*添加尺寸约束*/
 					AcDbObjectId varTmp;
 					const auto varCPosR = mid(argP.varKeyPoint1, argP.varKeyPoint5);
-					const AcGePoint3d & varCPos = varCPosR;
-					AcDbAssoc2dConstraintAPI::createHorizontalDimConstraint(argP.varID0, argP.varID3,
-						argP.varKeyPoint0_1, argP.varKeyPoint3_4, varCPos, varTmp);
-					AcDbAssoc2dConstraintAPI::createVerticalDimConstraint(argP.varID1, argP.varID6,
-						argP.varKeyPoint1_2, argP.varKeyPoint6_7, varCPos, varTmp);
+					{
+						AcGePoint3d varCPos = varCPosR;
+						varCPos.y = argP.varKeyPoint1.y + std::signbit(argP.varKeyPoint1.y - argP.varKeyPoint5.y) ? -3.5 : 3.5;
+						AcDbAssoc2dConstraintAPI::createHorizontalDimConstraint(argP.varID0, argP.varID3,
+							argP.varKeyPoint0_1, argP.varKeyPoint3_4, varCPos, varTmp);
+					}
+					{
+						AcGePoint3d varCPos = varCPosR;
+						varCPos.x = argP.varKeyPoint1.x + std::signbit(argP.varKeyPoint1.x - argP.varKeyPoint5.x) ? -3.5 : 3.5;
+						AcDbAssoc2dConstraintAPI::createVerticalDimConstraint(argP.varID1, argP.varID6,
+							argP.varKeyPoint1_2, argP.varKeyPoint6_7, varCPos, varTmp);
+					}
 				}
 			}
 
