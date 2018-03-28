@@ -316,11 +316,13 @@ namespace sstd {
 				varMiddlePoint.x += $StartPoint.x;
 				varMiddlePoint.y += $StartPoint.y;
 				{
-					auto dx = varMiddlePoint.x - $CenterPoint.x;
-					auto dy = varMiddlePoint.y - $CenterPoint.y;
-					const auto l = std::hypot(dx, dy);
-					dx /= l;
-					dy /= l;
+					auto dx = 0.5* varMiddlePoint.x - $CenterPoint.x;
+					auto dy = 0.5* varMiddlePoint.y - $CenterPoint.y;
+					{
+						const auto ls = std::hypot(dx, dy);
+						dx /= ls;
+						dy /= ls;
+					}
 					varMiddlePoint.x = std::fma(dx, $R, $CenterPoint.x);
 					varMiddlePoint.y = std::fma(dy, $R, $CenterPoint.y);
 				}

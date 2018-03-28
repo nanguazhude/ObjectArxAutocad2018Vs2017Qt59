@@ -257,8 +257,8 @@ namespace sstd {
 			varMiddlePoint.x += $StartPoint.x;
 			varMiddlePoint.y += $StartPoint.y;
 			{
-				auto dx = varMiddlePoint.x - $CenterPoint.x;
-				auto dy = varMiddlePoint.y - $CenterPoint.y;
+				auto dx = 0.5*varMiddlePoint.x - $CenterPoint.x;
+				auto dy = 0.5*varMiddlePoint.y - $CenterPoint.y;
 				const auto l = std::hypot(dx, dy);
 				dx /= l;
 				dy /= l;
