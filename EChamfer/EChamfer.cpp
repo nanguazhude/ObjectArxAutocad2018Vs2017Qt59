@@ -200,7 +200,7 @@ namespace sstd {
 		AcGePoint3d varCenter;
 		AcGePoint3d P1;
 		AcGePoint3d P0;
-		
+
 		{
 			sstd::ArxClosePointer<AcDbLine> L0;
 			sstd::ArxClosePointer<AcDbLine> L1;
@@ -256,24 +256,50 @@ namespace sstd {
 					if (varE != eOk) { throw varE; }
 				}
 
-				sstd::ArxClosePointer< AcDbLine > varLineFinal{ new AcDbLine {P0,P1} };
+				sstd::ArxClosePointer< AcDbLine > varLineFinal{ new AcDbLine {P1,P0} };
 				varBlockTableRecord->appendAcDbEntity(varLineFinal);
 
 				ol3 = varLineFinal->objectId();
 				varLineFinal->setLayer(LR"(粗实线)");
 			}
-			
+
+			auto varCPosR = P1;
 			{/*添加角度约束*/
 				AcDbObjectId varTmp;
-				auto varCPosR = P1; 
+				
 				{
 					varCPosR.x += P0.x;
 					varCPosR.y += P0.y;
 					varCPosR.x *= 0.5;
 					varCPosR.y *= 0.5;
 				}
+				const auto varL3P = varCPosR;
+
+				varCPosR = P0;
+				{
+					varCPosR.x += varCenter.x;
+					varCPosR.y += varCenter.y;
+					varCPosR.x *= 0.5;
+					varCPosR.y *= 0.5;
+				}
+
+				const auto varL1P = varCPosR;
+				{
+					varCPosR.x += varL3P.x;
+					varCPosR.y += varL3P.y;
+					varCPosR.x *= 0.5;
+					varCPosR.y *= 0.5;
+				}
+
 				AcDbAssoc2dConstraintAPI::create2LineAngularDimConstraint(
-					ol3, ol1, varCenter, P0, varCPosR,varTmp);
+					 ol1,ol3,
+					 varL1P,varL3P,
+					 varCPosR, varTmp);
+			}
+
+			{/*添加线型约束*/
+				//AcDbObjectId varTmp;
+				//AcDbAssoc2dConstraintAPI::createAlignedDimConstraint(ol1,varCenter, ol3,P1,varCPosR,varTmp);
 			}
 
 			{
@@ -302,10 +328,10 @@ namespace sstd {
 					acedSSAdd(eName, varLock.ss, varLock.ss);
 				}
 
-				acedCommandS(RTSTR,L"_.AutoConstrain",
-					RTPICKS, varLock.ss, 
+				acedCommandS(RTSTR, L"_.AutoConstrain",
+					RTPICKS, varLock.ss,
 					RTSTR, L"", RTNONE);
-				
+
 			}
 
 		}
