@@ -197,6 +197,7 @@ namespace sstd {
 		AcGePoint3d P1;
 		AcGePoint3d P0;
 		AcGePoint3d R0;
+		double varLength = 0;
 
 		{
 			sstd::ArxClosePointer<AcDbLine> L0;
@@ -210,7 +211,6 @@ namespace sstd {
 				ol1 = L0->objectId();
 				ol2 = L1->objectId();
 
-				double varLength = 0;
 				if (RTNORM != acedGetDist(nullptr, LR"(输入圆角半径：)", &varLength)) { return; }
 				if (varLength <= 0) { return; }
 
@@ -231,7 +231,7 @@ namespace sstd {
 				}
 
 				const auto cons2a = dx1 * dx2 + dy1 * dy2;
-				const auto sina = std::sqrt(std::abs(1 - cons2a))*0.5;
+				const auto sina = std::sqrt(std::abs(1 - cons2a)*0.5);
 
 				if (sina == 0) { return; }
 
@@ -250,6 +250,26 @@ namespace sstd {
 
 				R0.x = varCenter.x + dx1;
 				R0.y = varCenter.y + dy1;
+
+				/******************************************************************/
+				{
+					using Line = __get_three_points::Line<double>;
+					{
+						Line lineX(varCenter.x, varCenter.y, P0.x, P0.y);
+						const auto varX = lineX.mirror(R0.x, R0.y);
+						P0.x = varX[0] + R0.x;
+						P0.y = varX[1] + R0.y;
+						P0.x *= 0.5; P0.y *= 0.5;
+					}
+					{
+						Line lineX(varCenter.x, varCenter.y, P1.x, P1.y);
+						const auto varX = lineX.mirror(R0.x, R0.y);
+						P1.x = varX[0] + R0.x;
+						P1.y = varX[1] + R0.y;
+						P1.x *= 0.5; P1.y *= 0.5;
+					}
+				}
+				/******************************************************************/
 
 				{
 					auto varDB = acdbHostApplicationServices()
@@ -270,7 +290,7 @@ namespace sstd {
 
 						sstd::ArxClosePointer< AcDbArc > varLineFinal{ new  AcDbArc{
 							 R0,
-							 2.*varLength,
+							 varLength,
 							 std::atan2(P1.y - R0.y,P1.x - R0.x),
 							 std::atan2(P0.y - R0.y,P0.x - R0.x)
 						} };
@@ -286,7 +306,32 @@ namespace sstd {
 				/*0*/}
 
 
-			{
+			{/*半径约束*/
+				const auto & $StartPoint = P1;
+				const auto & $EndPoint = P0;
+				const auto & $CenterPoint = R0;
+				const auto & $R = varLength;
+				AcDbObjectId varTmp;
+				AcGePoint3d varMiddlePoint = $EndPoint;
+				varMiddlePoint.x += $StartPoint.x;
+				varMiddlePoint.y += $StartPoint.y;
+				{
+					auto dx = varMiddlePoint.x - $CenterPoint.x;
+					auto dy = varMiddlePoint.y - $CenterPoint.y;
+					const auto l = std::hypot(dx, dy);
+					dx /= l;
+					dy /= l;
+					varMiddlePoint.x = std::fma(dx, $R, $CenterPoint.x);
+					varMiddlePoint.y = std::fma(dy, $R, $CenterPoint.y);
+				}
+				AcDbAssoc2dConstraintAPI::createRadialDimConstraint(
+					ol3,
+					varMiddlePoint,
+					{ 0.5*($CenterPoint.x + varMiddlePoint.x),0.5*(varMiddlePoint.y + $CenterPoint.y),0 },
+					varTmp);
+			}
+
+			if constexpr(false) {
 				class Lock {
 				public:
 					ads_name ss = {};
