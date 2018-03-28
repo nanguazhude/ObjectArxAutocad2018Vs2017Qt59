@@ -181,6 +181,7 @@ namespace sstd {
 			argC->setDimatfit(1);
 			acdbSetDimBreakSize(argC, 0);
 		}
+
 		inline void/*角度标注*/_angular_child(simple_code_args, StyleTableRecord *argC) {
 			std::wstring varName{ argNM.begin(),argNM.end() };
 			varName += LR"($2)"sv;
@@ -202,6 +203,7 @@ namespace sstd {
 			setAnnotative(argC, true)/*注释性*/;
 			acdbSetDimBreakSize(argC, 0);
 		}
+
 		inline void/*直径标注*/_diameter_child(simple_code_args, StyleTableRecord *argC) {
 			std::wstring varName{ argNM.begin(),argNM.end() };
 			varName += LR"($3)"sv;
@@ -552,7 +554,7 @@ namespace sstd {
 				}
 			}
 
-		}
+		}/*_p_update_dim_style*/
 
 	}/*namespace*/
 
