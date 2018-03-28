@@ -99,16 +99,20 @@ namespace sstd {
 				AcGePoint3d varKeyPoint3;
 				AcGePoint3d varKeyPoint4;
 				AcGePoint3d varKeyPoint5;
+				AcGePoint3d varKeyPoint6;
+				AcGePoint3d varKeyPoint7;
 
 				AcGePoint3d varKeyPoint0_1;
 				AcGePoint3d varKeyPoint1_2;
 				AcGePoint3d varKeyPoint2_3;
 				AcGePoint3d varKeyPoint3_4;
 				AcGePoint3d varKeyPoint4_5;
-				AcGePoint3d varKeyPoint5_0;
+				AcGePoint3d varKeyPoint5_6;
+				AcGePoint3d varKeyPoint6_7;
+				AcGePoint3d varKeyPoint7_0;
 
 				using LineType = sstd::ArxClosePointer< AcDbLine >;
-				std::array<LineType, 6> varLines;
+				std::array<LineType, 8> varLines;
 				sstd::ArxClosePointer<AcDbBlockTable> varBlockTable;
 				sstd::ArxClosePointer<AcDbBlockTableRecord> varBlockTableRecord;
 
@@ -118,6 +122,8 @@ namespace sstd {
 				AcDbObjectId varID3;
 				AcDbObjectId varID4;
 				AcDbObjectId varID5;
+				AcDbObjectId varID6;
+				AcDbObjectId varID7;
 
 				std::vector<AcDbObjectId> varCObjecs;
 				AcCmColor varColor;
@@ -154,39 +160,51 @@ namespace sstd {
 
 					const auto & varW = argR.$Width;
 					const double varHH = argR.$Height*0.5;
+					const double varHW = argR.$Width*0.5;
 
+					arg.$StartPoint= UcsToWorld(arg.$StartPoint);
+
+					//0
 					argP.varKeyPoint0 = arg.$StartPoint;
+					//1
 					argP.varKeyPoint1 = arg.$StartPoint;
 					argP.varKeyPoint1.y += varHH;
+					//2
 					argP.varKeyPoint2 = argP.varKeyPoint1;
-					argP.varKeyPoint2.x -= varW;
-					argP.varKeyPoint3 = arg.$StartPoint;
-					argP.varKeyPoint3.x = argP.varKeyPoint2.x;
-					argP.varKeyPoint4 = argP.varKeyPoint3;
-					argP.varKeyPoint4.y -= varHH;
+					argP.varKeyPoint2.x -= varHW ;
+					//3
+					argP.varKeyPoint3 = argP.varKeyPoint1;
+					argP.varKeyPoint3.x -= varW;
+					//4
+					argP.varKeyPoint4 = arg.$StartPoint;
+					argP.varKeyPoint4.x = argP.varKeyPoint3.x;
+					//5
 					argP.varKeyPoint5 = argP.varKeyPoint4;
-					argP.varKeyPoint5.x = argP.varKeyPoint0.x;
-
-					argP.varKeyPoint0 = UcsToWorld(argP.varKeyPoint0);
-					argP.varKeyPoint1 = UcsToWorld(argP.varKeyPoint1);
-					argP.varKeyPoint2 = UcsToWorld(argP.varKeyPoint2);
-					argP.varKeyPoint3 = UcsToWorld(argP.varKeyPoint3);
-					argP.varKeyPoint4 = UcsToWorld(argP.varKeyPoint4);
-					argP.varKeyPoint5 = UcsToWorld(argP.varKeyPoint5);
+					argP.varKeyPoint5.y -= varHH;
+					//6
+					argP.varKeyPoint6 = argP.varKeyPoint5;
+					argP.varKeyPoint6.x = argP.varKeyPoint2.x;
+					//7
+					argP.varKeyPoint7 = argP.varKeyPoint6;
+					argP.varKeyPoint7.x = argP.varKeyPoint0.x;
 
 					argP.varLines[0] = { new AcDbLine{ argP.varKeyPoint0 ,argP.varKeyPoint1 } };
 					argP.varLines[1] = { new AcDbLine{ argP.varKeyPoint1 ,argP.varKeyPoint2 } };
 					argP.varLines[2] = { new AcDbLine{ argP.varKeyPoint2 ,argP.varKeyPoint3 } };
 					argP.varLines[3] = { new AcDbLine{ argP.varKeyPoint3 ,argP.varKeyPoint4 } };
 					argP.varLines[4] = { new AcDbLine{ argP.varKeyPoint4 ,argP.varKeyPoint5 } };
-					argP.varLines[5] = { new AcDbLine{ argP.varKeyPoint5 ,argP.varKeyPoint0 } };
+					argP.varLines[5] = { new AcDbLine{ argP.varKeyPoint5 ,argP.varKeyPoint6 } };
+					argP.varLines[6] = { new AcDbLine{ argP.varKeyPoint6 ,argP.varKeyPoint7 } };
+					argP.varLines[7] = { new AcDbLine{ argP.varKeyPoint7 ,argP.varKeyPoint0 } };
 
 					argP.varKeyPoint0_1 = mid(argP.varKeyPoint0, argP.varKeyPoint1);
 					argP.varKeyPoint1_2 = mid(argP.varKeyPoint1, argP.varKeyPoint2);
 					argP.varKeyPoint2_3 = mid(argP.varKeyPoint2, argP.varKeyPoint3);
 					argP.varKeyPoint3_4 = mid(argP.varKeyPoint3, argP.varKeyPoint4);
 					argP.varKeyPoint4_5 = mid(argP.varKeyPoint4, argP.varKeyPoint5);
-					argP.varKeyPoint5_0 = mid(argP.varKeyPoint5, argP.varKeyPoint0);
+					argP.varKeyPoint5_6 = mid(argP.varKeyPoint5, argP.varKeyPoint6);
+					argP.varKeyPoint6_7 = mid(argP.varKeyPoint6, argP.varKeyPoint7);
+					argP.varKeyPoint7_0 = mid(argP.varKeyPoint7, argP.varKeyPoint0);
 
 					/*添加线到数据库*/
 					{
@@ -202,6 +220,8 @@ namespace sstd {
 							case 3:argP.varBlockTableRecord->appendAcDbEntity(argP.varID3, varI); break;
 							case 4:argP.varBlockTableRecord->appendAcDbEntity(argP.varID4, varI); break;
 							case 5:argP.varBlockTableRecord->appendAcDbEntity(argP.varID5, varI); break;
+							case 6:argP.varBlockTableRecord->appendAcDbEntity(argP.varID6, varI); break;
+							case 7:argP.varBlockTableRecord->appendAcDbEntity(argP.varID7, varI); break;
 							}
 							++i;
 						}
@@ -227,29 +247,35 @@ namespace sstd {
 				AcDbAssoc2dConstraintAPI::createCoincidentConstraint(argP.varID2, argP.varID3, argP.varKeyPoint3, argP.varKeyPoint3);
 				AcDbAssoc2dConstraintAPI::createCoincidentConstraint(argP.varID3, argP.varID4, argP.varKeyPoint4, argP.varKeyPoint4);
 				AcDbAssoc2dConstraintAPI::createCoincidentConstraint(argP.varID4, argP.varID5, argP.varKeyPoint5, argP.varKeyPoint5);
-				AcDbAssoc2dConstraintAPI::createCoincidentConstraint(argP.varID5, argP.varID0, argP.varKeyPoint0, argP.varKeyPoint0);
-
+				AcDbAssoc2dConstraintAPI::createCoincidentConstraint(argP.varID5, argP.varID6, argP.varKeyPoint6, argP.varKeyPoint6);
+				AcDbAssoc2dConstraintAPI::createCoincidentConstraint(argP.varID6, argP.varID7, argP.varKeyPoint7, argP.varKeyPoint7);
+				AcDbAssoc2dConstraintAPI::createCoincidentConstraint(argP.varID7, argP.varID0, argP.varKeyPoint0, argP.varKeyPoint0);
 				/*添加水平，垂直约束*/
 				AcDbAssoc2dConstraintAPI::createHorizontalConstraint(argP.varID1, argP.varKeyPoint1_2);
-				AcDbAssoc2dConstraintAPI::createHorizontalConstraint(argP.varID4, argP.varKeyPoint4_5);
+				AcDbAssoc2dConstraintAPI::createHorizontalConstraint(argP.varID2, argP.varKeyPoint2_3);
+				AcDbAssoc2dConstraintAPI::createHorizontalConstraint(argP.varID5, argP.varKeyPoint5_6);
+				AcDbAssoc2dConstraintAPI::createHorizontalConstraint(argP.varID6, argP.varKeyPoint6_7);
+
 				AcDbAssoc2dConstraintAPI::createVerticalConstraint(argP.varID0, argP.varKeyPoint0_1);
-				AcDbAssoc2dConstraintAPI::createVerticalConstraint(argP.varID2, argP.varKeyPoint2_3);
+				AcDbAssoc2dConstraintAPI::createVerticalConstraint(argP.varID7, argP.varKeyPoint7_0);
 				AcDbAssoc2dConstraintAPI::createVerticalConstraint(argP.varID3, argP.varKeyPoint3_4);
-				AcDbAssoc2dConstraintAPI::createVerticalConstraint(argP.varID5, argP.varKeyPoint5_0);
+				AcDbAssoc2dConstraintAPI::createVerticalConstraint(argP.varID4, argP.varKeyPoint4_5);
 
 				/*添加相同约束*/
-				AcDbAssoc2dConstraintAPI::createEqualLengthConstraint(argP.varID0, argP.varID5, argP.varKeyPoint0_1, argP.varKeyPoint5_0);
-				AcDbAssoc2dConstraintAPI::createEqualLengthConstraint(argP.varID2, argP.varID3, argP.varKeyPoint2_3, argP.varKeyPoint3_4);
+				AcDbAssoc2dConstraintAPI::createEqualLengthConstraint(argP.varID0, argP.varID7, argP.varKeyPoint0_1, argP.varKeyPoint7_0);
+				AcDbAssoc2dConstraintAPI::createEqualLengthConstraint(argP.varID1, argP.varID2, argP.varKeyPoint1_2, argP.varKeyPoint2_3);
+				AcDbAssoc2dConstraintAPI::createEqualLengthConstraint(argP.varID3, argP.varID4, argP.varKeyPoint3_4, argP.varKeyPoint4_5);
+				AcDbAssoc2dConstraintAPI::createEqualLengthConstraint(argP.varID5, argP.varID6, argP.varKeyPoint5_6, argP.varKeyPoint6_7);
 
 				if constexpr (S) {
 					/*添加尺寸约束*/
 					AcDbObjectId varTmp;
-					const auto varCPosR = mid(argP.varKeyPoint1, argP.varKeyPoint4);
+					const auto varCPosR = mid(argP.varKeyPoint1, argP.varKeyPoint5);
 					const AcGePoint3d & varCPos = varCPosR;
-					AcDbAssoc2dConstraintAPI::createHorizontalDimConstraint(argP.varID0, argP.varID2,
-						argP.varKeyPoint0_1, argP.varKeyPoint2_3, varCPos, varTmp);
-					AcDbAssoc2dConstraintAPI::createVerticalDimConstraint(argP.varID1, argP.varID4,
-						argP.varKeyPoint1_2, argP.varKeyPoint4_5, varCPos, varTmp);
+					AcDbAssoc2dConstraintAPI::createHorizontalDimConstraint(argP.varID0, argP.varID3,
+						argP.varKeyPoint0_1, argP.varKeyPoint3_4, varCPos, varTmp);
+					AcDbAssoc2dConstraintAPI::createVerticalDimConstraint(argP.varID1, argP.varID6,
+						argP.varKeyPoint1_2, argP.varKeyPoint6_7, varCPos, varTmp);
 				}
 			}
 
