@@ -519,6 +519,7 @@ Acad::ErrorStatus AdnAssocSampleUtils::getClosestEdgeSubEntPathBref(
 //  
 //
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//http://adndevblog.typepad.com/autocad/2015/page/2/
 Acad::ErrorStatus AdnAssocSampleUtils::getClosestVertexInfo(
 	const AcDbObjectId& entId,
 	const AcDbFullSubentPath& edgeSubentPath,
@@ -527,91 +528,93 @@ Acad::ErrorStatus AdnAssocSampleUtils::getClosestVertexInfo(
 	AcDbFullSubentPath& closestVertexSubentPath)
 {
 	Acad::ErrorStatus es;
-
-	AcDbSmartObjectPointer <AcDbEntity> pEntity(entId, AcDb::kForRead);
+	AcDbSmartObjectPointer <AcDbEntity>
+		pEntity(entId, AcDb::kForRead);
 
 	if ((es = pEntity.openStatus()) != Acad::eOk)
-		return es;
+		return  es;
 
 	if (pEntity->isKindOf(AcDbBlockReference::desc()))
 	{
-		return AdnAssocSampleUtils::getClosestVertexInfoBref(entId,
+		return  AdnAssocSampleUtils::getClosestVertexInfoBref(entId,
 			edgeSubentPath,
 			pt,
 			closestVertexPos,
 			closestVertexSubentPath);
 	}
 
-	AcDbAssocPersSubentIdPE* const pAssocPersSubentIdPE =
+	AcDbAssocPersSubentIdPE* const  pAssocPersSubentIdPE =
 		AcDbAssocPersSubentIdPE::cast(pEntity->queryX(AcDbAssocPersSubentIdPE::desc()));
 
 	AcArray<AcDbSubentId> vertexSubentIds;
 
-	if (pEntity->isKindOf(AcDbSpline::desc()))
-	{
+	if (pEntity->isKindOf(AcDbSpline::desc())) {
+
 		AcDbSubentId startVertexSubentId;
 		AcDbSubentId endVertexSubentId;
-
 		AcArray<AcDbSubentId> controlPointSubentIds;
 		AcArray<AcDbSubentId> fitPointSubentIds;
 
-		if ((es = pAssocPersSubentIdPE->getSplineEdgeVertexSubentities(pEntity,
-			AcDbSubentId(),
-			startVertexSubentId,
-			endVertexSubentId,
-			controlPointSubentIds,
-			fitPointSubentIds)) != Acad::eOk)
-			return es;
-
+		if ((es =
+			pAssocPersSubentIdPE->getSplineEdgeVertexSubentities
+			(pEntity,
+				AcDbSubentId(),
+				startVertexSubentId,
+				endVertexSubentId,
+				controlPointSubentIds,
+				fitPointSubentIds)) != Acad::eOk)
+			return  es;
 		vertexSubentIds.append(startVertexSubentId);
 		vertexSubentIds.append(endVertexSubentId);
 		vertexSubentIds.append(controlPointSubentIds);
+	}
+	else  if (pEntity->isKindOf(AcDbPoint::desc()))
+	{
+		AcArray<AcDbSubentId> vertexSubentIds;
+		es = pAssocPersSubentIdPE->getAllSubentities(pEntity, AcDb::kVertexSubentType, vertexSubentIds);
+
+		if (vertexSubentIds.length() > 0) {
+			closestVertexSubentPath = AcDbFullSubentPath(entId, vertexSubentIds[0]);
+			return  es;
+		}
 	}
 	else
 	{
 		AcDbSubentId startVertexSubentId;
 		AcDbSubentId endVertexSubentId;
 
-		if ((es = pAssocPersSubentIdPE->getEdgeVertexSubentities(pEntity,
-			edgeSubentPath.subentId(),
-			startVertexSubentId,
-			endVertexSubentId,
-			vertexSubentIds)) != Acad::eOk)
-			return es;
-
+		if ((es = pAssocPersSubentIdPE->getEdgeVertexSubentities(pEntity, edgeSubentPath.
+			subentId(), startVertexSubentId, endVertexSubentId, vertexSubentIds)) != Acad::eOk)
+			return  es;
 		vertexSubentIds.append(startVertexSubentId);
 		vertexSubentIds.append(endVertexSubentId);
 	}
 
-	double minDist = -1.0;
-
+	double  minDist = -1.0;
 	AcDbSubentId closestId;
 
-	for (int i = 0; i < vertexSubentIds.length(); ++i)
-	{
+	for (int i = 0; i < vertexSubentIds.length(); ++i) {
+
 		AcGePoint3d vertexPos;
 
-		if ((es = pAssocPersSubentIdPE->getVertexSubentityGeometry(
-			pEntity,
-			vertexSubentIds[i],
-			vertexPos)) != eOk)
-			return es;
+		if ((es = pAssocPersSubentIdPE->getVertexSubentityGeometry(pEntity, vertexSubentIds[i], vertexPos)) != eOk)return  es;
 
-		double dist = vertexPos.distanceTo(pt);
+		double  dist = vertexPos.distanceTo(pt);
 
-		if (minDist < 0 || dist < minDist)
-		{
+		if (minDist < 0 || dist < minDist) {
+
 			minDist = dist;
 
 			closestId = vertexSubentIds[i];
-
 			closestVertexPos = vertexPos;
+
 		}
+
 	}
 
 	closestVertexSubentPath = AcDbFullSubentPath(entId, closestId);
 
-	return es;
+	return  es;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

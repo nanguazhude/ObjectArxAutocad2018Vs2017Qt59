@@ -17,68 +17,78 @@ inline void change_dim_style_to_dynammic(const AcDbObjectId & dimId) {
 // 
 //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//http://adndevblog.typepad.com/autocad/2015/page/2/
 Acad::ErrorStatus AcDbAssoc2dConstraintAPI::createCoincidentConstraint(
 	const AcDbObjectId& entId1,
 	const AcDbObjectId& entId2,
 	const AcGePoint3d& ptEnt1,
-	const AcGePoint3d& ptEnt2)
-{
-	Acad::ErrorStatus es = Acad::eOk;
+	const AcGePoint3d& ptEnt2){
 
-	if ((es = AcDbAssocManager::initialize()) != Acad::eOk)
-		return es;
+ 	Acad::ErrorStatus es = Acad::eOk;
 
-	AcDbFullSubentPathArray aEdgePaths;
+ 	if ((es = AcDbAssocManager::initialize()) != Acad::eOk)
+ 		return  es;
 
-	AcDbFullSubentPath edgeEntPath1;
-	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(
-		entId1, ptEnt1, edgeEntPath1)) != Acad::eOk)
-		return es;
+ 	AcDbFullSubentPathArray aPaths;
+ 	AcDbFullSubentPath edgeEntPath1;
 
-	aEdgePaths.append(edgeEntPath1);
+ 	if (entId1.objectClass() != AcDbPoint::desc()){
 
-	AcDbFullSubentPath edgeEntPath2;
-	if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(
-		entId2, ptEnt2, edgeEntPath2)) != Acad::eOk)
-		return es;
+ 		if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId1, ptEnt1, edgeEntPath1)) != Acad::eOk)
+ 			return  es;
 
-	aEdgePaths.append(edgeEntPath2);
+ 		aPaths.append(edgeEntPath1); 
 
+ 	}
 
-	AcDbFullSubentPathArray aVertexPaths;
+ 	AcDbFullSubentPathArray aVertexPaths;
+ 	AcDbFullSubentPath vertEntPath1;
 
-	AcDbFullSubentPath vertEntPath1;
-	AcGePoint3d vertexPos1;
-	if ((es = AdnAssocSampleUtils::getClosestVertexInfo(
-		entId1, edgeEntPath1, ptEnt1, vertexPos1, vertEntPath1)) != Acad::eOk)
-		return es;
+ 	AcGePoint3d vertexPos1;
 
-	aVertexPaths.append(vertEntPath1);
+ 	if ((es = AdnAssocSampleUtils::getClosestVertexInfo(entId1, edgeEntPath1, ptEnt1, 
+ 		vertexPos1, vertEntPath1)) != Acad::eOk)
+ 		return  es;
 
-	AcDbFullSubentPath vertEntPath2;
-	AcGePoint3d vertexPos2;
-	if ((es = AdnAssocSampleUtils::getClosestVertexInfo(
-		entId2, edgeEntPath2, ptEnt2, vertexPos2, vertEntPath2)) != Acad::eOk)
-		return es;
+ 	aVertexPaths.append(vertEntPath1);
 
-	aVertexPaths.append(vertEntPath2);
+ 	if (entId1.objectClass() == AcDbPoint::desc()){
+ 		aPaths.append(vertEntPath1); 
+ 	}
 
-	AcArray<AcConstrainedGeometry*> pConsGeoms;
-	if ((es = AdnAssocSampleUtils::addConstrainedGeometry(aEdgePaths, pConsGeoms)) != Acad::eOk)
-		return es;
+ 	AcDbFullSubentPath edgeEntPath2;
 
-	// hint fixed geometry
-	AcDbFullSubentPathArray fixedGeom;
+ 	if (entId2.objectClass() != AcDbPoint::desc()){
 
-	fixedGeom.append(edgeEntPath1);
+ 		if ((es = AdnAssocSampleUtils::getClosestEdgeSubEntPath(entId2, ptEnt2, edgeEntPath2)) != Acad::eOk)
+ 			return  es;
+ 		aPaths.append(edgeEntPath2); 
 
-	es = AdnAssocSampleUtils::addGeomConstraint(
-		AcGeomConstraint::kCoincident,
-		aVertexPaths,
-		fixedGeom);
+ 	}
 
-	return es;
-}
+ 	AcDbFullSubentPath vertEntPath2;
+ 	AcGePoint3d vertexPos2;
+
+ 	if ((es = AdnAssocSampleUtils::getClosestVertexInfo(entId2, edgeEntPath2, ptEnt2, vertexPos2, 
+ 		vertEntPath2)) != Acad::eOk)
+ 		return  es;
+
+ 	aVertexPaths.append(vertEntPath2);
+
+ 	if (entId2.objectClass() == AcDbPoint::desc()){
+ 		aPaths.append(vertEntPath2); 
+ 	}
+
+ 	AcArray<AcConstrainedGeometry*> pConsGeoms;
+
+ 	if ((es = AdnAssocSampleUtils::addConstrainedGeometry(aPaths, pConsGeoms)) != Acad::eOk)
+ 		return  es;
+
+ 	es = AdnAssocSampleUtils::addGeomConstraint(AcGeomConstraint::kCoincident, aVertexPaths);
+
+ 	return  es;
+
+ }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // 
