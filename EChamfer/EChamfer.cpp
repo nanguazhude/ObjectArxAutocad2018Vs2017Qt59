@@ -197,13 +197,13 @@ namespace sstd {
 	void EChamfer::main() try {
 
 		AcDbObjectId ol1, ol2, ol3;
+		AcGePoint3d varCenter;
+		AcGePoint3d P1;
+		AcGePoint3d P0;
 		
 		{
 			sstd::ArxClosePointer<AcDbLine> L0;
 			sstd::ArxClosePointer<AcDbLine> L1;
-			AcGePoint3d varCenter;
-			AcGePoint3d P1;
-			AcGePoint3d P0;
 
 			{
 				if (false == __get_three_points::get_three_point(P0, varCenter, P1, L0, L1)) {
@@ -263,6 +263,19 @@ namespace sstd {
 				varLineFinal->setLayer(LR"(粗实线)");
 			}
 			
+			{/*添加角度约束*/
+				AcDbObjectId varTmp;
+				auto varCPosR = P1; 
+				{
+					varCPosR.x += P0.x;
+					varCPosR.y += P0.y;
+					varCPosR.x *= 0.5;
+					varCPosR.y *= 0.5;
+				}
+				AcDbAssoc2dConstraintAPI::create2LineAngularDimConstraint(
+					ol3, ol1, varCenter, P0, varCPosR,varTmp);
+			}
+
 			{
 				class Lock {
 				public:

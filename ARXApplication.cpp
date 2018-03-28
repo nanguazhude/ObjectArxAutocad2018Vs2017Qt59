@@ -36,6 +36,7 @@ namespace sstd {
 	extern void loadHideLayer();
 	extern void loadMakeDimStyle();
 	extern void loadEChamfer();
+	extern void loadEFillet();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -72,6 +73,7 @@ namespace sstd {
 		    { &sstd::loadHideLayer },
 		    { &sstd::loadMakeDimStyle },
 		    { &sstd::loadEChamfer },
+		    { &sstd::loadEFillet },
 		};
 	}
 
