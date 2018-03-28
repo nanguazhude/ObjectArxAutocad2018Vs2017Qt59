@@ -272,14 +272,14 @@ namespace sstd {
 					AcDbObjectId varTmp;
 					const auto varCPosR = mid(argP.varKeyPoint1, argP.varKeyPoint5);
 					{
-						AcGePoint3d varCPos = varCPosR;
-						varCPos.y = argP.varKeyPoint1.y + std::signbit(argP.varKeyPoint1.y - argP.varKeyPoint5.y) ? -3.5 : 3.5;
+						const AcGePoint3d & varCPos = varCPosR;
+						//varCPos.y = argP.varKeyPoint1.y + std::signbit(argP.varKeyPoint1.y - argP.varKeyPoint5.y) ? -3.5 : 3.5;
 						AcDbAssoc2dConstraintAPI::createHorizontalDimConstraint(argP.varID0, argP.varID3,
 							argP.varKeyPoint0_1, argP.varKeyPoint3_4, varCPos, varTmp);
 					}
 					{
-						AcGePoint3d varCPos = varCPosR;
-						varCPos.x = argP.varKeyPoint1.x + std::signbit(argP.varKeyPoint1.x - argP.varKeyPoint5.x) ? -3.5 : 3.5;
+						const AcGePoint3d & varCPos = varCPosR;
+						//varCPos.x = argP.varKeyPoint1.x + std::signbit(argP.varKeyPoint1.x - argP.varKeyPoint5.x) ? -3.5 : 3.5;
 						AcDbAssoc2dConstraintAPI::createVerticalDimConstraint(argP.varID1, argP.varID6,
 							argP.varKeyPoint1_2, argP.varKeyPoint6_7, varCPos, varTmp);
 					}
