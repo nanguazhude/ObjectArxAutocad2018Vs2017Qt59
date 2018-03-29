@@ -302,7 +302,7 @@ namespace sstd {
 				//AcDbAssoc2dConstraintAPI::createAlignedDimConstraint(ol1,varCenter, ol3,P1,varCPosR,varTmp);
 			}
 
-			{
+			if constexpr(false) {
 				class Lock {
 				public:
 					ads_name ss = {};
