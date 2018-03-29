@@ -264,7 +264,7 @@ namespace sstd {
 			}
 
 			auto varCPosR = P1;
-			{/*添加角度约束*/
+			if constexpr(false){/*添加角度约束*/
 				AcDbObjectId varTmp;
 				
 				{
