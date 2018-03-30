@@ -93,7 +93,8 @@ SOURCES += \
         $$PWD/HideLayer/HideLayer.cpp \
         $$PWD/MakeDimstyle/MakeDimstyle.cpp \
         $$PWD/EChamfer/EChamfer.cpp \
-        $$PWD/EFillet/EFillet.cpp
+        $$PWD/EFillet/EFillet.cpp \
+    ArxZCC/ArxZCC.cpp
 
 
 #.h .hpp source
@@ -134,7 +135,8 @@ HEADERS += \
         $$PWD/HideLayer/HideLayer.hpp \
         $$PWD/MakeDimstyle/MakeDimstyle.hpp \
         $$PWD/EChamfer/EChamfer.hpp \
-        $$PWD/EFillet/EFillet.hpp
+        $$PWD/EFillet/EFillet.hpp \
+    ArxZCC/ArxZCC.hpp
 
 SOURCES += $$PWD/object_arx_global.cpp \
     $$PWD/ARXApplication.cpp \

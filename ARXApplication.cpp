@@ -37,6 +37,7 @@ namespace sstd {
 	extern void loadMakeDimStyle();
 	extern void loadEChamfer();
 	extern void loadEFillet();
+    extern void loadArxZCC();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -74,6 +75,7 @@ namespace sstd {
 		    { &sstd::loadMakeDimStyle },
 		    { &sstd::loadEChamfer },
 		    { &sstd::loadEFillet },
+            { &sstd::loadArxZCC },
 		};
 	}
 
