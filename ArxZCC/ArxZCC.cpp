@@ -53,10 +53,9 @@ namespace sstd {
 
 		inline void getAPoint(
 			const wstring_view & P,
-			AcGePoint3d & varAns,
-			const AcGePoint3d & varS = { 0,0,0 }) {
+			AcGePoint3d & varAns ) {
 			auto $Error = acedGetPoint(nullptr, P.data(), &(varAns.x));
-			if (RTNONE == $Error) { varAns = varS; }
+			if (RTNONE == $Error) { throw $Error; }
 			else { if ($Error == RTNORM)return; }
 			throw $Error;
 		}
@@ -65,7 +64,7 @@ namespace sstd {
 
 	void ArxZCC::main()try {
 		AcGePoint3d varCP;
-		getAPoint(LR"(获得圆心<0,0,0>)"sv, varCP);
+		getAPoint(LR"(获得圆心)"sv, varCP);
 		const auto varCPWord = UcsToWorld(varCP);
 		bool varRun = true;
 
@@ -101,7 +100,7 @@ namespace sstd {
 			while (varRun) try {
 
 				AcGePoint3d varPointS;
-				getAPoint(LR"(获得圆上一个点<0,0,0>)"sv, varPointS);
+				getAPoint(LR"(获得圆上一个点)"sv, varPointS);
 				const auto varR = std::hypot(varCP.x - varPointS.x, varCP.y - varPointS.y);
 
 				if (varR == 0) {
