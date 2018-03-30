@@ -1094,7 +1094,7 @@
 
 ;|concentric circles|;
 ;画同心圆
-(defun c:zcc (/
+(defun privatezcc (/
 	      point_0			;圆心|;
 	      point_temp		;用户输入点|;
 	      point_temp_1		;以point_0为圆心(point_temp_1,point_temp)为直径的圆|;
@@ -1131,6 +1131,18 @@
   (princ)
 )
 
+(
+defun c:zcc()  
+ (command "arxzcc")
+;  (if (/= nil arxzcc ) 
+;  (progn
+;    (command "arxzcc")
+;  )
+;  (progn
+;    (privatezcc)
+;  )
+; )
+)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;;draw bound
