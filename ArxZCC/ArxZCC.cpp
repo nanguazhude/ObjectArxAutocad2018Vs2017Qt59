@@ -2,6 +2,7 @@
 #include <string_view>
 #include <cmath>
 #include <set>
+#include <acedCmdNF.h>
 #include "../ThirdPart/ADN/ADNAssocCreateConstraint.hpp"
 
 using std::wstring_view;
@@ -53,7 +54,7 @@ namespace sstd {
 
 		inline void getAPoint(
 			const wstring_view & P,
-			AcGePoint3d & varAns ) {
+			AcGePoint3d & varAns) {
 			auto $Error = acedGetPoint(nullptr, P.data(), &(varAns.x));
 			if (RTNONE == $Error) { throw $Error; }
 			else { if ($Error == RTNORM)return; }
@@ -189,11 +190,65 @@ namespace sstd {
 				AcDbObjectId varTmp;
 				for (const auto & varI : varIDV) {
 					AcDbAssoc2dConstraintAPI::createDiamDimConstraint(
-						varI, addy(varCPWord, varI.$R),
+						varI,
+						(std::rand() & 1) ? addy(varCPWord, varI.$R) : addx(varCPWord, varI.$R),
 						addy(addx(varCPWord, varI.$R*getRandX()), varI.$R*getRandX()),
 						varTmp);
 				}
 			}
+
+		}
+
+		{/*自动约束*/
+
+			class Lock {
+			public:
+				ads_name ss = {};
+				Lock() { acedSSAdd(nullptr, nullptr, ss); }
+				~Lock() { acedSSFree(ss); }
+			} varLock;
+
+			{
+				ads_name eName;
+				acdbGetAdsName(eName, LX1);
+				acedSSAdd(eName, varLock.ss, varLock.ss);
+			}
+
+			{
+				ads_name eName;
+				acdbGetAdsName(eName, LX2);
+				acedSSAdd(eName, varLock.ss, varLock.ss);
+			}
+
+			{
+				ads_name eName;
+				acdbGetAdsName(eName, LY1);
+				acedSSAdd(eName, varLock.ss, varLock.ss);
+			}
+
+			{
+				ads_name eName;
+				acdbGetAdsName(eName, LY2);
+				acedSSAdd(eName, varLock.ss, varLock.ss);
+			}
+
+			for (const auto & varI: varIDV) {
+				ads_name eName;
+				acdbGetAdsName(eName, varI);
+				acedSSAdd(eName, varLock.ss, varLock.ss);
+			}
+
+			acedCommandS(
+				RTSTR, L"_.AutoConstrain",
+				RTPICKS, varLock.ss,
+				RTSTR, L"", 
+				RTNONE);
+
+			/*acedCommandS(
+				RTSTR, L"_.pselect",
+				RTPICKS, varLock.ss,
+				RTSTR, L"",
+				RTNONE);*/
 
 		}
 
