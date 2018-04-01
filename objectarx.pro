@@ -11,16 +11,16 @@ PRECOMPILED_HEADER  += Final.object_arx_global.hpp
 #DESTDIR =
 
 #the sdk include path
-INCLUDEPATH += "C:/ObjectARX 2018/inc"
-INCLUDEPATH += "C:/ObjectARX 2018/inc-x64"
+INCLUDEPATH += "C:/ObjectARX 2019/inc"
+INCLUDEPATH += "C:/ObjectARX 2019/inc-x64"
 
 #rxapi.lib; acdb21.lib; acge21.lib; acad.lib; ac1st21.lib; accore.lib;
-LIBS+= -L"C:/ObjectARX 2018/lib-x64" -lrxapi
-LIBS+= -L"C:/ObjectARX 2018/lib-x64" -lacdb23
-LIBS+= -L"C:/ObjectARX 2018/lib-x64" -lacge23
-LIBS+= -L"C:/ObjectARX 2018/lib-x64" -lacad
-LIBS+= -L"C:/ObjectARX 2018/lib-x64" -lac1st23
-LIBS+= -L"C:/ObjectARX 2018/lib-x64" -laccore
+LIBS+= -L"C:/ObjectARX 2019/lib-x64" -lrxapi
+LIBS+= -L"C:/ObjectARX 2019/lib-x64" -lacdb23
+LIBS+= -L"C:/ObjectARX 2019/lib-x64" -lacge23
+LIBS+= -L"C:/ObjectARX 2019/lib-x64" -lacad
+LIBS+= -L"C:/ObjectARX 2019/lib-x64" -lac1st23
+LIBS+= -L"C:/ObjectARX 2019/lib-x64" -laccore
 
 #DEF_FILE
 DEF_FILE += $$PWD/AcRxDefault.def
@@ -94,7 +94,7 @@ SOURCES += \
         $$PWD/MakeDimstyle/MakeDimstyle.cpp \
         $$PWD/EChamfer/EChamfer.cpp \
         $$PWD/EFillet/EFillet.cpp \
-    ArxZCC/ArxZCC.cpp
+        $$PWD/ArxZCC/ArxZCC.cpp
 
 
 #.h .hpp source
@@ -136,7 +136,7 @@ HEADERS += \
         $$PWD/MakeDimstyle/MakeDimstyle.hpp \
         $$PWD/EChamfer/EChamfer.hpp \
         $$PWD/EFillet/EFillet.hpp \
-    ArxZCC/ArxZCC.hpp
+        $$PWD/ArxZCC/ArxZCC.hpp
 
 SOURCES += $$PWD/object_arx_global.cpp \
     $$PWD/ARXApplication.cpp \
