@@ -7,6 +7,27 @@
 #include <functional>
 #define Version 0
 
+//acedGetString//int,//const wchar_t *,AcString &
+namespace {
+	template<typename T, typename V = void>
+	class SelectAcedGetString : public std::false_type {
+	public:
+		template<typename ... Args>
+		static int run(Args && ...args) {
+			return acedGetString(std::forward<Args>(args)...);
+		}
+	};
+	template<typename T>class SelectAcedGetString<T,
+		std::void_t< decltype(::acedGetString(std::declval<T>(), std::declval<const wchar_t *>(), std::declval<AcString &>())) >
+	> : public std::true_type {
+	public:
+		template<typename ... Args>
+		static int run(Args && ...args) {
+			return acedGetString(std::forward<Args>(args)...);
+		}
+	};
+}/*namespace*/
+
 using namespace std::string_view_literals;
 
 namespace sstd {
@@ -328,11 +349,24 @@ namespace {
 			auto varThisPack = std::make_shared< PackInFunction>();
 
 			/*******************************************/
-			{
+			if constexpr(SelectAcedGetString<int>::value) {
 				AcString varTmp;
-				acedGetString(0, LR"(输入样式名字：)", varTmp);
+				SelectAcedGetString<int>::run(0, LR"(输入样式名字：)", varTmp);
 				if (varTmp.isEmpty()) { return {}; }
 				varThisPack->$DimName = varTmp.constPtr();
+			}
+			else {
+				constexpr const int BufferValue = 256;
+				thread_local wchar_t varTmp[BufferValue];
+				varTmp[0] = 0;
+				varTmp[1] = 0;
+				varTmp[2] = 0;
+				varTmp[3] = 0;
+				if (RTNORM != SelectAcedGetString<int>::run(0, LR"(输入样式名字：)", varTmp, BufferValue)) {
+					return{};
+				}
+				if (varTmp[0] == 0) { return {}; }
+				varThisPack->$DimName = varTmp;
 			}
 			/*******************************************/
 			{
@@ -745,7 +779,7 @@ namespace sstd {
 	}
 }
 
-namespace sstd{
+namespace sstd {
 	extern void loadMakeDimStyle() {
 		MakeDimStyle::load();
 	}
