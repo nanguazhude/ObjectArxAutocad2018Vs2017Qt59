@@ -118,9 +118,9 @@ namespace sstd {/*namespace sstd*/
 
 	/*memory wrap type*/
 	template<typename T, bool = ((std::has_virtual_destructor<T>::value) && (std::is_final<T>::value == false)) >
-	class alignas(T)MWType final:public _1_p_sstd_memory_::MemoryWrapVirtualClass<T>{ public:template<typename ... Args>MWType(Args && ... args) : _1_p_sstd_memory_::MemoryWrapVirtualClass<T>(std::forward<Args>(args)...) {} };
+	class alignas(T)MWt final:public _1_p_sstd_memory_::MemoryWrapVirtualClass<T>{ public:template<typename ... Args>MWt(Args && ... args) : _1_p_sstd_memory_::MemoryWrapVirtualClass<T>(std::forward<Args>(args)...) {} };
 	template<typename T  >
-	class alignas(T)MWType<T, false> final :public _1_p_sstd_memory_::MemoryWrap<T> {public:template<typename ... Args>MWType(Args && ... args) : _1_p_sstd_memory_::MemoryWrap<T>(std::forward<Args>(args)...) {}};
+	class alignas(T)MWt<T, false> final :public _1_p_sstd_memory_::MemoryWrap<T> {public:template<typename ... Args>MWt(Args && ... args) : _1_p_sstd_memory_::MemoryWrap<T>(std::forward<Args>(args)...) {}};
 
 	template<typename T>
 	inline decltype(auto) pointer(T && arg) noexcept {
@@ -130,8 +130,8 @@ namespace sstd {/*namespace sstd*/
 	}
 
 	template<typename T, typename ... Args>
-	inline MWType<T> * wnew(Args&&...args) {
-		return new MWType<T>(std::forward<Args>(args)...);
+	inline MWt<T> * wnew(Args&&...args) {
+		return new MWt<T>(std::forward<Args>(args)...);
 	}
 
 	template<typename T>
@@ -140,13 +140,13 @@ namespace sstd {/*namespace sstd*/
 	}
 
 	template<typename T, typename ... Args>
-	std::unique_ptr<MWType<T>/**/> make_unique(Args && ... args) {
-		return std::make_unique<MWType<T>/**/>(std::forward<Args>(args)...);
+	std::unique_ptr<MWt<T>/**/> make_unique(Args && ... args) {
+		return std::make_unique<MWt<T>/**/>(std::forward<Args>(args)...);
 	}/*make unique*/
 
 	template<typename T, typename ... Args>
-	std::shared_ptr<MWType<T>> make_shared(Args && ... args) {
-		using U = MWType<T>;
+	std::shared_ptr<MWt<T>> make_shared(Args && ... args) {
+		using U = MWt<T>;
 		U * varData = wnew<T>(std::forward<Args>(args)...);
 		/*!!! set alloc here*/
 		return std::shared_ptr<U>(varData, std::default_delete<U>());
