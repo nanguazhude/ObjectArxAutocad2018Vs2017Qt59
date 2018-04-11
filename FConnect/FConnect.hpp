@@ -11,7 +11,7 @@ namespace sstd {
 
 		static void load();
 		static void main();
-		DEFINE_ARX_NAME(LR"(_fconnect)")
+		DEFINE_ARX_NAME(LR"(_fzconnect)")
 	};
 
 }/*namespace sstd*/
