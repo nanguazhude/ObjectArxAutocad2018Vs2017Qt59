@@ -61,12 +61,14 @@ SOURCES += $$PWD/object_arx_global.cpp \
     $$PWD/ARXApplication.cpp \
     $$PWD/QtApplication.cpp
 
+
 HEADERS += $$PWD/object_arx_global.hpp \
     $$PWD/ARXApplication.hpp \
     $$PWD/ArxClosePointer.hpp \
     $$PWD/AddToModelSpace.hpp \
     $$PWD/Final.object_arx_global.hpp \
     $$PWD/StringUtility.hpp
+
 
 INCLUDEPATH += $$PWD
 DEPENDPATH  += $$PWD

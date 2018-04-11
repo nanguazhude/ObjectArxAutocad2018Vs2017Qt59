@@ -38,6 +38,7 @@ namespace sstd {
 	extern void loadEChamfer();
 	extern void loadEFillet();
     extern void loadArxZCC();
+	extern void loadFConnect();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -76,6 +77,7 @@ namespace sstd {
 		    { &sstd::loadEChamfer },
 		    { &sstd::loadEFillet },
             { &sstd::loadArxZCC },
+		    { &sstd::loadFConnect },
 		};
 	}
 

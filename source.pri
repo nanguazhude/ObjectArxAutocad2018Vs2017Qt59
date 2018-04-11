@@ -37,7 +37,8 @@ SOURCES += \
         $$PWD/MakeDimstyle/MakeDimstyle.cpp \
         $$PWD/EChamfer/EChamfer.cpp \
         $$PWD/EFillet/EFillet.cpp \
-        $$PWD/ArxZCC/ArxZCC.cpp
+        $$PWD/ArxZCC/ArxZCC.cpp \
+        $$PWD/FConnect/FConnect.cpp
 
 
 #.h .hpp source
@@ -79,6 +80,7 @@ HEADERS += \
         $$PWD/MakeDimstyle/MakeDimstyle.hpp \
         $$PWD/EChamfer/EChamfer.hpp \
         $$PWD/EFillet/EFillet.hpp \
-        $$PWD/ArxZCC/ArxZCC.hpp
+        $$PWD/ArxZCC/ArxZCC.hpp \
+        $$PWD/FConnect/FConnect.hpp
 
         
