@@ -2,13 +2,15 @@
 #include <string_view>
 #include "object_arx_global.hpp"
 
+using namespace std::string_view_literals;
+
 namespace sstd {
 
 	namespace {
 		namespace _cpp_private {
 			const constexpr std::string_view qtApplicationPath =/*!!!*/
 #if _OBJECT_ARX_VERSION_X64_==2019
-				u8R"(C:\Program Files\Autodesk\AutoCAD 2018\acad.exe)"sv;
+				u8R"(C:\Program Files\Autodesk\AutoCAD 2019\acad.exe)"sv;
 #else
 				u8R"(C:\Program Files\Autodesk\AutoCAD 2018\acad.exe)"sv;
 #endif
