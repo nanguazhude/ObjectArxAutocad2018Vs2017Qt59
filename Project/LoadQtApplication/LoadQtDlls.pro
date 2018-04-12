@@ -1,5 +1,5 @@
 
-TARGET = ZFinal_SBGABOF
+TARGET = ZFinal_LoadQtDlls
 
 #the sdk include path
 INCLUDEPATH += "C:/ObjectARX 2019/inc"
@@ -23,15 +23,19 @@ QMAKE_CXXFLAGS += /MD
 TARGET_EXT = .arx
 
 #remove _DEBUG
-DEFINES -= _DEBUG
+DEFINES -= _DEBUG 
 DEFINES += _OBJECT_ARX_VERSION_X64_=2019
 
-QT       -= core
-QT       -= gui
+QT       += core
+QT       += gui
+QT       += widgets
 
 #Qt project template
 TEMPLATE = lib
 
 SOURCES += this_main.cpp
+
+RESOURCES += \
+    images.qrc
 
 

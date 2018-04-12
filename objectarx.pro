@@ -39,6 +39,7 @@ TARGET_EXT = .arx
 
 #remove _DEBUG
 DEFINES -= _DEBUG
+DEFINES += _OBJECT_ARX_VERSION_X64_=2019
 
 #just use Qt.Core and Qt.Gui Qt.Widget
 QT       += core
