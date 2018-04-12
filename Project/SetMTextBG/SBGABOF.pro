@@ -34,4 +34,4 @@ TEMPLATE = lib
 
 SOURCES += this_main.cpp
 
-
+DESTDIR = $$PWD/../../release/Autocad2019

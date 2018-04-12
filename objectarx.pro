@@ -8,7 +8,7 @@ TARGET = _ARX_DUTY_BY_NGZ_
 PRECOMPILED_HEADER  += Final.object_arx_global.hpp
 
 #change output dir
-#DESTDIR =
+DESTDIR = $$PWD/release/Autocad2019
 
 #the sdk include path
 INCLUDEPATH += "C:/ObjectARX 2019/inc"
@@ -73,6 +73,7 @@ HEADERS += $$PWD/object_arx_global.hpp \
 
 INCLUDEPATH += $$PWD
 DEPENDPATH  += $$PWD
+
 
 ##########################
 #                        #

@@ -39,4 +39,4 @@ SOURCES += this_main.cpp
 RESOURCES += \
     images.qrc
 
-
+DESTDIR = $$PWD/../../release/Autocad2019
