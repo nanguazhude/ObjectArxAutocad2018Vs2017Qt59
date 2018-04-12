@@ -80,7 +80,8 @@ namespace sstd {
 #ifdef QT_WIDGETS_LIB
 #include <QtWidgets>
 namespace sstd {
-	class QtApplication :QApplication {
+	class QtApplication {
+		std::shared_ptr<void> $QtApplication;
 	public:
 		QtApplication();
 	};

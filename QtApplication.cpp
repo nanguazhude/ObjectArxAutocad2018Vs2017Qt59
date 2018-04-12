@@ -6,7 +6,7 @@ namespace sstd {
 
 	namespace {
 		namespace _cpp_private {
-			const constexpr std::string_view qtApplicationPath =
+			const constexpr std::string_view qtApplicationPath =/*!!!*/
 				u8R"(C:\Program Files\Autodesk\AutoCAD 2018\acad.exe)"sv;
 			inline int & getArgc() {
 				static int ans;
@@ -24,8 +24,9 @@ namespace sstd {
 		}
 	}/*namespace*/
 
-	QtApplication::QtApplication() :
-		QApplication(_cpp_private::getArgc(), _cpp_private::getArgv()) {
+	QtApplication::QtApplication() {
+		if (qApp) { return; }
+		$QtApplication = std::make_shared<QApplication>(_cpp_private::getArgc(), _cpp_private::getArgv());
 	}
 
 }/*namespace sstd*/
