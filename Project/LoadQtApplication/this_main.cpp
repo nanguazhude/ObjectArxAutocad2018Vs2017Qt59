@@ -8,6 +8,7 @@
 using namespace std::string_view_literals;
 
 #include <QtWidgets>
+#include <QtQml>
 
 inline void just_print_hellow_world() {
 	acutPrintf(LR"(Hellow Word!
@@ -52,10 +53,17 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt) {
 					new QApplication(_cpp_private::getArgc(), _cpp_private::getArgv());
 				(void)varQtApplication;
 			}
-			/*force to load images plugins*/
-			QImage varImage{ QString(":/png/this.png") };
-			varImage.width();
-			varImage.height();
+			{
+				/*force to load images plugins*/
+				QImage varImage{ QString(":/png/this.png") };
+				varImage.width();
+				varImage.height();
+			}
+			{
+				/*fore to load JS*/
+				QJSEngine varE;
+				varE.evaluate( QString("1+1") );
+			}
 		}
 		/*****************************************/
 		acedRegCmds->addCommand(

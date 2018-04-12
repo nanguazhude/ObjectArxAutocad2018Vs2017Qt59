@@ -29,6 +29,7 @@ DEFINES += _OBJECT_ARX_VERSION_X64_=2019
 QT       += core
 QT       += gui
 QT       += widgets
+QT       += qml
 
 #Qt project template
 TEMPLATE = lib
