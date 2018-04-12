@@ -32,30 +32,36 @@ namespace sstd {
 			struct resbuf $osmode;
 			struct resbuf $snapmode;
 			struct resbuf $autosnap;
+			struct resbuf $constraintinfer;
 			inline ThisLock(AcDbDatabase * argDB) :$DB(argDB) {
 				const static class SetValue {
 				public:
 					struct resbuf $osmode/*1*/;
 					struct resbuf $snapmode/*0*/;
 					struct resbuf $autosnap/*31*/;
+					struct resbuf $constraintinfer/*0*/;
 					SetValue() {
 						$osmode.restype = RTSHORT;
 						$snapmode.restype = RTSHORT;
 						$autosnap.restype = RTSHORT;
+						$constraintinfer.restype = RTSHORT;
 
 						$osmode.rbnext = nullptr;
 						$snapmode.rbnext = nullptr;
 						$autosnap.rbnext = nullptr;
+						$constraintinfer.rbnext = nullptr;
 
 						$autosnap.resval.rint = 31;
 						$snapmode.resval.rint = 0;
 						$osmode.resval.rint = 1;
+						$constraintinfer.resval.rint = 0;
 					}
 
 					void setValue() const {
 						acedSetVar(LR"(AUTOSNAP)", &$autosnap);
 						acedSetVar(LR"(SNAPMODE)", &$snapmode);
 						acedSetVar(LR"(OSMODE)", &$osmode);
+						acedSetVar(LR"(CONSTRAINTINFER)", &$constraintinfer);
 					}
 
 				} varSetValue;
@@ -63,6 +69,7 @@ namespace sstd {
 				acedGetVar(LR"(AUTOSNAP)", &$autosnap);
 				acedGetVar(LR"(SNAPMODE)", &$snapmode);
 				acedGetVar(LR"(OSMODE)", &$osmode);
+				acedGetVar(LR"(CONSTRAINTINFER)", &$constraintinfer);
 				varSetValue.setValue();
 
 			}
@@ -70,13 +77,15 @@ namespace sstd {
 				acedSetVar(LR"(AUTOSNAP)", &$autosnap);
 				acedSetVar(LR"(SNAPMODE)", &$snapmode);
 				acedSetVar(LR"(OSMODE)", &$osmode);
+				acedSetVar(LR"(CONSTRAINTINFER)", &$constraintinfer);
 			}
 		}varThisLock{ $DB };
 
 		if constexpr (N) {
 			AcGePoint3d varP;
 			auto varGetP1 = [&varP1 = varP]() {
-				auto varError = acedGetPoint(nullptr, LR"(拾取第一个点:)", &varP1.x);
+				auto varError = acedGetPoint(nullptr, LR"(拾取第一个点:
+)", &varP1.x);
 				if (RTNORM == varError) {
 					varP1 = UcsToWorld(varP1);
 					return;
@@ -85,7 +94,8 @@ namespace sstd {
 			};
 
 			auto varGetP2 = [&varP1 = varP, &varP2 = varP]() {
-				auto varError = acedGetPoint(&varP1.x, LR"(拾取第二个点:)", &varP2.x);
+				auto varError = acedGetPoint(&varP1.x, LR"(拾取第二个点:
+)", &varP2.x);
 				if (RTNORM == varError) {
 					varP2 = UcsToWorld(varP2);
 					return;
@@ -118,7 +128,8 @@ namespace sstd {
 			AcGePoint3d varP1, varP2;
 			/************************/
 			auto varGetP1 = [&varP1]() {
-				auto varError = acedGetPoint(nullptr, LR"(拾取第一个点:)", &varP1.x);
+				auto varError = acedGetPoint(nullptr, LR"(拾取第一个点:
+)", &varP1.x);
 				if (RTNORM == varError) {
 					varP1 = UcsToWorld(varP1);
 					return;
@@ -127,7 +138,8 @@ namespace sstd {
 			};
 			/************************/
 			auto varGetP2 = [&varP1, &varP2]() {
-				auto varError = acedGetPoint(&varP1.x, LR"(拾取第二个点:)", &varP2.x);
+				auto varError = acedGetPoint(&varP1.x, LR"(拾取第二个点:
+)", &varP2.x);
 				if (RTNORM == varError) {
 					varP2 = UcsToWorld(varP2);
 					return;

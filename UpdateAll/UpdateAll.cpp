@@ -79,6 +79,10 @@ namespace sstd {
 					LR"(vvvvvvattsyngriducsicon
 (setvar "clayer" "不打印")
 (setvar "PARAMETERCOPYMODE" 3)
+(setvar "VTENABLE" 0)
+(setvar "FILETABPREVIEW" 0)
+(setvar "FILETABTHUMBHOVER" 0)
+(setvar "STARTMODE" 0)
 )"
 );
 			}
