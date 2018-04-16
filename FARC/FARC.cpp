@@ -1,9 +1,14 @@
 ﻿#include "FARC.hpp"
 #include "FARC_ALG.hpp"
 #include "../ThirdPart/ADN/ADNAssocCreateConstraint.hpp"
+#include <string_view>
+
+using namespace std::string_view_literals;
 
 namespace sstd {
 	extern void UCS2WCS(const double * i, double *o);
+	extern std::wstring_view double_to_string(double);
+	extern std::wstring_view int_to_string(int);
 }
 
 namespace {
@@ -183,13 +188,18 @@ namespace sstd {
 
 			/*指定半径*/
 			do {
-				int varReturn = acedGetReal(LR"(请输入半径<1.6>：)", &$R);
+				static double last_R = 1.6;
+				std::wstring varTmpString = LR"(请输入半径<)"s;
+				varTmpString += sstd::double_to_string(last_R);
+				varTmpString += LR"(>:)"sv;
+				int varReturn = acedGetReal(varTmpString.c_str(), &$R);
 				if (RTNONE == varReturn) {
-					$R = 1.6;
+					$R = last_R;
 					break;
 				}
 				else if ((RTNORM == varReturn) &&
 					($R > std::numeric_limits<double>::epsilon())) {
+					last_R = $R;
 					break;
 				}
 

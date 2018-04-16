@@ -6,6 +6,8 @@
 
 namespace sstd {
 	extern void UCS2WCS(const double * i, double *o);
+	extern std::wstring_view double_to_string(double);
+	extern std::wstring_view int_to_string(int);
 }
 
 namespace {
@@ -89,14 +91,14 @@ namespace sstd {
 
 			}/*Line*/;
 
-			void getALine(double *P, AcDbLine*&L) {
+			void getALine(bool isO, double *P, AcDbLine*&L) {
 				class Lock {
 				public:
 					ads_name varE;
 					~Lock() { acedSSFree(varE); }
 				}ss;
 
-				if (RTNORM == acedEntSel(LR"(选择一条直线)", ss.varE, P)) {
+				if (RTNORM == acedEntSel(isO ? LR"(选择一条直线)" : LR"(选择二条直线)", ss.varE, P)) {
 					AcDbObjectId eId;
 					acdbGetObjectId(eId, ss.varE);   //获取实体id  
 					AcDbEntity * pEnt;
@@ -126,13 +128,13 @@ namespace sstd {
 
 				{
 					/*获得直线1******************/
-					getALine(&varPointFistLine.x, varFirstLine);
+					getALine(true, &varPointFistLine.x, varFirstLine);
 					varPointFistLine = UcsToWorld(varPointFistLine);
 				}
 
 				{
 					/*获得直线2******************/
-					getALine(&varPointSecondLine.x, varSecondLine);
+					getALine(false, &varPointSecondLine.x, varSecondLine);
 					varPointSecondLine = UcsToWorld(varPointSecondLine);
 				}
 
@@ -213,9 +215,29 @@ namespace sstd {
 				ol1 = L0->objectId();
 				ol2 = L1->objectId();
 
+				static double varLastLength = 1;
+				auto getString = [varLastLength = varLastLength]()->std::wstring {
+					std::wstring varAns = LR"(输入倒角长度<)"s;
+					varAns += sstd::double_to_string(varLastLength);
+					varAns += LR"(>)";
+					return std::move(varAns);
+				};
 				double varLength = 0;
-				if (RTNORM != acedGetDist(nullptr, LR"(输入倒角长度：)", &varLength)) { return; }
-				if (varLength <= 0) { return; }
+				{
+					const auto varString = getString();
+					auto varError = acedGetDist(nullptr, varString.c_str(), &varLength);
+					if ((RTNORM == varError) && (varLength > 0.)) {
+						varLastLength = varLength;
+					}
+					else {
+						if (varError == RTNONE) {
+							varLength = varLastLength;
+						}
+						else {
+							return;
+						}
+					}
+				}
 
 				auto dx1 = P0.x - varCenter.x;
 				auto dy1 = P0.y - varCenter.y;
@@ -264,9 +286,9 @@ namespace sstd {
 			}
 
 			auto varCPosR = P1;
-			if constexpr(false){/*添加角度约束*/
+			if constexpr(false) {/*添加角度约束*/
 				AcDbObjectId varTmp;
-				
+
 				{
 					varCPosR.x += P0.x;
 					varCPosR.y += P0.y;
@@ -292,9 +314,9 @@ namespace sstd {
 				}
 
 				AcDbAssoc2dConstraintAPI::create2LineAngularDimConstraint(
-					 ol1,ol3,
-					 varL1P,varL3P,
-					 varCPosR, varTmp);
+					ol1, ol3,
+					varL1P, varL3P,
+					varCPosR, varTmp);
 			}
 
 			{/*添加线型约束*/

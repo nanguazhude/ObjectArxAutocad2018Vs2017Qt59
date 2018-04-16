@@ -56,7 +56,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 ##########################################################################
 
-include(source.pri)
+include($$PWD/source.pri)
+include($$PWD/ThirdPart/part_google_v8/double_conversion.pri)
 
 SOURCES += $$PWD/object_arx_global.cpp \
     $$PWD/ARXApplication.cpp \
