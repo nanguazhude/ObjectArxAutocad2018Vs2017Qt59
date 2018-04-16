@@ -91,14 +91,16 @@ namespace sstd {
 
 			}/*Line*/;
 
-			void getALine(bool isO, double *P, AcDbLine*&L) {
+			void getALine(bool isO, double *P, AcDbLine*&L) try{
 				class Lock {
 				public:
 					ads_name varE;
 					~Lock() { acedSSFree(varE); }
 				}ss;
 
-				if (RTNORM == acedEntSel(isO ? LR"(选择一条直线)" : LR"(选择二条直线)", ss.varE, P)) {
+				if (RTNORM == acedEntSel(isO ? LR"(选择一条直线
+)" : LR"(选择二条直线
+)", ss.varE, P)) {
 					AcDbObjectId eId;
 					acdbGetObjectId(eId, ss.varE);   //获取实体id  
 					AcDbEntity * pEnt;
@@ -113,6 +115,10 @@ namespace sstd {
 					}
 				}
 				else { throw 111; }
+			}
+			catch (...) {
+				acutPrintf(LR"(void getALine(bool isO, double *P, AcDbLine*&L)
+)");
 			}
 
 			bool get_three_point(
@@ -186,7 +192,11 @@ namespace sstd {
 
 				return true;
 			}
-			catch (...) { return false; }
+			catch (...) { 
+				acutPrintf(LR"(bool get_three_point
+)");
+				return false;
+			}
 		}
 	}/*namespace*/
 	/****************/

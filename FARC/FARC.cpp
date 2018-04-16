@@ -192,6 +192,7 @@ namespace sstd {
 				std::wstring varTmpString = LR"(请输入半径<)"s;
 				varTmpString += sstd::double_to_string(last_R);
 				varTmpString += LR"(>:)"sv;
+				acutPrintf(varTmpString.c_str());
 				int varReturn = acedGetReal(varTmpString.c_str(), &$R);
 				if (RTNONE == varReturn) {
 					$R = last_R;
@@ -284,7 +285,8 @@ namespace sstd {
 
 	}
 	catch (...) {
-
+		acutPrintf(LR"(FARC : thres is a undo exception
+)");
 	}
 
 }/*namespace sstd*/

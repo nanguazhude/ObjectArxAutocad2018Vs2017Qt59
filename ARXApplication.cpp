@@ -140,7 +140,6 @@ namespace sstd {
 			constexpr const static int N = 256;
 			std::array<char, N> char_chache;
 			std::array<wchar_t, N> wchar_chache;
-			const double_conversion::DoubleToStringConverter & varCV = double_conversion::DoubleToStringConverter::EcmaScriptConverter();
 
 			std::wstring_view int_to_string(int data) {
 				/*加速运算结果*/
@@ -191,11 +190,11 @@ namespace sstd {
 				return { varPointer + 1, static_cast<std::size_t>(varPointer - varPointerEnd) };
 			}
 
-			std::wstring_view double_to_string(double a) {
-
+			std::wstring_view double_to_string(double a) try{
+			 
 				double_conversion::StringBuilder varSB{ char_chache.data(),N };
-				varCV.ToShortest(a, &varSB);
-				varSB.Finalize();
+				double_conversion::DoubleToStringConverter::EcmaScriptConverter().ToShortest(a, &varSB);
+				 
 				const auto n = varSB.position();
 				{
 					auto wi = wchar_chache.begin();
@@ -205,19 +204,30 @@ namespace sstd {
 						++wi; ++ci;
 					}
 				}
-
+				 				
 				return std::wstring_view{ wchar_chache.data(),static_cast<std::size_t>(n) };
 
 			}
+			catch (...) {
+				acutPrintf(LR"(there is exception when cv double to string
+)");
+				return{};
+			}
+
+			static _StaticData_int_double_to_string_ & instance() {
+				static _StaticData_int_double_to_string_ ans;
+				return ans;
+			}
+
 		};
-		thread_local _StaticData_int_double_to_string_ _d_StaticData_int_double_to_string_;
+		 
 	}
 	
 	extern std::wstring_view double_to_string(double a) {
-		return _d_StaticData_int_double_to_string_.double_to_string(a);
+		return _StaticData_int_double_to_string_::instance().double_to_string(a);
 	}
 	extern std::wstring_view int_to_string(int a) {
-		return _d_StaticData_int_double_to_string_.int_to_string(a);
+		return _StaticData_int_double_to_string_::instance().int_to_string(a);
 	}
 	
 }/*namespace sstd*/

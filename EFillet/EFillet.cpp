@@ -101,7 +101,9 @@ namespace sstd {
 					~Lock() { acedSSFree(varE); }
 				}ss;
 
-				if (RTNORM == acedEntSel(isO ? LR"(选择一条直线)" : LR"(选择二条直线)", ss.varE, P)) {
+				if (RTNORM == acedEntSel(isO ? LR"(选择一条直线
+)" : LR"(选择二条直线
+)", ss.varE, P)) {
 					AcDbObjectId eId;
 					acdbGetObjectId(eId, ss.varE);   //获取实体id  
 					AcDbEntity * pEnt;
@@ -189,7 +191,11 @@ namespace sstd {
 
 				return true;
 			}
-			catch (...) { return false; }
+			catch (...) { 
+				acutPrintf(LR"(exception : get_three_point
+)");
+				return false;
+			}
 		}
 	}/*namespace*/
 
@@ -207,21 +213,24 @@ namespace sstd {
 
 			{/*0*/
 				if (false == __get_three_points::get_three_point(P0, varCenter, P1, L0, L1)) {
+					acutPrintf(LR"(if (false == __get_three_points::get_three_point(P0, varCenter, P1, L0, L1)) 
+)");
 					return;
 				}
 
 				ol1 = L0->objectId();
 				ol2 = L1->objectId();
 
-				static double varLastLength = 1;
+				static double varLastLength = 1.6 ;
 				auto getString = [varLastLength = varLastLength]()->std::wstring {
 					std::wstring varAns = LR"(输入圆角半径<)"s;
 					varAns += sstd::double_to_string(varLastLength);
-					varAns += LR"(>)";
+					varAns += LR"(>:)"sv;
 					return std::move(varAns);
 				};
 				{
-					const auto varString = getString();
+					const std::wstring varString = getString();
+					acutPrintf(varString.c_str());
 					auto varError = acedGetDist(nullptr, varString.c_str(), &varLength);
 					if ((RTNORM == varError) && (varLength > 0.)) {
 						varLastLength = varLength;
@@ -391,6 +400,8 @@ namespace sstd {
 
 	}
 	catch (...) {
+		acutPrintf(LR"(void EFillet::main()
+)");
 		return;
 	}
 
