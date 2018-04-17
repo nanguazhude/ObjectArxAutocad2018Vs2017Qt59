@@ -83,6 +83,12 @@ namespace sstd {
 (setvar "FILETABPREVIEW" 0)
 (setvar "FILETABTHUMBHOVER" 0)
 (setvar "STARTMODE" 0)
+(command "FILETAB")
+(command "PROPERTIES")
+(command "TOOLPALETTES")
+(command "RIBBON")
+(command "NAVVCUBE" "off" )
+(command "NAVBAR" "off" )
 )"
 );
 			}
