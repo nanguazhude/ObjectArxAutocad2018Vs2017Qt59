@@ -86,6 +86,17 @@ namespace sstd {
 						->fileName();
 					if (varFileName == nullptr) { throw 6; }
 					varFileNameQ = QString::fromWCharArray(varFileName);
+
+					const auto varPath = QFileInfo(varFileNameQ).absolutePath();
+					{
+						QDir varDir{ varPath };
+						auto varFullFilePath = varDir.absoluteFilePath("xy.wh.txt");
+						if (QFile::exists(varFullFilePath)) {
+							arg->$FileName = varFullFilePath;
+							return true;
+						}
+					}
+
 				}
 				arg->$FileName = QFileDialog::getOpenFileName(nullptr, {},
 					QFileInfo(varFileNameQ).absolutePath());

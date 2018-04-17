@@ -43,6 +43,7 @@ namespace sstd {
 	extern void loadEFillet();
 	extern void loadArxZCC();
 	extern void loadFConnect();
+    extern void loadEText();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -82,6 +83,7 @@ namespace sstd {
 			{ &sstd::loadEFillet },
 			{ &sstd::loadArxZCC },
 			{ &sstd::loadFConnect },
+            { &sstd::loadEText },
 		};
 	}
 

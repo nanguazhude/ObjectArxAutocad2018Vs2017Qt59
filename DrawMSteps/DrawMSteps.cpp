@@ -545,10 +545,20 @@ namespace {
 					->fileName();
 				if (varFileName == nullptr) { throw 6; }
 				varFileNameQ = QString::fromWCharArray(varFileName);
+				 
 			}
-			$FileName = QFileDialog::getOpenFileName(nullptr, {},
-				QFileInfo(varFileNameQ).absolutePath());
+			const auto varPath = QFileInfo(varFileNameQ).absolutePath();
+			{
+				QDir varDir{ varPath };
+				auto varFullFilePath = varDir.absoluteFilePath("xy.wh.txt");
+				if ( QFile::exists(varFullFilePath) ) {
+					$FileName = varFullFilePath;
+					return;
+				}
+			}
+			$FileName = QFileDialog::getOpenFileName(nullptr, {}, varPath);
 			if ($FileName.isEmpty()) { throw 11; }
+
 		}
 	};
 
