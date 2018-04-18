@@ -90,6 +90,7 @@ namespace sstd {
 (command "RIBBON")
 (command "NAVVCUBE" "off" )
 (command "NAVBAR" "off" )
+(command "layon")
 )"
 );
 			}
