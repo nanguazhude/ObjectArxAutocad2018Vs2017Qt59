@@ -83,6 +83,7 @@ namespace sstd {
 (setvar "FILETABPREVIEW" 0)
 (setvar "FILETABTHUMBHOVER" 0)
 (setvar "STARTMODE" 0)
+(setvar "WIPEOUTFRAME" 2)
 (command "FILETAB")
 (command "PROPERTIES")
 (command "TOOLPALETTES")
