@@ -10,7 +10,7 @@ namespace sstd {
 
 		static void load();
 		static void main();
-		DEFINE_ARX_NAME(LR"(_DDDIMDISTANCE)")
+		DEFINE_ARX_NAME(LR"(_DDADIMDISTANCE)")
 
 	};/**/
 

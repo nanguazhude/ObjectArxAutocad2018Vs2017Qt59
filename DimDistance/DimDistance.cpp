@@ -133,6 +133,23 @@ namespace {
 			Type type = Type::None;
 			AcGePoint3d varKeyPoint;
 
+			void updateKeyPoint() {
+				sstd::ArxClosePointer< AcDbEntity > varO;
+				if (eOk != acdbOpenObject(varO, this->objectID)) {
+					throw 332;
+				}
+				if (this->dimType == DimType::AlignedDimension) {
+					auto var = AcDbAlignedDimension::cast(varO);
+					if (var == nullptr) { throw nullptr; }
+					this->varKeyPoint = var->dimLinePoint();
+				}
+				else if (this->dimType == DimType::RotatedDimension) {
+					auto var = AcDbRotatedDimension::cast(varO);
+					if (var == nullptr) { throw nullptr; }
+					this->varKeyPoint = var->dimLinePoint();
+				}
+			}
+
 			bool updateData() {
 				sstd::ArxClosePointer< AcDbEntity > varO;
 				if (eOk != acdbOpenObject(varO, this->objectID)) {
@@ -299,30 +316,46 @@ namespace {
 			if (varObjecs.empty()) { throw 3423; }
 		}
 
-		void sort_objects() {
+		long double varDX = 0;
+		long double varDY = 0;
 
-			{/*sort them in autocad first*/
-				class Lock {
-				public:
-					ads_name ss = {};
-					Lock() { acedSSAdd(nullptr, nullptr, ss); }
-					~Lock() { acedSSFree(ss); }
-				} varLock;
-				for (auto & varI : $Objects) {
-					acedSSAdd(varI.adsName, varLock.ss, varLock.ss);
-				}
-				{
-					/*_.DIMSPACE*/
-					constexpr const static auto varCommand = LR"(_.DIMSPACE)";
-					acedCommandS(
-						RTSTR, varCommand,
-						RTENAME, $BasicObject.adsName,
-						RTPICKS, varLock.ss,
-						RTSTR, L"",
-						RTREAL, 3.141592654 * 5,
-						RTNONE);
-				}
+		void sort_objects() {
+			constexpr const static bool Ver = true;
+
+			if constexpr(Ver) {
+
 			}
+			else {
+				{/*sort them in autocad first*/
+					class Lock {
+					public:
+						ads_name ss = {};
+						Lock() { acedSSAdd(nullptr, nullptr, ss); }
+						~Lock() { acedSSFree(ss); }
+					} varLock;
+					for (auto & varI : $Objects) {
+						acedSSAdd(varI.adsName, varLock.ss, varLock.ss);
+					}
+					{
+						/*_.DIMSPACE*/
+						constexpr const static auto varCommand = LR"(_.DIMSPACE)";
+						acedCommandS(
+							RTSTR, varCommand,
+							RTENAME, $BasicObject.adsName,
+							RTPICKS, varLock.ss,
+							RTSTR, L"",
+							RTREAL, 3.141592654 * 5,
+							RTNONE);
+					}
+				}
+
+				{/*更新Key值*/
+					for (auto & varI : $Objects) {
+						varI.updateKeyPoint();
+					}
+				}
+			}/*const expr*/
+
 			$SortedObjects.clear();
 			$SortedObjects.reserve(1 + this->$Objects.size());
 			for (auto & varI : $Objects) {
@@ -330,32 +363,61 @@ namespace {
 			}
 			$SortedObjects.push_back(&$BasicObject);
 
-			/*计算X，Y方差*/
-			long double varDX = 0;
-			long double varDY = 0;
-			{
-				const double varISX = 1.0 / ($SortedObjects.size() < 333 ? ($SortedObjects.size()) : 333);
-				const auto & varBK = $BasicObject.varKeyPoint;
-				for (auto varI : $SortedObjects) {
-					auto & varK = varI->varKeyPoint;
-					varDX += std::abs(varK.x - varBK.x)*varISX;
-					varDY += std::abs(varK.y - varBK.y)*varISX;
+
+			if constexpr(Ver) {
+
+			}
+			else {
+				varDX = 0;
+				varDY = 0;
+				/*计算X，Y方差*/
+				{
+					const double varISX = 1.0 / ($SortedObjects.size() < 333 ? ($SortedObjects.size()) : 333);
+					const auto & varBK = $BasicObject.varKeyPoint;
+					double varXMax = varBK.x; double varXMin = varBK.x;
+					double varYMax = varBK.y; double varYMin = varBK.y;
+					for (auto varI : $SortedObjects) {
+						const auto & varK = varI->varKeyPoint;
+						varDX += std::abs(varK.x - varBK.x)*varISX;
+						varDY += std::abs(varK.y - varBK.y)*varISX;
+						if (varK.x > varXMax) {
+							varXMax = varK.x;
+						}
+						if (varK.x < varXMin) {
+							varXMin = varK.x;
+						}
+						if (varK.y > varYMax) {
+							varYMax = varK.y;
+						}
+						if (varK.y < varYMin) {
+							varYMin = varK.y;
+						}
+					}
+					if (varXMax != varXMin) varDX /= (varXMax - varXMin);
+					if (varYMax != varYMin) varDY /= (varYMax - varYMin);
 				}
+
+				acutPrintf(LR"(
+DX : %lf , DY : %lf
+)", varDX, varDY);
 			}
 
+#define sortBy std::sort/*std::stable_sort*/  
 			if (varDX > varDY) {
 				/*sort by x*/
-				std::sort($SortedObjects.begin(), $SortedObjects.end(),
+				sortBy($SortedObjects.begin(), $SortedObjects.end(),
 					[](Object * l, Object *r) {
 					return (l->varKeyPoint.x < r->varKeyPoint.x);
 				});
-				if ($SortedObjects[0] == &$BasicObject) { return; }
+				if ($SortedObjects[0] == &$BasicObject) {
+					return;
+				}
 				if (*$SortedObjects.rbegin() == &$BasicObject) {/*反序*/
 					std::reverse($SortedObjects.begin(), $SortedObjects.end());
 					return;
 				}
 				/*sort by y*/
-				std::sort($SortedObjects.begin(), $SortedObjects.end(),
+				sortBy($SortedObjects.begin(), $SortedObjects.end(),
 					[](Object * l, Object *r) {
 					return (l->varKeyPoint.y < r->varKeyPoint.y);
 				});
@@ -370,7 +432,7 @@ namespace {
 			}
 			else {
 				/*sort by y*/
-				std::sort($SortedObjects.begin(), $SortedObjects.end(),
+				sortBy($SortedObjects.begin(), $SortedObjects.end(),
 					[](Object * l, Object *r) {
 					return (l->varKeyPoint.y < r->varKeyPoint.y);
 				});
@@ -380,7 +442,7 @@ namespace {
 					return;
 				}
 				/*sort by x*/
-				std::sort($SortedObjects.begin(), $SortedObjects.end(),
+				sortBy($SortedObjects.begin(), $SortedObjects.end(),
 					[](Object * l, Object *r) {
 					return (l->varKeyPoint.x < r->varKeyPoint.x);
 				});
@@ -456,7 +518,7 @@ namespace {
 			auto varBasic = varPos++;
 
 			Object::Type varThisType = Object::Type::None;
-			while (varBasic != varEPos) {
+			while (varPos != varEPos) {
 
 				class Lock {
 				public:
@@ -466,18 +528,20 @@ namespace {
 				} varLock;
 
 				{
-					auto varP = (*varPos);
+					auto varP = (*varBasic);
 					varThisType = varP->type;
-					acedSSAdd(varP->adsName, varLock.ss, varLock.ss);
 				}
 
-				for (++varPos; varPos != varEPos; ++varPos) {
+				for (; varPos != varEPos; ++varPos) {
 					auto varP = (*varPos);
 					if (varP->type == varThisType) {
 						acedSSAdd(varP->adsName, varLock.ss, varLock.ss);
 						continue;
 					}
-					break;
+					else {
+						acedSSAdd(varP->adsName, varLock.ss, varLock.ss);
+						break;
+					}
 				}
 
 				{
@@ -492,18 +556,15 @@ namespace {
 						RTNONE);
 				}
 
-				if (varPos != varEPos) {
-					varBasic = varPos - 1;
-				}
-				else {
-					break;
-				}
+				varBasic = varPos++;
 
 			}
 
 		}/*apply*/
 
-		void run() try {
+		void run(long double a, long double b) try {
+			varDX = a;
+			varDY = b;
 			/*选择基*/
 			select_basic();
 			/*选择其它*/
@@ -521,6 +582,21 @@ namespace {
 
 	double PrivateDimDistance::space_0 = 12;
 	double PrivateDimDistance::space_1 = 16;
+
+	class DimDistanceB {
+	public:
+
+		static void load() {
+
+		}
+		static void main()try {
+			PrivateDimDistance var;
+			var.run(0, 1);
+		}
+		catch (...) {}
+		DEFINE_ARX_NAME(LR"(_DDBDIMDISTANCE)")
+
+	};/**/
 }/**/
 
 namespace sstd {
@@ -529,16 +605,17 @@ namespace sstd {
 		DimDistance::load();
 	}
 
-	void DimDistance::load() {
-		arx_add_main_command_usepickset<DimDistance>();
-	}
-
 	void DimDistance::main() try {
 		PrivateDimDistance var;
-		var.run();
+		var.run(1, 0);
 	}
 	catch (...) {
 		return;
+	}
+
+	void DimDistance::load() {
+		arx_add_main_command_usepickset<DimDistance>();
+		arx_add_main_command_usepickset<DimDistanceB>();
 	}
 
 }/*namespace sstd*/
