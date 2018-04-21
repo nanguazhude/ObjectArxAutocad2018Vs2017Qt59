@@ -147,7 +147,7 @@ namespace sstd {
 				{
 					/*计算两条直线的交点*********/
 					AcGePoint3dArray varAns;
-					if (false == varSecondLine->intersectWith(varFirstLine,
+					if (eOk != varSecondLine->intersectWith(varFirstLine,
 						AcDb::Intersect::kExtendBoth,
 						varAns)) {
 						throw 4433;
@@ -194,7 +194,7 @@ namespace sstd {
 
 				return true;
 			}
-			catch (...) { 
+			catch (...) {
 				acutPrintf(LR"(exception : get_three_point
 )");
 				return false;
@@ -224,7 +224,7 @@ namespace sstd {
 				ol1 = L0->objectId();
 				ol2 = L1->objectId();
 
-				static double varLastLength = 1.6 ;
+				static double varLastLength = 1.6;
 				auto getString = [varLastLength = varLastLength]()->std::wstring {
 					std::wstring varAns = LR"(输入圆角半径<)"s;
 					varAns += sstd::double_to_string(varLastLength);
@@ -398,7 +398,7 @@ namespace sstd {
 					RTSTR, L"", RTNONE);
 
 			}
-			
+
 		}
 
 	}
