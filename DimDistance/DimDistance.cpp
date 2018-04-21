@@ -309,6 +309,10 @@ namespace {
 			for (auto & varI : varObjecs) {
 				auto & varJ = $Objects.emplace_back();
 				static_cast<ObjectIndex&>(varJ) = varI;
+				if ( $BasicObject.objectID == varI.objectID ) {
+					$Objects.pop_back();
+					continue;
+				}
 				if (false == varJ.updateData()) {
 					$Objects.pop_back();
 					continue;
@@ -581,8 +585,8 @@ DX : %lf , DY : %lf
 
 	};
 
-	double PrivateDimDistance::space_0 = 12;
-	double PrivateDimDistance::space_1 = 16;
+	double PrivateDimDistance::space_0 = ((1.25 + 6.75) * 1.0) + 3.141592654;
+	double PrivateDimDistance::space_1 = ((1.25 + 1.25 + 0.75 * 6.75 + 0.75 * 6.75) * 1.0) + 3.141592654;
 
 	class DimDistanceB {
 	public:
@@ -614,7 +618,7 @@ DX : %lf , DY : %lf
 		static void main()try {
 			double var;
 			AcString varTmp;
-			auto varError = acedGetString(0, LR"(缩放比例16X12：
+			auto varError = acedGetString(0, LR"(缩放比例 ：
 )", varTmp);
 			if (RTNORM == varError) {
 				sstd::QtApplication varQtApp;
@@ -628,8 +632,8 @@ DX : %lf , DY : %lf
 				}
 				var = varJSV.toNumber();
 				if (var > 0.) {
-					PrivateDimDistance::space_0 = 12 * var;
-					PrivateDimDistance::space_1 = 16 * var;
+					PrivateDimDistance::space_0 = ((1.25 + 6.75) * var) + 3.141592654;
+					PrivateDimDistance::space_1 = ((1.25 + 1.25 + 0.75 * 6.75 + 0.75 * 6.75) * var) + 3.141592654;
 				}
 				else {
 					return;
