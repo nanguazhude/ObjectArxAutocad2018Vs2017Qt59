@@ -97,7 +97,8 @@ namespace sstd {
 			void getALine(bool isO, double *P, AcDbLine*&L) {
 				class Lock {
 				public:
-					ads_name varE;
+					ads_name varE = {};
+					Lock() { acedSSAdd(nullptr, nullptr, varE); }
 					~Lock() { acedSSFree(varE); }
 				}ss;
 

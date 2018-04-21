@@ -76,6 +76,7 @@ namespace sstd {
 				class Lock {
 				public:
 					ads_name ssName = {};
+					Lock() { acedSSAdd(nullptr, nullptr, ssName); }
 					~Lock() {
 						acedSSFree(ssName);
 					}
