@@ -379,6 +379,7 @@ namespace sstd {
 #include "appendDimStyle/极限公差_0P8.hpp"
 /*一半公差******************************************/
 #include "appendDimStyle/一半_默认公差.hpp"
+#include "appendDimStyle/一半_默认公差L.hpp"
 /*加框公差******************************************/
 #include "appendDimStyle/加框_默认公差.hpp"
 /***************************************************/

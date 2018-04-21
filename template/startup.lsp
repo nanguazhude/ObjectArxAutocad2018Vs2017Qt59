@@ -805,6 +805,7 @@
 (defun c:czor( / varS )(setq varS( ssget ":E" ))(command "change" varS "" "p" "la" "临时图形" "c" "BYLAYER" "" ))
 (defun c:czz( / varS )(setq varS( ssget ":E" ))(command "change" varS "" "p" "la" "0" "c" "BYLAYER" "" ))
 
+(defun c:zdhal()  (command "dimstyle" "R" "一半_默认公差L") );切换标注样式为一半_默认公差L
 (defun c:zdha()  (command "dimstyle" "R" "一半_默认公差") );切换标注样式为一半_默认公差
 (defun c:zdn()  (command "dimstyle"  "R" "默认公差") );切换标注样式为默认公差
 (defun c:zdl()  (command "dimstyle"  "R" "极限公差") );切换标注样式为极限公差
@@ -817,6 +818,7 @@
 (defun c:zdsf() (command "dimstyle"  "R" "对称公差_0P15") );切换标注样式为 对称公差_0P15
 (defun c:zdst() (command "dimstyle"  "R" "对称公差_0P12") );切换标注样式为 对称公差_0P12
 
+(defun c:czdhaL( / varS )(setq varS( ssget ":E" ))(command "dimstyle" "R" "一半_默认公差L")(command "dimstyle" "A" varS "" )(command "dimstyle" "R" "默认公差" ) )
 (defun c:czdha( / varS )(setq varS( ssget ":E" ))(command "dimstyle" "R" "一半_默认公差")(command "dimstyle" "A" varS "" )(command "dimstyle" "R" "默认公差" ) )
 (defun c:czdn( / varS )(setq varS( ssget ":E" ))(command "dimstyle" "R" "默认公差")(command "dimstyle" "A" varS "" )(command "dimstyle" "R" "默认公差" ) )
 (defun c:czdl( / varS )(setq varS( ssget ":E" ))(command "dimstyle" "R" "极限公差")(command "dimstyle" "A" varS "" )(command "dimstyle" "R" "默认公差" ) )
