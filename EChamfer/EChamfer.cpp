@@ -364,7 +364,8 @@ namespace sstd {
 					acedSSAdd(eName, varLock.ss, varLock.ss);
 				}
 
-				acedCommandS(RTSTR, L"_.AutoConstrain",
+				acedCommandS(
+					RTSTR, L"_.AutoConstrain",
 					RTPICKS, varLock.ss,
 					RTSTR, L"", RTNONE);
 

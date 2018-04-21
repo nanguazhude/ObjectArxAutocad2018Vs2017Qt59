@@ -5,14 +5,14 @@
 
 namespace sstd {
 
-class DimDistance{
-public:
+	class DimDistance {
+	public:
 
-    static void load();
-    static void main();
-    DEFINE_ARX_NAME(LR"(_dimdistance)")
+		static void load();
+		static void main();
+		DEFINE_ARX_NAME(LR"(_DDIMDISTANCE)")
 
-};/**/
+	};/**/
 
 }/*namespace sstd*/
 

@@ -234,7 +234,7 @@ namespace sstd {
 				};
 				{
 					const std::wstring varString = getString();
-					acutPrintf(varString.c_str());
+					//acutPrintf(varString.c_str());
 					auto varError = acedGetDist(nullptr, varString.c_str(), &varLength);
 					if ((RTNORM == varError) && (varLength > 0.)) {
 						varLastLength = varLength;
