@@ -1,4 +1,5 @@
 ﻿#include <tuple>
+#include <vector>
 #include "DimDistance.hpp"
 
 namespace {
@@ -7,10 +8,11 @@ namespace {
 	class ResbufSet {
 	public:
 		struct resbuf $Data[N];
+		operator const struct resbuf * () const { return static_cast<const struct resbuf *>($Data); }
 		ResbufSet() = default;
-		template<typename A0,typename ... Args>
-		ResbufSet(A0&&a0,Args && ... args) {
-			this->construct(std::forward<A0>(a0),std::forward<Args>(args)...);
+		template<typename A0, typename ... Args>
+		ResbufSet(A0&&a0, Args && ... args) {
+			this->construct(std::forward<A0>(a0), std::forward<Args>(args)...);
 		}
 		template<typename ... Args>
 		void construct(Args && ... args) {
@@ -84,17 +86,77 @@ namespace {
 	public:
 
 		AcDbDatabase * $DB;
+		class ObjectIndex {
+		public:
+			AcDbObjectId objectID;
+			ads_name adsName;
+			ObjectIndex() = default;
+			ObjectIndex(const AcDbObjectId & a, ads_name b) {
+				objectID = a;
+				adsName[0] = *b;
+				adsName[1] = *(1 + b);
+			}
+		};
+
+		class Object : public ObjectIndex {
+		};
+
+		inline static std::vector<ObjectIndex> ssToAcDbObjects(ads_name ss) {
+			std::int32_t varLen;
+			acedSSLength(ss, &varLen);
+			if (varLen < 1) { return{}; }
+
+			std::vector<ObjectIndex> varAns;
+			varAns.reserve(varLen);
+			for (std::int32_t i = 0; i < varLen; ++i) {
+				ads_name ent;
+				acedSSName(ss, i, ent);
+				AcDbObjectId eId;
+				acdbGetObjectId(eId, ent);
+				varAns.emplace_back(eId, ent);
+			}
+
+			return std::move(varAns);
+		}
+
+		Object $BasicObject;
+		std::vector<Object> $Objects;
 
 		PrivateDimDistance() {
 			$DB = acdbHostApplicationServices()->workingDatabase();
 		}
 
-		void run() {
-			/*选择基*/
+		void select_basic() {
+			class Lock {
+			public:
+				ads_name ss = {};
+				Lock() { acedSSAdd(nullptr, nullptr, ss); }
+				~Lock() { acedSSFree(ss); }
+			} varLock;
 
+			const static ResbufSet<1> varSelectFilter{ RTDXF0,LR"(Dimension)" };
+			acedSSGet(
+				LR"(:S)"/*选择单个实例*/,
+				nullptr,
+				nullptr,
+				varSelectFilter,
+				varLock.ss
+			);
+
+			auto varObjecs = ssToAcDbObjects(varLock.ss);
+			if (varObjecs.empty()) { throw 3423; }
+
+			static_cast<ObjectIndex&>( $BasicObject ) = varObjecs[0];
+
+		}
+
+		void run() try {
+			/*选择基*/
+			select_basic();
 			/*选择其它*/
 
 		}
+		catch (...) { return; }
 
 	};
 }/**/
@@ -109,9 +171,12 @@ namespace sstd {
 		arx_add_main_command_usepickset<DimDistance>();
 	}
 
-	void DimDistance::main() {
+	void DimDistance::main() try {
 		PrivateDimDistance var;
 		var.run();
+	}
+	catch (...) {
+		return;
 	}
 
 }/*namespace sstd*/
