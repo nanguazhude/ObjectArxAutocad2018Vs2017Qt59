@@ -99,6 +99,48 @@ namespace {
 		};
 
 		class Object : public ObjectIndex {
+		public:
+
+			enum class DimType : int {
+				AlignedDimension,
+				RotatedDimension,
+				None,
+			};
+
+			enum class Type :int {
+				Limit/*极限公差*/,
+				Normal/*无公差*/,
+				Mirror/*对称公差*/,
+				None,
+			};
+
+			DimType dimType= DimType::None;
+			Type type = Type::None;
+			bool updateData() {
+				sstd::ArxClosePointer< AcDbEntity > varO;
+				if (eOk != acdbOpenObject(varO, this->objectID)) {
+					throw 332;
+				}
+
+				if (varO->isKindOf(AcDbAlignedDimension::desc())) {
+					dimType = DimType::AlignedDimension;
+					auto var = AcDbAlignedDimension::cast( varO );
+					if (var == nullptr) { return false; }
+					{
+						auto dimSID = var->dimensionStyle();
+						//sstd::ArxClosePointer< AcDbEntity > varO;
+						
+					}
+					return true;
+				}
+				else if (varO->isKindOf(AcDbRotatedDimension::desc()) ) {
+					dimType = DimType::RotatedDimension;
+
+					return true;
+				}
+
+				return false;
+			}
 		};
 
 		inline static std::vector<ObjectIndex> ssToAcDbObjects(ads_name ss) {
@@ -127,27 +169,31 @@ namespace {
 		}
 
 		void select_basic() {
-			class Lock {
-			public:
-				ads_name ss = {};
-				Lock() { acedSSAdd(nullptr, nullptr, ss); }
-				~Lock() { acedSSFree(ss); }
-			} varLock;
+			{
+				class Lock {
+				public:
+					ads_name ss = {};
+					Lock() { acedSSAdd(nullptr, nullptr, ss); }
+					~Lock() { acedSSFree(ss); }
+				} varLock;
 
-			const static ResbufSet<1> varSelectFilter{ RTDXF0,LR"(Dimension)" };
-			acedSSGet(
-				LR"(:S)"/*选择单个实例*/,
-				nullptr,
-				nullptr,
-				varSelectFilter,
-				varLock.ss
-			);
+				const static ResbufSet<1> varSelectFilter{ RTDXF0,LR"(Dimension)" };
+				acedSSGet(
+					LR"(:S)"/*选择单个实例*/,
+					nullptr,
+					nullptr,
+					varSelectFilter,
+					varLock.ss
+				);
 
-			auto varObjecs = ssToAcDbObjects(varLock.ss);
-			if (varObjecs.empty()) { throw 3423; }
+				auto varObjecs = ssToAcDbObjects(varLock.ss);
+				if (varObjecs.empty()) { throw 3423; }
 
-			static_cast<ObjectIndex&>( $BasicObject ) = varObjecs[0];
-
+				static_cast<ObjectIndex&>($BasicObject) = varObjecs[0];
+			}
+			if (false == $BasicObject.updateData()) {
+				throw 3321;
+			}
 		}
 
 		void run() try {
