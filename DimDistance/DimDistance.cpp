@@ -6,6 +6,7 @@
 #include <string>
 #include <string_view>
 
+#include <QtQml/QtQml>
 #include <acedCmdNF.h>
 
 using namespace std::string_literals;
@@ -515,7 +516,7 @@ DX : %lf , DY : %lf
 		void apply() {
 			auto varPos = $SortedObjects.cbegin();
 			const auto varEPos = $SortedObjects.cend();
-			auto varBasic = varPos ;
+			auto varBasic = varPos;
 
 			Object::Type varThisType = Object::Type::None;
 			while (varPos != varEPos) {
@@ -556,7 +557,7 @@ DX : %lf , DY : %lf
 						RTSTR, L"",
 						RTREAL, (varThisType == Object::Type::Limit) ? space_1 : space_0,
 						RTNONE);
-				}					
+				}
 
 			}/*while*/
 
@@ -596,7 +597,7 @@ DX : %lf , DY : %lf
 
 	};/**/
 
-	class DimDistanceC {
+	class DimDistanceD {
 	public:
 		static void main()try {
 			PrivateDimDistance::get_space();
@@ -605,6 +606,42 @@ DX : %lf , DY : %lf
 
 		}
 		DEFINE_ARX_NAME(LR"(_DDDDIMDISTANCE)")
+
+	};/**/
+
+	class DimDistanceC {
+	public:
+		static void main()try {
+			double var;
+			AcString varTmp;
+			auto varError = acedGetString(0, LR"(缩放比例16X12：
+)", varTmp);
+			if (RTNORM == varError) {
+				sstd::QtApplication varQtApp;
+				QJSEngine varJSEngine;
+				auto varJSV = varJSEngine.evaluate(QString::fromWCharArray(varTmp.constPtr(), varTmp.length()));
+				if (varJSV.isError()) {
+					const auto ES = varJSV.toString();
+					const auto ESW = ES.toStdWString();
+					acutPrintf(ESW.c_str());
+					return;
+				}
+				var = varJSV.toNumber();
+				if (var > 0.) {
+					PrivateDimDistance::space_0 = 12 * var;
+					PrivateDimDistance::space_1 = 16 * var;
+				}
+				else {
+					return;
+				}
+			}
+
+
+		}
+		catch (...) {
+
+		}
+		DEFINE_ARX_NAME(LR"(_DDCDIMDISTANCE)")
 
 	};/**/
 
@@ -628,6 +665,7 @@ namespace sstd {
 		arx_add_main_command_usepickset<DimDistance>();
 		arx_add_main_command_usepickset<DimDistanceB>();
 		arx_add_main_command_usepickset<DimDistanceC>();
+		arx_add_main_command_usepickset<DimDistanceD>();
 	}
 
 }/*namespace sstd*/
