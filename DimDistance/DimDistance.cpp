@@ -400,7 +400,7 @@ namespace {
 				acutPrintf(LR"(
 DX : %lf , DY : %lf
 )", varDX, varDY);
-			}
+			}/**/
 
 #define sortBy std::sort/*std::stable_sort*/  
 			if (varDX > varDY) {
@@ -515,10 +515,12 @@ DX : %lf , DY : %lf
 		void apply() {
 			auto varPos = $SortedObjects.cbegin();
 			const auto varEPos = $SortedObjects.cend();
-			auto varBasic = varPos++;
+			auto varBasic = varPos ;
 
 			Object::Type varThisType = Object::Type::None;
 			while (varPos != varEPos) {
+
+				varBasic = varPos++;
 
 				class Lock {
 				public:
@@ -554,11 +556,9 @@ DX : %lf , DY : %lf
 						RTSTR, L"",
 						RTREAL, (varThisType == Object::Type::Limit) ? space_1 : space_0,
 						RTNONE);
-				}
+				}					
 
-				varBasic = varPos++;
-
-			}
+			}/*while*/
 
 		}/*apply*/
 
@@ -585,15 +585,13 @@ DX : %lf , DY : %lf
 
 	class DimDistanceB {
 	public:
-
-		static void load() {
-
-		}
 		static void main()try {
 			PrivateDimDistance var;
 			var.run(0, 1);
 		}
-		catch (...) {}
+		catch (...) {
+
+		}
 		DEFINE_ARX_NAME(LR"(_DDBDIMDISTANCE)")
 
 	};/**/
