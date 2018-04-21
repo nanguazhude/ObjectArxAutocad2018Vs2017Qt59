@@ -460,7 +460,7 @@ DX : %lf , DY : %lf
 
 		static double space_0;// = 12/*用于非Limit*/;
 		static double space_1;// = 16/*用于Limit*/;
-		void get_space() {
+		static void get_space() {
 
 			auto getString0 = [varLastLength = space_0]()->std::wstring {
 				std::wstring varAns = LR"(输入间距0<)"s;
@@ -572,7 +572,7 @@ DX : %lf , DY : %lf
 			/*sort*/
 			sort_objects();
 			/*获得对齐值*/
-			get_space();
+			//get_space();
 			/*apply*/
 			apply();
 		}
@@ -595,6 +595,19 @@ DX : %lf , DY : %lf
 		DEFINE_ARX_NAME(LR"(_DDBDIMDISTANCE)")
 
 	};/**/
+
+	class DimDistanceC {
+	public:
+		static void main()try {
+			PrivateDimDistance::get_space();
+		}
+		catch (...) {
+
+		}
+		DEFINE_ARX_NAME(LR"(_DDDDIMDISTANCE)")
+
+	};/**/
+
 }/**/
 
 namespace sstd {
@@ -614,6 +627,7 @@ namespace sstd {
 	void DimDistance::load() {
 		arx_add_main_command_usepickset<DimDistance>();
 		arx_add_main_command_usepickset<DimDistanceB>();
+		arx_add_main_command_usepickset<DimDistanceC>();
 	}
 
 }/*namespace sstd*/
