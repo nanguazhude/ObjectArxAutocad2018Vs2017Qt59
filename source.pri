@@ -39,7 +39,8 @@ SOURCES += \
         $$PWD/EFillet/EFillet.cpp \
         $$PWD/ArxZCC/ArxZCC.cpp \
         $$PWD/FConnect/FConnect.cpp \
-        $$PWD/EText/EText.cpp
+        $$PWD/EText/EText.cpp \
+        $$PWD/DimDistance/DimDistance.cpp
 
 
 #.h .hpp source
@@ -83,7 +84,8 @@ HEADERS += \
         $$PWD/EFillet/EFillet.hpp \
         $$PWD/ArxZCC/ArxZCC.hpp \
         $$PWD/FConnect/FConnect.hpp \
-        $$PWD/EText/EText.hpp
+        $$PWD/EText/EText.hpp \
+        $$PWD/DimDistance/DimDistance.hpp
 
 
         

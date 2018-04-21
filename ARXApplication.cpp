@@ -44,6 +44,7 @@ namespace sstd {
 	extern void loadArxZCC();
 	extern void loadFConnect();
     extern void loadEText();
+    extern void loadDimDistance();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -84,6 +85,7 @@ namespace sstd {
 			{ &sstd::loadArxZCC },
 			{ &sstd::loadFConnect },
             { &sstd::loadEText },
+            { &sstd::loadDimDistance },
 		};
 	}
 
