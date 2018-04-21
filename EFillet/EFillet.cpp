@@ -114,6 +114,7 @@ namespace sstd {
 						L = AcDbLine::cast(pEnt);
 					}
 					else {
+						pEnt->close();
 						throw 333;
 					}
 				}
@@ -146,9 +147,11 @@ namespace sstd {
 				{
 					/*计算两条直线的交点*********/
 					AcGePoint3dArray varAns;
-					varSecondLine->intersectWith(varFirstLine,
+					if (false == varSecondLine->intersectWith(varFirstLine,
 						AcDb::Intersect::kExtendBoth,
-						varAns);
+						varAns)) {
+						throw 4433;
+					}
 					if (varAns.isEmpty()) { throw 555; }
 					varPointIntersect = varAns.first();
 				}
