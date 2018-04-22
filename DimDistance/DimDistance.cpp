@@ -594,7 +594,7 @@ DX : %lf , DY : %lf
 							RTSTR, L"",
 							RTREAL, (varThisType == Object::Type::Limit) ? space_1 : space_0,
 							RTNONE);
-						{
+						if(varPos!=varEPos){
 							varBasic = varPos - 1;
 							varLock.destory();
 							varLock.construct();
