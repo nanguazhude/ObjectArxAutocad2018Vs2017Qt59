@@ -576,7 +576,8 @@ DX : %lf , DY : %lf
 
 				/*_.DIMSPACE*/
 				constexpr const static auto varCommand = LR"(_.DIMSPACE)";
-				if ($isReverse) {
+				if (($isReverse) || (varPos == varEPos)) {
+					/*字头方向和排序方向一致,或者没有找到新的不同元素...*/
 					acedCommandS(
 						RTSTR, varCommand,
 						RTENAME, (*varBasic)->adsName,
@@ -594,7 +595,7 @@ DX : %lf , DY : %lf
 							RTSTR, L"",
 							RTREAL, (varThisType == Object::Type::Limit) ? space_1 : space_0,
 							RTNONE);
-						if(varPos!=varEPos){
+						{
 							varBasic = varPos - 1;
 							varLock.destory();
 							varLock.construct();
