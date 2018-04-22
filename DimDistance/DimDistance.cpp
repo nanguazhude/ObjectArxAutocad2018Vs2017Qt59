@@ -309,7 +309,7 @@ namespace {
 			for (auto & varI : varObjecs) {
 				auto & varJ = $Objects.emplace_back();
 				static_cast<ObjectIndex&>(varJ) = varI;
-				if ( $BasicObject.objectID == varI.objectID ) {
+				if ($BasicObject.objectID == varI.objectID) {
 					$Objects.pop_back();
 					continue;
 				}
@@ -323,6 +323,7 @@ namespace {
 
 		long double varDX = 0;
 		long double varDY = 0;
+		bool $isReverse = false /*字头方向和排序方向相反*/;
 
 		void sort_objects() {
 			constexpr const static bool Ver = true;
@@ -415,9 +416,11 @@ DX : %lf , DY : %lf
 					return (l->varKeyPoint.x < r->varKeyPoint.x);
 				});
 				if ($SortedObjects[0] == &$BasicObject) {
+					$isReverse = false;
 					return;
 				}
 				if (*$SortedObjects.rbegin() == &$BasicObject) {/*反序*/
+					$isReverse = true;
 					std::reverse($SortedObjects.begin(), $SortedObjects.end());
 					return;
 				}
@@ -426,8 +429,12 @@ DX : %lf , DY : %lf
 					[](Object * l, Object *r) {
 					return (l->varKeyPoint.y < r->varKeyPoint.y);
 				});
-				if ($SortedObjects[0] == &$BasicObject) { return; }
+				if ($SortedObjects[0] == &$BasicObject) {
+					$isReverse = false;
+					return;
+				}
 				if (*$SortedObjects.rbegin() == &$BasicObject) {/*反序*/
+					$isReverse = true;
 					std::reverse($SortedObjects.begin(), $SortedObjects.end());
 					return;
 				}
@@ -441,8 +448,12 @@ DX : %lf , DY : %lf
 					[](Object * l, Object *r) {
 					return (l->varKeyPoint.y < r->varKeyPoint.y);
 				});
-				if ($SortedObjects[0] == &$BasicObject) { return; }
+				if ($SortedObjects[0] == &$BasicObject) {
+					$isReverse = true;
+					return;
+				}
 				if (*$SortedObjects.rbegin() == &$BasicObject) {/*反序*/
+					$isReverse = false;
 					std::reverse($SortedObjects.begin(), $SortedObjects.end());
 					return;
 				}
@@ -451,8 +462,12 @@ DX : %lf , DY : %lf
 					[](Object * l, Object *r) {
 					return (l->varKeyPoint.x < r->varKeyPoint.x);
 				});
-				if ($SortedObjects[0] == &$BasicObject) { return; }
+				if ($SortedObjects[0] == &$BasicObject) {
+					$isReverse = true;
+					return;
+				}
 				if (*$SortedObjects.rbegin() == &$BasicObject) {/*反序*/
+					$isReverse = false;
 					std::reverse($SortedObjects.begin(), $SortedObjects.end());
 					return;
 				}
@@ -530,8 +545,10 @@ DX : %lf , DY : %lf
 				class Lock {
 				public:
 					ads_name ss = {};
-					Lock() { acedSSAdd(nullptr, nullptr, ss); }
-					~Lock() { acedSSFree(ss); }
+					Lock() { construct(); }
+					void construct() { acedSSAdd(nullptr, nullptr, ss); }
+					void destory() { acedSSFree(ss); ss[0] = 0; ss[1] = 0; }
+					~Lock() { destory(); }
 				} varLock;
 
 				{
@@ -551,9 +568,15 @@ DX : %lf , DY : %lf
 					}
 				}
 
-				{
-					/*_.DIMSPACE*/
-					constexpr const static auto varCommand = LR"(_.DIMSPACE)";
+				std::int32_t varSSL = 0;
+				acedSSLength(varLock.ss, &varSSL);
+				if (varSSL == 0) {
+					break;
+				}
+
+				/*_.DIMSPACE*/
+				constexpr const static auto varCommand = LR"(_.DIMSPACE)";
+				if ($isReverse) {
 					acedCommandS(
 						RTSTR, varCommand,
 						RTENAME, (*varBasic)->adsName,
@@ -561,6 +584,40 @@ DX : %lf , DY : %lf
 						RTSTR, L"",
 						RTREAL, (varThisType == Object::Type::Limit) ? space_1 : space_0,
 						RTNONE);
+				}
+				else {
+					if (varSSL > 1) {/*bigger than 1*/
+						acedCommandS(
+							RTSTR, varCommand,
+							RTENAME, (*varBasic)->adsName,
+							RTPICKS, varLock.ss,
+							RTSTR, L"",
+							RTREAL, (varThisType == Object::Type::Limit) ? space_1 : space_0,
+							RTNONE);
+						{
+							varBasic = varPos - 1;
+							varLock.destory();
+							varLock.construct();
+							auto varP = *(varPos);
+							acedSSAdd(varP->adsName, varLock.ss, varLock.ss);
+							acedCommandS(
+								RTSTR, varCommand,
+								RTENAME, (*varBasic)->adsName,
+								RTPICKS, varLock.ss,
+								RTSTR, L"",
+								RTREAL, (varP->type == Object::Type::Limit) ? space_1 : space_0,
+								RTNONE);
+						}
+					}
+					else {/*equal one*/
+						acedCommandS(
+							RTSTR, varCommand,
+							RTENAME, (*varBasic)->adsName,
+							RTPICKS, varLock.ss,
+							RTSTR, L"",
+							RTREAL, ((*varPos)->type == Object::Type::Limit) ? space_1 : space_0,
+							RTNONE);
+					}
 				}
 
 			}/*while*/
