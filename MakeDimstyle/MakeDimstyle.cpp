@@ -373,14 +373,14 @@ namespace {
 				double varAns = 0;
 				const auto varReturn = acedGetReal(LR"(输入上偏差：)", &varAns);
 				if (RTNONE == varReturn) {
-					throw varReturn;
+					svthrow(LR"(获得上偏差失败)"sv); 
 				}
 				else
 					if (RTNORM == varReturn) {
 						varThisPack->$U = varAns;
 					}
 					else {
-						throw varReturn;
+						svthrow(LR"(获得上偏差失败)"sv); 
 					}
 			}
 			/******************************************/
@@ -397,7 +397,7 @@ namespace {
 						varThisPack->$Type = PackInFunction::Type::LDIM;
 					}
 					else {
-						throw varReturn;
+						svthrow(LR"(获得下偏差失败)"sv); 
 					}
 			}
 			/******************************************/

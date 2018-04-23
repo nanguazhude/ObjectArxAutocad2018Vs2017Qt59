@@ -445,7 +445,7 @@ namespace {
 
 		inline void _make_virtual_lines() {
 			$VirtualLines.clear();
-			if (bool($FileReader) == false) { throw 2; }
+			if (bool($FileReader) == false) { svthrow(LR"(打开文件失败)"sv); }
 			$VirtualLines.reserve($FileReader->$Result.size());
 
 			{

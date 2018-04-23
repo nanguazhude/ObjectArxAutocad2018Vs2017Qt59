@@ -149,8 +149,8 @@ namespace sstd {
 			/************************/
 			sstd::ArxClosePointer<AcDbBlockTable> varBlockTable;
 			sstd::ArxClosePointer<AcDbBlockTableRecord> varBlockTableRecord;
-			if (eOk != $DB->getBlockTable(varBlockTable, AcDb::kForRead)) { throw 1; }
-			if (eOk != varBlockTable->getAt(ACDB_MODEL_SPACE, varBlockTableRecord, AcDb::kForWrite)) { throw 2; }
+			if (eOk != $DB->getBlockTable(varBlockTable, AcDb::kForRead)) { svthrow(LR"(打开BlockTable失败)"sv); }
+			if (eOk != varBlockTable->getAt(ACDB_MODEL_SPACE, varBlockTableRecord, AcDb::kForWrite)) { svthrow(LR"(打开模型空间失败)"sv);  }
 			/************************/
 			auto varRunFunction = [&]() {
 				varGetP1();
