@@ -54,8 +54,8 @@ namespace sstd {
 					{
 						AcDbObjectId llid;
 						sstd::ArxClosePointer<AcDbLayerTable>t;
-						if (bool(t) == false) { throw 557000; }
 						a->getLayerTable(t);
+						if (bool(t) == false) { throw 557000; }
 						t->getAt(LR"(粗实线)", llid);
 						if (llid.isNull() == false)a->setClayer(llid);
 					}
