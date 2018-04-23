@@ -137,16 +137,16 @@ namespace {
 			void updateKeyPoint() {
 				sstd::ArxClosePointer< AcDbEntity > varO;
 				if (eOk != acdbOpenObject(varO, this->objectID)) {
-					throw 332;
+					svthrow(LR"(打开对象失败)"sv);
 				}
 				if (this->dimType == DimType::AlignedDimension) {
 					auto var = AcDbAlignedDimension::cast(varO);
-					if (var == nullptr) { throw nullptr; }
+					if (var == nullptr) { svthrow(LR"(对象转换失败)"sv); }
 					this->varKeyPoint = var->dimLinePoint();
 				}
 				else if (this->dimType == DimType::RotatedDimension) {
 					auto var = AcDbRotatedDimension::cast(varO);
-					if (var == nullptr) { throw nullptr; }
+					if (var == nullptr) { svthrow(LR"(对象转换失败)"sv); }
 					this->varKeyPoint = var->dimLinePoint();
 				}
 			}

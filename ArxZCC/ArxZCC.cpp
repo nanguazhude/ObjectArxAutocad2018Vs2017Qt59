@@ -56,9 +56,9 @@ namespace sstd {
 			const wstring_view & P,
 			AcGePoint3d & varAns) {
 			auto $Error = acedGetPoint(nullptr, P.data(), &(varAns.x));
-			if (RTNONE == $Error) { throw $Error; }
-			else { if ($Error == RTNORM)return; }
-			throw $Error;
+			if (RTNONE == $Error) { svthrow(LR"(无输入)"sv); }
+			else { if ($Error == RTNORM) return; }
+			svthrow(LR"(输入错误)"sv);
 		}
 
 	}/*namespace*/
@@ -91,11 +91,11 @@ namespace sstd {
 
 			{
 				auto varE = varDB->getBlockTable(varBlockTable, AcDb::kForRead);
-				if (varE != eOk) { throw varE; }
+				if (varE != eOk) { svthrow(LR"(打开BlockTable失败)"sv); }
 				varE = varBlockTable->getAt(ACDB_MODEL_SPACE,
 					varBlockTableRecord,
 					AcDb::kForWrite);
-				if (varE != eOk) { throw varE; }
+				if (varE != eOk) { svthrow(LR"(打开模型空间失败)"sv); }
 			}
 
 			while (varRun) try {

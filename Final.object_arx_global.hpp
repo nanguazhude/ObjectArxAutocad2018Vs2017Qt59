@@ -3,6 +3,7 @@
 
 /*cplusplus headers*/
 #include <cmath>
+#include <string>
 #include <atomic>
 #include <future>
 #include <thread>
@@ -11,7 +12,11 @@
 #include <cstddef>
 #include <utility>
 #include <numeric>
+#include <algorithm>
 #include <type_traits>
+#include <string_view>
+
+using namespace std::string_view_literals;
 
 #ifndef vmax
 #define vmax (std::max)
@@ -125,6 +130,46 @@ namespace sstd {
 	}
 
 }/*sstd*/
+
+namespace sstd{
+
+	class ThrowType {};
+
+	inline void _p_sstd_throw(
+		const std::wstring_view & arg ,
+		std::size_t argLine,
+		const std::string_view & argFile,
+		const std::string_view & argFunctionName
+		) {
+		
+		std::wstring varAboutToPrint=LR"(文件:)";
+		for (const auto &varI:argFile) {
+			varAboutToPrint.push_back(varI);
+		}
+		varAboutToPrint += LR"(
+函数名:)";
+		for (const auto &varI : argFunctionName) {
+			varAboutToPrint.push_back(varI);
+		}
+		varAboutToPrint += LR"(
+行号:)";
+		varAboutToPrint+=std::to_wstring(argLine);
+		varAboutToPrint += LR"(
+描述:)";
+		if (arg.empty() == false) {
+			varAboutToPrint += arg;
+			if (*arg.rbegin()!='\n') {
+				varAboutToPrint += '\n';
+			}
+		}
+		acutPrintf( varAboutToPrint.c_str() );
+		throw ThrowType{};
+	}
+}/*namespace sstd*/
+
+#ifndef svthrow
+#define svthrow(...) sstd::_p_sstd_throw( __VA_ARGS__ , __LINE__ , __FILE__ , __func__  )
+#endif
 
 #endif // OBJECT_ARX_GLOBAL_H
 
