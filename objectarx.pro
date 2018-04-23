@@ -4,8 +4,13 @@
 #the arx name
 TARGET = _ARX_DUTY_BY_NGZ_
 
+CONFIG(debug,debug|release){
 #add PRECOMPILED_HEADER
 PRECOMPILED_HEADER  += Final.object_arx_global.hpp
+}else{
+#add PRECOMPILED_HEADER
+PRECOMPILED_HEADER  += Final.object_arx_global.hpp
+}
 
 #change output dir
 DESTDIR = $$PWD/release/Autocad2019
@@ -39,6 +44,7 @@ TARGET_EXT = .arx
 
 #remove _DEBUG
 DEFINES -= _DEBUG
+DEFINES += NDEBUG
 DEFINES += _OBJECT_ARX_VERSION_X64_=2019
 
 #just use Qt.Core and Qt.Gui Qt.Widget
