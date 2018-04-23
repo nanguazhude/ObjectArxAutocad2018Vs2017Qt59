@@ -108,7 +108,7 @@ namespace sstd {
 					AcDbObjectId eId;
 					acdbGetObjectId(eId, ss.varE);   //获取实体id  
 					AcDbEntity * pEnt = nullptr ;
-					if (Acad::eOk != acdbOpenObject(pEnt, eId, AcDb::kForRead)) {
+					if (Acad::eOk != acdbOpenObject(pEnt, eId, AcDb::kForWrite)) {
 						throw 222;//打开实体失败，返回  
 					}
 					if (pEnt && pEnt->isKindOf(AcDbLine::desc())) {
