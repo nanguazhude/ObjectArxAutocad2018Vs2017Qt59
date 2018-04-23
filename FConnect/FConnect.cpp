@@ -90,7 +90,7 @@ namespace sstd {
 					varP1 = UcsToWorld(varP1);
 					return;
 				}
-				throw varError;
+				svthrow(LR"(获得点失败)"sv);
 			};
 
 			auto varGetP2 = [&varP1 = varP, &varP2 = varP]() {
@@ -100,13 +100,13 @@ namespace sstd {
 					varP2 = UcsToWorld(varP2);
 					return;
 				}
-				throw varError;
+				svthrow(LR"(获得点失败)"sv);
 			};
 
 			sstd::ArxClosePointer<AcDbBlockTable> varBlockTable;
 			sstd::ArxClosePointer<AcDbBlockTableRecord> varBlockTableRecord;
-			if (eOk != $DB->getBlockTable(varBlockTable, AcDb::kForRead)) { throw 1; }
-			if (eOk != varBlockTable->getAt(ACDB_MODEL_SPACE, varBlockTableRecord, AcDb::kForWrite)) { throw 2; }
+			if (eOk != $DB->getBlockTable(varBlockTable, AcDb::kForRead)) { svthrow(LR"(获得BlockTable)"sv);}
+			if (eOk != varBlockTable->getAt(ACDB_MODEL_SPACE, varBlockTableRecord, AcDb::kForWrite)) { svthrow(LR"(打开模型空间失败)"sv); }
 
 			varGetP1();
 			auto varRunFunction = [&]() {
@@ -134,7 +134,7 @@ namespace sstd {
 					varP1 = UcsToWorld(varP1);
 					return;
 				}
-				throw varError;
+				svthrow(LR"(获得点失败)"sv);
 			};
 			/************************/
 			auto varGetP2 = [&varP1, &varP2]() {
@@ -144,7 +144,7 @@ namespace sstd {
 					varP2 = UcsToWorld(varP2);
 					return;
 				}
-				throw varError;
+				svthrow(LR"(获得点失败)"sv);
 			};
 			/************************/
 			sstd::ArxClosePointer<AcDbBlockTable> varBlockTable;

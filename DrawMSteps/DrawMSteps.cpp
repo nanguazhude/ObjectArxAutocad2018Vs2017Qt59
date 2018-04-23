@@ -88,13 +88,13 @@ namespace {
 				{
 					QFile varF{ $FileName };
 					if (false == varF.open(QFile::ReadOnly)) {
-						throw 2;
+						svthrow(LR"(打开文件失败)"sv);
 					}
 					{
 						QTextStream varStream{ &varF };
 						$FileData = varStream.readAll();
 						if ($FileData.isEmpty()) {
-							throw 3;
+							svthrow(LR"(文件内容为空)"sv);
 						}
 					}
 				}
@@ -155,7 +155,7 @@ namespace {
 
 			}
 			if ($Result.empty()) {
-				throw 5;
+				svthrow(LR"(文件内容为空)"sv);
 			}
 			return true;
 		}
@@ -189,7 +189,7 @@ namespace {
 			};
 
 			if ($FileReader->read($FileName) == false) {
-				throw 10;
+				svthrow(LR"(文件内容为空)"sv);
 			}
 
 			_make_virtual_lines();
@@ -256,11 +256,11 @@ namespace {
 			varLines.reserve($VirtualLines.size());
 			{
 				auto varE = $DB->getBlockTable(varBlockTable, AcDb::kForRead);
-				if (varE != eOk) { throw varE; }
+				if (varE != eOk) { svthrow(LR"(打开BlockTable失败)"sv); }
 				varE = varBlockTable->getAt(ACDB_MODEL_SPACE,
 					varBlockTableRecord,
 					AcDb::kForWrite);
-				if (varE != eOk) { throw varE; }
+				if (varE != eOk) { svthrow(LR"(打开模型空间失败)"sv); }
 			}
 
 			{
@@ -421,11 +421,11 @@ namespace {
 
 			{
 				auto varE = $DB->getBlockTable(varBlockTable, AcDb::kForRead);
-				if (varE != eOk) { throw varE; }
+				if (varE != eOk) { svthrow(LR"(打开BlockTable失败)"sv); }
 				varE = varBlockTable->getAt(ACDB_MODEL_SPACE,
 					varBlockTableRecord,
 					AcDb::kForWrite);
-				if (varE != eOk) { throw varE; }
+				if (varE != eOk) { svthrow(LR"(打开模型空间失败)"sv); }
 			}
 
 			{
@@ -528,7 +528,7 @@ namespace {
 			}
 			else {
 				if (varError != RTNORM) {
-					throw varError;
+					svthrow(LR"(获得点失败)"sv);
 				}
 			}
 
@@ -543,7 +543,7 @@ namespace {
 					= acDocManager
 					->mdiActiveDocument()
 					->fileName();
-				if (varFileName == nullptr) { throw 6; }
+				if (varFileName == nullptr) { svthrow(LR"(获得文件名失败)"sv); }
 				varFileNameQ = QString::fromWCharArray(varFileName);
 				 
 			}
@@ -557,7 +557,7 @@ namespace {
 				}
 			}
 			$FileName = QFileDialog::getOpenFileName(nullptr, {}, varPath);
-			if ($FileName.isEmpty()) { throw 11; }
+			if ($FileName.isEmpty()) { svthrow(LR"(获得文件名失败)"sv); }
 
 		}
 	};

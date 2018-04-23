@@ -93,11 +93,11 @@ namespace sstd {
 
 		inline void ThisMain::check_error(int varG) {
 			if ($Error == varG) { return; }
-			throw $Error;
+			svthrow(LR"(检验失败)"sv);
 		}
 
 		void ThisMain::check_this() {
-			if ($N < 3) { throw 2; }
+			if ($N < 3) { svthrow(LR"(断言失败)"sv); }
 		}
 
 		inline void ThisMain::update_this() {

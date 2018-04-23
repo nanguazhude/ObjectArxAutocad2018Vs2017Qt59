@@ -109,17 +109,17 @@ namespace sstd {
 					acdbGetObjectId(eId, ss.varE);   //获取实体id  
 					AcDbEntity * pEnt = nullptr ;
 					if (Acad::eOk != acdbOpenObject(pEnt, eId, AcDb::kForWrite)) {
-						throw 222;//打开实体失败，返回  
+						svthrow(LR"(打开实体失败)"sv);//打开实体失败，返回  
 					}
 					if (pEnt && pEnt->isKindOf(AcDbLine::desc())) {
 						L = AcDbLine::cast(pEnt);
 					}
 					else {
 						if(pEnt) pEnt->close();
-						throw 333;
+						svthrow(LR"(不是直线)"sv);
 					}
 				}
-				else { throw 111; }
+				else { svthrow(LR"(选择直线失败)"sv); }
 			}
 
 			bool get_three_point(
@@ -145,9 +145,9 @@ namespace sstd {
 					varPointSecondLine = UcsToWorld(varPointSecondLine);
 				}
 
-				if (varFirstLine == varSecondLine) { throw 331112; }
-				if (varFirstLine == nullptr) { throw 564754; }
-				if (varSecondLine == nullptr) { throw 6456546; }
+				if (varFirstLine == varSecondLine) { svthrow(LR"(选择同一对象)"sv); }
+				if (varFirstLine == nullptr) { svthrow(LR"(对象为空)"sv); }
+				if (varSecondLine == nullptr) { svthrow(LR"(对象为空)"sv); }
 
 				{
 					/*计算两条直线的交点*********/
@@ -155,9 +155,9 @@ namespace sstd {
 					if (eOk != varSecondLine->intersectWith(varFirstLine,
 						AcDb::Intersect::kExtendBoth,
 						varAns)) {
-						throw 4433;
+						svthrow(LR"(计算交点失败)"sv);
 					}
-					if (varAns.isEmpty()) { throw 555; }
+					if (varAns.isEmpty()) { svthrow(LR"(计算交点失败)"sv); }
 					varPointIntersect = varAns.first();
 				}
 
@@ -200,8 +200,7 @@ namespace sstd {
 				return true;
 			}
 			catch (...) {
-				acutPrintf(LR"(exception : get_three_point
-)");
+				svprint(LR"(计算点失败)"sv);
 				return false;
 			}
 		}
@@ -320,11 +319,11 @@ namespace sstd {
 
 						{
 							auto varE = varDB->getBlockTable(varBlockTable, AcDb::kForRead);
-							if (varE != eOk) { throw varE; }
+							if (varE != eOk) { svthrow(LR"(打开BlockTable失败)"sv); }
 							varE = varBlockTable->getAt(ACDB_MODEL_SPACE,
 								varBlockTableRecord,
 								AcDb::kForWrite);
-							if (varE != eOk) { throw varE; }
+							if (varE != eOk) { svthrow(LR"(打开模型空间失败)"sv); }
 						}
 
 						sstd::ArxClosePointer< AcDbArc > varLineFinal{ new  AcDbArc{

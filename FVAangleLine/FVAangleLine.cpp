@@ -117,7 +117,7 @@ namespace sstd {
 
 			inline void Main::check_error(int varG) {
 				if ($Error == varG) { return; }
-				throw $Error;
+				svthrow(LR"(断言失败)"sv);;
 			}
 
 			inline Main::Main() {
@@ -167,14 +167,14 @@ namespace sstd {
 
 				$VDist1 = std::abs($VDist1);
 				$VDist2 = std::abs($VDist2);
-				if ($VDist2 == 0) { throw LR"(if ($VDist2 == 0))"; }
-				if ($VDist1 == 0) { throw LR"(if ($VDist1 == 0))"; }
-				if ($VDist1 == $VDist2) { LR"(if ($VDist1 == $VDist2))"; }
-				if ($HDist == 0) { LR"(if ($HDist == 0) )"; }
+				if ($VDist2 == 0) { svthrow (LR"(if ($VDist2 == 0))"); }
+				if ($VDist1 == 0) { svthrow (LR"(if ($VDist1 == 0))"); }
+				if ($VDist1 == $VDist2) { svthrow (LR"(if ($VDist1 == $VDist2))" ); }
+				if ($HDist == 0) { svthrow (LR"(if ($HDist == 0) )"); }
 				$Angle = std::abs($Angle);
-				if ($Angle == 0) { LR"(if ($Angle == 0) )"; }
-				if ($Angle >= 360) { LR"(if ($Angle >= 360))"; }
-				if ($Angle == 180) { LR"(if ($Angle == 180))"; }
+				if ($Angle == 0) { svthrow (LR"(if ($Angle == 0) )"); }
+				if ($Angle >= 360) { svthrow (LR"(if ($Angle >= 360))"); }
+				if ($Angle == 180) { svthrow (LR"(if ($Angle == 180))"); }
 
 				{
 					$Points[StartPoint] = $StartPoint;
@@ -252,15 +252,10 @@ namespace sstd {
 
 			}
 			catch (const wchar_t * arg) {
-				acutPrintf(arg);
-				acutPrintf(LR"(
-)");
-				throw arg;
+				svthrow ( arg );
 			}
 			catch (...) {
-				acutPrintf(LR"(quit @ exec!
-)");
-				throw;
+				svthrow ( LR"(quit @ exec!)");
 			}
 
 			inline void Main::draw() {
@@ -272,11 +267,11 @@ namespace sstd {
 
 				{
 					auto varE = $DB->getBlockTable(varBlockTable, AcDb::kForRead);
-					if (varE != eOk) { throw varE; }
+					if (varE != eOk) { svthrow (LR"(打开BlockTable失败)"sv); }
 					varE = varBlockTable->getAt(ACDB_MODEL_SPACE,
 						varBlockTableRecord,
 						AcDb::kForWrite);
-					if (varE != eOk) { throw varE; }
+					if (varE != eOk) { svthrow (LR"(打开模型空间失败)"sv); }
 				}
 
 				if (V1BV2) {

@@ -59,7 +59,7 @@ namespace sstd {
 
 			inline void check_error(PrivatePack * arg, int varG) {
 				if (arg->$Error == varG) { return; }
-				throw arg->$Error;
+				svthrow(LR"(断言失败)"sv);
 			}
 
 			inline bool _p_construct_pack(PrivatePack * arg) {

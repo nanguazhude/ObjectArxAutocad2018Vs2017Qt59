@@ -55,7 +55,7 @@ namespace sstd {
 						AcDbObjectId llid;
 						sstd::ArxClosePointer<AcDbLayerTable>t;
 						a->getLayerTable(t);
-						if (bool(t) == false) { throw 557000; }
+						if (bool(t) == false) { svthrow(LR"(获得图层失败)"sv); }
 						t->getAt(LR"(粗实线)", llid);
 						if (llid.isNull() == false)a->setClayer(llid);
 					}
@@ -150,7 +150,7 @@ namespace sstd {
 					$LineStartPoint = { 0.0,0.0,0.0 };
 				}
 				else if (varError != RTNORM) {
-					throw varError;
+					svthrow(LR"(获得点失败)"sv);
 				}
 
 				$LineStartPoint = UcsToWorld($LineStartPoint);
@@ -165,7 +165,7 @@ namespace sstd {
 					$LineEndPoint = { 0.0,0.0,0.0 };
 				}
 				else if (varError != RTNORM) {
-					throw varError;
+					svthrow(LR"(获得点失败)"sv);
 				}
 
 				$LineEndPoint = UcsToWorld($LineEndPoint);
@@ -182,7 +182,7 @@ namespace sstd {
 					$X0Point = { 0.0,0.0,0.0 };
 				}
 				else if (varError != RTNORM) {
-					throw varError;
+					svthrow(LR"(获得点失败)"sv);
 				}
 
 				$X0Point = UcsToWorld($X0Point);
@@ -244,11 +244,11 @@ namespace sstd {
 
 				{
 					auto varE = varDB->getBlockTable(varBlockTable, AcDb::kForRead);
-					if (varE != eOk) { throw varE; }
+					if (varE != eOk) { svthrow(LR"(打开BlockTable失败)"sv); }
 					varE = varBlockTable->getAt(ACDB_MODEL_SPACE,
 						varBlockTableRecord,
 						AcDb::kForWrite);
-					if (varE != eOk) { throw varE; }
+					if (varE != eOk) { svthrow(LR"(打开模型空间失败)"sv); }
 				}
 
 				sstd::ArxClosePointer< AcDbArc > varArc{

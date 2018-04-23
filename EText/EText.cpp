@@ -12,7 +12,7 @@ void sstd::EText::main()try{
 			= acDocManager
 			->mdiActiveDocument()
 			->fileName();
-		if (varFileName == nullptr) { throw 6; }
+		if (varFileName == nullptr) { svthrow(LR"(获得文件名失败)"sv); }
 		varFileNameQ = QString::fromWCharArray(varFileName);
 	}
 
@@ -27,9 +27,7 @@ void sstd::EText::main()try{
 	if ( false == QFile::exists(varFullFileName) ) {
 		QFile varFile{ varFullFileName };
 		if (false == varFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
-			acutPrintf(LR"(can not creat file
-)");
-			throw 333;
+			svthrow(LR"(创建文件失败)"sv);
 		}
 		QTextStream varStream{ &varFile };
 		varStream.setCodec( QTextCodec::codecForName("UTF-8") );

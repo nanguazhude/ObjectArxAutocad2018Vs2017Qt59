@@ -12,7 +12,7 @@ namespace sstd {
 
 	inline void check_error(const int & arg, const int & varG) {
 		if (arg == varG) { return; }
-		throw arg;
+		svthrow(LR"(断言失败)"sv);
 	}
 
 	template<bool S>
