@@ -79,14 +79,14 @@ namespace sstd {
 				x = x - 2*A*K;
 				y = y - 2*B*K;
 				/*/
-				inline std::array<T, 2> mirror(const T & x, const T& y) {
+				inline std::array<T, 3> mirror(const T & x, const T& y) {
 					auto K = std::fma(A, x, std::fma(B, y, C));
 					if (K == 0) {
 						return { x,y };
 					}
 					K /= std::fma(A, A, B*B);
 					K *= T{ -2 };
-					return { std::fma(K,A,x),std::fma(K,B,y) };
+					return { std::fma(K,A,x),std::fma(K,B,y),0 };
 				}
 
 			}/*Line*/;
