@@ -141,7 +141,7 @@ namespace sstd {
 	namespace {
 		class _StaticData_int_double_to_string_ {
 		public:
-			constexpr const static int N = 256;
+			constexpr const static int N = 1024;
 			std::array<char, N> char_chache;
 			std::array<wchar_t, N> wchar_chache;
 
@@ -207,6 +207,7 @@ namespace sstd {
 						*wi = *ci;
 						++wi; ++ci;
 					}
+					*wi = 0;
 				}
 				 				
 				return std::wstring_view{ wchar_chache.data(),static_cast<std::size_t>(n) };
