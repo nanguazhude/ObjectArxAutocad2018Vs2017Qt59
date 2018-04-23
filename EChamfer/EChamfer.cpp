@@ -41,10 +41,10 @@ namespace sstd {
 			class Line {
 			public:
 				T A, B, C;
-				const T & m0;
-				const T & n0;
-				const T & m1;
-				const T & n1;
+				const T   m0;
+				const T   n0;
+				const T   m1;
+				const T   n1;
 
 				inline Line(const T & am0, const T &  an0, const T &  am1, const T &  an1) :
 					m0(am0), n0(an0),
@@ -104,15 +104,15 @@ namespace sstd {
 )", ss.varE, P)) {
 					AcDbObjectId eId;
 					acdbGetObjectId(eId, ss.varE);   //获取实体id  
-					AcDbEntity * pEnt;
+					AcDbEntity * pEnt = nullptr ;
 					if (Acad::eOk != acdbOpenObject(pEnt, eId, AcDb::kForRead)) {
 						throw 222;//打开实体失败，返回  
 					}
-					if (pEnt->isKindOf(AcDbLine::desc())) {
+					if (pEnt && pEnt->isKindOf(AcDbLine::desc())) {
 						L = AcDbLine::cast(pEnt);
 					}
 					else {
-						pEnt->close();
+						if(pEnt)pEnt->close();
 						throw 333;
 					}
 				}
@@ -145,6 +145,10 @@ namespace sstd {
 					getALine(false, &varPointSecondLine.x, varSecondLine);
 					varPointSecondLine = UcsToWorld(varPointSecondLine);
 				}
+
+				if (varFirstLine == varSecondLine) { throw 331112; }
+				if (varFirstLine == nullptr) { throw 564754; }
+				if (varSecondLine == nullptr) { throw 6456546; }
 
 				{
 					/*计算两条直线的交点*********/

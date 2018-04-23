@@ -54,6 +54,7 @@ namespace sstd {
 					{
 						AcDbObjectId llid;
 						sstd::ArxClosePointer<AcDbLayerTable>t;
+						if (bool(t) == false) { throw 557000; }
 						a->getLayerTable(t);
 						t->getAt(LR"(粗实线)", llid);
 						if (llid.isNull() == false)a->setClayer(llid);
@@ -193,7 +194,7 @@ namespace sstd {
 				std::wstring varTmpString = LR"(请输入半径<)"s;
 				varTmpString += sstd::double_to_string(last_R);
 				varTmpString += LR"(>:)"sv;
-				acutPrintf(varTmpString.c_str());
+				//acutPrintf(varTmpString.c_str());
 				int varReturn = acedGetReal(varTmpString.c_str(), &$R);
 				if (RTNONE == varReturn) {
 					$R = last_R;
@@ -212,7 +213,7 @@ namespace sstd {
 
 			/*计算*/
 			{
-				double varTmpData[6];
+				double varTmpData[8];
 				if (false == sstd::_private_FARC_ALG_HPP::eval<double>(
 					$LineStartPoint.x, $LineStartPoint.y,
 					$LineEndPoint.x, $LineEndPoint.y,
