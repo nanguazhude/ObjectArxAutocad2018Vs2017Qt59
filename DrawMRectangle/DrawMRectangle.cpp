@@ -58,7 +58,7 @@ namespace sstd {
 
 			inline void check_error(PrivatePack * arg, int varG) {
 				if (arg->$Error == varG) { return; }
-				throw arg->$Error;
+				svthrow(LR"(检测失败)"sv) ;
 			}
 
 			inline bool _p_construct_pack(PrivatePack * arg) {
@@ -84,7 +84,7 @@ namespace sstd {
 						= acDocManager
 						->mdiActiveDocument()
 						->fileName();
-					if (varFileName == nullptr) { throw 6; }
+					if (varFileName == nullptr) { svthrow(LR"(获得当前文件名失败)"sv); }
 					varFileNameQ = QString::fromWCharArray(varFileName);
 
 					const auto varPath = QFileInfo(varFileNameQ).absolutePath();
@@ -101,7 +101,7 @@ namespace sstd {
 				arg->$FileName = QFileDialog::getOpenFileName(nullptr, {},
 					QFileInfo(varFileNameQ).absolutePath());
 				if (arg->$FileName.isEmpty()) {
-					throw 0;
+					svthrow(LR"(文件名为空)"sv);
 				}
 				return true;
 			}
@@ -125,7 +125,7 @@ namespace sstd {
 					QJSEngine varJSEngine;
 					QFile varFile{ arg->$FileName };
 					if (false == varFile.open(QFile::ReadOnly)) {
-						throw 1;
+						svthrow(LR"(打开文件失败)"sv);
 					}
 					QTextStream varStream{ &varFile };
 					//bool varHRead = false;
@@ -182,8 +182,8 @@ namespace sstd {
 						}
 					}
 				}
-				if (w.size() != h.size()) { throw 2; }
-				if (w.empty()) { throw 3; }
+				if (w.size() != h.size()) { svthrow(LR"(w/h数量不同)"sv); }
+				if (w.empty()) { svthrow(LR"(无数据)"sv); }
 				arg->$Rects.clear();
 				arg->$Rects.reserve(w.size());
 				auto varBw = w.begin();

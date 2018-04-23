@@ -83,7 +83,7 @@ namespace {
 		inline bool read(const QString & varFileName) try {
 			$Result.clear();
 			$FileName = varFileName;
-			if ($FileName.isEmpty()) { throw 1; }
+			if ($FileName.isEmpty()) { svthrow(LR"(无文件名)"sv); }
 			{
 				{
 					QFile varF{ $FileName };

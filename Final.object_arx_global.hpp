@@ -135,7 +135,7 @@ namespace sstd{
 
 	class ThrowType {};
 
-	inline void _p_sstd_throw(
+	inline void _p_sstd_warning(
 		const std::wstring_view & arg ,
 		std::size_t argLine,
 		const std::string_view & argFile,
@@ -163,9 +163,23 @@ namespace sstd{
 			}
 		}
 		acutPrintf( varAboutToPrint.c_str() );
+	}
+
+	[[noreturn]] inline void _p_sstd_throw(
+		const std::wstring_view & arg,
+		std::size_t argLine,
+		const std::string_view & argFile,
+		const std::string_view & argFunctionName
+	)  {
+		_p_sstd_warning(arg,argLine,argFile,argFunctionName);
 		throw ThrowType{};
 	}
+
 }/*namespace sstd*/
+
+#ifndef svwarning
+#define svprint(...) sstd::_p_sstd_warning( __VA_ARGS__ , __LINE__ , __FILE__ , __func__  )
+#endif
 
 #ifndef svthrow
 #define svthrow(...) sstd::_p_sstd_throw( __VA_ARGS__ , __LINE__ , __FILE__ , __func__  )

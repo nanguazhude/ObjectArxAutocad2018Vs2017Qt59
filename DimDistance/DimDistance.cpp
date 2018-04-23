@@ -154,7 +154,7 @@ namespace {
 			bool updateData() {
 				sstd::ArxClosePointer< AcDbEntity > varO;
 				if (eOk != acdbOpenObject(varO, this->objectID)) {
-					throw 332;
+					svthrow(LR"(打开对象失败)"sv);
 				}
 
 				if (varO->isKindOf(AcDbAlignedDimension::desc())) {
@@ -168,7 +168,7 @@ namespace {
 						auto dimSID = var->dimensionStyle();
 						AcDbDimStyleTableRecord * varDimStyleObject = nullptr;
 						if (eOk != acdbOpenObject(varDimStyleObject, dimSID)) {
-							throw 7788;
+							svthrow(LR"(打开对象失败)"sv);
 						}
 
 						if (varDimStyleObject->dimtol()) {
@@ -197,7 +197,7 @@ namespace {
 						auto dimSID = var->dimensionStyle();
 						AcDbDimStyleTableRecord * varDimStyleObject = nullptr;
 						if (eOk != acdbOpenObject(varDimStyleObject, dimSID)) {
-							throw 7788;
+							svthrow(LR"(打开对象失败)"sv);
 						}
 
 						if (varDimStyleObject->dimtol()) {
@@ -267,13 +267,13 @@ namespace {
 				);
 
 				auto varObjecs = ssToAcDbObjects(varLock.ss);
-				if (varObjecs.empty()) { throw 3423; }
+				if (varObjecs.empty()) { svthrow(LR"(选择集为空)"sv); }
 
 				static_cast<ObjectIndex&>($BasicObject) = varObjecs[0];
 			}
 
 			if (false == $BasicObject.updateData()) {
-				throw 3321;
+				svthrow(LR"(更新数据失败)"sv);
 			}
 
 		}
@@ -302,7 +302,7 @@ namespace {
 				);
 
 				varObjecs = ssToAcDbObjects(varLock.ss);
-				if (varObjecs.empty()) { throw 3423; }
+				if (varObjecs.empty()) { svthrow(LR"(选择集为空)"sv); }
 			}
 
 			$Objects.reserve(varObjecs.size());
@@ -318,7 +318,7 @@ namespace {
 					continue;
 				}
 			}
-			if (varObjecs.empty()) { throw 3423; }
+			if (varObjecs.empty()) { svthrow(LR"(选择集为空)"sv); }
 		}
 
 		long double varDX = 0;
@@ -438,9 +438,7 @@ DX : %lf , DY : %lf
 					std::reverse($SortedObjects.begin(), $SortedObjects.end());
 					return;
 				}
-				acutPrintf(LR"(基准尺寸不在最内或最外
-)");
-				throw 7834;
+				svthrow(LR"(基准尺寸不在最内或最外)"sv);
 			}
 			else {
 				/*sort by y*/
@@ -471,9 +469,7 @@ DX : %lf , DY : %lf
 					std::reverse($SortedObjects.begin(), $SortedObjects.end());
 					return;
 				}
-				acutPrintf(LR"(基准尺寸不在最内或最外
-)");
-				throw 7834;
+				svthrow(LR"(基准尺寸不在最内或最外)");
 			}
 
 		}
@@ -508,7 +504,7 @@ DX : %lf , DY : %lf
 						space_0 = backData;
 					}
 					else {
-						throw 3423;
+						svthrow(LR"(获得距离失败)"sv);
 					}
 				}
 			}
@@ -525,7 +521,7 @@ DX : %lf , DY : %lf
 						space_1 = backData;
 					}
 					else {
-						throw 3423;
+						svthrow(LR"(获得距离失败)"sv);
 					}
 				}
 			}
