@@ -191,7 +191,7 @@ namespace sstd {
 					--varPointer;
 				}
 
-				return { varPointer + 1, static_cast<std::size_t>(varPointer - varPointerEnd) };
+				return { varPointer + 1, static_cast<std::size_t>( varPointerEnd - varPointer ) };
 			}
 
 			std::wstring_view double_to_string(double a) try{
