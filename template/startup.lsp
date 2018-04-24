@@ -43,7 +43,7 @@
 	   )
 )
 
-(defun c:aq(/ varS)
+(defun c:aaq(/ varS)
 	(setq varS(ssget ":E"))
 	(if (/= varS nil)(progn
 		(command "AUTOCONSTRAIN" varS "" )
