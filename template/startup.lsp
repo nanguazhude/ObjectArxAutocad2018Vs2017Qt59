@@ -1,5 +1,5 @@
 (defun c:zoomo() (command "zoom" "o" pause) )
-;(defun c:dd()   (command "dim" ) )
+(defun c:dd()   (command "dimlinear" ) )
 (defun c:ddf()  (command "dimlinear" ) )
 (defun c:ddfa() (command "dimaligned" ) )
 
