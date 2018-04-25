@@ -1,9 +1,9 @@
 (defun c:v中心线() (c:zml) ) ;
 (defun c:vc圆中心线() (c:zmc) ) ;
-(defun c:vd箭头引线() (c:zmld) ) ;
+(defun c:vd无箭头引线() (c:zmld) ) ;
 (defun c:vdStand() (c:zmlds) ) ;
 (defun c:vdp点引线() (c:zmldp) ) ;
-(defun c:vdn无箭头引线() (c:zmldn) ) ;
+(defun c:vdn箭头引线() (c:zmldn) ) ;
 
 (defun c:zoomo() (command "zoom" "o" pause) )
 (defun c:dd()   (command "dimlinear" ) )
