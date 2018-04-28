@@ -40,7 +40,8 @@ SOURCES += \
         $$PWD/ArxZCC/ArxZCC.cpp \
         $$PWD/FConnect/FConnect.cpp \
         $$PWD/EText/EText.cpp \
-        $$PWD/DimDistance/DimDistance.cpp
+        $$PWD/DimDistance/DimDistance.cpp \
+        $$PWD/EPrint/EPrint.cpp
 
 
 #.h .hpp source
@@ -85,7 +86,8 @@ HEADERS += \
         $$PWD/ArxZCC/ArxZCC.hpp \
         $$PWD/FConnect/FConnect.hpp \
         $$PWD/EText/EText.hpp \
-        $$PWD/DimDistance/DimDistance.hpp
+        $$PWD/DimDistance/DimDistance.hpp \
+        $$PWD/EPrint/EPrint.hpp
 
 
         
