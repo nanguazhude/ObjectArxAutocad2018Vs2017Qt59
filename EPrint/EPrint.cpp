@@ -224,12 +224,27 @@ namespace sstd {
 		return{ varBID.begin(),varBID.end() };
 	}
 
+	void setPlotArea(AcDbDatabase*$DB,const AcDbObjectId & varHBKID) {
+
+	}
+
+	void fitTextArea(AcDbDatabase*$DB, 
+		const AcDbObjectId & varHBKID,
+		const AcDbObjectId & varBTLID ) {
+
+	}
+
+	void setPrintPath(AcDbDatabase*) {
+
+	}
+
 	void EPrint::main() try {
 		auto DB = acdbHostApplicationServices()->workingDatabase();
 		//print_all_used_block_name(DB);
-
+		std::vector<AcDbObjectId> varBTLIDS;
+		std::vector<AcDbObjectId> varHBKIDS;
 		try {
-			setBlockDrawOrder<false>(DB, LR"(@标题栏文字(1))"sv);
+			varBTLIDS = setBlockDrawOrder<false>(DB, LR"(@标题栏文字(1))"sv);
 		}
 		catch (...) {
 			acutPrintf(LR"(e@标题栏文字(1)
@@ -237,11 +252,26 @@ namespace sstd {
 		}
 
 		try {
-			setBlockDrawOrder<true>(DB, LR"(横边框2(G3000))"sv);
+			varHBKIDS = setBlockDrawOrder<true>(DB, LR"(横边框2(G3000))"sv);
 		}
 		catch (...) {
 			acutPrintf(LR"(e@横边框2(G3000)
 )");
+		}
+
+		/*设置打印区域*/
+		if (varHBKIDS.size()==1) {
+			setPlotArea(DB, varHBKIDS[0]);
+		}
+
+		/*调整标题栏*/
+		if ((varBTLIDS.size()==1)&&(varHBKIDS.size() == 1)) {
+			fitTextArea(DB, varHBKIDS[0], varBTLIDS[0]);
+		}
+
+		/*设置打印路径*/
+		{
+			setPrintPath(DB);
 		}
 
 	}
