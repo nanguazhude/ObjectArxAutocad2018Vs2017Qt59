@@ -63,13 +63,15 @@ namespace sstd {
 
 		AcDbObjectIdArray varIDS_;
 		{
-			//尝试从动态块获得ID
 			AcDbDynBlockTableRecord varDR_{ varR->objectId() };
 			if (varDR_.isDynamicBlock()) {
 				AcDbObjectIdArray varBLKIDS_;
+				//尝试从普通块获得ID
+				varR->getBlockReferenceIds(varIDS_);
+				varR.close();
+				//尝试从动态块获得ID
 				varDR_.getAnonymousBlockIds(varBLKIDS_);
 				//acutPrintf(L"---%d",varBLKIDS_.length());
-				varR.close();
 				for (const auto & varJ : varBLKIDS_) {
 					sstd::ArxClosePointer<AcDbBlockTableRecord> varR;
 					if (eOk != acdbOpenObject(varR.pointer(), varJ)) {
