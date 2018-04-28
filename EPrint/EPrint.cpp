@@ -25,6 +25,7 @@ namespace sstd {
 		arx_add_main_command<EPrint>();
 	}
 
+	////////////////////////////////////////
 	void print_all_used_block_name(AcDbDatabase*$DB) {
 		std::vector< AcDbObjectId > varBTIDS;
 		{
@@ -124,6 +125,7 @@ namespace sstd {
 		}
 
 	}
+	////////////////////////////////////////
 
 	/*set block up*/
 	template<bool ToUp = true>
