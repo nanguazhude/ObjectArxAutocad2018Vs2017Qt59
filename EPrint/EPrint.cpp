@@ -61,20 +61,20 @@ namespace sstd {
 							}
 
 							AcDbBlockReference * varBR = AcDbBlockReference::cast(varEnt.pointer());
-							 
-							
+
+
 							if (varBR) {
-								AcDbDynBlockReference varDyID{varBR->objectId()};
+								AcDbDynBlockReference varDyID{ varBR->objectId() };
 								if (varDyID.isDynamicBlock()) {
 									varBTIDS.push_back(varDyID.dynamicBlockTableRecord());
 								}
 								else {
 									varBTIDS.push_back(varBR->blockTableRecord());
 								}
-								
+
 							}
 							/*********************************/
-							if(varBR){
+							if (varBR) {
 								std::unique_ptr< AcDbObjectIterator> varAIt{
 									varBR->attributeIterator()
 								};
@@ -104,8 +104,8 @@ namespace sstd {
 
 			}
 
-			for (const auto & varI: varBTIDS) {
-				AcDbBlockTableRecord  * cc;
+			for (const auto & varI : varBTIDS) {
+				//AcDbBlockTableRecord  * cc;
 				sstd::ArxClosePointer<AcDbBlockTableRecord > pBlkTblRec;
 				if (eOk != acdbOpenObject(pBlkTblRec.pointer(), varI, AcDb::kForRead)) {
 					continue;
@@ -116,7 +116,7 @@ namespace sstd {
 				acutPrintf(LR"(---
 )");
 				acutPrintf(varName);
-				 
+
 
 				//pBlkTblRec->setAttributes();
 			}
@@ -126,11 +126,11 @@ namespace sstd {
 	}
 
 	/*set block up*/
-	template<bool ToUp=true>
+	template<bool ToUp = true>
 	std::vector<AcDbObjectId > setBlockDrawOrder(
 		AcDbDatabase*$DB,
 		const wstring&varName) {
-	
+
 		sstd::ArxClosePointer< AcDbBlockTable> varBlockTable;
 		if (eOk != $DB->getBlockTable(varBlockTable, AcDb::kForRead)) {
 			svthrow(LR"(获得AcDbBlockTable失败1)"sv);
@@ -139,25 +139,41 @@ namespace sstd {
 		sstd::ArxClosePointer<AcDbBlockTableRecord> varR;
 		if (eOk != varBlockTable->getAt(varName.c_str(),
 			varR.pointer(),
-			AcDb::kForRead,
-			true)) {
-			svthrow(LR"(获得AcDbBlockTable失败2)"sv);
+			AcDb::kForRead)) {
+			svthrow(LR"(获得AcDbBlockTableRecord失败2)"sv);
 		}
 
-		std::unique_ptr<AcDbBlockReferenceIdIterator> varIt;
+		AcDbObjectIdArray varIDS_;
 		{
-			AcDbBlockReferenceIdIterator * varTmp;
-			if (eOk != varR->newBlockReferenceIdIterator(varTmp)) {
-				svthrow(LR"(获得迭代器失败)"sv);
+			//尝试从动态块获得ID
+			AcDbDynBlockTableRecord varDR_{ varR->objectId() };
+			if (varDR_.isDynamicBlock()) {
+				AcDbObjectIdArray varBLKIDS_;
+				varDR_.getAnonymousBlockIds(varBLKIDS_);
+				//acutPrintf(L"---%d",varBLKIDS_.length());
+				varR.close();
+				for (const auto & varJ : varBLKIDS_) {
+					sstd::ArxClosePointer<AcDbBlockTableRecord> varR;
+					if (eOk != acdbOpenObject(varR.pointer(), varJ)) {
+						continue;
+					}
+					AcDbObjectIdArray varTmpIDS;
+					varR->getBlockReferenceIds(varTmpIDS);
+					varIDS_.append(varTmpIDS);
+				}
 			}
-			varIt.reset(varTmp);
+			else {//尝试从普通块获得ID
+				varR->getBlockReferenceIds(varIDS_);
+				varR.close();
+			}
 		}
+
 
 		std::set< AcDbObjectId > varBID;
-		for (; !varIt->done(); varIt->step()) {
+		for (const auto & varJ : varIDS_) {
 
 			sstd::ArxClosePointer<AcDbBlockReference> varBR;
-			if (eOk != varIt->getBlockReference(varBR, AcDb::kForWrite,true)) {
+			if (eOk != acdbOpenObject(varBR.pointer(), varJ, AcDb::kForWrite)) {
 				continue;
 			}
 
@@ -178,7 +194,7 @@ namespace sstd {
 				~Lock() { destory(); }
 			} varLock;
 
-			for (const auto & varI:varBID) {
+			for (const auto & varI : varBID) {
 				ads_name s;
 				acdbGetAdsName(s, varI);
 				acedSSAdd(s, varLock.ss, varLock.ss);
@@ -206,9 +222,9 @@ namespace sstd {
 		return{ varBID.begin(),varBID.end() };
 	}
 
-	void EPrint::main() try{
+	void EPrint::main() try {
 		auto DB = acdbHostApplicationServices()->workingDatabase();
-		print_all_used_block_name(DB);
+		//print_all_used_block_name(DB);
 
 		try {
 			setBlockDrawOrder<false>(DB, LR"(@标题栏文字(1))"sv);
@@ -225,7 +241,7 @@ namespace sstd {
 			acutPrintf(LR"(e@横边框2(G3000)
 )");
 		}
-		
+
 	}
 	catch (...) {}
 
