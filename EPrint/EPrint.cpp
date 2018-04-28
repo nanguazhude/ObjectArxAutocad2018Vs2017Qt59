@@ -25,12 +25,79 @@ namespace sstd {
 		arx_add_main_command<EPrint>();
 	}
 
+	void print_all_used_block_name(AcDbDatabase*$DB) {
+		std::vector< AcDbObjectId > varBTIDS;
+		{
+			sstd::ArxClosePointer<AcDbBlockTable> varBlockTable;
+			if (Acad::eOk == $DB->getBlockTable(varBlockTable, AcDb::kForRead)) {
+				std::unique_ptr<AcDbBlockTableIterator> varIt;
+				{
+					AcDbBlockTableIterator * varTmp = nullptr;
+					if (Acad::eOk != varBlockTable->newIterator(varTmp)) {
+						return;
+					}
+					varIt.reset(varTmp);
+				}
+
+				for (; !varIt->done(); varIt->step()) {
+					sstd::ArxClosePointer<AcDbBlockTableRecord> varR;
+					if (Acad::eOk != varIt->getRecord(varR)) {
+						continue;
+					}
+
+					{
+						AcDbBlockTableRecord * varT = varR;
+						std::unique_ptr<AcDbBlockTableRecordIterator> varIt;
+						{
+							AcDbBlockTableRecordIterator *varTmp;
+							if (varT->newIterator(varTmp) != Acad::eOk) { return; }
+							varIt.reset(varTmp);
+						}
+
+						for (; !varIt->done(); varIt->step()) {
+							sstd::ArxClosePointer< AcDbEntity> varEnt;
+							if (varIt->getEntity(varEnt, AcDb::kForRead) != Acad::eOk) {
+								continue;
+							}
+
+							AcDbBlockReference * varBR = AcDbBlockReference::cast(varEnt.pointer());
+							if (varBR) {
+								varBTIDS.push_back(varBR->blockTableRecord());
+							}
+
+						}
+					}
+
+				}
+
+			}
+
+			for (const auto & varI: varBTIDS) {
+				AcDbBlockTableRecord  * cc;
+				sstd::ArxClosePointer<AcDbBlockTableRecord > pBlkTblRec;
+				if (eOk != acdbOpenObject(pBlkTblRec.pointer(), varI, AcDb::kForRead)) {
+					continue;
+				}
+				AcString varName;
+				pBlkTblRec->getName(varName);
+				acutPrintf(LR"(---
+)");
+				acutPrintf(varName);
+				 
+
+				//pBlkTblRec->setAttributes();
+			}
+
+		}
+
+	}
+
 	/*set block up*/
 	template<bool ToUp=true>
 	std::vector<AcDbObjectId > setBlockDrawOrder(
 		AcDbDatabase*$DB,
 		const wstring&varName) {
-
+	
 		sstd::ArxClosePointer< AcDbBlockTable> varBlockTable;
 		if (eOk != $DB->getBlockTable(varBlockTable, AcDb::kForRead)) {
 			svthrow(LR"(获得AcDbBlockTable失败1)"sv);
@@ -108,6 +175,7 @@ namespace sstd {
 
 	void EPrint::main() try{
 		auto DB = acdbHostApplicationServices()->workingDatabase();
+		print_all_used_block_name(DB);
 
 		try {
 			setBlockDrawOrder<false>(DB, LR"(@标题栏文字(1))"sv);
