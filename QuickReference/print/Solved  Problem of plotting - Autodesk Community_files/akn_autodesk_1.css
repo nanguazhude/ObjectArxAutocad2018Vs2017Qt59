@@ -1,0 +1,297 @@
+.product_picker_modal.show {
+    -webkit-transform: translateX(0px);
+    transform: translateX(0px);
+    transition: 0.4s ease-in-out 0s;
+}
+
+.product_picker_modal.show {
+    visibility: visible;
+    display: inline-block;
+}
+
+.product_picker_modal {
+    background-color: #2e2e2e;
+    background-image: url(/sites/all/themes/autodesk_foundation5/images/standard/pattern1.png),url(/sites/all/themes/autodesk_foundation5/images/standard/pattern2.png),url(/sites/all/themes/autodesk_foundation5/images/standard/pattern3.png);
+    background-position: top left,bottom left,bottom right;
+    background-repeat: no-repeat;
+    -webkit-backface-visibility: hidden;
+    -webkit-box-shadow: 5px 5px 5px -1px rgba(0,0,0,0.5);
+    -moz-box-shadow: 5px 5px 5px -1px rgba(0,0,0,0.5);
+    -ms-box-shadow: 5px 5px 5px -1px rgba(0,0,0,0.5);
+    box-shadow: 5px 5px 5px -1px rgba(0,0,0,0.5);
+    max-width: 50rem;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    z-index: 1004;
+    box-sizing: content-box;
+    position: relative;
+    display: inline-block;
+    position: relative;
+    width: 64.5%;
+    -webkit-transform: translateX(-2200px);
+    transform: translateX(-2200px);
+    transition: 0.7s ease-in-out 0s;
+}
+
+#lia-body .lia-content .product-picker-by-topics-container .all-products {
+  margin: 50px 0px;
+}
+
+#lia-body .lia-content .all-products-list-container {
+  clear: both;
+  padding: 40px 20px;
+  display: -webkit-inline-box;
+  width: 100%;
+}
+#lia-body .lia-content .all-products-list-container .all-products .all-product-list {
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
+  break-inside: avoid;
+  width: 100%;
+}
+#lia-body .lia-content .all-products-list-container .all-products .all-product-list h3 {
+  font-family: FrutigerNext,Arial,"メイリオ",Meiryo,sans-serif;
+  font-weight: normal;
+  font-style: normal;
+  color: #222222;
+  text-rendering: optimizeLegibility;
+  margin-top: 0.2rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.4;
+}
+#lia-body .lia-content .all-product-list li.list-item {
+  height: 25px;
+}
+
+#lia-body .lia-content .product_picker_modal a.close-button {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 45px;
+  height: 45px;
+  display: block;
+  text-indent: -9999px;
+  float: right;
+  background: url(/html/assets/btn_close_productpicker.png);
+  background-repeat: no-repeat;
+  background-position: center center;
+  cursor: pointer;
+  z-index: 1;
+}
+
+#lia-body .lia-content .product_picker_modal {
+  visibility: hidden;
+  display: none;
+}
+#lia-body .lia-content .product_picker_modal.show {
+  visibility: visible;
+  display: inline-block;
+}
+#lia-body .lia-content .show-product-picker-only .product_picker_modal {
+  position: relative;
+  transition: none;
+  display: none;
+}
+#lia-body .lia-content .show-product-picker-only .product_picker_modal.show {
+  display: block;
+}
+#lia-body .lia-content .offcanvas-overlap-right .product_picker_modal.show {
+  -webkit-transform: translateX(0px);
+  transform: translateX(0px);
+  transition: 0.4s ease-in-out 0s;
+}
+#lia-body .lia-content .offcanvas-overlap-right .product_picker_modal.hide2 {
+  overflow-x: hidden;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: hidden;
+}
+#lia-body .lia-content .product-picker-by-topics-container {
+  padding: 40px 20px;
+  display: inline-block;
+  width: 100%;
+}
+#lia-body .lia-content .product-picker-by-topics-container.hide {
+  display: none;
+}
+#lia-body .lia-content .product-picker-by-topics-container .title-block {
+  text-align: center;
+  margin-bottom: 28px;
+}
+#lia-body .lia-content .product-picker-by-topics-container .title-block h1 {
+  font-size: 32px;
+  text-transform: uppercase;
+  color: #ffffff;
+  line-height: 32px;
+  margin-bottom: 7px;
+}
+#lia-body .lia-content .product-picker-by-topics-container .title-block h3 {
+  font-size: 28px;
+  color: #bbbbbb;
+  font-style: italic;
+  line-height: 28px;
+}
+#lia-body .lia-content .product-picker-by-topics-container li {
+  list-style: none;
+}
+#lia-body .lia-content .product-picker-by-topics-container .tab-product-suites-cloud {
+  height: 50px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+#lia-body .lia-content .product-picker-by-topics-container .tab-product-suites-cloud ul.menu-tabs {
+  display: inline-block;
+  margin: 0px;
+  font-size: 24px;
+  color: #ababab;
+}
+#lia-body .lia-content body.lang-ru .product-picker-by-topics-container .tab-product-suites-cloud ul.menu-tabs {
+  font-size: 18px;
+}
+#lia-body .lia-content .product-picker-by-topics-container .tab-product-suites-cloud ul.menu-tabs li {
+  display: inline-block;
+  padding: 0px 20px;
+  margin-right: 15px;
+  height: 47px;
+  border-bottom: 4px solid #888888;
+}
+#lia-body .lia-content .product-picker-by-topics-container .tab-product-suites-cloud ul.menu-tabs li.last {
+  margin-right: 0px;
+}
+#lia-body .lia-content .product-picker-by-topics-container .tab-product-suites-cloud ul.menu-tabs li > a {
+  color: #ababab;
+  line-height: 47px;
+  text-transform: uppercase;
+  text-decoration: none !important;
+}
+#lia-body .lia-content .product-picker-by-topics-container .tab-product-suites-cloud ul.menu-tabs li > a:hover {
+  text-decoration: none !important;
+}
+#lia-body .lia-content .product-picker-by-topics-container .tab-product-suites-cloud ul.menu-tabs li.active {
+  border-bottom-color: #327084;
+}
+#lia-body .lia-content .product-picker-by-topics-container .tab-product-suites-cloud ul.menu-tabs li.active a {
+  color: #ffffff;
+}
+#lia-body .lia-content .product-picker-by-topics-container .topic-product-picker-container {
+  margin: 45px 0px 0px;
+  display: block;
+}
+#lia-body .lia-content .product-picker-by-topics-container .topic-product-picker-container .product-mini-icon {
+  float: left;
+  height: 27px;
+}
+#lia-body .lia-content .product-picker-by-topics-container .topic-product-picker-container .product-mini-icon img {
+  height: 27px;
+}
+#lia-body .lia-content .product-picker-by-topics-container .topic-product-picker-container .product-name {
+  margin-left: 35px;
+  height: 25px;
+  padding-top: 7px;
+}
+#lia-body .lia-content .product-picker-by-topics-container .topic-product-picker-container .product-name.no-margin {
+  margin: 0px;
+}
+#lia-body .lia-content .product-picker-by-topics-container .topic-product-picker-container .product-name .field-content {
+  height: 18px;
+}
+#lia-body .lia-content .product-picker-by-topics-container .topic-product-picker-container .product-name .field-content a {
+  font-size: 18px;
+  line-height: 18px;
+  color: #ffffff;
+}
+#lia-body .lia-content .product-picker-by-topics-container .all-products {
+  margin: 50px 0px;
+}
+#lia-body .lia-content .product-picker-by-topics-container .all-products > a {
+  font-size: 18px;
+  color: #ffffff;
+  min-width: 240px;
+  text-align: center;
+  line-height: 18px;
+  padding-top: 16px;
+  padding-bottom: 16px;
+  margin-bottom: 0px;
+}
+#lia-body .lia-content .product-picker-by-topics-container .multicolumn-3 {
+  margin: 0px 6.25%;
+  -webkit-column-width: 160px;
+  -moz-column-width: 160px;
+  column-width: 160px;
+  -webkit-column-gap: 30px;
+  -moz-column-gap: 30px;
+  column-gap: 30px;
+}
+#lia-body .lia-content .product-picker-by-topics-container .multicolumn-3 li {
+  margin-bottom: 35px;
+  line-height: 25px;
+  /*display: inline-block;*/
+  display: block;
+  width: 100%;
+}
+#lia-body .lia-content .product-picker-by-topics-container .multicolumn-3 li:after {
+  clear: both;
+}
+#lia-body .lia-content .all-products-list-container {
+  clear: both;
+  padding: 40px 20px;
+  display: -webkit-inline-box;
+  width: 100%;
+}
+#lia-body .lia-content .all-products-list-container.hide {
+  display: none;
+}
+#lia-body .lia-content .all-products-list-container .all-product-tab-mobile {
+  display: none;
+}
+#lia-body .lia-content .all-products-list-container .all-products {
+  -webkit-column-count: 3;
+  -moz-column-count: 3;
+  column-count: 3;
+  -webkit-column-gap: 1rem;
+  -moz-column-gap: 1rem;
+  column-gap: 1rem;
+}
+#lia-body .lia-content .left-off-canvas-menu {
+  -webkit-backface-visibility: hidden;
+  width: 100%;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: #ffffff;
+  z-index: 1001;
+  box-sizing: content-box;
+  transition: -webkit-transform 500ms ease 0s;
+  transition: transform 500ms ease 0s;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+  -ms-transform: translate(100%, 0);
+  -webkit-transform: translate3d(100%, 0, 0);
+  -moz-transform: translate3d(100%, 0, 0);
+  -ms-transform: translate3d(100%, 0, 0);
+  -o-transform: translate3d(100%, 0, 0);
+  transform: translate3d(0%, 0, 0);
+  left: 0;
+}
+#lia-body .lia-content .off-canvas-menu-wrap .left-off-canvas-menu .close-button {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 45px;
+    height: 45px;
+    display: block;
+    background: url(/html/assets/btn_close_productpicker.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    cursor: pointer;
+    font-size: 1.625rem;
+    font-weight: 200;
+    color: #aaaaaa;
+}

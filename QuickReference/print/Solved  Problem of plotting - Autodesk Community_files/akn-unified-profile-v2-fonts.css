@@ -1,0 +1,106 @@
+@font-face {
+  font-family: UP2FrutigerNextLight;
+  src: url(https://akn.unifiedprofile.autodesk.com/unifiedprofile-widgets/fonts/FrutigerNextPro-Light.woff) format('woff'),url(https://akn.unifiedprofile.autodesk.com/unifiedprofile-widgets/fonts/FrutigerNextPro-Light.otf)
+}
+
+@font-face {
+  font-family: UP2FrutigerNextRegular;
+  src: url(https://akn.unifiedprofile.autodesk.com/unifiedprofile-widgets/fonts/FrutigerNextLTW1G-Regular.woff) format('woff'),url(https://akn.unifiedprofile.autodesk.com/unifiedprofile-widgets/fonts/FrutigerNextLTW1G-Regular.otf)
+}
+
+@font-face {
+  font-family: UP2FrutigerNextBold;
+  src: url(https://akn.unifiedprofile.autodesk.com/unifiedprofile-widgets/fonts/FrutigerNextLTW1G-Bold.woff) format('woff'),url(https://akn.unifiedprofile.autodesk.com/unifiedprofile-widgets/fonts/FrutigerNextLTW1G-Bold.otf)
+}
+
+@font-face {
+  font-family: UP2FrutigerNextMedium;
+  src: url(https://akn.unifiedprofile.autodesk.com/unifiedprofile-widgets/fonts/FrutigerNextPro-Medium.woff) format('woff'),url(https://akn.unifiedprofile.autodesk.com/unifiedprofile-widgets/fonts/FrutigerNextPro-Medium.otf)
+}
+
+@font-face {
+  font-family: "UP2ArtifaktElement";
+  src: url('artifakt/elementweb/WOFF/Artifakt-Element-Light.woff') format('woff');
+  font-style: normal;
+  font-weight: 200;
+}
+@font-face {
+  font-family: "UP2ArtifaktElement";
+  src: url('artifakt/elementweb/WOFF/Artifakt-Element-Regular.woff') format('woff');
+  font-style: normal;
+  font-weight: normal;
+}
+@font-face {
+  font-family: "UP2ArtifaktElement";
+  src: url('artifakt/elementweb/WOFF/Artifakt-Element-Medium.woff') format('woff');
+  font-style: normal;
+  font-weight: 600;
+}
+@font-face {
+  font-family: "UP2ArtifaktElement";
+  src: url('artifakt/elementweb/WOFF/Artifakt-Element-Bold.woff') format('woff');
+  font-style: normal;
+  font-weight: bold;
+}
+@font-face {
+  font-family: "UP2ArtifaktLegend";
+  src: url('artifakt/legendweb/WOFF/Artifakt-Legend-Light.woff')-format('woff');
+  font-style: normal;
+  font-weight: 200;
+}
+@font-face {
+  font-family: "UP2ArtifaktLegend";
+  src: url('artifakt/legendweb/WOFF/Artifakt-Legend-Regular.woff') format('woff');
+  font-style: normal;
+  font-weight: normal;
+}
+@font-face {
+  font-family: "UP2ArtifaktLegend";
+  src: url('artifakt/legendweb/WOFF/Artifakt-Legend-Bold.woff') format('woff');
+  font-style: normal;
+  font-weight: bold;
+}
+@font-face {
+  font-family: 'UP2FontAwesome';
+  src: url('fontawesome-up-v2/fontawesome-webfont.eot?v=4.7.0');
+  src: url('fontawesome-up-v2/fontawesome-webfont.eot?#iefix&v=4.7.0') format('embedded-opentype'), url('fontawesome-up-v2/fontawesome-webfont.woff2?v=4.7.0') format('woff2'), url('fontawesome-up-v2/fontawesome-webfont.woff?v=4.7.0') format('woff'), url('fontawesome-up-v2/fontawesome-webfont.ttf?v=4.7.0') format('truetype'), url('fontawesome-up-v2/fontawesome-webfont.svg?v=4.7.0#fontawesomeregular') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.up2-fa {
+  display: inline-block;
+  font: normal normal normal 14px/1 UP2FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.up2-fa-pencil:before {
+  content: "\f040";
+}
+
+.up2-fa-linkedin:before {
+  content: "\f0e1";
+}
+
+.up2-fa-blog:before {
+  content: "\f09e";
+}
+
+.up2-fa-website:before {
+  content: "\f0ac";
+}
+
+.up2-fa-eye:before {
+  content: "\f06e";
+}
+
+.up2-fa-map-marker:before {
+  content: "\f041";
+}
+
+.up2-fa-times:before {
+  content: "\f00d";
+}

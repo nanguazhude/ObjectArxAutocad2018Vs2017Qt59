@@ -222,19 +222,117 @@ namespace sstd {
 		}
 
 		return{ varBID.begin(),varBID.end() };
+	}	
+
+	bool _setPlotArea(AcDbDatabase*$DB, const AcDbObjectId & varHBKID,
+		const double x0,const double y0,
+		const double x1,const double y1,
+		const wstring strFileName) {
+		/*https://forums.autodesk.com/t5/objectarx/problem-of-plotting/m-p/6803724*/
+		Acad::ErrorStatus es;
+
+		class Locker {
+		public:
+			AcPlPlotEngine * PlotEngine = nullptr;
+			AcDbBlockTableRecord *pBTR = nullptr;
+			AcDbLayout *pLayout = nullptr;
+			AcDbPlotSettings * pPlotSettings = nullptr;
+			~Locker() {
+				if (PlotEngine)PlotEngine->destroy();
+				if (pBTR) { pBTR->close(); }
+				if (pLayout) { pLayout->close(); }
+				if (pPlotSettings) { delete pPlotSettings; }
+			}
+		}varData;
+
+		AcPlPlotEngine * & PlotEngine = varData.PlotEngine;
+		if (Acad::eOk != AcPlPlotFactory::createPublishEngine(PlotEngine)) return false;
+
+		// get a pointer to the layout manager
+		AcApLayoutManager *pLayoutManager = (AcApLayoutManager *)acdbHostApplicationServices()->layoutManager();
+		AcDbObjectId idBTR = pLayoutManager->getActiveLayoutBTRId();
+		AcDbBlockTableRecord * & pBTR = varData.pBTR;
+
+		es = acdbOpenObject(pBTR, idBTR, AcDb::kForRead);
+		if (es != Acad::eOk) { return false; }
+
+		// We want to instantiate our custom AcDbPlotSettings object, and inherit the 
+		// properties from the active layout.
+		AcDbObjectId idLayout = pBTR->getLayoutId();
+		AcDbLayout * & pLayout = varData.pLayout;
+
+		es = acdbOpenObject(pLayout, idLayout, AcDb::kForRead);
+		if (es != Acad::eOk) { return false; }
+
+		AcDbPlotSettings * & pPlotSettings =varData.pPlotSettings; 
+		pPlotSettings = new AcDbPlotSettings(pLayout->modelType());
+		es = pPlotSettings->copyFrom(pLayout);
+		if (es != Acad::eOk) { return false; }
+
+		pLayout->close();
+		pLayout = nullptr;
+		pBTR->close();
+		pBTR = nullptr;
+
+		AcDbPlotSettingsValidator *pPlotSettingsValidator = acdbHostApplicationServices()->plotSettingsValidator();
+		if (pPlotSettingsValidator == nullptr) return false;
+
+		pPlotSettingsValidator->refreshLists(pPlotSettings);	// Refresh the layout lists in order to use it
+		es = pPlotSettingsValidator->setPlotCfgName(pPlotSettings, LR"(User 1)");	//设置图纸大小（A4）
+		es = pPlotSettingsValidator->setPlotWindowArea(pPlotSettings, x0,y0,x1,y1); //设置打印范围
+		es = pPlotSettingsValidator->setPlotOrigin(pPlotSettings, x0, y0);	//设置origin
+		es = pPlotSettingsValidator->setPlotCentered(pPlotSettings, true);	//是否居中打印
+		es = pPlotSettingsValidator->setPlotType(pPlotSettings, AcDbPlotSettings::kWindow);	//打印类型
+		//es = pPlotSettingsValidator->setStdScale(pPlotSettings, dbScale);	//比例
+		es = pPlotSettingsValidator->setStdScaleType(pLayout, AcDbPlotSettings::StdScaleType::kScaleToFit);//比例
+																										   // we have to close the layout here because the last parameter of
+																										   // findLayoutNamed is true, leave layout open
+		es = PlotEngine->beginPlot(nullptr, nullptr);
+
+		AcPlPlotInfo plotInfo;
+		plotInfo.setLayout(idLayout);
+		plotInfo.setOverrideSettings(pPlotSettings);
+
+		AcPlPlotConfig *pPlotConfig = nullptr;
+		es = acplPlotConfigManagerPtr()->setCurrentConfig(pPlotConfig, LR"(@AutoCAD PDF(High Quality Print).pc3)");
+		pPlotConfig->setPlotToFile(true);
+		pPlotConfig->refreshMediaNameList();
+		plotInfo.setDeviceOverride(pPlotConfig);
+
+		//开始打印
+		AcPlPlotInfoValidator plotInfoValidator;
+		AcPlPlotPageInfo pageInfo;
+		plotInfoValidator.setMediaMatchingPolicy(AcPlPlotInfoValidator::kMatchEnabled);
+		plotInfoValidator.validate(plotInfo);
+		es = PlotEngine->beginDocument(plotInfo, acDocManager->curDocument()->fileName(),nullptr, 1, true, strFileName.c_str());
+		es = PlotEngine->beginPage(pageInfo, plotInfo, true);
+		es = PlotEngine->beginGenerateGraphics();
+		PlotEngine->endGenerateGraphics();
+		PlotEngine->endPage();
+		PlotEngine->endDocument();
+		PlotEngine->endPlot();
+
+		return true;
 	}
 
-	void setPlotArea(AcDbDatabase*$DB,const AcDbObjectId & varHBKID) {
+	bool setPlotArea(AcDbDatabase*$DB, const AcDbObjectId & varHBKID) {
+		AcGePoint3d varBottomLeft;
+		AcGePoint3d varTopRight;
+		/*获得打印文件名称*/
 
+		/*获得打印区域*/
+		{
+			sstd::ArxClosePointer< AcDbBlockReference > varR;
+			if (eOk != acdbOpenObject(varR.pointer(), varHBKID)) {
+				svthrow(LR"(can not open  AcDbBlockReference)");
+				
+			}
+		}
 	}
 
-	void fitTextArea(AcDbDatabase*$DB, 
+	void fitTextArea(AcDbDatabase*$DB,
 		const AcDbObjectId & varHBKID,
-		const AcDbObjectId & varBTLID ) {
-
-	}
-
-	void setPrintPath(AcDbDatabase*) {
+		const AcDbObjectId & varBTLID) {
 
 	}
 
@@ -259,19 +357,14 @@ namespace sstd {
 )");
 		}
 
-		/*设置打印区域*/
-		if (varHBKIDS.size()==1) {
-			setPlotArea(DB, varHBKIDS[0]);
-		}
-
 		/*调整标题栏*/
-		if ((varBTLIDS.size()==1)&&(varHBKIDS.size() == 1)) {
+		if ((varBTLIDS.size() == 1) && (varHBKIDS.size() == 1)) {
 			fitTextArea(DB, varHBKIDS[0], varBTLIDS[0]);
 		}
 
-		/*设置打印路径*/
-		{
-			setPrintPath(DB);
+		/*设置打印区域*/
+		if (varHBKIDS.size() == 1) {
+			setPlotArea(DB, varHBKIDS[0]);
 		}
 
 	}

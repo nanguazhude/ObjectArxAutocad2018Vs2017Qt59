@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<!-- saved from url=(0087)https://forums-dev.autodesk.com/html/assets/oxygen_openid_response.html?version=preview -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <title></title>
+  <script type="text/javascript" src="oxygen_openid_response_data/js.js"></script>
+  <script type="text/javascript">
+  // <![CDATA[
+	  function getParameterByName(name, url) {
+	    if (!url) {
+	      url = window.location.href;
+	    }
+	    name = name.replace(/[\[\]]/g, "\\$&");
+	    var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)");
+	    results = regex.exec(url);
+	    if (!results){
+		return null;
+	    }
+	    if (!results[2]){
+		return '';
+	    }
+	    return decodeURIComponent(results[2].replace(/\+/g, " "));
+	}
+    if (window.opener) {
+      window.opener.Oxygen.processOpenIDResponse(window.location.href);
+    } else {
+      try {
+        parent.Oxygen.processOpenIDResponse(window.location.href);
+      } catch (e) {
+        try{
+          window.top.Oxygen.processOpenIDResponse(window.location.href);
+        } catch(e2) {
+		var has_sign_in_origin = Cookies.get('loginAttemptedPage');
+		Cookies.remove('loginAttemptedPage', { path: '/' });
+		if (has_sign_in_origin != null ) {
+			if(getParameterByName('newpost') == 1){
+				var getUrl = window.location;
+				var base = getUrl.protocol + "//" + getUrl.host;
+				var sso_iden = "http%3A%2F%2Faccounts.autodesk.com";
+				if( (base.indexOf('dev') > 0) || (base.indexOf('stage') > 0) ){
+					sso_iden = "http%3A%2F%2Faccounts-staging.autodesk.com";
+				}
+				var bounce = '/auth/openid_security_check?openid_identifier='+sso_iden+'%2F&action=bounce';
+				var newURL = getParameterByName('newpostURL');
+				window.location.href = bounce+"&dest_url="+encodeURIComponent(newURL);
+			}else{
+				window.location.href = has_sign_in_origin;
+			}
+		}
+		else {
+			window.location.href = "/";
+		}
+        }
+      }
+    }
+    Cookies.remove('loginAttemptedPage', { path: '/' });
+  // ]]>
+  </script>
+</head>
+
+<body>
+  
+
+
+</body></html>
