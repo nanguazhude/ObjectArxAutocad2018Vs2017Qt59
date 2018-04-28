@@ -61,35 +61,47 @@ namespace sstd {
 			return;
 		}
 
-		std::unique_ptr<AcDbBlockReferenceIdIterator> varIt;
+		AcDbObjectIdArray varIDS_;
 		{
-			AcDbBlockReferenceIdIterator * varTmp;
-			if (eOk != varR->newBlockReferenceIdIterator(varTmp)) {
-				acutPrintf(LR"(获得横边框2(G3000)迭代器失败)");
-				acutPrintf(LR"(
-)");
-				return;
+			//尝试从动态块获得ID
+			AcDbDynBlockTableRecord varDR_{ varR->objectId() };
+			if (varDR_.isDynamicBlock()) {
+				AcDbObjectIdArray varBLKIDS_;
+				varDR_.getAnonymousBlockIds(varBLKIDS_);
+				//acutPrintf(L"---%d",varBLKIDS_.length());
+				varR.close();
+				for (const auto & varJ : varBLKIDS_) {
+					sstd::ArxClosePointer<AcDbBlockTableRecord> varR;
+					if (eOk != acdbOpenObject(varR.pointer(), varJ)) {
+						continue;
+					}
+					AcDbObjectIdArray varTmpIDS;
+					varR->getBlockReferenceIds(varTmpIDS);
+					varIDS_.append(varTmpIDS);
+				}
 			}
-			varIt.reset(varTmp);
+			else {//尝试从普通块获得ID
+				varR->getBlockReferenceIds(varIDS_);
+				varR.close();
+			}
 		}
 
-		auto varBlockCount = 0;
-		for (; !varIt->done(); varIt->step()) {
-			++varBlockCount;
-
+		std::ptrdiff_t varBlockCount = 0;
+		for (const auto & varI : varIDS_) {/*for:1*/
 			sstd::ArxClosePointer<AcDbBlockReference> varBR;
-			if (eOk != varIt->getBlockReference(varBR, AcDb::kForWrite)) {
+			if (eOk != acdbOpenObject(varBR.pointer(), varI, AcDb::kForWrite)) {
 				acutPrintf(LR"(获得横边框2(G3000)对象迭代器失败)");
 				acutPrintf(LR"(
 )");
 				continue;
 			}
 
+			++varBlockCount;
 			std::unique_ptr< AcDbObjectIterator> varAIt{
 				varBR->attributeIterator()
 			};
 
-			for (; !varAIt->done(); varAIt->step()) {
+			for (; !varAIt->done(); varAIt->step()) {/*for:2*/
 				sstd::ArxClosePointer< AcDbAttribute > varAT;
 				if (eOk != acdbOpenObject(varAT.pointer(),
 					varAIt->objectId(),
@@ -105,9 +117,8 @@ namespace sstd {
 
 				}
 
-			}
-
-		}
+			}/*for:2*/
+		}/*for:1*/
 
 		acutPrintf(LR"(共扫描：)");
 		acutPrintf(get_cstr(std::to_wstring(varBlockCount)));
