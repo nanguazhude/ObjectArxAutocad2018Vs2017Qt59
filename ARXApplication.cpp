@@ -45,6 +45,7 @@ namespace sstd {
 	extern void loadFConnect();
     extern void loadEText();
     extern void loadDimDistance();
+	extern void loadEPrint();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -86,6 +87,7 @@ namespace sstd {
 			{ &sstd::loadFConnect },
             { &sstd::loadEText },
             { &sstd::loadDimDistance },
+		    { &sstd::loadEPrint },
 		};
 	}
 
