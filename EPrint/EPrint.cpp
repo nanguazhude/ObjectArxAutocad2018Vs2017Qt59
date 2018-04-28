@@ -286,8 +286,15 @@ namespace sstd {
 		//es = pPlotSettingsValidator->setStdScale(pPlotSettings, dbScale);	//比例
 		es = pPlotSettingsValidator->setStdScaleType(pLayout, AcDbPlotSettings::StdScaleType::kScaleToFit);//比例
 																										   // we have to close the layout here because the last parameter of
-																										   // findLayoutNamed is true, leave layout open
-		es = PlotEngine->beginPlot(nullptr, nullptr);
+		const struct PlotEngineLock {
+			AcPlPlotEngine * & d;
+			PlotEngineLock(AcPlPlotEngine *&a, Acad::ErrorStatus&es):d(a){
+				es = d->beginPlot(nullptr, nullptr);
+				if (es != eOk) { svthrow(LR"(can not beginPlot)"sv); }
+			}
+			~PlotEngineLock() { d->endPlot(); }
+		}varPlotEngineLock(PlotEngine,es);																								   // findLayoutNamed is true, leave layout open
+		
 
 		AcPlPlotInfo plotInfo;
 		plotInfo.setLayout(idLayout);
@@ -305,13 +312,29 @@ namespace sstd {
 		plotInfoValidator.setMediaMatchingPolicy(AcPlPlotInfoValidator::kMatchEnabled);
 		plotInfoValidator.validate(plotInfo);
 		es = PlotEngine->beginDocument(plotInfo, acDocManager->curDocument()->fileName(),nullptr, 1, true, strFileName.c_str());
-		es = PlotEngine->beginPage(pageInfo, plotInfo, true);
-		es = PlotEngine->beginGenerateGraphics();
-		PlotEngine->endGenerateGraphics();
-		PlotEngine->endPage();
-		PlotEngine->endDocument();
-		PlotEngine->endPlot();
+		if (es != eOk) { svthrow(LR"(can not beginDocument)"sv); }
+		struct PlotEngineLock {
+			AcPlPlotEngine * & d;
+			PlotEngineLock(AcPlPlotEngine * &a):d(a) {}
+			~PlotEngineLock() { d->endDocument(); }
+		}varPlotEngine(PlotEngine);
 
+		es = PlotEngine->beginPage(pageInfo, plotInfo, true);
+		if (es != eOk) { svthrow(LR"(can not beginPage)"sv); }
+		struct PlotEngineLockPage {
+			AcPlPlotEngine * & d;
+			PlotEngineLockPage(AcPlPlotEngine * &a) :d(a) {}
+			~PlotEngineLockPage() { d->endPage(); }
+		}varPlotEnginePage(PlotEngine);
+
+		es = PlotEngine->beginGenerateGraphics();
+		if (es != eOk) { svthrow(LR"(can not GenerateGraphics)"sv); }
+		struct PlotEngineLockGenerateGraphics {
+			AcPlPlotEngine * & d;
+			PlotEngineLockGenerateGraphics(AcPlPlotEngine * &a) :d(a) {}
+			~PlotEngineLockGenerateGraphics() { d->endGenerateGraphics(); }
+		}varPlotEngineLockGenerateGraphics(PlotEngine);
+	
 		return true;
 	}
 
