@@ -4,14 +4,17 @@
 #include <memory>
 #include <set>
 #include <string_view>
+
 using namespace std::string_view_literals;
+extern AcPlPlotProgressDialog * _sstd_acplCreatePlotProgressDialog();
+
 //AcDbDynBlockReference
 namespace {
 	class wstring :public std::wstring {
 		using super = std::wstring;
 	public:
-		using super::super;
-		wstring(const std::wstring_view & arg) :wstring(arg.data(), arg.size()) {}
+		wstring() = default;
+		wstring(const std::wstring_view & arg) :super(arg.data(), arg.size()) {}
 	};
 }/*namespace*/
 
@@ -147,13 +150,15 @@ namespace sstd {
 
 		AcDbObjectIdArray varIDS_;
 		{
-			//尝试从动态块获得ID
 			AcDbDynBlockTableRecord varDR_{ varR->objectId() };
 			if (varDR_.isDynamicBlock()) {
 				AcDbObjectIdArray varBLKIDS_;
+				//尝试从普通块获得ID
+				varR->getBlockReferenceIds(varIDS_);
+				varR.close();
+				/*尝试从动态块获得ID*/
 				varDR_.getAnonymousBlockIds(varBLKIDS_);
 				//acutPrintf(L"---%d",varBLKIDS_.length());
-				varR.close();
 				for (const auto & varJ : varBLKIDS_) {
 					sstd::ArxClosePointer<AcDbBlockTableRecord> varR;
 					if (eOk != acdbOpenObject(varR.pointer(), varJ)) {
@@ -169,7 +174,6 @@ namespace sstd {
 				varR.close();
 			}
 		}
-
 
 		std::set< AcDbObjectId > varBID;
 		for (const auto & varJ : varIDS_) {
@@ -222,13 +226,14 @@ namespace sstd {
 		}
 
 		return{ varBID.begin(),varBID.end() };
-	}	
+	}
 
-	bool _setPlotArea(AcDbDatabase*$DB, const AcDbObjectId & varHBKID,
-		const double x0,const double y0,
-		const double x1,const double y1,
-		const wstring strFileName) {
-		/*https://forums.autodesk.com/t5/objectarx/problem-of-plotting/m-p/6803724*/
+	bool _setPlotArea(
+		const double x0, const double y0,
+		const double x1, const double y1,
+		const wstring & strFileName) {
+		/*https://forums.autodesk.com/t5/objectarx/problem-of-plotting/m-p/6803724 */
+		/*https://www.cnblogs.com/c-gis/articles/2214470.html */
 		Acad::ErrorStatus es;
 
 		class Locker {
@@ -237,85 +242,116 @@ namespace sstd {
 			AcDbBlockTableRecord *pBTR = nullptr;
 			AcDbLayout *pLayout = nullptr;
 			AcDbPlotSettings * pPlotSettings = nullptr;
+			AcPlPlotProgressDialog * pProgress = nullptr;
 			~Locker() {
 				if (PlotEngine)PlotEngine->destroy();
 				if (pBTR) { pBTR->close(); }
 				if (pLayout) { pLayout->close(); }
 				if (pPlotSettings) { delete pPlotSettings; }
+				if (pProgress) { pProgress->destroy(); }
 			}
 		}varData;
 
 		AcPlPlotEngine * & PlotEngine = varData.PlotEngine;
 		if (Acad::eOk != AcPlPlotFactory::createPublishEngine(PlotEngine)) return false;
 
-		// get a pointer to the layout manager
-		AcApLayoutManager *pLayoutManager = (AcApLayoutManager *)acdbHostApplicationServices()->layoutManager();
-		AcDbObjectId idBTR = pLayoutManager->getActiveLayoutBTRId();
-		AcDbBlockTableRecord * & pBTR = varData.pBTR;
+		//创建进度条
+		AcPlPlotProgressDialog * & pProgress = varData.pProgress;
+		pProgress = _sstd_acplCreatePlotProgressDialog();
+		if (pProgress) {
+			const wstring varTmp = wstring(LR"(打印进度 - )"sv) + strFileName;
+			pProgress->setPlotMsgString(AcPlPlotProgressDialog::kDialogTitle, varTmp.c_str());
+			pProgress->setPlotMsgString(AcPlPlotProgressDialog::kCancelJobBtnMsg, LR"(取消打印)");
+			pProgress->setPlotMsgString(AcPlPlotProgressDialog::kCancelSheetBtnMsg, LR"(取消作业)");
+			pProgress->setPlotMsgString(AcPlPlotProgressDialog::kSheetSetProgressCaption, LR"(打印进度)");
+			pProgress->setPlotMsgString(AcPlPlotProgressDialog::kSheetProgressCaption, LR"(打印进度)");
+			pProgress->setPlotProgressRange(0, 100);
+			pProgress->onBeginPlot();
+			pProgress->setIsVisible(true);
+		}
 
-		es = acdbOpenObject(pBTR, idBTR, AcDb::kForRead);
-		if (es != Acad::eOk) { return false; }
+		// get a pointer to the layout manager
+		auto * pLayoutManager = acdbHostApplicationServices()->layoutManager();
+		AcDbBlockTableRecord * & pBTR = varData.pBTR;
+		{
+			AcDbObjectId idBTR = pLayoutManager->getActiveLayoutBTRId();
+			es = acdbOpenObject(pBTR, idBTR, AcDb::kForRead);
+			if (es != Acad::eOk) { return false; }
+		}
 
 		// We want to instantiate our custom AcDbPlotSettings object, and inherit the 
 		// properties from the active layout.
-		AcDbObjectId idLayout = pBTR->getLayoutId();
 		AcDbLayout * & pLayout = varData.pLayout;
+		AcDbObjectId idLayout = pBTR->getLayoutId();
+		{
+			es = acdbOpenObject(pLayout, idLayout, AcDb::kForRead);
+			if (es != Acad::eOk) { return false; }
+		}
 
-		es = acdbOpenObject(pLayout, idLayout, AcDb::kForRead);
-		if (es != Acad::eOk) { return false; }
+		AcDbPlotSettings * & pPlotSettings = varData.pPlotSettings;
+		{
+			pPlotSettings = new AcDbPlotSettings(pLayout->modelType());
+			es = pPlotSettings->copyFrom(pLayout);
+			if (es != Acad::eOk) { return false; }
+		}
 
-		AcDbPlotSettings * & pPlotSettings =varData.pPlotSettings; 
-		pPlotSettings = new AcDbPlotSettings(pLayout->modelType());
-		es = pPlotSettings->copyFrom(pLayout);
-		if (es != Acad::eOk) { return false; }
+		{
+			pLayout->close();
+			pLayout = nullptr;
+			pBTR->close();
+			pBTR = nullptr;
+		}
 
-		pLayout->close();
-		pLayout = nullptr;
-		pBTR->close();
-		pBTR = nullptr;
-
-		AcDbPlotSettingsValidator *pPlotSettingsValidator = acdbHostApplicationServices()->plotSettingsValidator();
+		auto * pPlotSettingsValidator = acdbHostApplicationServices()->plotSettingsValidator();
 		if (pPlotSettingsValidator == nullptr) return false;
 
 		pPlotSettingsValidator->refreshLists(pPlotSettings);	// Refresh the layout lists in order to use it
-		es = pPlotSettingsValidator->setPlotCfgName(pPlotSettings, LR"(User 1)");	//设置图纸大小（A4）
-		es = pPlotSettingsValidator->setPlotWindowArea(pPlotSettings, x0,y0,x1,y1); //设置打印范围
+		es = pPlotSettingsValidator->setPlotCfgName(pPlotSettings, LR"(@AutoCAD PDF(High Quality Print).pc3)");	//设置打印设备
+		es = pPlotSettingsValidator->setCanonicalMediaName(pLayout, LR"(User 1)");//设置图纸尺寸
+		//es = pPlotSettingsValidator->setCurrentStyleSheet(pLayout,_T("JSTRI.ctb"));//设置打印样式表
+		es = pPlotSettingsValidator->setPlotWindowArea(pPlotSettings, x0, y0, x1, y1); //设置打印范围
 		es = pPlotSettingsValidator->setPlotOrigin(pPlotSettings, x0, y0);	//设置origin
 		es = pPlotSettingsValidator->setPlotCentered(pPlotSettings, true);	//是否居中打印
 		es = pPlotSettingsValidator->setPlotType(pPlotSettings, AcDbPlotSettings::kWindow);	//打印类型
 		//es = pPlotSettingsValidator->setStdScale(pPlotSettings, dbScale);	//比例
-		es = pPlotSettingsValidator->setStdScaleType(pLayout, AcDbPlotSettings::StdScaleType::kScaleToFit);//比例
-																										   // we have to close the layout here because the last parameter of
+		es = pPlotSettingsValidator->setPlotRotation(pLayout, AcDbPlotSettings::k0degrees);//设置打印方向
+		es = pPlotSettingsValidator->setStdScaleType(pLayout, AcDbPlotSettings::StdScaleType::kScaleToFit);//布满图纸
+		// we have to close the layout here because the last parameter of
 		const struct PlotEngineLock {
 			AcPlPlotEngine * & d;
-			PlotEngineLock(AcPlPlotEngine *&a, Acad::ErrorStatus&es):d(a){
-				es = d->beginPlot(nullptr, nullptr);
+			PlotEngineLock(AcPlPlotEngine *&a, AcPlPlotProgressDialog *  p, Acad::ErrorStatus&es) :d(a) {
+				es = d->beginPlot(p, nullptr);
 				if (es != eOk) { svthrow(LR"(can not beginPlot)"sv); }
 			}
 			~PlotEngineLock() { d->endPlot(); }
-		}varPlotEngineLock(PlotEngine,es);																								   // findLayoutNamed is true, leave layout open
-		
+		}varPlotEngineLock(PlotEngine, pProgress, es);																								   // findLayoutNamed is true, leave layout open
+
 
 		AcPlPlotInfo plotInfo;
 		plotInfo.setLayout(idLayout);
 		plotInfo.setOverrideSettings(pPlotSettings);
 
-		AcPlPlotConfig *pPlotConfig = nullptr;
-		es = acplPlotConfigManagerPtr()->setCurrentConfig(pPlotConfig, LR"(@AutoCAD PDF(High Quality Print).pc3)");
-		pPlotConfig->setPlotToFile(true);
-		pPlotConfig->refreshMediaNameList();
-		plotInfo.setDeviceOverride(pPlotConfig);
+		if constexpr(false) {
+			AcPlPlotConfig * pPlotConfig = nullptr;
+			es = acplPlotConfigManagerPtr()->setCurrentConfig(pPlotConfig, LR"(@AutoCAD PDF(High Quality Print).pc3)");
+			if (es != eOk) {
+				svthrow(LR"(can not setCurrentConfig)"sv);
+			}
+			pPlotConfig->setPlotToFile(true);
+			pPlotConfig->refreshMediaNameList();
+			plotInfo.setDeviceOverride(pPlotConfig);
+		}
 
 		//开始打印
 		AcPlPlotInfoValidator plotInfoValidator;
 		AcPlPlotPageInfo pageInfo;
 		plotInfoValidator.setMediaMatchingPolicy(AcPlPlotInfoValidator::kMatchEnabled);
 		plotInfoValidator.validate(plotInfo);
-		es = PlotEngine->beginDocument(plotInfo, acDocManager->curDocument()->fileName(),nullptr, 1, true, strFileName.c_str());
+		es = PlotEngine->beginDocument(plotInfo, acDocManager->curDocument()->fileName(), nullptr, 1, true, strFileName.c_str());
 		if (es != eOk) { svthrow(LR"(can not beginDocument)"sv); }
 		struct PlotEngineLock {
 			AcPlPlotEngine * & d;
-			PlotEngineLock(AcPlPlotEngine * &a):d(a) {}
+			PlotEngineLock(AcPlPlotEngine * &a) :d(a) {}
 			~PlotEngineLock() { d->endDocument(); }
 		}varPlotEngine(PlotEngine);
 
@@ -334,29 +370,100 @@ namespace sstd {
 			PlotEngineLockGenerateGraphics(AcPlPlotEngine * &a) :d(a) {}
 			~PlotEngineLockGenerateGraphics() { d->endGenerateGraphics(); }
 		}varPlotEngineLockGenerateGraphics(PlotEngine);
-	
+
 		return true;
 	}
 
-	bool setPlotArea(AcDbDatabase*$DB, const AcDbObjectId & varHBKID) {
+	bool setPlotArea(AcDbDatabase*, const AcDbObjectId & varHBKID) {
 		AcGePoint3d varBottomLeft;
 		AcGePoint3d varTopRight;
+		wstring varFileName;
 		/*获得打印文件名称*/
+		{
+			const wchar_t * varFileName1
+				= acDocManager
+				->mdiActiveDocument()
+				->fileName();
+			if (varFileName1 == nullptr) { return false; }
+			const auto varFileNameQ = QString::fromWCharArray(varFileName1);
 
+			QtApplication varQtApp;
+			const auto varFileInfo = QFileInfo(varFileNameQ);
+			const auto varFilePath = varFileInfo.absolutePath()/*获得完整路径*/;
+
+			QDir varDirTmp{ varFilePath };
+			varFileName.assign(varDirTmp.absoluteFilePath(varFileInfo.baseName() +
+				QString::fromUtf8(u8R"(.uncheck.pdf)")).toStdWString());
+
+		}
 		/*获得打印区域*/
 		{
 			sstd::ArxClosePointer< AcDbBlockReference > varR;
 			if (eOk != acdbOpenObject(varR.pointer(), varHBKID)) {
 				svthrow(LR"(can not open  AcDbBlockReference)");
-				
 			}
+			AcDbExtents varBound;
+			varR->bounds(varBound);
+			varTopRight = varBound.maxPoint();
+			varBottomLeft = varBound.minPoint();
 		}
+
+		return _setPlotArea(
+			varBottomLeft.x, varBottomLeft.y,
+			varTopRight.x, varTopRight.y,
+			varFileName);
+
 	}
 
-	void fitTextArea(AcDbDatabase*$DB,
+	void fitTextArea(
 		const AcDbObjectId & varHBKID,
 		const AcDbObjectId & varBTLID) {
+		sstd::ArxClosePointer< AcDbBlockReference > varHBK;
+		sstd::ArxClosePointer< AcDbBlockReference > varBTL;
 
+		/*
+		0,1 :
+		2,3 :text
+		*/
+		AcGePoint3d varLimit[4];
+
+		{
+			if (eOk != acdbOpenObject(varHBK.pointer(), varHBKID)) {
+				svthrow(LR"(can not open  AcDbBlockReference)");
+			}
+			AcDbExtents varBound;
+			varHBK->bounds(varBound);
+			varLimit[0] = varBound.maxPoint();
+			varLimit[1] = varBound.minPoint();
+		}
+
+		{
+			if (eOk != acdbOpenObject(varBTL.pointer(), varBTLID, AcDb::kForWrite)) {
+				svthrow(LR"(can not open  AcDbBlockReference)");
+			}
+			AcDbExtents varBound;
+			varBTL->bounds(varBound);
+			varLimit[2] = varBound.maxPoint();
+			varLimit[3] = varBound.minPoint();
+		}
+
+		/*top , bottom*/
+		constexpr const double varTopDy = 112.178;
+		constexpr const double varTotalDy = 599.31;
+		constexpr const double varBottomDy = 17.87;
+		constexpr const double varX_ = 17.16;
+		const auto varK = std::abs(varLimit[0].y - varLimit[1].y) / varTotalDy;
+		const double varTopY = std::fma(varTopDy, varK, varLimit[1].y);
+		const double varBottomY = std::fma(varBottomDy, varK, varLimit[1].y);
+		const double varX = std::fma(varX_, varK, varLimit[1].x);
+		/*align*/
+		{
+			auto varSY = std::abs(varTopY - varBottomY) / std::abs(varLimit[3].y - varLimit[2].y);
+			const auto varSFS = varBTL->scaleFactors();
+			varSY *= varSFS.sx;
+			varBTL->setScaleFactors({ varSY,varSY,varSY });
+		}
+		varBTL->setPosition({ varX,varTopY,0 });
 	}
 
 	void EPrint::main() try {
@@ -382,10 +489,10 @@ namespace sstd {
 
 		/*调整标题栏*/
 		if ((varBTLIDS.size() == 1) && (varHBKIDS.size() == 1)) {
-			fitTextArea(DB, varHBKIDS[0], varBTLIDS[0]);
+			fitTextArea(varHBKIDS[0], varBTLIDS[0]);
 		}
 
-		/*设置打印区域*/
+		/*设置打印区域,并打印*/
 		if (varHBKIDS.size() == 1) {
 			setPlotArea(DB, varHBKIDS[0]);
 		}

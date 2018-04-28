@@ -41,7 +41,8 @@ SOURCES += \
         $$PWD/FConnect/FConnect.cpp \
         $$PWD/EText/EText.cpp \
         $$PWD/DimDistance/DimDistance.cpp \
-        $$PWD/EPrint/EPrint.cpp
+        $$PWD/EPrint/EPrint.cpp \
+        $$PWD/EPrint/EPrint.Windows.cpp
 
 
 #.h .hpp source
