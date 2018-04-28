@@ -240,14 +240,12 @@ namespace sstd {
 		public:
 			AcPlPlotEngine * PlotEngine = nullptr;
 			AcDbBlockTableRecord *pBTR = nullptr;
-			AcDbLayout *pLayout = nullptr;
-			AcDbPlotSettings * pPlotSettings = nullptr;
+			//AcDbLayout *pLayout = nullptr;
 			AcPlPlotProgressDialog * pProgress = nullptr;
 			~Locker() {
 				if (PlotEngine)PlotEngine->destroy();
 				if (pBTR) { pBTR->close(); }
-				if (pLayout) { pLayout->close(); }
-				if (pPlotSettings) { delete pPlotSettings; }
+				//if (pLayout) { pLayout->close(); }
 				if (pProgress) { pProgress->destroy(); }
 			}
 		}varData;
@@ -281,42 +279,42 @@ namespace sstd {
 
 		// We want to instantiate our custom AcDbPlotSettings object, and inherit the 
 		// properties from the active layout.
-		AcDbLayout * & pLayout = varData.pLayout;
+		AcDbLayout *  pLayout = nullptr;
 		AcDbObjectId idLayout = pBTR->getLayoutId();
-		{
-			es = acdbOpenObject(pLayout, idLayout, AcDb::kForRead);
-			if (es != Acad::eOk) { return false; }
-		}
-
-		AcDbPlotSettings * & pPlotSettings = varData.pPlotSettings;
-		{
-			pPlotSettings = new AcDbPlotSettings(pLayout->modelType());
-			es = pPlotSettings->copyFrom(pLayout);
+		{   /*获得已经存在的打印样式...*/
+			es = acdbOpenObject(pLayout, idLayout, AcDb::kForWrite);
 			if (es != Acad::eOk) { return false; }
 		}
 
 		{
-			pLayout->close();
-			pLayout = nullptr;
+			class PLayoutLock {
+				AcDbLayout * d;
+			public:
+				PLayoutLock(AcDbLayout *a) :d(a) {}
+				~PLayoutLock() { d->close(); }
+			}PlayoutLock(pLayout);
+
+			auto * pPlotSettingsValidator = acdbHostApplicationServices()->plotSettingsValidator();
+			if (pPlotSettingsValidator == nullptr) return false;
+			//plot dialog box
+			pPlotSettingsValidator->refreshLists(pLayout);	// Refresh the layout lists in order to use it
+			es = pPlotSettingsValidator->setPlotCfgName(pLayout, LR"(@AutoCAD PDF(High Quality Print).pc3)");	//设置打印设备
+			//es = pPlotSettingsValidator->setCanonicalMediaName(pLayout, LR"(User 1)");//设置图纸尺寸(A4?)
+			//es = pPlotSettingsValidator->setCurrentStyleSheet(pLayout,_T("JSTRI.ctb"));//设置打印样式表
+			es = pPlotSettingsValidator->setPlotWindowArea(pLayout, x0, y0, x1, y1); //设置打印范围
+			es = pPlotSettingsValidator->setPlotOrigin(pLayout, x0, y0);	//设置origin
+			es = pPlotSettingsValidator->setPlotCentered(pLayout, true);	//是否居中打印
+			es = pPlotSettingsValidator->setPlotType(pLayout, AcDbPlotSettings::kWindow);	//打印类型
+			//es = pPlotSettingsValidator->setStdScale(pPlotSettings, dbScale);	//比例
+			es = pPlotSettingsValidator->setPlotRotation(pLayout, AcDbPlotSettings::k0degrees);//设置打印方向
+			es = pPlotSettingsValidator->setStdScaleType(pLayout, AcDbPlotSettings::StdScaleType::kScaleToFit);//布满图纸
+			// apply to layout		 
+			//pPlotSettingsValidator->setPlotViewName()
+			// we have to close the layout here because the last parameter of
 			pBTR->close();
 			pBTR = nullptr;
 		}
 
-		auto * pPlotSettingsValidator = acdbHostApplicationServices()->plotSettingsValidator();
-		if (pPlotSettingsValidator == nullptr) return false;
-
-		pPlotSettingsValidator->refreshLists(pPlotSettings);	// Refresh the layout lists in order to use it
-		es = pPlotSettingsValidator->setPlotCfgName(pPlotSettings, LR"(@AutoCAD PDF(High Quality Print).pc3)");	//设置打印设备
-		es = pPlotSettingsValidator->setCanonicalMediaName(pLayout, LR"(User 1)");//设置图纸尺寸
-		//es = pPlotSettingsValidator->setCurrentStyleSheet(pLayout,_T("JSTRI.ctb"));//设置打印样式表
-		es = pPlotSettingsValidator->setPlotWindowArea(pPlotSettings, x0, y0, x1, y1); //设置打印范围
-		es = pPlotSettingsValidator->setPlotOrigin(pPlotSettings, x0, y0);	//设置origin
-		es = pPlotSettingsValidator->setPlotCentered(pPlotSettings, true);	//是否居中打印
-		es = pPlotSettingsValidator->setPlotType(pPlotSettings, AcDbPlotSettings::kWindow);	//打印类型
-		//es = pPlotSettingsValidator->setStdScale(pPlotSettings, dbScale);	//比例
-		es = pPlotSettingsValidator->setPlotRotation(pLayout, AcDbPlotSettings::k0degrees);//设置打印方向
-		es = pPlotSettingsValidator->setStdScaleType(pLayout, AcDbPlotSettings::StdScaleType::kScaleToFit);//布满图纸
-		// we have to close the layout here because the last parameter of
 		const struct PlotEngineLock {
 			AcPlPlotEngine * & d;
 			PlotEngineLock(AcPlPlotEngine *&a, AcPlPlotProgressDialog *  p, Acad::ErrorStatus&es) :d(a) {
@@ -327,15 +325,28 @@ namespace sstd {
 		}varPlotEngineLock(PlotEngine, pProgress, es);																								   // findLayoutNamed is true, leave layout open
 
 
+		{   /*获得已经存在的打印样式...*/
+			es = acdbOpenObject(pLayout, idLayout, AcDb::kForRead);
+			if (es != Acad::eOk) { return false; }
+		}
+
+		class PLayoutLock {
+			AcDbLayout * d;
+		public:
+			PLayoutLock(AcDbLayout *a) :d(a) {}
+			~PLayoutLock() { d->close(); }
+		}PlayoutLock(pLayout);
+
 		AcPlPlotInfo plotInfo;
 		plotInfo.setLayout(idLayout);
-		plotInfo.setOverrideSettings(pPlotSettings);
+		plotInfo.setOverrideSettings(pLayout)/*pLayout must be open by read...*/;
+
 
 		if constexpr(false) {
 			AcPlPlotConfig * pPlotConfig = nullptr;
-			es = acplPlotConfigManagerPtr()->setCurrentConfig(pPlotConfig, LR"(@AutoCAD PDF(High Quality Print).pc3)");
+			es = acplPlotConfigManagerPtr()->getCurrentConfig(pPlotConfig);/*, LR"(@AutoCAD PDF(High Quality Print).pc3)"*/
 			if (es != eOk) {
-				svthrow(LR"(can not setCurrentConfig)"sv);
+				svthrow(LR"(can not getCurrentConfig)"sv);
 			}
 			pPlotConfig->setPlotToFile(true);
 			pPlotConfig->refreshMediaNameList();
@@ -371,10 +382,15 @@ namespace sstd {
 			~PlotEngineLockGenerateGraphics() { d->endGenerateGraphics(); }
 		}varPlotEngineLockGenerateGraphics(PlotEngine);
 
+		/*****************************************/
+		QtApplication varQtApp;
+		QDesktopServices::openUrl(QUrl::fromLocalFile(QString::fromStdWString(strFileName)));
+		/*****************************************/
 		return true;
 	}
 
 	bool setPlotArea(AcDbDatabase*, const AcDbObjectId & varHBKID) {
+
 		AcGePoint3d varBottomLeft;
 		AcGePoint3d varTopRight;
 		wstring varFileName;
@@ -386,16 +402,31 @@ namespace sstd {
 				->fileName();
 			if (varFileName1 == nullptr) { return false; }
 			const auto varFileNameQ = QString::fromWCharArray(varFileName1);
-
 			QtApplication varQtApp;
 			const auto varFileInfo = QFileInfo(varFileNameQ);
 			const auto varFilePath = varFileInfo.absolutePath()/*获得完整路径*/;
 
 			QDir varDirTmp{ varFilePath };
-			varFileName.assign(varDirTmp.absoluteFilePath(varFileInfo.baseName() +
-				QString::fromUtf8(u8R"(.uncheck.pdf)")).toStdWString());
+			const auto varPlotFileName = varDirTmp.absoluteFilePath(varFileInfo.baseName() +
+				QString::fromUtf8(u8R"(.uncheck.pdf)"));
+			const auto varPlotFileNameBack = varPlotFileName + QStringLiteral(".back");
+			varFileName.assign(varPlotFileName.toStdWString());
+
+			if (QFile::exists(varPlotFileNameBack)) {
+				if (false == QFile::remove(varPlotFileNameBack)) {
+					svthrow(LR"(无法删除已经存在的文件!)"sv);
+				}
+			}
+
+			if (QFile::exists(varPlotFileName)) {
+				QFile::copy(varPlotFileName, varPlotFileNameBack);
+				if (false == QFile::remove(varPlotFileName)) {
+					svthrow(LR"(无法删除已经存在的文件!)"sv);
+				}
+			}
 
 		}
+
 		/*获得打印区域*/
 		{
 			sstd::ArxClosePointer< AcDbBlockReference > varR;
@@ -407,6 +438,56 @@ namespace sstd {
 			varTopRight = varBound.maxPoint();
 			varBottomLeft = varBound.minPoint();
 		}
+
+		{/* zoom */
+			class Lock {
+			public:
+				ads_name ss = {};
+				Lock() { construct(); }
+				void construct() { acedSSAdd(nullptr, nullptr, ss); }
+				void destory() { acedSSFree(ss); ss[0] = 0; ss[1] = 0; }
+				~Lock() { destory(); }
+			} varLock;
+
+			{
+				ads_name s;
+				acdbGetAdsName(s, varHBKID);
+				acedSSAdd(s, varLock.ss, varLock.ss);
+			}
+
+			acedCommandS(
+				RTSTR, LR"(ZOOM)",
+				RTSTR, L"O",
+				RTPICKS, varLock.ss,
+				RTSTR, L"",
+				RTNONE);
+		}
+
+		class PlotLock {
+			//BACKGROUNDPLOT
+		private:
+			struct resbuf $BACKGROUNDPLOT;
+		public:
+			PlotLock() {
+				acedGetVar(LR"(BACKGROUNDPLOT)", &$BACKGROUNDPLOT);
+				static class SetVar {
+					struct resbuf $BACKGROUNDPLOT;
+				public:
+					SetVar() {
+						$BACKGROUNDPLOT.rbnext = nullptr;
+						$BACKGROUNDPLOT.restype = RTSHORT;
+						$BACKGROUNDPLOT.resval.rint = 0;
+					}
+					void set() {
+						acedSetVar(LR"(BACKGROUNDPLOT)", &$BACKGROUNDPLOT);
+					}
+				}setVar;
+				setVar.set();
+			}
+			~PlotLock() {
+				acedSetVar(LR"(BACKGROUNDPLOT)", &$BACKGROUNDPLOT);
+			}
+		}varPlotLock;
 
 		return _setPlotArea(
 			varBottomLeft.x, varBottomLeft.y,
@@ -463,7 +544,7 @@ namespace sstd {
 			varSY *= varSFS.sx;
 			varBTL->setScaleFactors({ varSY,varSY,varSY });
 		}
-		varBTL->setPosition({ varX,varTopY,0 });
+		varBTL->setPosition({ varX, varTopY - 0.5 ,0 });
 	}
 
 	void EPrint::main() try {
