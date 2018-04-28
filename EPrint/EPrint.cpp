@@ -5,7 +5,7 @@
 #include <set>
 #include <string_view>
 using namespace std::string_view_literals;
-
+//AcDbDynBlockReference
 namespace {
 	class wstring :public std::wstring {
 		using super = std::wstring;
@@ -61,10 +61,42 @@ namespace sstd {
 							}
 
 							AcDbBlockReference * varBR = AcDbBlockReference::cast(varEnt.pointer());
+							 
+							
 							if (varBR) {
-								varBTIDS.push_back(varBR->blockTableRecord());
+								AcDbDynBlockReference varDyID{varBR->objectId()};
+								if (varDyID.isDynamicBlock()) {
+									varBTIDS.push_back(varDyID.dynamicBlockTableRecord());
+								}
+								else {
+									varBTIDS.push_back(varBR->blockTableRecord());
+								}
+								
 							}
+							/*********************************/
+							if(varBR){
+								std::unique_ptr< AcDbObjectIterator> varAIt{
+									varBR->attributeIterator()
+								};
 
+								for (; !varAIt->done(); varAIt->step()) {
+									sstd::ArxClosePointer< AcDbAttribute > varAT;
+									if (eOk != acdbOpenObject(varAT.pointer(),
+										varAIt->objectId(),
+										AcDb::kForWrite)) {
+										acutPrintf(LR"(Can not open AcDbAttribute!
+)");
+										continue;
+									}
+
+									const sstd::ArxString varTag = varAT->tag();
+									acutPrintf(varTag);
+									acutPrintf(LR"(:
+)");
+								}
+
+							}
+							/**********************************/
 						}
 					}
 
@@ -78,6 +110,7 @@ namespace sstd {
 				if (eOk != acdbOpenObject(pBlkTblRec.pointer(), varI, AcDb::kForRead)) {
 					continue;
 				}
+
 				AcString varName;
 				pBlkTblRec->getName(varName);
 				acutPrintf(LR"(---
