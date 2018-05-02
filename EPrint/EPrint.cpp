@@ -3,10 +3,17 @@
 #include <string>
 #include <memory>
 #include <set>
+#include <optional>
 #include <string_view>
 
 using namespace std::string_view_literals;
 extern AcPlPlotProgressDialog * _sstd_acplCreatePlotProgressDialog();
+/** This method returns
+true when this database is using color-dependent plot styles, and
+false for named plot styles.
+See the AutoCAD User's Guide for more information
+on the two types of plot styles.  **/
+thread_local bool globalPlostStyle;
 
 //AcDbDynBlockReference
 namespace {
@@ -135,97 +142,126 @@ namespace sstd {
 	std::vector<AcDbObjectId > setBlockDrawOrder(
 		AcDbDatabase*$DB,
 		const wstring&varName) {
-
-		sstd::ArxClosePointer< AcDbBlockTable> varBlockTable;
-		if (eOk != $DB->getBlockTable(varBlockTable, AcDb::kForRead)) {
-			svthrow(LR"(获得AcDbBlockTable失败1)"sv);
-		}
-
-		sstd::ArxClosePointer<AcDbBlockTableRecord> varR;
-		if (eOk != varBlockTable->getAt(varName.c_str(),
-			varR.pointer(),
-			AcDb::kForRead)) {
-			svthrow(LR"(获得AcDbBlockTableRecord失败2)"sv);
-		}
-
-		AcDbObjectIdArray varIDS_;
+		std::set< AcDbObjectId > varBID;
 		{
-			AcDbDynBlockTableRecord varDR_{ varR->objectId() };
-			if (varDR_.isDynamicBlock()) {
-				AcDbObjectIdArray varBLKIDS_;
-				//尝试从普通块获得ID
-				varR->getBlockReferenceIds(varIDS_);
-				varR.close();
-				/*尝试从动态块获得ID*/
-				varDR_.getAnonymousBlockIds(varBLKIDS_);
-				//acutPrintf(L"---%d",varBLKIDS_.length());
-				for (const auto & varJ : varBLKIDS_) {
-					sstd::ArxClosePointer<AcDbBlockTableRecord> varR;
-					if (eOk != acdbOpenObject(varR.pointer(), varJ)) {
-						continue;
+			sstd::ArxClosePointer< AcDbBlockTable> varBlockTable;
+			if (eOk != $DB->getBlockTable(varBlockTable, AcDb::kForRead)) {
+				svthrow(LR"(获得AcDbBlockTable失败1)"sv);
+			}
+
+			sstd::ArxClosePointer<AcDbBlockTableRecord> varR;
+			if (eOk != varBlockTable->getAt(varName.c_str(),
+				varR.pointer(),
+				AcDb::kForRead)) {
+				svthrow(LR"(获得AcDbBlockTableRecord失败2)"sv);
+			}
+
+			/* 如果只有一个非匿名对象,则返回它 */
+			//std::optional< AcDbObjectId > varJustReturnOneID;
+			AcDbObjectIdArray varIDS_;
+			{
+				AcDbDynBlockTableRecord varDR_{ varR->objectId() };
+				if (varDR_.isDynamicBlock()) {
+					AcDbObjectIdArray varBLKIDS_;
+					//尝试从普通块获得ID
+					varR->getBlockReferenceIds(varIDS_);
+					varR.close();
+					//if (varIDS_.length() == 1) {
+					//	varJustReturnOneID = *varIDS_.begin();
+					//}
+					/*尝试从动态块获得ID*/
+					varDR_.getAnonymousBlockIds(varBLKIDS_);
+					//acutPrintf(L"---%d",varBLKIDS_.length());
+					for (const auto & varJ : varBLKIDS_) {
+						sstd::ArxClosePointer<AcDbBlockTableRecord> varR;
+						if (eOk != acdbOpenObject(varR.pointer(), varJ)) {
+							continue;
+						}
+						AcDbObjectIdArray varTmpIDS;
+						varR->getBlockReferenceIds(varTmpIDS);
+						varIDS_.append(varTmpIDS);
 					}
-					AcDbObjectIdArray varTmpIDS;
-					varR->getBlockReferenceIds(varTmpIDS);
-					varIDS_.append(varTmpIDS);
+				}
+				else {//尝试从普通块获得ID
+					varR->getBlockReferenceIds(varIDS_);
+					varR.close();
 				}
 			}
-			else {//尝试从普通块获得ID
-				varR->getBlockReferenceIds(varIDS_);
-				varR.close();
+
+			for (const auto & varJ : varIDS_) {
+
+				sstd::ArxClosePointer<AcDbBlockReference> varBR;
+				if (eOk != acdbOpenObject(varBR.pointer(), varJ, AcDb::kForWrite)) {
+					continue;
+				}
+
+				varBID.insert(varBR->objectId());
+				varBR->setLayer(LR"(尺寸线)");
+
 			}
+
+			if (varBID.empty()) { return{}; }
+
+			{
+				class Lock {
+				public:
+					ads_name ss = {};
+					Lock() { construct(); }
+					void construct() { acedSSAdd(nullptr, nullptr, ss); }
+					void destory() { acedSSFree(ss); ss[0] = 0; ss[1] = 0; }
+					~Lock() { destory(); }
+				} varLock;
+
+				for (const auto & varI : varBID) {
+					ads_name s;
+					acdbGetAdsName(s, varI);
+					acedSSAdd(s, varLock.ss, varLock.ss);
+				}
+
+				if constexpr(ToUp) {
+					acedCommandS(
+						RTSTR, LR"(DRAWORDER)",
+						RTPICKS, varLock.ss,
+						RTSTR, L"",
+						RTSTR, L"F",
+						RTNONE);
+				}
+				else {
+					acedCommandS(
+						RTSTR, LR"(DRAWORDER)",
+						RTPICKS, varLock.ss,
+						RTSTR, L"",
+						RTSTR, L"B",
+						RTNONE);
+				}
+
+			}
+
+			//		if (varJustReturnOneID) {
+			//			return { static_cast<std::size_t>(1) , *varJustReturnOneID };
+			//		}
 		}
 
-		std::set< AcDbObjectId > varBID;
-		for (const auto & varJ : varIDS_) {
-
-			sstd::ArxClosePointer<AcDbBlockReference> varBR;
-			if (eOk != acdbOpenObject(varBR.pointer(), varJ, AcDb::kForWrite)) {
-				continue;
+		if (varBID.empty()) { return {}; }
+		if (varBID.size() == 1) { return { 1,*varBID.begin() }; }
+		std::vector< AcDbObjectId > varAns;
+		varAns.reserve(varBID.size());
+		if constexpr(false) for (const auto & varI : varBID) {
+			{
+				sstd::ArxClosePointer< AcDbBlockReference > varR;
+				if (eOk != acdbOpenObject(varR.pointer(), varI)) {
+					continue/*忽略无法打开的元素*/;
+				}
+				if (varR->isErased()) { continue/*忽略被删除的对象*/; }
+				if (varR->visibility() != kVisible) { continue/*忽略不可见对象*/; }
+				acutPrintf(L"%d\n", varR.pointer());
+				varAns.push_back(varI);
 			}
-
-			varBID.insert(varBR->objectId());
-			varBR->setLayer(LR"(尺寸线)");
-
+			return std::move(varAns);
 		}
-
-		if (varBID.empty()) { return{}; }
-
-		{
-			class Lock {
-			public:
-				ads_name ss = {};
-				Lock() { construct(); }
-				void construct() { acedSSAdd(nullptr, nullptr, ss); }
-				void destory() { acedSSFree(ss); ss[0] = 0; ss[1] = 0; }
-				~Lock() { destory(); }
-			} varLock;
-
-			for (const auto & varI : varBID) {
-				ads_name s;
-				acdbGetAdsName(s, varI);
-				acedSSAdd(s, varLock.ss, varLock.ss);
-			}
-
-			if constexpr(ToUp) {
-				acedCommandS(
-					RTSTR, LR"(DRAWORDER)",
-					RTPICKS, varLock.ss,
-					RTSTR, L"",
-					RTSTR, L"F",
-					RTNONE);
-			}
-			else {
-				acedCommandS(
-					RTSTR, LR"(DRAWORDER)",
-					RTPICKS, varLock.ss,
-					RTSTR, L"",
-					RTSTR, L"B",
-					RTNONE);
-			}
-
+		else {
+			return { varAns.begin(),varAns.end() };
 		}
-
-		return{ varBID.begin(),varBID.end() };
 	}
 
 	bool _setPlotArea(
@@ -300,6 +336,14 @@ namespace sstd {
 			pPlotSettingsValidator->refreshLists(pLayout);	// Refresh the layout lists in order to use it
 			es = pPlotSettingsValidator->setPlotCfgName(pLayout, LR"(@AutoCAD PDF(High Quality Print).pc3)");	//设置打印设备
 			//es = pPlotSettingsValidator->setCanonicalMediaName(pLayout, LR"(User 1)");//设置图纸尺寸(A4?)
+			{
+				if (globalPlostStyle) {/*color*/
+					es = pPlotSettingsValidator->setCurrentStyleSheet(pLayout, LR"(monochrome.ctb)");//设置打印样式表
+				}
+				else {/*not color*/
+					es = pPlotSettingsValidator->setCurrentStyleSheet(pLayout, LR"(monochrome.stb)");//设置打印样式表
+				}
+			}
 			//es = pPlotSettingsValidator->setCurrentStyleSheet(pLayout,_T("JSTRI.ctb"));//设置打印样式表
 			es = pPlotSettingsValidator->setPlotWindowArea(pLayout, x0, y0, x1, y1); //设置打印范围
 			es = pPlotSettingsValidator->setPlotOrigin(pLayout, x0, y0);	//设置origin
@@ -340,7 +384,6 @@ namespace sstd {
 		AcPlPlotInfo plotInfo;
 		plotInfo.setLayout(idLayout);
 		plotInfo.setOverrideSettings(pLayout)/*pLayout must be open by read...*/;
-
 
 		if constexpr(false) {
 			AcPlPlotConfig * pPlotConfig = nullptr;
@@ -549,6 +592,7 @@ namespace sstd {
 
 	void EPrint::main() try {
 		auto DB = acdbHostApplicationServices()->workingDatabase();
+		globalPlostStyle = DB->plotStyleMode();
 		//print_all_used_block_name(DB);
 		std::vector<AcDbObjectId> varBTLIDS;
 		std::vector<AcDbObjectId> varHBKIDS;
@@ -556,7 +600,7 @@ namespace sstd {
 			varBTLIDS = setBlockDrawOrder<false>(DB, LR"(@标题栏文字(1))"sv);
 		}
 		catch (...) {
-			acutPrintf(LR"(e@标题栏文字(1)
+			acutPrintf(LR"(无法找到@标题栏文字(1)
 )");
 		}
 
@@ -564,9 +608,16 @@ namespace sstd {
 			varHBKIDS = setBlockDrawOrder<true>(DB, LR"(横边框2(G3000))"sv);
 		}
 		catch (...) {
-			acutPrintf(LR"(e@横边框2(G3000)
+			acutPrintf(LR"(无法找到@横边框2(G3000)
 )");
 		}
+
+		acutPrintf(LR"(
+@标题栏文字(1) : %d
+)", varBTLIDS.size());
+		acutPrintf(LR"(
+@横边框2(G3000) : %d
+)", varHBKIDS.size());
 
 		/*调整标题栏*/
 		if ((varBTLIDS.size() == 1) && (varHBKIDS.size() == 1)) {
