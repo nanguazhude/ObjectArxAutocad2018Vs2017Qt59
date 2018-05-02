@@ -669,6 +669,11 @@ DX : %lf , DY : %lf
 
 	class DimDistanceC {
 	public:
+		static void update(double var) {
+			PrivateDimDistance::space_0 = ((1.25 + 6.75) * var) + 3.141592654;
+			PrivateDimDistance::space_1 = ((1.25 + 1.25 + 0.75 * 6.75 + 0.75 * 6.75) * var) + 3.141592654;
+		}
+
 		static void main()try {
 			double var;
 			AcString varTmp;
@@ -686,8 +691,7 @@ DX : %lf , DY : %lf
 				}
 				var = varJSV.toNumber();
 				if (var > 0.) {
-					PrivateDimDistance::space_0 = ((1.25 + 6.75) * var) + 3.141592654;
-					PrivateDimDistance::space_1 = ((1.25 + 1.25 + 0.75 * 6.75 + 0.75 * 6.75) * var) + 3.141592654;
+					update(var);
 				}
 				else {
 					return;
@@ -724,6 +728,10 @@ namespace sstd {
 		arx_add_main_command_usepickset<DimDistanceB>();
 		arx_add_main_command_usepickset<DimDistanceC>();
 		arx_add_main_command_usepickset<DimDistanceD>();
+	}
+
+	extern void update_dim_distance(double x) {
+		DimDistanceC::update(x);
 	}
 
 }/*namespace sstd*/

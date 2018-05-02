@@ -8,7 +8,7 @@ namespace sstd {
 	public:
 		static void main();
 		static void load();
-		DEFINE_ARX_NAME(LR"(_ecale)")
+		DEFINE_ARX_NAME(LR"(_escale)")
 	};
 }/*namespace sstd*/
 

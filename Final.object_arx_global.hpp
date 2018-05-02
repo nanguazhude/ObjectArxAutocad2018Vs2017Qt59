@@ -93,6 +93,10 @@ namespace sstd {
 }/*namespace sstd*/
 #endif
 
+#ifdef QT_QML_LIB
+#include <QtQml/QtQml>
+#endif
+
 /*utility*/
 #include "ArxClosePointer.hpp"
 

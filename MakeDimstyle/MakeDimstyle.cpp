@@ -351,7 +351,7 @@ namespace {
 			/*******************************************/
 			if constexpr(SelectAcedGetString<int>::value) {
 				AcString varTmp;
-				SelectAcedGetString<int>::run(0, LR"(输入样式名字：)", varTmp);
+				SelectAcedGetString<int>::run(false/*should not have space*/, LR"(输入样式名字：)", varTmp);
 				if (varTmp.isEmpty()) { return {}; }
 				varThisPack->$DimName = varTmp.constPtr();
 			}
@@ -362,7 +362,7 @@ namespace {
 				varTmp[1] = 0;
 				varTmp[2] = 0;
 				varTmp[3] = 0;
-				if (RTNORM != SelectAcedGetString<int>::run(0, LR"(输入样式名字：)", varTmp, BufferValue)) {
+				if (RTNORM != SelectAcedGetString<int>::run(false, LR"(输入样式名字：)", varTmp, BufferValue)) {
 					return{};
 				}
 				if (varTmp[0] == 0) { return {}; }
