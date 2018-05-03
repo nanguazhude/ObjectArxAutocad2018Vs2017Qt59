@@ -268,6 +268,10 @@ namespace sstd {
 		const double x0, const double y0,
 		const double x1, const double y1,
 		const wstring & strFileName) {
+		acutPrintf(LR"(待打印文件:)");
+		acutPrintf(strFileName.c_str());
+		acutPrintf(LR"(
+)");
 		/*https://forums.autodesk.com/t5/objectarx/problem-of-plotting/m-p/6803724 */
 		/*https://www.cnblogs.com/c-gis/articles/2214470.html */
 		Acad::ErrorStatus es;
@@ -468,6 +472,7 @@ namespace sstd {
 					}
 				}
 			}	/*if constexpr */	else {
+				varFileName.assign(varPlotFileName.toStdWString());
 				if (QFile::exists(varPlotFileName)) {
 					if (false == QFile::remove(varPlotFileName)) {
 						svthrow(LR"(无法删除已经存在的文件!)"sv);
