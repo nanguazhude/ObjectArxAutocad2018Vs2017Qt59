@@ -452,19 +452,26 @@ namespace sstd {
 			QDir varDirTmp{ varFilePath };
 			const auto varPlotFileName = varDirTmp.absoluteFilePath(varFileInfo.baseName() +
 				QString::fromUtf8(u8R"(.uncheck.pdf)"));
-			const auto varPlotFileNameBack = varPlotFileName + QStringLiteral(".back");
-			varFileName.assign(varPlotFileName.toStdWString());
 
-			if (QFile::exists(varPlotFileNameBack)) {
-				if (false == QFile::remove(varPlotFileNameBack)) {
-					svthrow(LR"(无法删除已经存在的文件!)"sv);
+			if constexpr(false) {
+				const auto varPlotFileNameBack = varPlotFileName + QStringLiteral(".back");
+				varFileName.assign(varPlotFileName.toStdWString());
+				if (QFile::exists(varPlotFileNameBack)) {
+					if (false == QFile::remove(varPlotFileNameBack)) {
+						svthrow(LR"(无法删除已经存在的文件!)"sv);
+					}
 				}
-			}
-
-			if (QFile::exists(varPlotFileName)) {
-				QFile::copy(varPlotFileName, varPlotFileNameBack);
-				if (false == QFile::remove(varPlotFileName)) {
-					svthrow(LR"(无法删除已经存在的文件!)"sv);
+				if (QFile::exists(varPlotFileName)) {
+					QFile::copy(varPlotFileName, varPlotFileNameBack);
+					if (false == QFile::remove(varPlotFileName)) {
+						svthrow(LR"(无法删除已经存在的文件!)"sv);
+					}
+				}
+			}	/*if constexpr */	else {
+				if (QFile::exists(varPlotFileName)) {
+					if (false == QFile::remove(varPlotFileName)) {
+						svthrow(LR"(无法删除已经存在的文件!)"sv);
+					}
 				}
 			}
 
