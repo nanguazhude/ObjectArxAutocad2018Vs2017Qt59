@@ -212,14 +212,10 @@ catch (...) {
 void sstd::EResetAnnotationScale::main()try {
 	/*要保留的注释比例对象*/
 	AcString varCurrentName;
-	do {
-		auto varE = acedGetString(false/*不允许有空格*/,
-			LR"(输入当前注释比例名字<1:1>)",
-			varCurrentName);
-		if ((varE == RTNORM) && (varCurrentName.isEmpty() == false)) { break; }
-		if (RTNONE == varE) { varCurrentName = thisfile::one_by_one_name; break; }
-		svthrow(LR"(获得当前注释比例失败)");
-	} while (false);
+	{
+		auto $DB = acdbHostApplicationServices()->workingDatabase();
+		$DB->cannoscale()->getName(varCurrentName);
+	}
 	/*要删除的注释比例对象*/
 	AcString varDeleteName;
 	do {
