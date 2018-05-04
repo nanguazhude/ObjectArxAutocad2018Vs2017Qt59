@@ -23,12 +23,12 @@ void sstd::EResetAnnotationScale::load() {
 
 namespace {
 	namespace thisfile {
-
+		using SetAcDbAnnotationScale = std::set< std::unique_ptr<AcDbAnnotationScale> /**/>;
 		constexpr auto one_by_one_name = LR"(1:1)";
 		/**/
 		void reset_item(AcDbEntity *  varEnt/*当前对象*/,
 			AcDbAnnotationScale * varScaleOneOne/*必须增加的元素*/,
-			const std::set<AcDbAnnotationScale *> & varAboutToDelete/*要删除的元素*/) {
+			const SetAcDbAnnotationScale & varAboutToDelete/*要删除的元素*/) {
 			AcDbAnnotativeObjectPE * varANN = ACRX_PE_PTR(varEnt, AcDbAnnotativeObjectPE);
 			if (varANN == nullptr) { return; }
 			/*如果这不是一个注释对象,则结束*/
@@ -86,7 +86,7 @@ void sstd::EResetAnnotationScale::main() try {
 		return;
 	}
 	$DB->setCannoscale(varScaleOneOne);
-	std::set<AcDbAnnotationScale *> varAboutToRemove;
+	thisfile::SetAcDbAnnotationScale varAboutToRemove;
 	{
 		std::unique_ptr<AcDbObjectContextCollectionIterator> varIt;
 		{
@@ -95,16 +95,19 @@ void sstd::EResetAnnotationScale::main() try {
 			varIt.reset(var);
 		}
 		for (varIt->start(); !varIt->done(); varIt->next()) {
-			AcDbObjectContext *var = nullptr;
-			varIt->getContext(var);
-			if (var == nullptr) { continue; }
-			auto var1 = dynamic_cast<AcDbAnnotationScale *>(var);
-			if (var1 == nullptr) { continue; }
-			if (var1 == varScaleOneOne) { continue; }
+			std::unique_ptr<AcDbAnnotationScale> var  ;
+			{
+				AcDbObjectContext * tmp = nullptr;
+				varIt->getContext(tmp);
+				if (tmp == nullptr) { continue; }
+				auto var1 = dynamic_cast<AcDbAnnotationScale *>(tmp);
+				if (var1 == nullptr) { delete tmp; continue; }
+				var.reset(var1);
+			}
 			AcString varName;
-			var1->getName(varName);
+			var->getName(varName);
 			if (varName == thisfile::one_by_one_name) { continue; }
-			varAboutToRemove.insert(var1);
+			varAboutToRemove.insert(std::move(var));
 		}
 	}
 	if (varAboutToRemove.empty()) { return; }
