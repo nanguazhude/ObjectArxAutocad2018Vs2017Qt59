@@ -48,7 +48,7 @@ namespace sstd {
 
 			}
 
-		}
+		}/*ThisCommandState::makeSeleted()*/
 
 		inline void ThisCommandState::_selete_a_block_table(AcDbBlockTableRecord* varT) {
 			std::unique_ptr<AcDbBlockTableRecordIterator> varIt;

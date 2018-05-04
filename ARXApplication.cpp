@@ -47,6 +47,7 @@ namespace sstd {
     extern void loadDimDistance();
 	extern void loadEPrint();
 	extern void loadEScale();
+	extern void loadEResetAnnotationScale();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -90,6 +91,7 @@ namespace sstd {
             { &sstd::loadDimDistance },
 		    { &sstd::loadEPrint },
 		    { &sstd::loadEScale },
+		    { &sstd::loadEResetAnnotationScale },
 		};
 	}
 
