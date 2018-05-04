@@ -42,22 +42,28 @@ namespace {
 
 			/*增加元素*/
 			if (!varContextInterface->hasContext(varEnt, *varScaleOneOne)) {
-				if (varDeleteAll || (varAnotherScales.empty())) {/*如果除此之外要删除其它元素...*/
+				if constexpr(false) {
+					(void)varAnotherScales;
 					varContextInterface->addContext(varEnt, *varScaleOneOne);
 				}
 				else {
-					bool varHasAnother = false;
-					/*如果删除了注释比例后注释列表为空,则增加*/
-					for (const auto & varI : varAnotherScales) {
-						if (varContextInterface->hasContext(varEnt, *varI)) {
-							varHasAnother = true;
-							break;
-						}
-					}
-					if (varHasAnother == false) {
+					if (varDeleteAll || (varAnotherScales.empty())) {/*如果除此之外要删除其它元素...*/
 						varContextInterface->addContext(varEnt, *varScaleOneOne);
 					}
-				}
+					else {
+						bool varHasAnother = false;
+						/*如果删除了注释比例后注释列表为空,则增加*/
+						for (const auto & varI : varAnotherScales) {
+							if (varContextInterface->hasContext(varEnt, *varI)) {
+								varHasAnother = true;
+								break;
+							}
+						}
+						if (varHasAnother == false) {
+							varContextInterface->addContext(varEnt, *varScaleOneOne);
+						}
+					}
+				}/*const expr*/
 			}
 
 			/*删除元素*/
@@ -303,6 +309,9 @@ void sstd::EResetAnnotationScale::main()try {
 		acutPrintf(LR"(error code:%d)", varE);
 		svthrow(LR"(获得要删除比例失败)");
 	} while (false);
+	if (varCurrentName== varDeleteName) {
+		svthrow(LR"(当前名字与要删除名字一致)");
+	}
 	sstd_EResetAnnotationScale_main(varCurrentName, varDeleteName);
 }
 catch (...) {}

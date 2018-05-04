@@ -45,19 +45,63 @@ void sstd::ECalse::main() try {
 
 	if (!contextCollection->hasContext(varName)) {
 		newKeyValue();
-		// basic scale object on stack, to add
-		AcDbAnnotationScale annoScaleToAdd;
-		auto acadErr = annoScaleToAdd.setName(varName);
-		acadErr = annoScaleToAdd.setPaperUnits(260.);
-		acadErr = annoScaleToAdd.setDrawingUnits(varKeyValue);
-		// add annotation scale to overall database contexts
-		acadErr = contextCollection->addContext(&annoScaleToAdd);
+		{
+			// basic scale object on stack, to add
+			AcDbAnnotationScale annoScaleToAdd;
+			auto acadErr = annoScaleToAdd.setName(varName);
+			acadErr = annoScaleToAdd.setPaperUnits(260.);
+			acadErr = annoScaleToAdd.setDrawingUnits(varKeyValue);
+			// add annotation scale to overall database contexts
+			acadErr = contextCollection->addContext(&annoScaleToAdd);
+		}
+	}
+	{
+		auto varTmpName = varName + LR"(P80)";
+		if (!contextCollection->hasContext(varTmpName)) {
+			// basic scale object on stack, to add
+			AcDbAnnotationScale annoScaleToAdd;
+			auto acadErr = annoScaleToAdd.setName(varTmpName);
+			acadErr = annoScaleToAdd.setPaperUnits(260.);
+			acadErr = annoScaleToAdd.setDrawingUnits(varKeyValue*0.8);
+			// add annotation scale to overall database contexts
+			acadErr = contextCollection->addContext(&annoScaleToAdd);
+		}
+		varTmpName = varName + LR"(P60)";
+		if (!contextCollection->hasContext(varTmpName)) {
+			// basic scale object on stack, to add
+			AcDbAnnotationScale annoScaleToAdd;
+			auto acadErr = annoScaleToAdd.setName(varTmpName);
+			acadErr = annoScaleToAdd.setPaperUnits(260.);
+			acadErr = annoScaleToAdd.setDrawingUnits(varKeyValue*0.6);
+			// add annotation scale to overall database contexts
+			acadErr = contextCollection->addContext(&annoScaleToAdd);
+		}
+		varTmpName = varName + LR"(P90)";
+		if (!contextCollection->hasContext(varTmpName)) {
+			// basic scale object on stack, to add
+			AcDbAnnotationScale annoScaleToAdd;
+			auto acadErr = annoScaleToAdd.setName(varTmpName);
+			acadErr = annoScaleToAdd.setPaperUnits(260.);
+			acadErr = annoScaleToAdd.setDrawingUnits(varKeyValue*0.9);
+			// add annotation scale to overall database contexts
+			acadErr = contextCollection->addContext(&annoScaleToAdd);
+		}
+		varTmpName = varName + LR"(P70)";
+		if (!contextCollection->hasContext(varTmpName)) {
+			// basic scale object on stack, to add
+			AcDbAnnotationScale annoScaleToAdd;
+			auto acadErr = annoScaleToAdd.setName(varTmpName);
+			acadErr = annoScaleToAdd.setPaperUnits(260.);
+			acadErr = annoScaleToAdd.setDrawingUnits(varKeyValue*0.7);
+			// add annotation scale to overall database contexts
+			acadErr = contextCollection->addContext(&annoScaleToAdd);
+		}
 	}
 
 	{
 		auto varTmp = contextCollection->getContext(varName);
 		auto varScale = dynamic_cast<AcDbAnnotationScale*>(varTmp);
-		if (varScale==nullptr) {
+		if (varScale == nullptr) {
 			delete varTmp;
 			svthrow(LR"(logical error!)");
 		}
