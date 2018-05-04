@@ -29,16 +29,35 @@ namespace {
 		/**/
 		void reset_item(AcDbEntity *  varEnt/*当前对象*/,
 			AcDbAnnotationScale * varScaleOneOne/*必须增加的元素*/,
-			const SetAcDbAnnotationScale & varAboutToDelete/*要删除的元素*/) {
+			const SetAcDbAnnotationScale & varAboutToDelete/*要删除的元素*/,
+			bool varDeleteAll,
+			const SetAcDbAnnotationScale &varAnotherScales) {
 			AcDbAnnotativeObjectPE * varANN = ACRX_PE_PTR(varEnt, AcDbAnnotativeObjectPE);
 			if (varANN == nullptr) { return; }
 			/*如果这不是一个注释对象,则结束*/
 			if (varANN->annotative(varEnt) == false) { return; }
+
 			/*获得interface*/
 			AcDbObjectContextInterface *varContextInterface = ACRX_PE_PTR(varEnt, AcDbObjectContextInterface);
+
 			/*增加元素*/
 			if (!varContextInterface->hasContext(varEnt, *varScaleOneOne)) {
-				varContextInterface->addContext(varEnt, *varScaleOneOne);
+				if (varDeleteAll || (varAnotherScales.empty())) {/*如果除此之外要删除其它元素...*/
+					varContextInterface->addContext(varEnt, *varScaleOneOne);
+				}
+				else {
+					bool varHasAnother = false;
+					/*如果删除了注释比例后注释列表为空,则增加*/
+					for (const auto & varI : varAnotherScales) {
+						if (varContextInterface->hasContext(varEnt, *varI)) {
+							varHasAnother = true;
+							break;
+						}
+					}
+					if (varHasAnother == false) {
+						varContextInterface->addContext(varEnt, *varScaleOneOne);
+					}
+				}
 			}
 
 			/*删除元素*/
@@ -86,10 +105,10 @@ static void sstd_EResetAnnotationScale_main(const AcString & varCurrentName,
 		svthrow(LR"(varContextCollection == nullptr)");
 		return;
 	}
-	std::unique_ptr<AcDbAnnotationScale>  varScaleOneOne;
+	std::unique_ptr<AcDbAnnotationScale> varScaleOneOne;
 
 	/*try add 1:1 , add set varScaleOneOne value */
-	if(varCurrentName==thisfile::one_by_one_name){
+	if (varCurrentName == thisfile::one_by_one_name) {
 		if (!varContextCollection->hasContext(varCurrentName)) {
 			AcDbAnnotationScale annoScaleToAdd;
 			auto acadErr = annoScaleToAdd.setName(varCurrentName);
@@ -117,7 +136,7 @@ static void sstd_EResetAnnotationScale_main(const AcString & varCurrentName,
 	$DB->setCannoscale(varScaleOneOne.get());
 	thisfile::SetAcDbAnnotationScale varAboutToRemove;
 
-	if(varDeleteAll){
+	if (varDeleteAll) {
 		std::unique_ptr<AcDbObjectContextCollectionIterator> varIt;
 		{
 			auto var = varContextCollection->newIterator();
@@ -146,12 +165,42 @@ static void sstd_EResetAnnotationScale_main(const AcString & varCurrentName,
 			std::unique_ptr<AcDbAnnotationScale> var{
 				dynamic_cast<AcDbAnnotationScale *>(
 			varContextCollection->getContext(varDeleteName)) };
-			if (var==nullptr) {
+			if (var == nullptr) {
 				svthrow(LR"(logical error)");
 			}
 			varAboutToRemove.insert(std::move(var));
 		}
-		svthrow(LR"(can not find the delete name)");
+		else {
+			svthrow(LR"(can not find the delete name)");
+		}
+	}
+
+	/*去掉当前注释比例与要删除的注释比例*/
+	thisfile::SetAcDbAnnotationScale varAnotherScales;
+	if (!varDeleteAll) {
+		std::unique_ptr<AcDbObjectContextCollectionIterator> varIt;
+		{
+			auto var = varContextCollection->newIterator();
+			if (var == nullptr) { return; }
+			varIt.reset(var);
+		}
+		for (varIt->start(); !varIt->done(); varIt->next()) {
+			std::unique_ptr<AcDbAnnotationScale> var;
+			{
+				AcDbObjectContext * tmp = nullptr;
+				varIt->getContext(tmp);
+				if (tmp == nullptr) { continue; }
+				auto var1 = dynamic_cast<AcDbAnnotationScale *>(tmp);
+				if (var1 == nullptr) { delete tmp; continue; }
+				var.reset(var1);
+			}
+			AcString varName;
+			var->getName(varName);
+			if (varName == varCurrentName) { continue; }
+			if (varName.isEmpty()) { continue; }
+			if (varName == varDeleteName) { continue; }
+			varAnotherScales.insert(std::move(var));
+		}
 	}
 
 	if (varAboutToRemove.empty()) { return; }
@@ -192,7 +241,9 @@ static void sstd_EResetAnnotationScale_main(const AcString & varCurrentName,
 					try {
 						thisfile::reset_item(varEnt.pointer(),
 							varScaleOneOne.get(),
-							varAboutToRemove);
+							varAboutToRemove,
+							varDeleteAll,
+							varAnotherScales);
 					}
 					catch (...) {
 						/*ignore all exceptions*/
@@ -212,19 +263,45 @@ catch (...) {
 void sstd::EResetAnnotationScale::main()try {
 	/*要保留的注释比例对象*/
 	AcString varCurrentName;
-	{
-		auto $DB = acdbHostApplicationServices()->workingDatabase();
-		$DB->cannoscale()->getName(varCurrentName);
-	}
+	do {
+		const auto varE = acedGetString(false/*不允许有空格*/,
+			LR"(输入当前比例名字<*>:)",
+			varCurrentName);
+		if (varE == RTNORM) {
+			if (varCurrentName.isEmpty()) {
+				auto $CS = acdbHostApplicationServices()
+					->workingDatabase()
+					->cannoscale();
+				$CS->getName(varCurrentName);
+			}
+			break;
+		}
+		if (RTNONE == varE) {
+			auto $CS = acdbHostApplicationServices()
+				->workingDatabase()
+				->cannoscale();
+			$CS->getName(varCurrentName);
+			break;
+		}
+		acutPrintf(LR"(error code:%d)", varE);
+		svthrow(LR"(获得当前比例失败)");
+	} while (false);
+
 	/*要删除的注释比例对象*/
 	AcString varDeleteName;
 	do {
-		auto varE = acedGetString(false/*不允许有空格*/,
+		const auto varE = acedGetString(false/*不允许有空格*/,
 			LR"(输入要删除的比例名字<*>)",
 			varDeleteName);
-		if ((varE == RTNORM) && (varDeleteName.isEmpty() == false)) { break; }
+		if (varE == RTNORM) {
+			if (varDeleteName.isEmpty()) {
+				varDeleteName = LR"(*)";
+			}
+			break;
+		}
 		if (RTNONE == varE) { varDeleteName = LR"(*)"; break; }
-		svthrow(LR"(获得当前注释比例失败)");
+		acutPrintf(LR"(error code:%d)", varE);
+		svthrow(LR"(获得要删除比例失败)");
 	} while (false);
 	sstd_EResetAnnotationScale_main(varCurrentName, varDeleteName);
 }
