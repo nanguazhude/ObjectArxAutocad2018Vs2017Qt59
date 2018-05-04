@@ -26,7 +26,7 @@ namespace {
 
 		constexpr auto one_by_one_name = LR"(1:1)";
 
-		void reset_item(AcDbEntity * varEnt/*当前对象*/,
+		void reset_item(AcDbEntity * & varEnt/*当前对象*/,
 			AcDbAnnotationScale * varScaleOneOne/*必须增加的元素*/,
 			const std::set<AcDbAnnotationScale *> & varAboutToDelete/*要删除的元素*/) {
 			AcDbAnnotativeObjectPE * varANN = ACRX_PE_PTR(varEnt, AcDbAnnotativeObjectPE);
@@ -36,17 +36,21 @@ namespace {
 			/*获得interface*/
 			AcDbObjectContextInterface *varContextInterface = ACRX_PE_PTR(varEnt, AcDbObjectContextInterface);
 			/*增加元素*/
-			if (!varContextInterface->hasContext(varEnt, *varScaleOneOne)) {
-				varContextInterface->addContext(varEnt, *varScaleOneOne);
-			}
-			
+			bool varAddContex = false;
+			varAddContex = !varContextInterface->hasContext(varEnt, *varScaleOneOne);
+			std::vector< AcString > varAboutToRemoveNames;
 			/*删除元素*/
-			//for (const auto & varI : varAboutToDelete) {
-			//	if (!varContextInterface->hasContext(varEnt, *varI)) {
-			//		continue;
-			//	}
-			//	varContextInterface->removeContext(varEnt, *varI);
-			//}
+			for (const auto & varI : varAboutToDelete) {
+				if (!varContextInterface->hasContext(varEnt, *varI)) {
+					continue;
+				}
+				varI->getName(varAboutToRemoveNames.emplace_back());
+			}
+			/*close the item*/
+			varEnt->close();
+			varEnt = nullptr;
+			/************************************/
+
 		}/*void reset_item(AcDbEntity * arg)*/
 	}/*namespace thisfile*/
 }/*namespace*/
@@ -136,7 +140,7 @@ void sstd::EResetAnnotationScale::main() try {
 					}
 
 					try {
-						thisfile::reset_item(varEnt,
+						thisfile::reset_item(varEnt.pointer(),
 							varScaleOneOne,
 							varAboutToRemove);
 					}
