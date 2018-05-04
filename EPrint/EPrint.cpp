@@ -452,10 +452,13 @@ namespace sstd {
 			QtApplication varQtApp;
 			const auto varFileInfo = QFileInfo(varFileNameQ);
 			const auto varFilePath = varFileInfo.absolutePath()/*获得完整路径*/;
-
+			const bool varHasFinal = varFileInfo.fileName()
+				.indexOf(QStringLiteral("final"), Qt::CaseInsensitive);
 			QDir varDirTmp{ varFilePath };
 			const auto varPlotFileName = varDirTmp.absoluteFilePath(varFileInfo.baseName() +
-				QString::fromUtf8(u8R"(.uncheck.pdf)"));
+				(varHasFinal ?
+					QString::fromUtf8(u8R"(.final.pdf)") :
+					QString::fromUtf8(u8R"(.unchecked.pdf)")));
 
 			if constexpr(false) {
 				const auto varPlotFileNameBack = varPlotFileName + QStringLiteral(".back");
