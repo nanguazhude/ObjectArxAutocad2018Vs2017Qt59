@@ -25,8 +25,8 @@ namespace {
 	namespace thisfile {
 
 		constexpr auto one_by_one_name = LR"(1:1)";
-
-		void reset_item(AcDbEntity * & varEnt/*当前对象*/,
+		/**/
+		void reset_item(AcDbEntity *  varEnt/*当前对象*/,
 			AcDbAnnotationScale * varScaleOneOne/*必须增加的元素*/,
 			const std::set<AcDbAnnotationScale *> & varAboutToDelete/*要删除的元素*/) {
 			AcDbAnnotativeObjectPE * varANN = ACRX_PE_PTR(varEnt, AcDbAnnotativeObjectPE);
@@ -36,20 +36,17 @@ namespace {
 			/*获得interface*/
 			AcDbObjectContextInterface *varContextInterface = ACRX_PE_PTR(varEnt, AcDbObjectContextInterface);
 			/*增加元素*/
-			bool varAddContex = false;
-			varAddContex = !varContextInterface->hasContext(varEnt, *varScaleOneOne);
-			std::vector< AcString > varAboutToRemoveNames;
+			if (!varContextInterface->hasContext(varEnt, *varScaleOneOne)) {
+				varContextInterface->addContext(varEnt, *varScaleOneOne);
+			}
+
 			/*删除元素*/
 			for (const auto & varI : varAboutToDelete) {
 				if (!varContextInterface->hasContext(varEnt, *varI)) {
 					continue;
 				}
-				varI->getName(varAboutToRemoveNames.emplace_back());
+				varContextInterface->removeContext(varEnt, *varI);
 			}
-			/*close the item*/
-			varEnt->close();
-			varEnt = nullptr;
-			/************************************/
 
 		}/*void reset_item(AcDbEntity * arg)*/
 	}/*namespace thisfile*/
@@ -60,14 +57,16 @@ void sstd::EResetAnnotationScale::main() try {
 	/*遍历所有对象*/
 	auto $DB = acdbHostApplicationServices()->workingDatabase();
 	AcDbObjectContextManager *varManager = acdbCurDwg()->objectContextManager();
-	if (varManager == nullptr) { 
+	if (varManager == nullptr) {
 		svthrow(LR"(varManager == nullptr)");
-		return; }
+		return;
+	}
 	/*获得scalelist*/
 	AcDbObjectContextCollection *varContextCollection = varManager->contextCollection(ACDB_ANNOTATIONSCALES_COLLECTION);
 	if (varContextCollection == nullptr) {
 		svthrow(LR"(varContextCollection == nullptr)");
-		return; }
+		return;
+	}
 	AcDbAnnotationScale * varScaleOneOne = nullptr;
 	/*try add 1:1 , add set varScaleOneOne value */
 	{
@@ -84,7 +83,8 @@ void sstd::EResetAnnotationScale::main() try {
 	}
 	if (varScaleOneOne == nullptr) {
 		svthrow(LR"(varScaleOneOne == nullptr)");
-		return; }
+		return;
+	}
 	$DB->setCannoscale(varScaleOneOne);
 	std::set<AcDbAnnotationScale *> varAboutToRemove;
 	{
@@ -101,6 +101,9 @@ void sstd::EResetAnnotationScale::main() try {
 			auto var1 = dynamic_cast<AcDbAnnotationScale *>(var);
 			if (var1 == nullptr) { continue; }
 			if (var1 == varScaleOneOne) { continue; }
+			AcString varName;
+			var1->getName(varName);
+			if (varName == thisfile::one_by_one_name) { continue; }
 			varAboutToRemove.insert(var1);
 		}
 	}
