@@ -41,24 +41,29 @@ namespace {
 			}
 			
 			/*删除元素*/
-			for (const auto & varI : varAboutToDelete) {
-				if (!varContextInterface->hasContext(varEnt, *varI)) {
-					continue;
-				}
-				varContextInterface->removeContext(varEnt, *varI);
-			}
+			//for (const auto & varI : varAboutToDelete) {
+			//	if (!varContextInterface->hasContext(varEnt, *varI)) {
+			//		continue;
+			//	}
+			//	varContextInterface->removeContext(varEnt, *varI);
+			//}
 		}/*void reset_item(AcDbEntity * arg)*/
 	}/*namespace thisfile*/
 }/*namespace*/
 
 void sstd::EResetAnnotationScale::main() try {
+	acutPrintf(LR"(void sstd::EResetAnnotationScale::main())");
 	/*遍历所有对象*/
 	auto $DB = acdbHostApplicationServices()->workingDatabase();
 	AcDbObjectContextManager *varManager = acdbCurDwg()->objectContextManager();
-	if (varManager == nullptr) { return; }
+	if (varManager == nullptr) { 
+		svthrow(LR"(varManager == nullptr)");
+		return; }
 	/*获得scalelist*/
 	AcDbObjectContextCollection *varContextCollection = varManager->contextCollection(ACDB_ANNOTATIONSCALES_COLLECTION);
-	if (varContextCollection == nullptr) { return; }
+	if (varContextCollection == nullptr) {
+		svthrow(LR"(varContextCollection == nullptr)");
+		return; }
 	AcDbAnnotationScale * varScaleOneOne = nullptr;
 	/*try add 1:1 , add set varScaleOneOne value */
 	{
@@ -73,8 +78,10 @@ void sstd::EResetAnnotationScale::main() try {
 		varScaleOneOne = dynamic_cast<AcDbAnnotationScale*>(
 			varContextCollection->getContext(thisfile::one_by_one_name));
 	}
-	if (varScaleOneOne == nullptr) { return; }
-	varContextCollection->setCurrentContext(varScaleOneOne);
+	if (varScaleOneOne == nullptr) {
+		svthrow(LR"(varScaleOneOne == nullptr)");
+		return; }
+	$DB->setCannoscale(varScaleOneOne);
 	std::set<AcDbAnnotationScale *> varAboutToRemove;
 	{
 		std::unique_ptr<AcDbObjectContextCollectionIterator> varIt;
