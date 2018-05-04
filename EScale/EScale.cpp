@@ -115,6 +115,46 @@ void sstd::ECalse::main() try {
 			// add annotation scale to overall database contexts
 			acadErr = contextCollection->addContext(&annoScaleToAdd);
 		}
+		varTmpName = varName + LR"(P110)";
+		if (!contextCollection->hasContext(varTmpName)) {
+			// basic scale object on stack, to add
+			AcDbAnnotationScale annoScaleToAdd;
+			auto acadErr = annoScaleToAdd.setName(varTmpName);
+			acadErr = annoScaleToAdd.setPaperUnits(varPU);
+			acadErr = annoScaleToAdd.setDrawingUnits(varDU*1.1);
+			// add annotation scale to overall database contexts
+			acadErr = contextCollection->addContext(&annoScaleToAdd);
+		}
+		varTmpName = varName + LR"(P120)";
+		if (!contextCollection->hasContext(varTmpName)) {
+			// basic scale object on stack, to add
+			AcDbAnnotationScale annoScaleToAdd;
+			auto acadErr = annoScaleToAdd.setName(varTmpName);
+			acadErr = annoScaleToAdd.setPaperUnits(varPU);
+			acadErr = annoScaleToAdd.setDrawingUnits(varDU*1.2);
+			// add annotation scale to overall database contexts
+			acadErr = contextCollection->addContext(&annoScaleToAdd);
+		}
+		varTmpName = varName + LR"(P130)";
+		if (!contextCollection->hasContext(varTmpName)) {
+			// basic scale object on stack, to add
+			AcDbAnnotationScale annoScaleToAdd;
+			auto acadErr = annoScaleToAdd.setName(varTmpName);
+			acadErr = annoScaleToAdd.setPaperUnits(varPU);
+			acadErr = annoScaleToAdd.setDrawingUnits(varDU*1.3);
+			// add annotation scale to overall database contexts
+			acadErr = contextCollection->addContext(&annoScaleToAdd);
+		}
+		varTmpName = varName + LR"(P140)";
+		if (!contextCollection->hasContext(varTmpName)) {
+			// basic scale object on stack, to add
+			AcDbAnnotationScale annoScaleToAdd;
+			auto acadErr = annoScaleToAdd.setName(varTmpName);
+			acadErr = annoScaleToAdd.setPaperUnits(varPU);
+			acadErr = annoScaleToAdd.setDrawingUnits(varDU*1.4);
+			// add annotation scale to overall database contexts
+			acadErr = contextCollection->addContext(&annoScaleToAdd);
+		}
 	}
 
 	if (varKeyValue > 0)update_dim_distance(varKeyValue);
