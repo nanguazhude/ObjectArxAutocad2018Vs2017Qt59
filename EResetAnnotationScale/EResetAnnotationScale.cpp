@@ -49,11 +49,26 @@ namespace {
 			}
 
 		}/*void reset_item(AcDbEntity * arg)*/
+
+		void clean_scales_not_used() {
+			/* -SCALELISTEDIT Delete * Exit*/
+			acedCommandS(
+				RTSTR, L"-SCALELISTEDIT",
+				RTSTR, L"Delete",
+				RTSTR, L"*",
+				RTSTR, L"Exit",
+				RTNONE);
+		}
+
 	}/*namespace thisfile*/
 }/*namespace*/
 
 void sstd::EResetAnnotationScale::main() try {
-	acutPrintf(LR"(void sstd::EResetAnnotationScale::main())");
+	class Lock {
+	public:
+		Lock() { thisfile::clean_scales_not_used(); }
+		~Lock() { thisfile::clean_scales_not_used(); }
+	}_thisLock;
 	/*遍历所有对象*/
 	auto $DB = acdbHostApplicationServices()->workingDatabase();
 	AcDbObjectContextManager *varManager = acdbCurDwg()->objectContextManager();
@@ -67,7 +82,7 @@ void sstd::EResetAnnotationScale::main() try {
 		svthrow(LR"(varContextCollection == nullptr)");
 		return;
 	}
-	AcDbAnnotationScale * varScaleOneOne = nullptr;
+	std::unique_ptr<AcDbAnnotationScale>  varScaleOneOne;
 	/*try add 1:1 , add set varScaleOneOne value */
 	{
 		if (!varContextCollection->hasContext(thisfile::one_by_one_name)) {
@@ -78,14 +93,14 @@ void sstd::EResetAnnotationScale::main() try {
 			// add annotation scale to overall database contexts
 			acadErr = varContextCollection->addContext(&annoScaleToAdd);
 		}
-		varScaleOneOne = dynamic_cast<AcDbAnnotationScale*>(
-			varContextCollection->getContext(thisfile::one_by_one_name));
+		varScaleOneOne.reset(dynamic_cast<AcDbAnnotationScale*>(
+			varContextCollection->getContext(thisfile::one_by_one_name)));
 	}
 	if (varScaleOneOne == nullptr) {
 		svthrow(LR"(varScaleOneOne == nullptr)");
 		return;
 	}
-	$DB->setCannoscale(varScaleOneOne);
+	$DB->setCannoscale(varScaleOneOne.get());
 	thisfile::SetAcDbAnnotationScale varAboutToRemove;
 	{
 		std::unique_ptr<AcDbObjectContextCollectionIterator> varIt;
@@ -95,7 +110,7 @@ void sstd::EResetAnnotationScale::main() try {
 			varIt.reset(var);
 		}
 		for (varIt->start(); !varIt->done(); varIt->next()) {
-			std::unique_ptr<AcDbAnnotationScale> var  ;
+			std::unique_ptr<AcDbAnnotationScale> var;
 			{
 				AcDbObjectContext * tmp = nullptr;
 				varIt->getContext(tmp);
@@ -147,7 +162,7 @@ void sstd::EResetAnnotationScale::main() try {
 
 					try {
 						thisfile::reset_item(varEnt.pointer(),
-							varScaleOneOne,
+							varScaleOneOne.get(),
 							varAboutToRemove);
 					}
 					catch (...) {

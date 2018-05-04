@@ -55,7 +55,12 @@ void sstd::ECalse::main() try {
 	}
 
 	{
-		auto varScale = dynamic_cast<AcDbAnnotationScale*>(contextCollection->getContext(varName));
+		auto varTmp = contextCollection->getContext(varName);
+		auto varScale = dynamic_cast<AcDbAnnotationScale*>(varTmp);
+		if (varScale==nullptr) {
+			delete varTmp;
+			svthrow(LR"(logical error!)");
+		}
 		if (varScale) {
 			DB->setCannoscale(varScale);
 			double varPU = 1;
@@ -64,6 +69,7 @@ void sstd::ECalse::main() try {
 			varScale->getDrawingUnits(varDU);
 			varKeyValue = varDU / varPU;
 		}
+		delete varScale;
 	}
 
 	if (varKeyValue > 0)update_dim_distance(varKeyValue);
