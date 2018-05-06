@@ -244,21 +244,32 @@ namespace sstd {
 
 		if (varBID.empty()) { return {}; }
 		if (varBID.size() == 1) { return { 1,*varBID.begin() }; }
-		if constexpr(false) for (const auto & varI : varBID) {
+		if constexpr(true) {
 			std::vector< AcDbObjectId > varAns;
 			varAns.reserve(varBID.size());
-			{
+			for (const auto & varI : varBID) {
 				sstd::ArxClosePointer< AcDbBlockReference > varR;
 				if (eOk != acdbOpenObject(varR.pointer(), varI)) {
 					continue/*忽略无法打开的元素*/;
 				}
+				if (varR->isEraseStatusToggled()) { continue; }
 				if (varR->isErased()) { continue/*忽略被删除的对象*/; }
 				if (varR->visibility() != kVisible) { continue/*忽略不可见对象*/; }
-				acutPrintf(L"%d\n", varR.pointer());
+				class HighLightLock {
+					AcDbBlockReference * d;
+				public:
+					HighLightLock(AcDbBlockReference*a) :d(a) { d->highlight(); }
+					~HighLightLock() { d->unhighlight(); }
+				}varLock{ varR.pointer() };
+				AcString varKey;
+				acedGetString(false,LR"(只打印此元素?[Yes]<N>)", varKey);
+				if ((varKey.isEmpty()==false)&&((varKey[0]== 'Y')||(varKey[0]=='y'))) {
+					return {1,varI };
+				}
 				varAns.push_back(varI);
 			}
 			return std::move(varAns);
-		}
+		}/*constexpr*/
 		else {
 			return { varBID.begin(),varBID.end() };
 		}
@@ -453,7 +464,7 @@ namespace sstd {
 			const auto varFileInfo = QFileInfo(varFileNameQ);
 			const auto varFilePath = varFileInfo.absolutePath()/*获得完整路径*/;
 			const bool varHasFinal = varFileInfo.fileName()
-				.indexOf(QStringLiteral("final"), Qt::CaseInsensitive)>=0;
+				.indexOf(QStringLiteral("final"), Qt::CaseInsensitive) >= 0;
 			QDir varDirTmp{ varFilePath };
 			const auto varPlotFileName = varDirTmp.absoluteFilePath(varFileInfo.baseName() +
 				(varHasFinal ?
