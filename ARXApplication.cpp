@@ -48,6 +48,7 @@ namespace sstd {
 	extern void loadEPrint();
 	extern void loadEScale();
 	extern void loadEResetAnnotationScale();
+	extern void loadFEraseAll();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -92,6 +93,7 @@ namespace sstd {
 		    { &sstd::loadEPrint },
 		    { &sstd::loadEScale },
 		    { &sstd::loadEResetAnnotationScale },
+		    { &sstd::loadFEraseAll },
 		};
 	}
 
