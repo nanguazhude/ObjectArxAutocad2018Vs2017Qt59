@@ -43,7 +43,7 @@ SOURCES += \
         $$PWD/DimDistance/DimDistance.cpp \
         $$PWD/EPrint/EPrint.cpp \
         $$PWD/EPrint/EPrint.Windows.cpp \
-        $$PWD/EScale/EScale.cpp
+        $$PWD/EScale/EScale.cpp \
         $$PWD/EResetAnnotationScale/EResetAnnotationScale.cpp
 
 
@@ -90,8 +90,8 @@ HEADERS += \
         $$PWD/FConnect/FConnect.hpp \
         $$PWD/EText/EText.hpp \
         $$PWD/DimDistance/DimDistance.hpp \
-        $$PWD/EPrint/EPrint.hpp
-        $$PWD/EScale/EScale.hpp
+        $$PWD/EPrint/EPrint.hpp \
+        $$PWD/EScale/EScale.hpp \
         $$PWD/EResetAnnotationScale/EResetAnnotationScale.hpp
 
 
