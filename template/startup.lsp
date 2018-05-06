@@ -1026,7 +1026,13 @@
   )
 
 )
-
+;;选择中心线,并置于底层
+(defun c:zcd( / varS )
+	(setq varS ( ssget (list ( cons 8 "中心线*" ) ) ) )
+	(if(/= varS nil)
+  	   (command "DRAWORDER" varS "" "B" )
+    )
+)
 ;;将粗实线置为顶层
 (defun c:ztu( / varS )
 
