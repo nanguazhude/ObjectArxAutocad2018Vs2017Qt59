@@ -244,9 +244,9 @@ namespace sstd {
 
 		if (varBID.empty()) { return {}; }
 		if (varBID.size() == 1) { return { 1,*varBID.begin() }; }
-		std::vector< AcDbObjectId > varAns;
-		varAns.reserve(varBID.size());
 		if constexpr(false) for (const auto & varI : varBID) {
+			std::vector< AcDbObjectId > varAns;
+			varAns.reserve(varBID.size());
 			{
 				sstd::ArxClosePointer< AcDbBlockReference > varR;
 				if (eOk != acdbOpenObject(varR.pointer(), varI)) {
@@ -260,7 +260,7 @@ namespace sstd {
 			return std::move(varAns);
 		}
 		else {
-			return { varAns.begin(),varAns.end() };
+			return { varBID.begin(),varBID.end() };
 		}
 	}
 
