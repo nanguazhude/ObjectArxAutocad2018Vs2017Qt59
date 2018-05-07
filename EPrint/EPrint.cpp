@@ -262,9 +262,9 @@ namespace sstd {
 					~HighLightLock() { d->unhighlight(); }
 				}varLock{ varR.pointer() };
 				AcString varKey;
-				acedGetString(false,LR"(只打印此元素?[Yes]<N>)", varKey);
-				if ((varKey.isEmpty()==false)&&((varKey[0]== 'Y')||(varKey[0]=='y'))) {
-					return {1,varI };
+				acedGetString(false, LR"(只打印此元素?[Yes]<N>)", varKey);
+				if ((varKey.isEmpty() == false) && ((varKey[0] == 'Y') || (varKey[0] == 'y'))) {
+					return { 1,varI };
 				}
 				varAns.push_back(varI);
 			}
@@ -279,6 +279,18 @@ namespace sstd {
 		const double x0, const double y0,
 		const double x1, const double y1,
 		const wstring & strFileName) {
+
+		bool varFlageK;
+		{
+			const auto varDx = std::abs(x0 - x1);
+			const auto varDy = std::abs(y0 - y1);
+
+			if (varDy < 0.00001) { svthrow(LR"(y is too small)"); }
+			if (varDx < 0.00001) { svthrow(LR"(x is too small)"); }
+
+			varFlageK = varDy > varDx;
+		}
+
 		acutPrintf(LR"(待打印文件:)");
 		acutPrintf(strFileName.c_str());
 		acutPrintf(LR"(
@@ -365,7 +377,12 @@ namespace sstd {
 			es = pPlotSettingsValidator->setPlotCentered(pLayout, true);	//是否居中打印
 			es = pPlotSettingsValidator->setPlotType(pLayout, AcDbPlotSettings::kWindow);	//打印类型
 			//es = pPlotSettingsValidator->setStdScale(pPlotSettings, dbScale);	//比例
-			es = pPlotSettingsValidator->setPlotRotation(pLayout, AcDbPlotSettings::k0degrees);//设置打印方向
+			if (varFlageK/*y>x?*/) {
+				es = pPlotSettingsValidator->setPlotRotation(pLayout, AcDbPlotSettings::k90degrees);//设置打印方向
+			}
+			else {
+				es = pPlotSettingsValidator->setPlotRotation(pLayout, AcDbPlotSettings::k0degrees);//设置打印方向
+			}
 			es = pPlotSettingsValidator->setStdScaleType(pLayout, AcDbPlotSettings::StdScaleType::kScaleToFit);//布满图纸
 			// apply to layout		 
 			//pPlotSettingsValidator->setPlotViewName()
