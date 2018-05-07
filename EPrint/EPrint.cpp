@@ -488,7 +488,10 @@ namespace sstd {
 				auto varTmp = varBaseName.split(QChar('.'), QString::SkipEmptyParts);
 				if (varTmp.isEmpty()) { svthrow(LR"(logical error!)"); }
 				if (varTmp.size() == 1) { return *varTmp.cbegin(); }
-				varTmp.pop_back();
+				if ((varTmp.crbegin()->compare(QStringLiteral("final"), Qt::CaseInsensitive) == 0) ||
+					(varTmp.crbegin()->compare(QStringLiteral("unchecked"), Qt::CaseInsensitive) == 0)) {
+					varTmp.pop_back();
+				}
 				varBaseName = *varTmp.cbegin();
 				varTmp.pop_front();
 				for (const auto & varI : std::as_const(varTmp)) {
