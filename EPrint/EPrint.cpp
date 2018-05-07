@@ -481,7 +481,7 @@ namespace sstd {
 			const auto varFileInfo = QFileInfo(varFileNameQ);
 			const auto varFilePath = varFileInfo.absolutePath()/*获得完整路径*/;
 			const bool varHasFinal = varFileInfo.fileName()
-				.indexOf(QStringLiteral("final"), Qt::CaseInsensitive) >= 0;
+				.indexOf(QStringLiteral("final"), 0, Qt::CaseInsensitive) >= 0;
 			QDir varDirTmp{ varFilePath };
 			const auto varBaseName = [&varFileInfo]() ->QString {
 				auto varBaseName = varFileInfo.completeBaseName();
