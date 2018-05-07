@@ -483,10 +483,25 @@ namespace sstd {
 			const bool varHasFinal = varFileInfo.fileName()
 				.indexOf(QStringLiteral("final"), Qt::CaseInsensitive) >= 0;
 			QDir varDirTmp{ varFilePath };
-			const auto varPlotFileName = varDirTmp.absoluteFilePath(varFileInfo.completeBaseName() +
-				(varHasFinal ?
-					QString::fromUtf8(u8R"(.final.pdf)") :
-					QString::fromUtf8(u8R"(.unchecked.pdf)")));
+			const auto varBaseName = [&varFileInfo]() ->QString {
+				auto varBaseName = varFileInfo.completeBaseName();
+				auto varTmp = varBaseName.split(QChar('.'), QString::SkipEmptyParts);
+				if (varTmp.isEmpty()) { svthrow(LR"(logical error!)"); }
+				if (varTmp.size() == 1) { return *varTmp.cbegin(); }
+				varTmp.pop_back();
+				varBaseName = *varTmp.cbegin();
+				varTmp.pop_front();
+				for (const auto & varI : std::as_const(varTmp)) {
+					varBaseName += QChar('.');
+					varBaseName += varI;
+				}
+				return std::move(varBaseName);
+			}();
+			const auto varFinalName = varDirTmp.absoluteFilePath(varBaseName
+				+ QString::fromUtf8(u8R"(.Final.pdf)"));
+			const auto varUncheckedName = varDirTmp.absoluteFilePath(varBaseName
+				+ QString::fromUtf8(u8R"(.unchecked.pdf)"));
+			const auto & varPlotFileName = varHasFinal ? varFinalName : varUncheckedName;
 
 			if constexpr(false) {
 				const auto varPlotFileNameBack = varPlotFileName + QStringLiteral(".back");
@@ -504,8 +519,13 @@ namespace sstd {
 				}
 			}	/*if constexpr */	else {
 				varFileName.assign(varPlotFileName.toStdWString());
-				if (QFile::exists(varPlotFileName)) {
-					if (false == QFile::remove(varPlotFileName)) {
+				if (QFile::exists(varFinalName)) {
+					if (false == QFile::remove(varFinalName)) {
+						svthrow(LR"(无法删除已经存在的文件!)"sv);
+					}
+				}
+				if (QFile::exists(varUncheckedName)) {
+					if (false == QFile::remove(varUncheckedName)) {
 						svthrow(LR"(无法删除已经存在的文件!)"sv);
 					}
 				}
