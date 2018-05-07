@@ -483,7 +483,7 @@ namespace sstd {
 			const bool varHasFinal = varFileInfo.fileName()
 				.indexOf(QStringLiteral("final"), Qt::CaseInsensitive) >= 0;
 			QDir varDirTmp{ varFilePath };
-			const auto varPlotFileName = varDirTmp.absoluteFilePath(varFileInfo.baseName() +
+			const auto varPlotFileName = varDirTmp.absoluteFilePath(varFileInfo.completeBaseName() +
 				(varHasFinal ?
 					QString::fromUtf8(u8R"(.final.pdf)") :
 					QString::fromUtf8(u8R"(.unchecked.pdf)")));
