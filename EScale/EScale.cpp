@@ -13,17 +13,20 @@ namespace sstd {
 }/*sstd*/
 
 void sstd::ECalse::main() try {
-	{
-		auto varCD = acDocManager->curDocument();
-		if (varCD) {
-			acDocManager->sendStringToExecute(
-				varCD,LR"((setvar "HPANNOTATIVE" 1)
+	struct LockThisMain {
+		~LockThisMain() {
+			auto varCD = acDocManager->curDocument();
+			if (varCD) {
+				acDocManager->sendStringToExecute(
+					varCD,
+					LR"((setvar "HPANNOTATIVE" 1)
 (setvar "HPLAYER" "细实线")
 (setvar "HPNAME" "ANSI31")
 (setvar "HPASSOC" 1)
-)" );
+)");
+			}
 		}
-	}
+	}varLockThisMain;
 
 	const AcString varName = LR"(E)";
 	double varKeyValue = 0;
@@ -66,7 +69,7 @@ void sstd::ECalse::main() try {
 			acadErr = contextCollection->addContext(&annoScaleToAdd);
 		}
 	}
-	
+
 	double varPU = 1;
 	double varDU = 1;
 	{

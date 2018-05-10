@@ -457,11 +457,16 @@ namespace sstd {
 			~PlotEngineLockGenerateGraphics() { d->endGenerateGraphics(); }
 		}varPlotEngineLockGenerateGraphics(PlotEngine);
 
-		/*****************************************/
-		QtApplication varQtApp;
-		QDesktopServices::openUrl(QUrl::fromLocalFile(QString::fromStdWString(strFileName)));
-		/*****************************************/
 		return true;
+	}
+
+	static inline void show_pdf(const std::wstring & strFileName) {
+		QtApplication varQtApp;
+		const auto varStartCode = QStringLiteral("mupdf ") +
+			(QChar('\"') + QString::fromStdWString(strFileName) + QChar('\"'));
+		if (false == QProcess::startDetached(varStartCode)) {
+			QDesktopServices::openUrl(QUrl::fromLocalFile(QString::fromStdWString(strFileName)));
+		}
 	}
 
 	bool setPlotArea(AcDbDatabase*, const AcDbObjectId & varHBKID) {
@@ -598,10 +603,14 @@ namespace sstd {
 			}
 		}varPlotLock;
 
-		return _setPlotArea(
+		if (_setPlotArea(
 			varBottomLeft.x, varBottomLeft.y,
 			varTopRight.x, varTopRight.y,
-			varFileName);
+			varFileName)) {
+			show_pdf( varFileName ) ;
+			return true;
+		}
+		return false;
 
 	}
 
@@ -654,7 +663,7 @@ namespace sstd {
 			varBTL->setScaleFactors({ varSY,varSY,varSY });
 		}
 		varBTL->setPosition({ varX, varTopY - 0.5 ,0 });
-	}
+	}	
 
 	void EPrint::main() try {
 		auto DB = acdbHostApplicationServices()->workingDatabase();
