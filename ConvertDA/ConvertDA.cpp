@@ -43,6 +43,7 @@ static inline void _sstd_ConvertDA_main() try {
 	{
 		for (auto & varI : $AllDimension) {
 			if (false == varI->isConstraintObject()) { continue; }
+			varI->setLayer(LR"(尺寸线)");
 			varI->setConstraintDynamic(value);
 		}
 	}
