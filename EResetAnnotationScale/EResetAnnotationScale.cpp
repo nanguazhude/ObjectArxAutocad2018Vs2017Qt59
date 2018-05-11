@@ -91,6 +91,10 @@ namespace {
 
 static void sstd_EResetAnnotationScale_main(const AcString & varCurrentName,
 	const AcString & varDeleteName) try {
+	if (thisfile::one_by_one_name == varDeleteName) {
+		svthrow(LR"(can not remove 1:1)");
+		return;
+	}
 	auto varDeleteAll = (varDeleteName == LR"(*)");
 	class Lock {
 	public:
@@ -162,6 +166,7 @@ static void sstd_EResetAnnotationScale_main(const AcString & varCurrentName,
 			AcString varName;
 			var->getName(varName);
 			if (varName == varCurrentName) { continue; }
+			if (varName == thisfile::one_by_one_name) { /*do not remove 1:1*/continue; }
 			if (varName.isEmpty()) { continue; }
 			varAboutToRemove.insert(std::move(var));
 		}
@@ -267,6 +272,38 @@ catch (...) {
 }
 
 void sstd::EResetAnnotationScale::main()try {
+
+	/** 隐藏所有对象 , 显示所有对象 **/
+	class VisibleLock {
+	public:
+		// (command "HIDEOBJECTS" (ssget "A" ) "") 
+		// (command "unisolated" )
+		VisibleLock() {
+			class Lock {
+			public:
+				ads_name ss = {};
+				Lock() { acedSSAdd(nullptr, nullptr, ss); }
+				~Lock() { acedSSFree(ss); }
+			} varLock;
+
+			acedSSGet(LR"...(A)...",
+				nullptr,nullptr,
+				nullptr,
+				varLock.ss);
+
+			acedCommandS(
+				RTSTR, LR"...(HIDEOBJECTS)...",
+				RTPICKS, varLock.ss,
+				RTSTR, LR"...()...",
+				RTNONE);
+		}
+		~VisibleLock() {
+			acedCommandS(
+				RTSTR, LR"...(UNISOLATEOBJECTS)...",
+				RTNONE);
+		}
+	};
+
 	/*要保留的注释比例对象*/
 	AcString varCurrentName;
 	do {
@@ -309,12 +346,16 @@ void sstd::EResetAnnotationScale::main()try {
 		acutPrintf(LR"(error code:%d)", varE);
 		svthrow(LR"(获得要删除比例失败)");
 	} while (false);
-	if (varCurrentName== varDeleteName) {
+	if (varCurrentName == varDeleteName) {
 		svthrow(LR"(当前名字与要删除名字一致)");
 	}
+
+	VisibleLock varLockVisible;
 	sstd_EResetAnnotationScale_main(varCurrentName, varDeleteName);
 }
 catch (...) {}
+
+
 
 sstd::EResetAnnotationScale::EResetAnnotationScale() {
 }
