@@ -1,8 +1,8 @@
 (defun c:ccc( / varV ) 
     ( setq varV (getvar "CCONSTRAINTFORM") )
     (if (/= varV 1)
-      (progn (setvar "CCONSTRAINTFORM" 0) )
       (progn (setvar "CCONSTRAINTFORM" 1) )
+      (progn (setvar "CCONSTRAINTFORM" 0) )
     )
 )
 
