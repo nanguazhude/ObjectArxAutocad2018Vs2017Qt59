@@ -1,3 +1,11 @@
+(defun c:ccc( / varV ) 
+    ( setq varV (getvar "CCONSTRAINTFORM") )
+    (if (/= varV 1)
+      (progn (setvar "CCONSTRAINTFORM" 0) )
+      (progn (setvar "CCONSTRAINTFORM" 1) )
+    )
+)
+
 (defun c:v中心线() (c:zml) ) ;
 (defun c:vc圆中心线() (c:zmc) ) ;
 (defun c:vd无箭头引线() (c:zmld) ) ;
