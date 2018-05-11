@@ -166,7 +166,7 @@ static void sstd_EResetAnnotationScale_main(const AcString & varCurrentName,
 			AcString varName;
 			var->getName(varName);
 			if (varName == varCurrentName) { continue; }
-			if (varName == thisfile::one_by_one_name) { /*do not remove 1:1*/continue; }
+			//if (varName == thisfile::one_by_one_name) { /*do not remove 1:1*/continue; }
 			if (varName.isEmpty()) { continue; }
 			varAboutToRemove.insert(std::move(var));
 		}
@@ -226,10 +226,20 @@ static void sstd_EResetAnnotationScale_main(const AcString & varCurrentName,
 			varIt.reset(varTmp);
 		}
 
+		acutPrintf(LR"(
+)");
 		for (; !varIt->done(); varIt->step()) {
 			sstd::ArxClosePointer<AcDbBlockTableRecord> varR;
 			if (Acad::eOk != varIt->getRecord(varR)) {
 				continue;
+			}
+			{
+				AcString varBTRName;
+				varR->getName(varBTRName);
+				acutPrintf(LR"(块名:)");
+				acutPrintf(varBTRName);
+				acutPrintf(LR"(
+)");
 			}
 			/********************************************/
 			{
