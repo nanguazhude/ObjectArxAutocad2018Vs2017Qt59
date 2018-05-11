@@ -49,6 +49,7 @@ namespace sstd {
 	extern void loadEScale();
 	extern void loadEResetAnnotationScale();
 	extern void loadFEraseAll();
+	extern void loadConvertDA();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -94,6 +95,7 @@ namespace sstd {
 		    { &sstd::loadEScale },
 		    { &sstd::loadEResetAnnotationScale },
 		    { &sstd::loadFEraseAll },
+		    { &sstd::loadConvertDA }
 		};
 	}
 

@@ -37,10 +37,12 @@ namespace sstd {
 
 		class ThisFunction final {
 		public:
-			ads_name varSSName;
+			ads_name varSSName = {0,0};
 			AcDbDatabase * const $DB;
 			SSName $Select;
-			ThisFunction(AcDbDatabase * arg) :$DB(arg) {}
+			ThisFunction(AcDbDatabase * arg) :$DB(arg) {
+				//ads_ssadd(nullptr, nullptr, varSSName);
+			}
 			inline bool make_select();
 			std::list< sstd::ArxClosePointer< AcDbDimension > > $AllDimension;
 			inline void ThisFunction::make_dim_set();
@@ -70,10 +72,10 @@ namespace sstd {
 				nullptr,
 				nullptr,
 				varSSName);
+			$Select = varSSName;
 			std::int32_t varSSLength = 0;
 			acedSSLength(varSSName, &varSSLength);
 			if (varSSLength < 1) { return false; }
-			$Select = varSSName;
 			return true;
 		}
 
