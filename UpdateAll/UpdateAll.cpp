@@ -89,6 +89,7 @@ namespace sstd {
 (setvar "HPLAYER" "细实线")
 (setvar "HPNAME" "ANSI31")
 (setvar "HPASSOC" 1)
+(setvar "CONSTRAINTNAMEFORMAT" 1)
 (command "FILETAB")
 (command "PROPERTIES")
 (command "TOOLPALETTES")
@@ -98,6 +99,9 @@ namespace sstd {
 (command "layon")
 )"
 );
+/*
+CONSTRAINTNAMEFORMAT : 0 : 只显示名称 , 1 : 只显示值 , 2 : 显示名称=表达式
+*/
 			}
 			UpdateLayer::main();
 		}
