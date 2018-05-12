@@ -45,7 +45,8 @@ SOURCES += \
         $$PWD/EPrint/EPrint.Windows.cpp \
         $$PWD/EScale/EScale.cpp \
         $$PWD/EResetAnnotationScale/EResetAnnotationScale.cpp \
-        $$PWD/FEraseAll/FEraseAll.cpp
+        $$PWD/FEraseAll/FEraseAll.cpp \
+        $$PWD/ConvertDA/ConvertDA.cpp
 
 
 #.h .hpp source
@@ -94,7 +95,8 @@ HEADERS += \
         $$PWD/EPrint/EPrint.hpp \
         $$PWD/EScale/EScale.hpp \
         $$PWD/EResetAnnotationScale/EResetAnnotationScale.hpp \
-        $$PWD/FEraseAll/FEraseAll.hpp
+        $$PWD/FEraseAll/FEraseAll.hpp \
+        $$PWD/ConvertDA/ConvertDA.hpp
 
 
         
