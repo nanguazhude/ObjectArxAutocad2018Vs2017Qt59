@@ -19,6 +19,12 @@ namespace {
 		const AcGePoint3d $LineStart;
 		const AcGePoint3d $LineEnd;
 		std::set<AcDbObjectId> $Items;
+
+		AcGePoint3d $PPP0;
+		AcGePoint3d $PPP1;
+		AcGePoint3d $PPP2;
+		AcGePoint3d $PPP3;
+
 		class PointCompare {
 		public:
 			bool operator()(const AcGePoint3d & l, const AcGePoint3d & r) const {
@@ -36,6 +42,66 @@ namespace {
 			$LineObject(argObjectID),
 			$LineStart(argLineStart),
 			$LineEnd(argLineEnd) {}
+
+		void get_4_points() {
+			constexpr const static auto varHW = 0.00085/*对于一般机械行业,这个精度是合适的*/;
+			auto varDx = $LineStart.x - $LineEnd.x;
+			auto varDy = $LineStart.y - $LineEnd.y;
+			auto varLength = varHW / std::hypot(varDx, varDy);
+			varDx *= varLength;
+			varDy *= varLength;
+
+			$PPP0 = $LineStart;
+			$PPP0.x += varDx - varDy;
+			$PPP0.y += varDy + varDx;
+
+			$PPP1 = $LineEnd;
+			$PPP1.x += -varDx - varDy;
+			$PPP1.y += -varDy + varDx;
+
+			$PPP3 = $LineStart;
+			$PPP3.x += varDx + varDy;
+			$PPP3.y += varDy - varDx;
+
+			$PPP2 = $LineEnd;
+			$PPP2.x += -varDx + varDy;
+			$PPP2.y += -varDy - varDx;
+
+			if constexpr(false)/*debug*/{
+				auto varDB = acdbHostApplicationServices()
+					->workingDatabase();
+
+				sstd::ArxClosePointer<AcDbBlockTable> varBlockTable;
+				sstd::ArxClosePointer<AcDbBlockTableRecord> varBlockTableRecord;
+
+				{
+					auto varE = varDB->getBlockTable(varBlockTable, AcDb::kForRead);
+					if (varE != eOk) { svthrow(LR"(打开BlockTable失败)"sv); }
+					varE = varBlockTable->getAt(ACDB_MODEL_SPACE,
+						varBlockTableRecord,
+						AcDb::kForWrite);
+					if (varE != eOk) { svthrow(LR"(打开模型空间失败)"sv); }
+				}
+
+				sstd::ArxClosePointer<AcDbLine> varAnsLine1 = new AcDbLine($PPP0, $PPP1);
+				sstd::ArxClosePointer<AcDbLine> varAnsLine2 = new AcDbLine($PPP1, $PPP2);
+				sstd::ArxClosePointer<AcDbLine> varAnsLine3 = new AcDbLine($PPP2, $PPP3);
+				sstd::ArxClosePointer<AcDbLine> varAnsLine4 = new AcDbLine($PPP3, $PPP0);
+				
+				varAnsLine1->setLayer(LR"(参考线)");
+				varAnsLine2->setLayer(LR"(参考线)");
+				varAnsLine3->setLayer(LR"(参考线)");
+				varAnsLine4->setLayer(LR"(参考线)");
+				
+				varBlockTableRecord->appendAcDbEntity(varAnsLine1);
+				varBlockTableRecord->appendAcDbEntity(varAnsLine2);
+				varBlockTableRecord->appendAcDbEntity(varAnsLine3);
+				varBlockTableRecord->appendAcDbEntity(varAnsLine4);
+
+			}/*debug*/
+
+		}
+
 		void exec() {
 
 			const bool varDX = $LineStart.x > $LineEnd.x;
@@ -46,6 +112,7 @@ namespace {
 			if (varDXE&&varDYE) {
 				svthrow(LR"(input two pionts are equal)");
 			}
+			get_4_points();
 
 			class Lock {
 			public:
@@ -55,23 +122,32 @@ namespace {
 			}varSelectSet;
 
 			{
-				struct resbuf varPointlist[2];
+				struct resbuf varPointlist[4];
 				varPointlist[0].restype = RTPOINT;
 				varPointlist[0].rbnext = &varPointlist[1];
-
-				constexpr const static auto varDiff = 0.0001;
-
-				varPointlist[0].resval.rpoint[0] = $LineStart.x + (varDXE ? 0 : (varDX ? varDiff : -varDiff));
-				varPointlist[0].resval.rpoint[1] = $LineStart.y + (varDYE ? 0 : (varDY ? varDiff : -varDiff));
+				varPointlist[0].resval.rpoint[0] = $PPP0.x;
+				varPointlist[0].resval.rpoint[1] = $PPP0.y;
 				varPointlist[0].resval.rpoint[2] = 0;
 
 				varPointlist[1].restype = RTPOINT;
-				varPointlist[1].rbnext = nullptr;
-				varPointlist[1].resval.rpoint[0] = $LineEnd.x - (varDXE ? 0 : (varDX ? varDiff : -varDiff));
-				varPointlist[1].resval.rpoint[1] = $LineEnd.y - (varDYE ? 0 : (varDY ? varDiff : -varDiff));
+				varPointlist[1].rbnext = &varPointlist[2];
+				varPointlist[1].resval.rpoint[0] = $PPP1.x;
+				varPointlist[1].resval.rpoint[1] = $PPP1.y;
 				varPointlist[1].resval.rpoint[2] = 0;
 
-				acedSSGet(LR"...(F)..."/*Fence (open polygon) selection */,
+				varPointlist[2].restype = RTPOINT;
+				varPointlist[2].rbnext = &varPointlist[3];
+				varPointlist[2].resval.rpoint[0] = $PPP2.x;
+				varPointlist[2].resval.rpoint[1] = $PPP2.y;
+				varPointlist[2].resval.rpoint[2] = 0;
+
+				varPointlist[3].restype = RTPOINT;
+				varPointlist[3].rbnext = nullptr;
+				varPointlist[3].resval.rpoint[0] = $PPP3.x;
+				varPointlist[3].resval.rpoint[1] = $PPP3.y;
+				varPointlist[3].resval.rpoint[2] = 0;
+
+				acedSSGet(LR"...(CP)..."/*Fence (open polygon) selection */,
 					varPointlist/*point list*/,
 					nullptr/*null*/,
 					nullptr/*filter*/,
@@ -148,6 +224,17 @@ namespace {
 
 					varBlockTableRecord->appendAcDbEntity(varAnsLine);
 
+					if constexpr(true) /*debug*/ {
+						sstd::ArxClosePointer<AcDbLine> varAnsLine1 = new AcDbLine($PPP0, $PPP1);
+						sstd::ArxClosePointer<AcDbLine> varAnsLine2 = new AcDbLine($PPP1, $PPP2);
+						sstd::ArxClosePointer<AcDbLine> varAnsLine3 = new AcDbLine($PPP2, $PPP3);
+						sstd::ArxClosePointer<AcDbLine> varAnsLine4 = new AcDbLine($PPP3, $PPP0);
+						varBlockTableRecord->appendAcDbEntity(varAnsLine1);
+						varBlockTableRecord->appendAcDbEntity(varAnsLine2);
+						varBlockTableRecord->appendAcDbEntity(varAnsLine3);
+						varBlockTableRecord->appendAcDbEntity(varAnsLine4);
+					}
+
 				}
 
 			}
@@ -170,10 +257,44 @@ namespace {
 
 }/*namespace*/
 
-void sstd::DrawCrossLine::main() {
-	/*we get the line */
+void sstd::DrawCrossLine::main() try {
 
+	{
+		class Lock {
+		public:
+			ads_name varE = {};
+			Lock() { acedSSAdd(nullptr, nullptr, varE); }
+			~Lock() { acedSSFree(varE); }
+		}varSelectSet;
+		double varPointsTmp[4];
+		sstd::ArxClosePointer< AcDbLine > L;
+		/*we get the line */
+		if (RTNORM == acedEntSel(LR"(选择一条直线
+)", varSelectSet.varE, varPointsTmp)) {
+			AcDbObjectId eId;
+			acdbGetObjectId(eId, varSelectSet.varE);   //获取实体id  
+			AcDbEntity * pEnt = nullptr;
+			if (Acad::eOk != acdbOpenObject(pEnt, eId, AcDb::kForWrite)) {
+				svthrow(LR"(打开实体失败)"sv);//打开实体失败，返回  
+			}
+			if (pEnt && pEnt->isKindOf(AcDbLine::desc())) {
+				L = AcDbLine::cast(pEnt);
+				/*call draw line*/
+				const auto varID = L->objectId();
+				const auto varSP = L->startPoint();
+				const auto varEP = L->endPoint();
+				L.close()/*close the line now*/;
+				do_draw_cross_line(varID, varSP, varEP);
+			}
+			else {
+				if (pEnt) pEnt->close();
+				svthrow(LR"(不是直线)"sv);
+			}
+		}
+		else { svthrow(LR"(选择直线失败)"sv); }
+	}
 }
+catch (...) {}
 
 namespace sstd {
 	extern void loadDrawCrossLine() {
