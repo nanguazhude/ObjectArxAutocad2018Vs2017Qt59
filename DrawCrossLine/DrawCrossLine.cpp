@@ -15,6 +15,8 @@ void sstd::DrawCrossLine::load() {
 
 namespace {
 	class DrawCrossLinePrivate {
+		const double $SX;
+		const double $SY;
 		const AcDbObjectId $LineObject;
 		const AcGePoint3d $LineStart;
 		const AcGePoint3d $LineEnd;
@@ -37,9 +39,13 @@ namespace {
 		std::set<AcGePoint3d, PointCompare> $PointsLight/*points light*/;
 	public:
 		DrawCrossLinePrivate(
+			double argSX,
+			double argSY,
 			const AcDbObjectId  &argObjectID,
 			const AcGePoint3d & argLineStart,
 			const AcGePoint3d &argLineEnd) :
+			$SX(argSX),
+			$SY(argSY),
 			$LineObject(argObjectID),
 			$LineStart(argLineStart),
 			$LineEnd(argLineEnd) {}
@@ -227,30 +233,23 @@ namespace {
 				$PointsLight.clear();
 			}
 
-			bool var_try_to_add_start_end = false;
 			do {
 				const bool varHasEnd = ($Points.count($LineEnd) > 0);
 				const bool varHasStart = ($Points.count($LineStart) > 0);
 				const bool varLHasEnd = ($PointsLight.count($LineEnd) > 0);
 				const bool varLHasStart = ($PointsLight.count($LineStart) > 0);
-				if ((!varHasEnd)&&(!varHasStart)) {
+				if ((!varHasEnd) && (!varHasStart)) {
 					if (varLHasEnd&&varLHasStart) {
-						if ($Points.size() == 1) {
-							const auto varCurrentPoint = *$Points.begin();
-							const auto varDS = std::hypot(varCurrentPoint.x - $LineStart.x,
-								varCurrentPoint.y - $LineStart.y);
-							const auto varDE = std::hypot(varCurrentPoint.x - $LineEnd.x,
-								varCurrentPoint.y - $LineEnd.y);
-							if (varDS > varDE) {
-								$Points.insert($LineStart);
-							}
-							else {
-								$Points.insert($LineEnd);
-							}
+
+						const auto varDS = std::hypot($SX - $LineStart.x,$SY- $LineStart.y);
+						const auto varDE = std::hypot($SX - $LineEnd.x,$SY - $LineEnd.y);
+						if (varDS > varDE) {
+							$Points.insert($LineStart);
 						}
 						else {
-							var_try_to_add_start_end = true;
+							$Points.insert($LineEnd);
 						}
+
 					}
 					else if (varLHasEnd) {
 						$Points.insert($LineEnd);
@@ -261,7 +260,7 @@ namespace {
 				}
 			} while (false);
 
-			if ( $Points.size() < 2 ) {
+			if ($Points.size() < 2) {
 				svthrow(LR"(do not have enough data)");
 			}
 
@@ -278,33 +277,6 @@ namespace {
 					[](const auto & l, const auto &r) {return l.x < r.x; });
 				varPoint0 = *varPointsPair.first;
 				varPoint1 = *varPointsPair.second;
-			}
-
-			if (var_try_to_add_start_end) {
-				const auto varDS0 = std::hypot(varPoint0.x - $LineStart.x,
-					varPoint0.y - $LineStart.y);
-				const auto varDS1 = std::hypot(varPoint1.x - $LineStart.x,
-					varPoint1.y - $LineStart.y);
-				const auto varDE0 = std::hypot(varPoint0.x - $LineEnd.x,
-					varPoint0.y - $LineEnd.y);
-				const auto varDE1 = std::hypot(varPoint1.x - $LineEnd.x,
-					varPoint1.y - $LineEnd.y);
-				if (std::max(varDS0, varDS1) > std::max(varDE0, varDE1)) {
-					if ( varDS0 > varDS1 ) {
-						varPoint1 = $LineStart;
-					}
-					else {
-						varPoint0 = $LineStart;
-					}
-				}
-				else {
-					if (varDE0>varDE1) {
-						varPoint1 = $LineEnd;
-					}
-					else {
-						varPoint0 = $LineEnd;
-					}
-				}
 			}
 
 			/*add the line to db*/
@@ -338,11 +310,15 @@ namespace {
 	};
 
 	void do_draw_cross_line(
+		double varSX,
+		double varSY,
 		const AcDbObjectId  &argObjectID,
 		const AcGePoint3d & argLineStart,
 		const AcGePoint3d & argLineEnd)try {
 		auto && varWorker =
 			std::make_unique<DrawCrossLinePrivate>(
+				varSX,
+				varSY,
 				argObjectID,
 				argLineStart,
 				argLineEnd);
@@ -353,7 +329,7 @@ namespace {
 }/*namespace*/
 
 void sstd::DrawCrossLine::main() try {
-
+	double varPointsTmp[4];
 	{
 		class Lock {
 		public:
@@ -361,7 +337,7 @@ void sstd::DrawCrossLine::main() try {
 			Lock() { acedSSAdd(nullptr, nullptr, varE); }
 			~Lock() { acedSSFree(varE); }
 		}varSelectSet;
-		double varPointsTmp[4];
+
 		sstd::ArxClosePointer< AcDbLine > L;
 		/*we get the line */
 		if (RTNORM == acedEntSel(LR"(选择一条直线
@@ -379,7 +355,12 @@ void sstd::DrawCrossLine::main() try {
 				const auto varSP = L->startPoint();
 				const auto varEP = L->endPoint();
 				L.close()/*close the line now*/;
-				do_draw_cross_line(varID, varSP, varEP);
+				do_draw_cross_line(
+					varPointsTmp[0],
+					varPointsTmp[1],
+					varID,
+					varSP,
+					varEP);
 			}
 			else {
 				if (pEnt) pEnt->close();
