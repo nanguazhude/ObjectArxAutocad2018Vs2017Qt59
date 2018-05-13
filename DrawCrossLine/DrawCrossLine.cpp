@@ -33,7 +33,8 @@ namespace {
 				return l.y < r.y;
 			}
 		};
-		std::set<AcGePoint3d, PointCompare> $Points;
+		std::set<AcGePoint3d, PointCompare> $Points/*points heavy*/;
+		std::set<AcGePoint3d, PointCompare> $PointsLight/*points light*/;
 	public:
 		DrawCrossLinePrivate(
 			const AcDbObjectId  &argObjectID,
@@ -190,8 +191,53 @@ namespace {
 				AcGePoint3dArray varIPoints;
 				varItem->intersectWith(varLine, kOnBothOperands, varIPoints);
 				if (varIPoints.isEmpty()) { continue; }
-				for (const auto & varII : varIPoints)$Points.insert(varII);
+				bool isHeavy;
+				{
+					AcString varLayerName;
+					varItem->layer(varLayerName);
+					isHeavy = (varLayerName.find(LR"(参考)")<0);
+				}
+
+				if (isHeavy) {
+					for (const auto & varII : varIPoints) {
+						const auto varJudget = $Points.insert(varII);
+						if (varJudget.second) /*如果是一个新的重要的点,则在不重要集合删除它*/ {
+							$PointsLight.erase(varII);
+						}
+					}
+				}
+				else {
+					for (const auto & varII : varIPoints) {
+						if ($Points.count(varII) > 0) {
+							/*如果重要的点集合中已经有了,则放弃*/
+							continue;
+						}
+						$PointsLight.insert(varII);
+					}
+				}
+				
 			}
+			/**/
+			if ($Points.size() == 0) {
+				$Points.merge( $PointsLight );
+			}
+			else if($Points.size()==1){
+				const auto varCurrentPoint = *$Points.begin();
+				const auto varDS = std::hypot( varCurrentPoint.x-$LineStart.x,
+					varCurrentPoint.y-$LineStart.y);
+				const auto varDE = std::hypot(varCurrentPoint.x - $LineEnd.x,
+					varCurrentPoint.y - $LineEnd.y);
+				if (varDS>varDE) {
+					$Points.insert($LineStart);
+				}
+				else {
+					$Points.insert($LineEnd);
+				}
+			}
+			$PointsLight.clear();
+
+			if ($Points.size() < 2) { svthrow(LR"(do not have enough data)"); }
+
 			/**/
 			AcGePoint3d varPoint0, varPoint1;
 			if (varDXE) {/*按照y排序*/
