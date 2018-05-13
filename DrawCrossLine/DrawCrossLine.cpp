@@ -1,6 +1,6 @@
 ﻿/**
 选择直线 ,
-找到与直线相交的对象 [圆,直线] ,
+找到与直线相交的对象 [圆,直线...] ,
 计算直线与这些对象的交点集合 ,
 在交点集合中找到距离最大的一组交点 ,
 用直线连接交点
@@ -177,10 +177,16 @@ namespace {
 			}
 
 			for (const auto & varI : $Items) {
-				sstd::ArxClosePointer<  AcDbEntity  > varItem;
+				sstd::ArxClosePointer< AcDbEntity > varItem;
 				if (eOk != acdbOpenObject(varItem.pointer(), varI, AcDb::kForRead)) {
 					continue;
 				}
+				if (varItem->isKindOf(AcDbPoint::desc()))continue/*忽略点*/;
+				if (varItem->isKindOf(AcDbDimension::desc()))continue/*忽略标注*/;
+				if (varItem->isKindOf(AcDbMText::desc()))continue/*忽略多行文字*/;
+				if (varItem->isKindOf(AcDbText::desc()))continue/*忽略单行文字*/;
+				if (varItem->isKindOf(AcDbMline::desc()))continue/*忽略引线*/;
+				if (varItem->isKindOf(AcDbHatch::desc()))continue/*忽略填充*/;
 				AcGePoint3dArray varIPoints;
 				varItem->intersectWith(varLine, kOnBothOperands, varIPoints);
 				if (varIPoints.isEmpty()) { continue; }
