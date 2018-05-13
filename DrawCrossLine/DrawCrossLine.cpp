@@ -104,8 +104,8 @@ namespace {
 
 		void exec() {
 
-			const bool varDX = $LineStart.x > $LineEnd.x;
-			const bool varDY = $LineStart.y > $LineEnd.y;
+			//const bool varDX = $LineStart.x > $LineEnd.x;
+			//const bool varDY = $LineStart.y > $LineEnd.y;
 			const bool varDXE = ($LineStart.x == $LineEnd.x);
 			const bool varDYE = ($LineStart.y == $LineEnd.y);
 
@@ -223,17 +223,6 @@ namespace {
 					}
 
 					varBlockTableRecord->appendAcDbEntity(varAnsLine);
-
-					if constexpr(true) /*debug*/ {
-						sstd::ArxClosePointer<AcDbLine> varAnsLine1 = new AcDbLine($PPP0, $PPP1);
-						sstd::ArxClosePointer<AcDbLine> varAnsLine2 = new AcDbLine($PPP1, $PPP2);
-						sstd::ArxClosePointer<AcDbLine> varAnsLine3 = new AcDbLine($PPP2, $PPP3);
-						sstd::ArxClosePointer<AcDbLine> varAnsLine4 = new AcDbLine($PPP3, $PPP0);
-						varBlockTableRecord->appendAcDbEntity(varAnsLine1);
-						varBlockTableRecord->appendAcDbEntity(varAnsLine2);
-						varBlockTableRecord->appendAcDbEntity(varAnsLine3);
-						varBlockTableRecord->appendAcDbEntity(varAnsLine4);
-					}
 
 				}
 

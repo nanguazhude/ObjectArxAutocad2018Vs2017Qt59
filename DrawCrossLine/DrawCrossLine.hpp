@@ -10,7 +10,7 @@ class DrawCrossLine{
 public:
 		static void load();
 		static void main();
-		DEFINE_ARX_NAME(LR"(_drawcrossline)")
+		DEFINE_ARX_NAME(LR"(_tgdrawcrossline)")
 };
 
 
