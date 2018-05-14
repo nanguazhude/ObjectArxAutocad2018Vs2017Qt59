@@ -51,6 +51,7 @@ namespace sstd {
 	extern void loadFEraseAll();
 	extern void loadConvertDA();
 	extern void loadDrawCrossLine();
+	extern void loadWrapDim();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -98,6 +99,7 @@ namespace sstd {
 		    { &sstd::loadFEraseAll },
 		    { &sstd::loadConvertDA },
 		    { &sstd::loadDrawCrossLine },
+		    { &sstd::loadWrapDim },
 		};
 	}
 

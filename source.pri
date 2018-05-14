@@ -46,7 +46,9 @@ SOURCES += \
         $$PWD/EScale/EScale.cpp \
         $$PWD/EResetAnnotationScale/EResetAnnotationScale.cpp \
         $$PWD/FEraseAll/FEraseAll.cpp \
-        $$PWD/ConvertDA/ConvertDA.cpp
+        $$PWD/ConvertDA/ConvertDA.cpp \
+        $$PWD/DrawCrossLine/DrawCrossLine.cpp \
+        $$PWD/WrapDim/WrapDim.cpp
 
 
 #.h .hpp source
@@ -96,7 +98,9 @@ HEADERS += \
         $$PWD/EScale/EScale.hpp \
         $$PWD/EResetAnnotationScale/EResetAnnotationScale.hpp \
         $$PWD/FEraseAll/FEraseAll.hpp \
-        $$PWD/ConvertDA/ConvertDA.hpp
+        $$PWD/ConvertDA/ConvertDA.hpp \
+        $$PWD/DrawCrossLine/DrawCrossLine.hpp \
+        $$PWD/WrapDim/WrapDim.hpp
 
 
         

@@ -1,4 +1,5 @@
-﻿/**
+﻿//此函数暂时作废
+/**
 选择直线 ,
 找到与直线相交的对象 [圆,直线...] ,
 计算直线与这些对象的交点集合 ,
@@ -8,6 +9,10 @@
 #include "DrawCrossLine.hpp"
 #include <set>
 #include <vector>
+
+namespace sstd {
+	extern void UCS2WCS(const double *, double *);
+}
 
 void sstd::DrawCrossLine::load() {
 	arx_add_main_command<DrawCrossLine>();
@@ -342,6 +347,7 @@ void sstd::DrawCrossLine::main() try {
 		/*we get the line */
 		if (RTNORM == acedEntSel(LR"(选择一条直线
 )", varSelectSet.varE, varPointsTmp)) {
+			UCS2WCS(varPointsTmp,varPointsTmp);
 			AcDbObjectId eId;
 			acdbGetObjectId(eId, varSelectSet.varE);   //获取实体id  
 			AcDbEntity * pEnt = nullptr;
