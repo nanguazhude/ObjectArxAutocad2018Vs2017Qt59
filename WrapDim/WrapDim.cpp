@@ -6,20 +6,37 @@ void sstd::WrapDim::load() {
 
 namespace {
 
+	class Resbuf : public  resbuf {
+		/*
+		Resbuf *rbnext; // Allows them to be "linked"
+        short restype;
+        union ads_u_val resval;
+		*/
+	public:
+		Resbuf(Resbuf * a,short b,short c) {
+			this->rbnext = a;
+			this->restype = b;
+			this->resval.rint = c;
+		}
+	};
+
 	class TG {
 	public:
 		static void main() {
 			auto varOsnap = get_osnap();
-			if (varOsnap->resval.rint) {
+			if ((varOsnap->resval.rint) &&
+				(/*打开osnap*/0 == (varOsnap->resval.rint & 0b0100'0000'0000'0000))) {
 				*get_osnap_back() = *get_osnap();
-				clear_osnap();
+				clear_osnap()/*关闭osnap*/;
 			}
 			else {
-				static const struct resbuf $osmode {
-					nullptr, RTSHORT, static_cast<std::int64_t>(16381)
+				static const Resbuf $osmode {
+					nullptr, RTSHORT, static_cast<short>(0b0011'1111'1111'1101)
 				};
-				if (get_osnap_back()->resval.rint) {
-					set_osnap(get_osnap_back());
+				varOsnap = get_osnap_back();
+				if (varOsnap->resval.rint &&
+					(0/*打开osnap*/== (varOsnap->resval.rint & 0b0100'0000'0000'0000))) {
+					set_osnap(varOsnap);
 				}
 				else {
 					set_osnap(&$osmode);
@@ -31,13 +48,17 @@ namespace {
 			return LR"(OSMODE)";
 		}
 
-		static struct resbuf * get_osnap_back() {
-			static struct resbuf $osmode;
+		static Resbuf * get_osnap_back() {
+			static Resbuf $osmode {
+				nullptr,
+					RTSHORT,
+					static_cast<std::int64_t>(0b0011'1111'1111'1101)
+			};
 			return &$osmode;
 		}
 
-		static const struct resbuf * get_osnap() {
-			static struct resbuf $osmode {
+		static const Resbuf * get_osnap() {
+			static Resbuf $osmode {
 				nullptr,
 					RTSHORT,
 					static_cast<short>(0)
@@ -46,15 +67,15 @@ namespace {
 			return &$osmode;
 		}
 
-		static void set_osnap(const struct resbuf *arg) {
+		static void set_osnap(const Resbuf *arg) {
 			acedSetVar(name(), arg);
 		}
 
 		static void clear_osnap() {
-			static const struct resbuf $osmode {
+			static const Resbuf $osmode {
 				nullptr,
 					RTSHORT,
-					static_cast<std::int64_t>(0)
+					static_cast<std::int64_t>(0b0111'1111'1111'1101)
 			};
 			set_osnap(&$osmode);
 		}
