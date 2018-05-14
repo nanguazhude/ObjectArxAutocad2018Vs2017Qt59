@@ -1,3 +1,28 @@
+(defun c:mydim( / varOSMode
+  *error* )
+  (defun start_this_function() (setq varOSMode (getvar "osmode") ) )
+  
+  (defun normalReturn_this()
+     (princ "normal return")
+     (setvar "osmode" varOSMode )
+     (princ "\n")
+    )
+
+   (defun *error* ( msg )
+        (normalReturn_this)
+        (princ "Zzz:error: ")
+        (princ msg)
+        (princ "\n")
+        (princ)
+    )
+
+  (start_this_function)
+  (setvar "osmode" 0 )
+  (command "DIM" pause )
+  (normalReturn_this)
+)
+
+
 (defun c:sd( / varS )
    (setq varS (ssget  (list (cons 0 "dimension" ) ) ) )     ;Ñ¡Ôñ¼¯ºÏ  
    (command "change" varS "" "p" "la" "Defpoints" "" )      ;ÇÐ»»Í¼²ãµ½DefpointsÍ¼²ã
