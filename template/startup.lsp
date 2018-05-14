@@ -1,3 +1,12 @@
+(defun c:sd( / varS )
+   (setq varS (ssget  (list (cons 0 "dimension" ) ) ) )     ;选择集合  
+   (command "change" varS "" "p" "la" "Defpoints" "" )      ;切换图层到Defpoints图层
+   (command "dimedit" "r" 10 varS "")                       ;尺寸文字选择10度
+   (command "dimstyle" "R" "private_note")(command "dimstyle" "A" varS "" );切换到private_note样式
+   (command "dimstyle" "R" "默认公差" );切换回默认样式
+)
+
+
 (defun c:ccc( / varV ) 
     ( setq varV (getvar "CCONSTRAINTFORM") )
     (if (/= varV 1)

@@ -383,7 +383,7 @@ namespace sstd {
 /*加框公差******************************************/
 #include "appendDimStyle/加框_默认公差.hpp"
 /***************************************************/
-
+#include "appendDimStyle/private_note.hpp"
 			return std::move(varAns);
 		}
 
