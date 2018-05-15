@@ -16,7 +16,7 @@ namespace sstd {
 		/*0 to 359*/
 		while (false == isHOk) {
 			H = std::rand() % 359;
-			if ((H >= 150) && (H <= 210)) {
+			if ((H >= 150) && (H <= 270)) {
 				continue;
 			}
 			isHOk = true;
