@@ -1,4 +1,18 @@
 ﻿#include "TestMultiFiles.hpp"
+#include <filesystem>
+
+static inline bool save( AcDbDatabase * doc , const wchar_t * full_name)try {
+	{
+		const std::filesystem::path varFilePath(full_name);
+		if (false == std::filesystem::remove(varFilePath)) {
+			svthrow(LR"(can not remove file!)");
+		}
+	}
+	return eOk==doc->saveAs(full_name);
+}
+catch (...) {
+	return false;
+}
 
 namespace sstd {
 	template<typename T>
@@ -56,12 +70,16 @@ static inline void _sstd_TestMultiFiles_main() {
 )", varFileName);
 		acutPrintf(LR"(CurrentDocumentFileName: %s
 )", acDocManager->curDocument()->fileName());
+		acutPrintf(LR"(%s
+)" , acDocManager->curDocument()->isNamedDrawing()?LR"(true)": LR"(false)");
 		//save the document
-		varDataBase->saveAs(LR"(D:/Project1/project.dwg)");
+		save(varDataBase,LR"(D:/Project1/project.dwg)");
+		acutPrintf(LR"(%s
+)", acDocManager->curDocument()->isNamedDrawing() ? LR"(true)" : LR"(false)");
 	}
 
 	//application
-	acDocManager->closeDocument( acDocManager->curDocument() );
+	//acDocManager->closeDocument( acDocManager->curDocument() );
 
 	/*********************/
 	//AcApDocument *doc = acDocManager->document(dwg);
