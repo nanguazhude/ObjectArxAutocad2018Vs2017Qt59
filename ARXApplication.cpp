@@ -123,9 +123,33 @@ namespace sstd {
 
 namespace sstd {
 
+	extern void WCS2DCS(const double * i,double * o) {
+		const static class V {
+		public:
+			struct resbuf wcs, dcs;
+			V() {
+				wcs.rbnext = nullptr;
+				wcs.restype = RTSHORT;
+				wcs.resval.rint = 0;
+
+				dcs.rbnext = nullptr;
+				dcs.restype = RTSHORT;
+				dcs.resval.rint = 2;
+			}
+		}var;
+
+		ads_point pt1;
+		pt1[0] = *i++;
+		pt1[1] = *i++;
+		pt1[2] = *i++;
+
+		acedTrans(pt1, &var.wcs, &var.dcs, 0, o);
+
+	}
+
 	extern void UCS2WCS(const double * i, double *o) {
 
-		static class V {
+		const static class V {
 		public:
 			struct resbuf wcs, ucs;
 			V() {

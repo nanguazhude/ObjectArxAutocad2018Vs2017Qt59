@@ -6,6 +6,10 @@
 #include <optional>
 #include <string_view>
 
+namespace sstd {
+	extern void WCS2DCS(const double * i, double * o);
+}
+
 using namespace std::string_view_literals;
 extern AcPlPlotProgressDialog * _sstd_acplCreatePlotProgressDialog();
 /** This method returns
@@ -357,10 +361,14 @@ namespace sstd {
 				~PLayoutLock() { d->close(); }
 			}PlayoutLock(pLayout);
 
-			auto * pPlotSettingsValidator = acdbHostApplicationServices()->plotSettingsValidator();
-			if (pPlotSettingsValidator == nullptr) return false;
+			//AcDbPlotSettingsValidator
+			AcDbPlotSettingsValidator * pPlotSettingsValidator = acdbHostApplicationServices()->plotSettingsValidator();
+			if (pPlotSettingsValidator == nullptr) { return false; }
 			//plot dialog box
 			pPlotSettingsValidator->refreshLists(pLayout);	// Refresh the layout lists in order to use it
+			//
+			pPlotSettingsValidator->setPlotViewName(pLayout, LR"(my_plot_view)");
+			//pPlotSettingsValidator->setPlotViewName(pLayout,LR"()");
 			es = pPlotSettingsValidator->setPlotCfgName(pLayout, LR"(@AutoCAD PDF(High Quality Print).pc3)");	//设置打印设备
 			//es = pPlotSettingsValidator->setCanonicalMediaName(pLayout, LR"(User 1)");//设置图纸尺寸(A4?)
 			{
@@ -372,6 +380,7 @@ namespace sstd {
 				}
 			}
 			//es = pPlotSettingsValidator->setCurrentStyleSheet(pLayout,_T("JSTRI.ctb"));//设置打印样式表
+			//https://forums.autodesk.com/t5/net/setplotwindowarea-got-an-offset/m-p/6341629
 			es = pPlotSettingsValidator->setPlotWindowArea(pLayout, x0, y0, x1, y1); //设置打印范围
 			es = pPlotSettingsValidator->setPlotOrigin(pLayout, x0, y0);	//设置origin
 			es = pPlotSettingsValidator->setPlotCentered(pLayout, true);	//是否居中打印
@@ -553,7 +562,9 @@ namespace sstd {
 			varBottomLeft = varBound.minPoint();
 		}
 
-		{/* zoom */
+		{
+
+			/* zoom */
 			class Lock {
 			public:
 				ads_name ss = {};
@@ -603,11 +614,14 @@ namespace sstd {
 			}
 		}varPlotLock;
 
+		WCS2DCS(&varBottomLeft.x, &varBottomLeft.x);
+		WCS2DCS(&varTopRight.x, &varTopRight.x);
+
 		if (_setPlotArea(
 			varBottomLeft.x, varBottomLeft.y,
 			varTopRight.x, varTopRight.y,
 			varFileName)) {
-			show_pdf( varFileName ) ;
+			show_pdf(varFileName);
 			return true;
 		}
 		return false;
@@ -663,7 +677,7 @@ namespace sstd {
 			varBTL->setScaleFactors({ varSY,varSY,varSY });
 		}
 		varBTL->setPosition({ varX, varTopY - 0.5 ,0 });
-	}	
+	}
 
 	void EPrint::main() try {
 		auto DB = acdbHostApplicationServices()->workingDatabase();
