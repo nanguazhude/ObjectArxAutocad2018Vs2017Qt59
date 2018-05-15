@@ -79,7 +79,7 @@ static inline void _sstd_TestMultiFiles_main() {
 	}
 
 	//application
-	//acDocManager->closeDocument( acDocManager->curDocument() );
+	acDocManager->closeDocument( acDocManager->curDocument() );
 
 	/*********************/
 	//AcApDocument *doc = acDocManager->document(dwg);
