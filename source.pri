@@ -48,7 +48,8 @@ SOURCES += \
         $$PWD/FEraseAll/FEraseAll.cpp \
         $$PWD/ConvertDA/ConvertDA.cpp \
         $$PWD/DrawCrossLine/DrawCrossLine.cpp \
-        $$PWD/WrapDim/WrapDim.cpp
+        $$PWD/WrapDim/WrapDim.cpp \
+        $$PWD/TestMultiFiles/TestMultiFiles.cpp
 
 
 #.h .hpp source
@@ -100,7 +101,8 @@ HEADERS += \
         $$PWD/FEraseAll/FEraseAll.hpp \
         $$PWD/ConvertDA/ConvertDA.hpp \
         $$PWD/DrawCrossLine/DrawCrossLine.hpp \
-        $$PWD/WrapDim/WrapDim.hpp
+        $$PWD/WrapDim/WrapDim.hpp \
+        $$PWD/TestMultiFiles/TestMultiFiles.hpp
 
 
         

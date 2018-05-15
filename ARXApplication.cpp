@@ -43,8 +43,8 @@ namespace sstd {
 	extern void loadEFillet();
 	extern void loadArxZCC();
 	extern void loadFConnect();
-    extern void loadEText();
-    extern void loadDimDistance();
+	extern void loadEText();
+	extern void loadDimDistance();
 	extern void loadEPrint();
 	extern void loadEScale();
 	extern void loadEResetAnnotationScale();
@@ -52,6 +52,7 @@ namespace sstd {
 	extern void loadConvertDA();
 	extern void loadDrawCrossLine();
 	extern void loadWrapDim();
+	extern void loadTestMultiFiles();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -91,15 +92,16 @@ namespace sstd {
 			{ &sstd::loadEFillet },
 			{ &sstd::loadArxZCC },
 			{ &sstd::loadFConnect },
-            { &sstd::loadEText },
-            { &sstd::loadDimDistance },
-		    { &sstd::loadEPrint },
-		    { &sstd::loadEScale },
-		    { &sstd::loadEResetAnnotationScale },
-		    { &sstd::loadFEraseAll },
-		    { &sstd::loadConvertDA },
-		    { &sstd::loadDrawCrossLine },
-		    { &sstd::loadWrapDim },
+			{ &sstd::loadEText },
+			{ &sstd::loadDimDistance },
+			{ &sstd::loadEPrint },
+			{ &sstd::loadEScale },
+			{ &sstd::loadEResetAnnotationScale },
+			{ &sstd::loadFEraseAll },
+			{ &sstd::loadConvertDA },
+			{ &sstd::loadDrawCrossLine },
+			{ &sstd::loadWrapDim },
+			{ &sstd::loadTestMultiFiles },
 		};
 	}
 
@@ -123,7 +125,7 @@ namespace sstd {
 
 namespace sstd {
 
-	extern void WCS2DCS(const double * i,double * o) {
+	extern void WCS2DCS(const double * i, double * o) {
 		const static class V {
 		public:
 			struct resbuf wcs, dcs;
@@ -229,14 +231,14 @@ namespace sstd {
 					--varPointer;
 				}
 
-				return { varPointer + 1, static_cast<std::size_t>( varPointerEnd - varPointer ) };
+				return { varPointer + 1, static_cast<std::size_t>(varPointerEnd - varPointer) };
 			}
 
-			std::wstring_view double_to_string(double a) try{
-			 
+			std::wstring_view double_to_string(double a) try {
+
 				double_conversion::StringBuilder varSB{ char_chache.data(),N };
 				double_conversion::DoubleToStringConverter::EcmaScriptConverter().ToShortest(a, &varSB);
-				 
+
 				const auto n = varSB.position();
 				{
 					auto wi = wchar_chache.begin();
@@ -247,7 +249,7 @@ namespace sstd {
 					}
 					*wi = 0;
 				}
-				 				
+
 				return std::wstring_view{ wchar_chache.data(),static_cast<std::size_t>(n) };
 
 			}
@@ -263,16 +265,16 @@ namespace sstd {
 			}
 
 		};
-		 
+
 	}
-	
+
 	extern std::wstring_view double_to_string(double a) {
 		return _StaticData_int_double_to_string_::instance().double_to_string(a);
 	}
 	extern std::wstring_view int_to_string(int a) {
 		return _StaticData_int_double_to_string_::instance().int_to_string(a);
 	}
-	
+
 }/*namespace sstd*/
 /************************************************/
 
