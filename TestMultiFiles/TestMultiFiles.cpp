@@ -37,6 +37,8 @@ static inline void _sstd_TestMultiFiles_main() {
 		varDataBase->getFilename(varFileName);
 		acutPrintf(LR"(CurrentDocument: %s
 )", varFileName);
+		acutPrintf(LR"(CurrentDocumentFileName: %s
+)", acDocManager->curDocument()->fileName());
 	}
 
 	//application
@@ -52,12 +54,18 @@ static inline void _sstd_TestMultiFiles_main() {
 		varDataBase->getFilename(varFileName);
 		acutPrintf(LR"(CurrentDocument: %s
 )", varFileName);
+		acutPrintf(LR"(CurrentDocumentFileName: %s
+)", acDocManager->curDocument()->fileName());
 		//save the document
 		varDataBase->saveAs(LR"(D:/Project1/project.dwg)");
 	}
 
 	//application
 	acDocManager->closeDocument( acDocManager->curDocument() );
+
+	/*********************/
+	//AcApDocument *doc = acDocManager->document(dwg);
+	//https://forums.autodesk.com/t5/objectarx/getfilename/m-p/313975
 
 }
 

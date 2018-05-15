@@ -380,7 +380,7 @@ namespace sstd {
 				}
 			}
 			//es = pPlotSettingsValidator->setCurrentStyleSheet(pLayout,_T("JSTRI.ctb"));//设置打印样式表
-			//https://forums.autodesk.com/t5/net/setplotwindowarea-got-an-offset/m-p/6341629
+			//https://forums.autodesk.com/t5/net/setplotwindowarea-got-an-offset/m-p/6341629 /**/
 			es = pPlotSettingsValidator->setPlotWindowArea(pLayout, x0, y0, x1, y1); //设置打印范围
 			es = pPlotSettingsValidator->setPlotOrigin(pLayout, x0, y0);	//设置origin
 			es = pPlotSettingsValidator->setPlotCentered(pLayout, true);	//是否居中打印
