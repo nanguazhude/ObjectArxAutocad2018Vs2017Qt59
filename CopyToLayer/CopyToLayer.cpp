@@ -142,7 +142,8 @@ namespace {
 		static void main()try {
 			lock_layers_except<true>(layer_name());
 			acDocManager->sendStringToExecute(acDocManager->curDocument(),
-				LR"(Regen)");
+				LR"(Regen
+)");
 		}
 		catch (...) {}
 		DEFINE_ARX_NAME(LR"(_scd)")
@@ -153,7 +154,8 @@ namespace {
 		static void main()try {
 			lock_layers_except<false>(layer_name());
 			acDocManager->sendStringToExecute(acDocManager->curDocument(),
-				LR"(Regen)");
+				LR"(Regen
+)");
 		}
 		catch (...) {}
 		DEFINE_ARX_NAME(LR"(_scdd)")
