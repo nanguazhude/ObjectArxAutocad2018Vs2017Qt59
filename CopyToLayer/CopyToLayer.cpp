@@ -186,8 +186,7 @@ namespace {
 				RTSTR, L"-LAYER",
 				RTSTR, L"Unlock",
 				RTSTR, varUnLockLayersNames.c_str(),
-				RTSTR,LR"(
-)",
+				RTSTR,LR"()",
 				RTNONE);
 
 		}
@@ -200,8 +199,7 @@ namespace {
 				RTSTR, L"-LAYER",
 				RTSTR, L"Lock",
 				RTSTR, varLockLayersNames.c_str(),
-				RTSTR, LR"(
-)",
+				RTSTR, LR"()",
 				RTNONE);
 		}
 
