@@ -8,7 +8,7 @@ using namespace std::string_view_literals;
 
 namespace sstd {
 
-	extern void loadHellowWord();
+	extern void loadHellowWorld();
 	extern void loadSimpleDrawLine();
 	extern void loadSimpleDrawLineChangeColor();
 	extern void loadSimpleDrawPolygon();
@@ -53,11 +53,12 @@ namespace sstd {
 	extern void loadDrawCrossLine();
 	extern void loadWrapDim();
 	extern void loadTestMultiFiles();
+	extern void loadCopyToLayer();
 
 	namespace {
 		using FunctionType = void(*)(void);
 		static constexpr FunctionType _v_functions[] = {
-			{ &sstd::loadHellowWord },
+			{ &sstd::loadHellowWorld },
 			{ &sstd::loadSimpleDrawLine },
 			{ &sstd::loadSimpleDrawLineChangeColor },
 			{ &sstd::loadSimpleDrawPolygon },
@@ -102,6 +103,7 @@ namespace sstd {
 			{ &sstd::loadDrawCrossLine },
 			{ &sstd::loadWrapDim },
 			{ &sstd::loadTestMultiFiles },
+			{ &sstd::loadCopyToLayer },
 		};
 	}
 

@@ -6,8 +6,10 @@
 namespace sstd{
 class CopyToLayer{
 public:
-
+		static void load();
+		static void main();
+		DEFINE_ARX_NAME(LR"(_scopytolayer)")
 };
-}
+}/*namespace sstd*/
 
 #endif
