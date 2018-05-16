@@ -180,7 +180,9 @@ namespace sstd {
 						continue;
 					}
 					/*设置注释性*/
-					setAnnotative(varBlockID, std::get<3>(*varPos));
+					if (std::get<3>(*varPos)) {
+						setAnnotative(varBlockID, true);
+					}
 				}
 
 			}
