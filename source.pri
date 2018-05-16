@@ -49,7 +49,8 @@ SOURCES += \
         $$PWD/ConvertDA/ConvertDA.cpp \
         $$PWD/DrawCrossLine/DrawCrossLine.cpp \
         $$PWD/WrapDim/WrapDim.cpp \
-        $$PWD/TestMultiFiles/TestMultiFiles.cpp
+        $$PWD/TestMultiFiles/TestMultiFiles.cpp \
+        $$PWD/CopyToLayer/CopyToLayer.cpp
 
 
 #.h .hpp source
@@ -102,7 +103,8 @@ HEADERS += \
         $$PWD/ConvertDA/ConvertDA.hpp \
         $$PWD/DrawCrossLine/DrawCrossLine.hpp \
         $$PWD/WrapDim/WrapDim.hpp \
-        $$PWD/TestMultiFiles/TestMultiFiles.hpp
+        $$PWD/TestMultiFiles/TestMultiFiles.hpp \
+        $$PWD/CopyToLayer/CopyToLayer.hpp
 
 
         
