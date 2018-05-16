@@ -1,3 +1,19 @@
+(defun c:szb(/ varS)                                    ;选择"_坐标"
+  (command "pselect" "" )                               ;取消全部选择
+  (setq varS (ssget  (list (cons 8 "_坐标*" ) ) ) )     ;选择集合  
+  (command "pselect" varS "" )                          ;选择
+)
+
+(defun c:swzb(/ varS )                                  ;选择除了"_坐标"之外的元素
+  (command "pselect" "" )                               ;取消全部选择
+  (setq varS (ssget  (list (cons 8 "~_坐标*" ) ) ) )     ;选择集合  
+  (command "pselect" varS "" )                          ;选择  
+)
+
+(defun c:zb()  (command "-layer" "on" "_坐标" "" ) ( command "clayer" "_坐标"));;;     切换到图层_坐标
+(defun c:czb( / varS )(setq varS( ssget ":E" ))(command "change" varS "" "p" "la" "_坐标" "c" "BYLAYER" "" ))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun c:mydim( / varOSMode
   *error* )
   (defun start_this_function() (setq varOSMode (getvar "osmode") ) )
