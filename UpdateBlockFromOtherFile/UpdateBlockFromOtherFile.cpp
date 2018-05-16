@@ -152,10 +152,10 @@ namespace sstd {
 				std::unique_ptr<AcDbDatabase> varOtherFile{ new AcDbDatabase{ false } };
 				/*bool annotativeDwg() const;
 				Description
-				Controls whether the drawing is treated as 
+				Controls whether the drawing is treated as
 				an annotative block when it is inserted into other drawings.
-				True to treat the drawing as an annotative block when 
-				it is inserted into other drawings, false otherwise. 
+				True to treat the drawing as an annotative block when
+				it is inserted into other drawings, false otherwise.
 				The default value for new databases is false.
 				*/
 				if (Acad::eOk != varOtherFile->readDwgFile(varOtherFileName.c_str())) {
@@ -180,9 +180,7 @@ namespace sstd {
 						continue;
 					}
 					/*设置注释性*/
-					if (std::get<3>(*varPos)) {
-						setAnnotative(varBlockID, true);
-					}
+					setAnnotative(varBlockID, std::get<3>(*varPos));
 				}
 
 			}
