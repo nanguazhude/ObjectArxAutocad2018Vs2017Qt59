@@ -1,8 +1,12 @@
 ﻿#include "UpdateBlockFromOtherFile.hpp"
 #include <string>
+#include <string_view>
 #include <set>
 #include <tuple>
 #include <dbAnnotativeObjectPE.h>
+
+using namespace std::string_view_literals;
+using namespace std::string_literals;
 
 namespace sstd {
 
@@ -146,6 +150,14 @@ namespace sstd {
 				}
 
 				std::unique_ptr<AcDbDatabase> varOtherFile{ new AcDbDatabase{ false } };
+				/*bool annotativeDwg() const;
+				Description
+				Controls whether the drawing is treated as 
+				an annotative block when it is inserted into other drawings.
+				True to treat the drawing as an annotative block when 
+				it is inserted into other drawings, false otherwise. 
+				The default value for new databases is false.
+				*/
 				if (Acad::eOk != varOtherFile->readDwgFile(varOtherFileName.c_str())) {
 					acutPrintf(LR"(打开文件")");
 					acutPrintf(varOtherFileName.c_str());
