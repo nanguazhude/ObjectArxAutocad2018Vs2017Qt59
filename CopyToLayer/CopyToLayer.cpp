@@ -77,6 +77,25 @@ namespace {
 		if (eOk != DB->getLayerTable(varLayers.pointer()))
 			svthrow(LR"(can not open layer table)");
 
+		class ResBuf : public resbuf {
+		public:
+			ResBuf(short value) {
+				this->rbnext = nullptr;
+				this->restype = RTSHORT;
+				this->resval.rint = value;
+			}
+		};
+
+		//CONSTRAINTINFER
+		if constexpr(LockLayer) {
+			const static ResBuf $constraintinfer/*1*/(1);
+			acedSetVar(L"CONSTRAINTINFER",&$constraintinfer);
+		}
+		else {
+			const static ResBuf $constraintinfer/*1*/(0);
+			acedSetVar(L"CONSTRAINTINFER",&$constraintinfer);
+		}
+
 		if constexpr(LockLayer) {
 			AcDbObjectId varLayerID;
 			if (eOk != varLayers->getIdAt(arg, varLayerID)) {
