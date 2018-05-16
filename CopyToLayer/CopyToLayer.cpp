@@ -123,7 +123,7 @@ namespace {
 		static void main()try {
 			lock_layers_except<true>(layer_name());
 			acedCommandS(
-				RTSTR, L"REGEN",
+				RTSTR, L"REGENALL",
 				RTNONE);
 		}
 		catch (...) {}
@@ -135,7 +135,7 @@ namespace {
 		static void main()try {
 			lock_layers_except<false>(layer_name());
 			acedCommandS(
-				RTSTR, L"REGEN",
+				RTSTR, L"REGENALL",
 				RTNONE);
 		}
 		catch (...) {}
