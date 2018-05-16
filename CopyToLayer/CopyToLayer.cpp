@@ -88,11 +88,11 @@ namespace {
 
 		//CONSTRAINTINFER
 		if constexpr(LockLayer) {
-			const static ResBuf $constraintinfer/*1*/(1);
+			const static ResBuf $constraintinfer/*1*/(0);
 			acedSetVar(L"CONSTRAINTINFER",&$constraintinfer);
 		}
 		else {
-			const static ResBuf $constraintinfer/*1*/(0);
+			const static ResBuf $constraintinfer/*1*/(1);
 			acedSetVar(L"CONSTRAINTINFER",&$constraintinfer);
 		}
 
@@ -141,9 +141,8 @@ namespace {
 	public:
 		static void main()try {
 			lock_layers_except<true>(layer_name());
-			acedCommandS(
-				RTSTR, L"REGENALL",
-				RTNONE);
+			acDocManager->sendStringToExecute(acDocManager->curDocument(),
+				LR"(Regen)");
 		}
 		catch (...) {}
 		DEFINE_ARX_NAME(LR"(_scd)")
@@ -153,9 +152,8 @@ namespace {
 	public:
 		static void main()try {
 			lock_layers_except<false>(layer_name());
-			acedCommandS(
-				RTSTR, L"REGENALL",
-				RTNONE);
+			acDocManager->sendStringToExecute(acDocManager->curDocument(),
+				LR"(Regen)");
 		}
 		catch (...) {}
 		DEFINE_ARX_NAME(LR"(_scdd)")
