@@ -147,6 +147,7 @@ namespace sstd {
 		AcDbDatabase*$DB,
 		const wstring&varName) {
 		std::set< AcDbObjectId > varBID;
+		std::set< AcDbObjectId > varEBID;
 		{
 			sstd::ArxClosePointer< AcDbBlockTable> varBlockTable;
 			if (eOk != $DB->getBlockTable(varBlockTable, AcDb::kForRead)) {
@@ -163,12 +164,14 @@ namespace sstd {
 			/* 如果只有一个非匿名对象,则返回它 */
 			//std::optional< AcDbObjectId > varJustReturnOneID;
 			AcDbObjectIdArray varIDS_;
+			AcDbObjectIdArray varEIDS_;
 			{
 				AcDbDynBlockTableRecord varDR_{ varR->objectId() };
 				if (varDR_.isDynamicBlock()) {
 					AcDbObjectIdArray varBLKIDS_;
 					//尝试从普通块获得ID
 					varR->getBlockReferenceIds(varIDS_);
+					varR->getErasedBlockReferenceIds(varEIDS_);
 					varR.close();
 					//if (varIDS_.length() == 1) {
 					//	varJustReturnOneID = *varIDS_.begin();
@@ -182,12 +185,16 @@ namespace sstd {
 							continue;
 						}
 						AcDbObjectIdArray varTmpIDS;
+						AcDbObjectIdArray varTmpEIDS;
 						varR->getBlockReferenceIds(varTmpIDS);
+						varR->getErasedBlockReferenceIds(varTmpEIDS);
 						varIDS_.append(varTmpIDS);
+						varEIDS_.append(varTmpEIDS);
 					}
 				}
 				else {//尝试从普通块获得ID
 					varR->getBlockReferenceIds(varIDS_);
+					varR->getErasedBlockReferenceIds(varEIDS_);
 					varR.close();
 				}
 			}
@@ -205,6 +212,10 @@ namespace sstd {
 			}
 
 			if (varBID.empty()) { return{}; }
+
+			for (const auto & varJ : varEIDS_) {
+				varEBID.insert(varJ);
+			}
 
 			{
 				class Lock {
@@ -256,9 +267,10 @@ namespace sstd {
 				if (eOk != acdbOpenObject(varR.pointer(), varI)) {
 					continue/*忽略无法打开的元素*/;
 				}
-				if (varR->isEraseStatusToggled()) { continue; }
-				if (varR->isErased()) { continue/*忽略被删除的对象*/; }
-				if (varR->visibility() != kVisible) { continue/*忽略不可见对象*/; }
+				//if (varR->isEraseStatusToggled()) { continue; }
+				if (varEBID.count(varI) > 0) { continue/*忽略被删除对象*/; }
+				//if (varR->isErased()) { continue/*忽略被删除的对象*/; }
+				//if (varR->visibility() != kVisible) { continue/*忽略不可见对象*/; }
 				class HighLightLock {
 					AcDbBlockReference * d;
 				public:
