@@ -11,6 +11,12 @@
 #include <optional>
 #include <string_view>
 
+static inline void refreshDisplay() {
+	actrTransactionManager->queueForGraphicsFlush();
+	actrTransactionManager->flushGraphics();
+	acedUpdateDisplay();
+}
+
 namespace sstd {
 	extern void loadEResetAnnotationScale() {
 		EResetAnnotationScale::load();
@@ -36,7 +42,8 @@ namespace {
 			if (varANN == nullptr) { return; }
 			/*如果这不是一个注释对象,则结束*/
 			if (varANN->annotative(varEnt) == false) { return; }
-
+			/*clode then update it*/
+			varEnt->recordGraphicsModified(true);
 			/*获得interface*/
 			AcDbObjectContextInterface *varContextInterface = ACRX_PE_PTR(varEnt, AcDbObjectContextInterface);
 
@@ -284,11 +291,11 @@ catch (...) {
 void sstd::EResetAnnotationScale::main()try {
 
 	/** 隐藏所有对象 , 显示所有对象 **/
-	class VisibleLock {
+	class VisibleLock1 {
 	public:
 		// (command "HIDEOBJECTS" (ssget "A" ) "") 
 		// (command "unisolated" )
-		VisibleLock() {
+		VisibleLock1() {
 			class Lock {
 			public:
 				ads_name ss = {};
@@ -307,12 +314,20 @@ void sstd::EResetAnnotationScale::main()try {
 				RTSTR, LR"...()...",
 				RTNONE);
 		}
-		~VisibleLock() {
+		~VisibleLock1() {
 			acedCommandS(
 				RTSTR, LR"...(UNISOLATEOBJECTS)...",
 				RTNONE);
 		}
 	};
+
+	class VisibleLock2 {
+	public:
+		VisibleLock2() {}
+		~VisibleLock2() { refreshDisplay(); }
+	};
+
+	using VisibleLock = VisibleLock1;
 
 	/*要保留的注释比例对象*/
 	AcString varCurrentName;

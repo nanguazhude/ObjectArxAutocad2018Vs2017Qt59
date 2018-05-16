@@ -57,7 +57,7 @@ namespace sstd {
 		acedRegCmds->addCommand(arx_group_name(),
 			T::globalName(),
 			T::localName(),
-			ACRX_CMD_MODAL,
+			ACRX_CMD_REDRAW | ACRX_CMD_MODAL,
 			&T::main
 		);
 	}
@@ -67,7 +67,7 @@ namespace sstd {
 		acedRegCmds->addCommand(arx_group_name(),
 			T::globalName(),
 			T::localName(),
-			ACRX_CMD_MODAL | ACRX_CMD_USEPICKSET,
+			ACRX_CMD_REDRAW | ACRX_CMD_USEPICKSET,
 			&T::main
 		);
 	}
