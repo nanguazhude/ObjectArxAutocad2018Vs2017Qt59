@@ -304,7 +304,7 @@ void sstd::EResetAnnotationScale::main()try {
 			} varLock;
 
 			acedSSGet(LR"...(A)...",
-				nullptr,nullptr,
+				nullptr, nullptr,
 				nullptr,
 				varLock.ss);
 
@@ -327,7 +327,13 @@ void sstd::EResetAnnotationScale::main()try {
 		~VisibleLock2() { refreshDisplay(); }
 	};
 
-	using VisibleLock = VisibleLock1;
+	class VisibleLock3 {
+	public:
+		VisibleLock3() {}
+		~VisibleLock3() {  }
+	};
+
+	using VisibleLock = VisibleLock3;
 
 	/*要保留的注释比例对象*/
 	AcString varCurrentName;
