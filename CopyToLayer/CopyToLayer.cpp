@@ -62,12 +62,35 @@ static inline void copy_to_layer(Concept * arg) {
 }
 
 void sstd::CopyToLayer::main() try {
-	Concept concept;
-	/*select object except the layer*/
-	select_data(&concept);
-	/*复制选中图像到指定图层*/
-	copy_to_layer(&concept);
-
+	{
+		Concept concept;
+		/*select object except the layer*/
+		select_data(&concept);
+		/*复制选中图像到指定图层*/
+		copy_to_layer(&concept);
+	}
+	/*************************************************/
+	if constexpr(false){
+		Concept::Lock varSelect;
+		acedSSGet(
+			LR"(P)"/*选择刚刚创建的对象*/,
+			nullptr,
+			nullptr,
+			nullptr,
+			varSelect.ss);
+		{
+			std::int32_t varLength = 0;
+			acedSSLength(varSelect.ss, &varLength);
+			if (varLength < 1) { svthrow(LR"(选择集为空)"); }
+		}
+		acedCommandS(
+			RTSTR, L"setbylayer",
+			RTPICKS, varSelect.ss,
+			RTSTR, L"",
+			RTSTR, L"Yes"/*change by block to bylayer*/,
+			RTSTR, L"Yes"/*include block*/,
+			RTNONE);
+	}
 }
 catch (...) {
 
@@ -224,6 +247,31 @@ namespace {
 		catch (...) {}
 		DEFINE_ARX_NAME(LR"(_scdd)")
 	};
+	
+	class GGW {
+	public:
+		static void main()try {
+			acDocManager->sendStringToExecute(acDocManager->curDocument(),
+				LR"b...e((setvar "DYNCONSTRAINTMODE" 0)
+(setvar "CONSTRAINTBARDISPLAY" 0)
+)b...e");
+		}
+		catch (...) {}
+		DEFINE_ARX_NAME(LR"(_ggw)")
+	};
+
+
+	class GGQ {
+	public:
+		static void main()try {
+			acDocManager->sendStringToExecute(acDocManager->curDocument(),
+				LR"b...e((setvar "DYNCONSTRAINTMODE" 1)
+(setvar "CONSTRAINTBARDISPLAY" 3)
+)b...e");
+		}
+		catch (...) {}
+		DEFINE_ARX_NAME(LR"(_ggq)")
+	};
 
 
 }/*打开关闭绘制模式*/
@@ -234,7 +282,12 @@ namespace sstd {
 		CopyToLayer::load();
 		arx_add_main_command<SCDD>();
 		arx_add_main_command<SCD>();
+		arx_add_main_command<GGW>();
+		arx_add_main_command<GGQ>();
 	}
 }
+
+//DYNCONSTRAINTMODE
+//CONSTRAINTBARDISPLAY
 
 
