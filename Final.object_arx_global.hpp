@@ -52,22 +52,22 @@ constexpr static inline const auto * localName() { return 1 + globalName(); }
 
 namespace sstd {
 	inline constexpr const auto * arx_group_name() { return LR"(SSTD)"; }
-	template<typename T>
+	template<typename T,std::uint32_t N = 0>
 	inline void arx_add_main_command() {
 		acedRegCmds->addCommand(arx_group_name(),
 			T::globalName(),
 			T::localName(),
-			ACRX_CMD_REDRAW | ACRX_CMD_MODAL,
+			N | ACRX_CMD_REDRAW | ACRX_CMD_MODAL,
 			&T::main
 		);
 	}
 
-	template<typename T>
+	template<typename T,std::uint32_t N = 0>
 	inline void arx_add_main_command_usepickset() {
 		acedRegCmds->addCommand(arx_group_name(),
 			T::globalName(),
 			T::localName(),
-			ACRX_CMD_REDRAW | ACRX_CMD_USEPICKSET,
+			N | ACRX_CMD_REDRAW | ACRX_CMD_USEPICKSET,
 			&T::main
 		);
 	}

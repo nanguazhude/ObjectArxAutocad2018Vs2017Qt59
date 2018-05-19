@@ -8,7 +8,7 @@ void sstd::CopyToLayer::load() {
 }
 
 static inline void refreshDisplay() {
-	
+
 }
 
 static constexpr const wchar_t * layer_name() { return LR"(_坐标)"; }
@@ -61,6 +61,44 @@ static inline void copy_to_layer(Concept * arg) {
 		RTNONE);
 }
 
+namespace {
+	class AfterMain {
+	public:
+
+		static inline void main() {
+			/*************************************************/
+			if constexpr(true) {
+				Concept::Lock varSelect;
+				acedSSGet(
+					LR"(P)"/*选择刚刚创建的对象*/,
+					nullptr,
+					nullptr,
+					nullptr,
+					varSelect.ss);
+				{
+					std::int32_t varLength = 0;
+					acedSSLength(varSelect.ss, &varLength);
+					if (varLength < 1) { svthrow(LR"(选择集为空)"); }
+				}
+				acedCommandS(
+					RTSTR, L"setbylayer",
+					RTPICKS, varSelect.ss,
+					RTSTR, L"",
+					RTSTR, L"Yes"/*change by block to bylayer*/,
+					RTSTR, L"Yes"/*include block*/,
+					RTNONE);
+				acedCommandS(RTSTR, L"DELCONSTRAINT",
+					RTPICKS, varSelect.ss,
+					RTSTR, L"",
+					RTNONE);
+			}
+		}
+
+		DEFINE_ARX_NAME(LR"(_ppppaftermain_CopyToLayer)")
+
+	};
+}
+
 void sstd::CopyToLayer::main() try {
 	{
 		Concept concept;
@@ -68,29 +106,11 @@ void sstd::CopyToLayer::main() try {
 		select_data(&concept);
 		/*复制选中图像到指定图层*/
 		copy_to_layer(&concept);
-	}
-	/*************************************************/
-	if constexpr(false){
-		Concept::Lock varSelect;
-		acedSSGet(
-			LR"(P)"/*选择刚刚创建的对象*/,
-			nullptr,
-			nullptr,
-			nullptr,
-			varSelect.ss);
-		{
-			std::int32_t varLength = 0;
-			acedSSLength(varSelect.ss, &varLength);
-			if (varLength < 1) { svthrow(LR"(选择集为空)"); }
-		}
-		acedCommandS(
-			RTSTR, L"setbylayer",
-			RTPICKS, varSelect.ss,
-			RTSTR, L"",
-			RTSTR, L"Yes"/*change by block to bylayer*/,
-			RTSTR, L"Yes"/*include block*/,
-			RTNONE);
-	}
+	}//(________aftermain_CopyToLayer)
+	return;
+	acDocManager->sendStringToExecute(acDocManager->curDocument(),
+		LR"b...e(ppppaftermain_CopyToLayer
+)b...e");
 }
 catch (...) {
 
@@ -201,7 +221,7 @@ namespace {
 			}
 		}
 
-		if ( varUnLockLayersNames.empty()==false ) {
+		if (varUnLockLayersNames.empty() == false) {
 			varUnLockLayersNames.pop_back();
 			//varUnLockLayersNames.push_back(L'\n');
 
@@ -209,12 +229,12 @@ namespace {
 				RTSTR, L"-LAYER",
 				RTSTR, L"Unlock",
 				RTSTR, varUnLockLayersNames.c_str(),
-				RTSTR,LR"()",
+				RTSTR, LR"()",
 				RTNONE);
 
 		}
 
-		if (varLockLayersNames.empty()==false) {
+		if (varLockLayersNames.empty() == false) {
 			varLockLayersNames.pop_back();
 			//varLockLayersNames.push_back(L'\n');
 
@@ -247,7 +267,7 @@ namespace {
 		catch (...) {}
 		DEFINE_ARX_NAME(LR"(_scdd)")
 	};
-	
+
 	class GGW {
 	public:
 		static void main()try {
@@ -284,6 +304,7 @@ namespace sstd {
 		arx_add_main_command<SCD>();
 		arx_add_main_command<GGW>();
 		arx_add_main_command<GGQ>();
+		if constexpr(false) arx_add_main_command_usepickset<AfterMain>();
 	}
 }
 
