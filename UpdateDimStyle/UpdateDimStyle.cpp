@@ -356,7 +356,7 @@ namespace sstd {
 					argR->setDimtm(0.4)/*公差最小值*/;
 					argR->setDimtzin(8)/*公差消零*/;
 					argR->setDimalttz(8)/*公差消零*/;
-					argR->setDimtolj(1)/*公差显示位置*/;
+					argR->setDimtolj(0)/*公差显示位置*/;
 				}
 
 				/******************************************************************/

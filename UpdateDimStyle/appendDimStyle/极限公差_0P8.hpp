@@ -87,12 +87,12 @@
 	{
 		argR->setDimtol(true)/*不显示公差*/;
 		argR->setDimtdec(3)/*小数0.00*/;
-		argR->setDimtfac(0.75)/*公差高度比*/;
+		argR->setDimtfac(0.70)/*公差高度比*/;
 		argR->setDimtp(0)/*公差最大值*/;
 		argR->setDimtm(0.8)/*公差最小值*/;
 		argR->setDimtzin(8)/*公差消零*/;
 		argR->setDimalttz(8)/*公差消零*/;
-		argR->setDimtolj(1)/*公差显示位置*/;
+		argR->setDimtolj(0)/*公差显示位置*/;
 	}
 
 	/******************************************************************/
