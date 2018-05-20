@@ -1,5 +1,6 @@
 ﻿#include <object_arx_global.hpp>
 #include "UpdateAll.hpp"
+#include "dbtexteditor.h"
 
 /*****************************************************/
 #include "../UpdateBlockFromOtherFile/UpdateBlockFromOtherFile.hpp"
@@ -38,6 +39,8 @@ namespace sstd {
 				DB->setAunits(0)/*十进制角度*/;
 				DB->setPdmode(35)/*设置点样式*/;
 				DB->setPdsize(3)/*设置点样式*/;
+				DB->setTStackAlign(0);
+				DB->setTStackSize(70);
 				{/**
 				 http://jprdintprev.autodesk.com/adn/servlet/devnote?siteID=4814862&id=5414556&preview=1&linkID=4900509
 				 **/
@@ -90,6 +93,7 @@ namespace sstd {
 (setvar "HPNAME" "ANSI31")
 (setvar "HPASSOC" 1)
 (setvar "CONSTRAINTNAMEFORMAT" 1)
+(setvar "MTEXTAUTOSTACK" 1)
 (command "FILETAB")
 (command "PROPERTIES")
 (command "TOOLPALETTES")
@@ -112,7 +116,7 @@ void sstd::UpdateAll::load() {
 	arx_add_main_command<UpdateAll>();
 }
 
-void sstd::UpdateAll::main() {
+void sstd::UpdateAll::main() try{
 	ThisFunction varFunction(acdbHostApplicationServices()->workingDatabase());
 	varFunction.updateAll();
 	//{
@@ -125,9 +129,28 @@ void sstd::UpdateAll::main() {
 	//		varFunction.$DB->setClayer(varID);
 	//	}
 	//}
+
+	//AcDbTextEditor::setDefaultStackScale(0.7);
 }
+catch (...) {}
 
 namespace sstd {
 	extern void loadUpdateAll() { UpdateAll::load(); }
 }/*namespace*/
 
+/*
+AcDbTextEditor:
+setDefaultStackAlignment
+setDefaultStackScale
+
+Stack Properties
+Text 
+Upper
+Lower
+
+Appearance
+Style
+Position
+Text size
+
+*/
