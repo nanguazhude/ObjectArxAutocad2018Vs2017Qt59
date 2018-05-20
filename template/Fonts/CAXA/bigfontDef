@@ -1,0 +1,61 @@
+#这个文件指定大字体形文件的codepage信息
+#书写规范如下：
+#以"#"为注释符号，它后面的内容被忽略
+#空行被忽略
+#表示为：
+#<BIGFONTFILENAME.SHX>;<CODE PAGE INDEX>
+#“BIGFONTFILENAME.SHX”形文件名，"CODE PAGE INDEX"CodePage索引
+#以";"区分文件名和对应的codepage
+#代码页表示
+#如果中文简体表示为CODE PAGE INDEX =1
+#如果中文繁体表示为CODE PAGE INDEX =2
+#如果日文表示为	  CODE PAGE INDEX =3
+#如果韩文表示为       CODE PAGE INDEX =4
+#
+#例如：简体中文形文件gbcbig.shx ,表示为
+#gbcbig.shx;1
+
+#中文简体
+Hz.shx;1
+gbcbig.shx;1
+Hztxt.shx;1
+INTECAD.SHX;1
+DXFS.SHX;1
+fst.shx;1
+HZFS.SHX;1
+HZHT.SHX;1
+HZKT.SHX;1
+HZLIB.SHX;1
+LC_HZTXT.SHX;1
+JTT.SHX;1
+JFS.SHX;1
+HZ1.shx;1
+HZDX.SHX;1
+CAEDYT.SHX;1
+simplex.shx;1
+KTJ_S.SHX;1
+
+#中文繁体
+chineset.shx;2
+XYF.SHX;2
+xc54.shx;2
+xc55.shx;2
+xc62.shx;2
+XC61.SHX;2
+STF.SHX;2
+DAYUL.SHX;2
+
+#日文
+extfont.shx;3
+extfont2.shx;3
+visiojp.shx;3
+bigfont.shx;3
+
+#韩文
+whgdtxt.shx;4
+whtmtxt.shx;4
+whgtxt.shx;4
+whtgtxt.shx;4
+visiohg.shx;4
+GHG1.SHX;4
+CGDH2.SHX;4

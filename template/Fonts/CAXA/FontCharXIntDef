@@ -1,0 +1,46 @@
+#这个文件指定字体的对应  字符间距修正系数经验值 = 字符间距数值/字高 
+#使用时  字符间距数值 = 字符间距系数 × 字符字高 × 修正系数经验值
+#书写规范如下：
+#以"#"为注释符号，它后面的内容被忽略
+#空行被忽略
+#表示为：
+#<FONTFILENAME>;<CHAR XINT FAC>
+#“FONTFILENAME”字体文件名，"CHAR XINT FAC" 字符间距信息
+#以";"区分文件名和对应的字符间距信息
+#代码页表示
+#
+#例如：简体中文形文件字体名fzshuti,表示为
+#fzshuti;2.1053
+
+#TrueType
+
+#中文简体
+fzshuti;0.84212
+fzyaoti;0.66668
+fangsong_gb2312;0.69192
+simhei;0.72316
+stcaiyun;0.61528
+stfangsong;0.58636
+sthupo;0.6486
+stkaiti;0.58636
+stliti;0.57468
+stsong;0.58636
+stxihei;0.64392
+stxinwei;0.60768
+stxingkai;0.48676
+stzhongsong;0.68716
+kaiti_gb2312;0.69188
+lisu;0.71112
+simsun;0.71108
+simsun(founder extended);0.78528
+nsimsun;0.71108
+youyuan;0.71112
+arial;0.61664
+arial black;0.77148
+arial narrow;0.50548
+arial rounded mt bold;0.66396
+arial unicode ms;0.61664
+times new roman;0.59192
+wingdings;1.35212
+
+#end
