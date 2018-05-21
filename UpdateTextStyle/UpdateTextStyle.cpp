@@ -61,8 +61,8 @@ namespace sstd {
 
 				argR->setFlagBits(argR->flagBits()&0b11111001)/*清除标志位*/;
 				argR->setIsShapeFile(false);
-				argR->setFileName(LR"(gbenor.SHX)")/*shx字体文件名*/;
-				argR->setBigFontFileName(LR"(gbcbig.SHX)")/*shx大字体文件名*/;
+				argR->setFileName(LR"(ztxt.SHX)")/*shx字体文件名*/;
+				argR->setBigFontFileName(LR"(whtmtxt.shx)")/*shx大字体文件名*/;
 
 				auto varSetTextHeight = [argR]() {
 					argR->setTextSize( zihao_shx(5.7))/*文字高度*/;
