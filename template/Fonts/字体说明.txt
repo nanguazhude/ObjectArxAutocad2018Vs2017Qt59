@@ -1,0 +1,13 @@
+﻿Romans.shx(西文花体)、
+romand.shx（西文花体）、
+bold.shx（西文黑体）、
+txt.shx（西文单线体）、
+simpelx(西文单线体)、
+st64f.shx（汉字宋体）、
+ht64f.shx（汉字黑体）、
+kt64f.shx（汉字楷体）、
+fs64f.shx（汉字仿宋）、
+hztxt.shx（汉字单线）、
+
+
+
