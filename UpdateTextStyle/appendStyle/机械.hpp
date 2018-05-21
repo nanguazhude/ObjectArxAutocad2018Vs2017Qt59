@@ -11,7 +11,7 @@
 	argR->setFlagBits(argR->flagBits()&0b11111001)/*清除标志位*/;
 	argR->setIsShapeFile(false)/**/;
 	argR->setFileName(LR"(ztxt.shx)")/*shx字体文件名*/;
-	argR->setBigFontFileName(LR"(gbcbig.shx)")/*shx大字体文件名*/;
+	argR->setBigFontFileName(LR"(hzfs.shx)")/*shx大字体文件名*/;
 	auto varSetTextHeight = [argR]() {
 	argR->setTextSize(0.0)/*文字高度*/;
 	if (argR->priorSize()<5)argR->setPriorSize(6.75)/*默认大小*/;
