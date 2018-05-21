@@ -18,8 +18,8 @@
 		Autodesk::AutoCAD::PAL::FontUtils::FontFamily::kModern
 	);
 	auto varSetTextHeight = [argR]() {
-	argR->setTextSize(5.2)/*文字高度*/;
-	if (argR->priorSize()<5)argR->setPriorSize(5.2)/*默认大小*/;
+	argR->setTextSize(zihao(5.2))/*文字高度*/;
+	if (argR->priorSize()<zihao(5))argR->setPriorSize(zihao(5.2))/*默认大小*/;
 	};
 	argR->setXScale(0.7)/*宽度比*/;
 

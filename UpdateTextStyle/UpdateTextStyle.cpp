@@ -1,7 +1,7 @@
 ﻿#include <dbAnnotativeObjectPE.h>
 #include <map>
 #include "UpdateTextStyle.hpp"
- 
+#include "../zihao.hpp"
 
 namespace sstd {
 
@@ -61,13 +61,13 @@ namespace sstd {
 
 				argR->setFlagBits(argR->flagBits()&0b11111001)/*清除标志位*/;
 				argR->setIsShapeFile(false);
-				argR->setFileName(LR"(ztxt.shx)")/*shx字体文件名*/;
-				argR->setBigFontFileName(LR"(CHIN2.SHX)")/*shx大字体文件名*/;
+				argR->setFileName(LR"(gbenor.SHX)")/*shx字体文件名*/;
+				argR->setBigFontFileName(LR"(gbcbig.SHX)")/*shx大字体文件名*/;
 
 				auto varSetTextHeight = [argR]() {
-					argR->setTextSize(5.7)/*文字高度*/;
-					if (argR->priorSize() < 5) {
-						argR->setPriorSize(5.7)/*默认大小*/;
+					argR->setTextSize( zihao_shx(5.7))/*文字高度*/;
+					if (argR->priorSize() < zihao_shx(5)) {
+						argR->setPriorSize( zihao_shx(5.7) )/*默认大小*/;
 					}
 				};
 

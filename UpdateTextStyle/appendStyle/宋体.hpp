@@ -19,9 +19,9 @@
 	);
 
 	auto varSetTextHeight = [argR]() {
-		argR->setTextSize(0.0)/*文字高度*/;
-		if (argR->priorSize()<5){
-			argR->setPriorSize(5.7)/*默认大小*/;
+		argR->setTextSize( zihao(0.0) )/*文字高度*/;
+		if (argR->priorSize()<zihao(5)){
+			argR->setPriorSize(zihao(5.7))/*默认大小*/;
 		}
 	};
 
