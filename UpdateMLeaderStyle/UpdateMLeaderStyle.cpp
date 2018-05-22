@@ -3,6 +3,7 @@
 #include <dbmleaderstyle.h>
 #include <object_arx_global.hpp>
 #include "UpdateMLeaderStyle.hpp"
+#include "../zihao.hpp"
 
 namespace sstd {
 
@@ -141,7 +142,7 @@ namespace sstd {
 				argR->setBreakSize(0)/**/;
 				
 				auto varDoFunction = [argR, argTable]() {
-					argR->setTextHeight(6.75);
+					argR->setTextHeight( zihao_shx( 6.75 ) );
 					argR->setLandingGap(1.2);
 					argR->setArrowSize(4.6)/*箭头大小*/;
 					if (argTable->$TextTypeID) argR->setTextStyleId(*argTable->$TextTypeID);

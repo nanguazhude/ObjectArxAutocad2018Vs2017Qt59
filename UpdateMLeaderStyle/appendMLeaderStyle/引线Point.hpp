@@ -16,7 +16,7 @@
 	argR->setBreakSize(0)/**/;
 
 	auto varDoFunction = [argR,argTable]() {
-		argR->setTextHeight(6.75);
+		argR->setTextHeight(zihao_shx(6.75));
 		argR->setArrowSize(1.6)/*点大小*/;
 		argR->setMaxLeaderSegmentsPoints(2);
 		//argR->setDescription(LR"(Hellow Kitty!)");

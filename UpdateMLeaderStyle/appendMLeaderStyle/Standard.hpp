@@ -16,7 +16,7 @@
 	argR->setLeaderLineColor(11_ac);
 
 auto varDoFunction = [argR,argTable]() {
-	argR->setTextHeight(6.75);
+	argR->setTextHeight(zihao_shx(6.75));
 	argR->setArrowSize(4.6)/*箭头大小*/;
 	argR->setMaxLeaderSegmentsPoints(2);
 	//argR->setDescription(LR"(Hellow Kitty!)");
