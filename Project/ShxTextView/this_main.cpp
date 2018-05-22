@@ -143,8 +143,8 @@ void create_text_style(Item * i,int n){
 	}
 
 	varR->setName(varStyleName.c_str());
-	varR->setFileName(LR"(MONOTXT8.SHX)");
-
+	varR->setFileName(LR"(GBXWXT.shx)");
+	//GBHZFS
 	{
 		const auto varFN = i->file_info.absoluteFilePath().toStdWString();
 		varR->setBigFontFileName( varFN.c_str() );
