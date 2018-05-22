@@ -7,37 +7,87 @@
 #include <string_view>
 using namespace std::string_view_literals;
 
-#include <QtWidgets>
+#include <QtWidgets/QtWidgets>
 #include <QtQml>
+#include <vector>
+#include <forward_list>
+#include <string_view>
 
-inline void just_print_hellow_world() {
-	acutPrintf(LR"(Hellow Word!
-)");
+using namespace std::string_view_literals;
+
+class Item {
+public:
+	QFileInfo file_info;
+};
+
+/****************************************/
+AcDbMText * drawitem ( Item * i , int n  )   {
+	AcDbMText * varItem = new AcDbMText;
+	std::wstring varData;
+	{
+		varData = i->file_info.fileName().toStdWString();
+		varData += LR"b...e( 1沉孔2锪34%%p56%%d78×9今天0)b...e"sv;
+	}
+	varItem->setLocation({ 0, n * (-18.0) ,0 });
+	 
+	varItem->setContents(varData.c_str());
+	
+	return varItem;
 }
 
-namespace {
-	namespace _cpp_private {
-		const constexpr std::string_view qtApplicationPath =/*!!!*/
-#if _OBJECT_ARX_VERSION_X64_ == 2019
-			u8R"(C:\Program Files\Autodesk\AutoCAD 2019\acad.exe)"sv;
-#else
-			u8R"(C:\Program Files\Autodesk\AutoCAD 2018\acad.exe)"sv;
-#endif
-		inline int & getArgc() {
-			static int ans;
-			ans = 1;
-			return ans;
-		}
-		inline char** getArgv() {
-			static char acadpath[qtApplicationPath.size() + 4] = {};
-			static char *argv[] = { nullptr };
-			std::copy(qtApplicationPath.begin(), qtApplicationPath.end(),
-				static_cast<char*>(acadpath));
-			argv[0] = static_cast<char *>(acadpath);
-			return argv;
+template<typename T,typename T1,typename B>
+void drawitems(T b,const T1 e,B d) {
+	int n = -1;
+	for (;b!=e;++b) {
+		auto v = drawitem(*b,++n);
+		d->appendAcDbEntity(v);
+		v->close();
+	}
+}
+
+inline static void show_shx_text() {
+	std::forward_list< Item > var_memory_list;
+	std::vector< Item * > varItems;
+	const QString & varDirName = QFileDialog::getExistingDirectory();
+	if (varDirName.isEmpty()) {
+		return;
+	}
+	/**/
+	QDirIterator varIt{ varDirName,
+		QDir::NoDotAndDotDot | QDir::NoSymLinks | QDir::NoSymLinks,
+		QDirIterator::NoIteratorFlags };
+
+	while (varIt.hasNext()) {
+		varIt.next();
+		const auto varFileInfo = varIt.fileInfo();
+		if (varFileInfo.suffix().toLower() == QStringLiteral("shx")) {
+			Item * i = &var_memory_list.emplace_front();
+			i->file_info = varFileInfo;
+			varItems.push_back(i);
 		}
 	}
-}/*namespace*/
+
+	/*draw items*/
+	AcDbBlockTableRecord * pRec ;
+	{
+		const auto varDB = acdbHostApplicationServices()->workingDatabase();
+
+		AcDbBlockTable * pBlkTable;
+		if (varDB->getBlockTable(pBlkTable, AcDb::kForRead) != Acad::eOk)
+			return;
+
+		if (pBlkTable->getAt(ACDB_MODEL_SPACE, pRec, AcDb::kForWrite) != Acad::eOk)
+			return;
+		pBlkTable->close();
+	}
+
+	try {
+		drawitems(varItems.cbegin(), varItems.cend(), pRec);
+	}
+	catch (...) {
+	}
+	pRec->close();
+}
 
 extern "C" AcRx::AppRetCode
 acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt) {
@@ -45,33 +95,14 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt) {
 	case AcRx::kInitAppMsg: {
 		acrxDynamicLinker->unlockApplication(pkt);
 		acrxRegisterAppMDIAware(pkt);
-		/*****************************************/
-		{
-			if (qApp == nullptr) {
-				/*create the qt applicaton and never destory it*/
-				auto varQtApplication =
-					new QApplication(_cpp_private::getArgc(), _cpp_private::getArgv());
-				(void)varQtApplication;
-			}
-			{
-				/*force to load images plugins*/
-				QImage varImage{ QString(":/png/this.png") };
-				varImage.width();
-				varImage.height();
-			}
-			{
-				/*fore to load JS*/
-				QJSEngine varE;
-				varE.evaluate( QString("1+1") );
-			}
-		}
-		/*****************************************/
+
 		acedRegCmds->addCommand(
 			L"SSTD_GLOBAL_CMD_GROUP",
-			L"_just_print_hellow_world",
-			L"just_print_hellow_world",
+			L"_shxtextview",
+			L"shxtextview",
 			ACRX_CMD_MODAL,
-			&just_print_hellow_world);
+			&show_shx_text);
+
 	}break;
 	case AcRx::kUnloadAppMsg: {}break;
 	default:break;
