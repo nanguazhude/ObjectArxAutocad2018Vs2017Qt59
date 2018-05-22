@@ -203,3 +203,7 @@ namespace sstd {
 	extern void loadUpdateTextStyle() { UpdateTextStyle::load(); }
 
 }/*namespace sstd*/
+
+//simsun.ttc
+//whtmtxt.shx
+//simfang.ttf
