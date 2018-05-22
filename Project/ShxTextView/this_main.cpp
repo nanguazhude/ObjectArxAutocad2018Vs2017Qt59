@@ -13,6 +13,7 @@ using namespace std::string_view_literals;
 #include <forward_list>
 #include <string_view>
 #include <regex>
+#include <filesystem>
 
 using namespace std::string_view_literals;
 
@@ -23,29 +24,61 @@ public:
 };
 
 /****************************************/
-AcDbMText * drawitem(Item * i, int n) {
-	AcDbMText * varItem = new AcDbMText;
-	std::wstring varData;
-	{
-		varData = i->file_info.fileName().toStdWString();
-		varData += LR"b...e( 1沉孔2锪34%%p56%%d78×9今天0)b...e"sv;
-	}
-	varItem->setLocation({ 0, n * (-18.0) ,0 });
-	varItem->setTextStyle(i->style_index);
-	varItem->setWidth(1000);
-	varItem->setColumnWidth(1000);
-	varItem->setContents(varData.c_str());
+void drawitem(Item * i, int n, AcDbBlockTableRecord * t) {
 
-	return varItem;
+	if (! i->style_index.isValid()  ) {
+		return  ;
+	}
+
+	const static AcCmColor color1 = []() {
+		AcCmColor ans;
+		ans.setRGB( 132u,255u,113u );
+		return ans;
+	}();
+
+	const static AcCmColor color2 = []() {
+		AcCmColor ans;
+		ans.setRGB(55u, 55u, 221u);
+		return ans;
+	}();
+
+	AcDbExtents varBound;
+	{
+		AcDbText * varItem = new AcDbText;
+		t->appendAcDbEntity(varItem);
+		varItem->setTextStyle(i->style_index);
+		varItem->setPosition({ -64 , n * (-18.0) ,0 });
+		varItem->setTextString(LR"b...e( 1沉孔2锪34%%p56%%d78×9今天0)b...e");
+		varItem->bounds(varBound);
+		varItem->setColor(color1);
+		varItem->close();
+	}
+
+	{
+		AcDbMText * varItem = new AcDbMText;
+		t->appendAcDbEntity(varItem);
+		std::wstring varData(LR"( )"sv);
+		{
+			varData += i->file_info.fileName().toStdWString();
+			varData += LR"b...e( 1沉孔2锪34%%p56%%d78×9今天0)b...e"sv;
+		}
+		auto varPos = varBound.maxPoint();
+		varItem->setLocation(varPos);
+		varItem->setTextStyle(i->style_index);
+		varItem->setWidth(1000);
+		varItem->setColumnWidth(1000);
+		varItem->setContents(varData.c_str());
+		varItem->setColor(color2);
+		varItem->close();
+	}
+		
 }
 
 template<typename T, typename T1, typename B>
 void drawitems(T b, const T1 e, B d) {
 	int n = -1;
 	for (; b != e; ++b) {
-		auto v = drawitem(*b, ++n);
-		d->appendAcDbEntity(v);
-		v->close();
+		 drawitem(*b, ++n,d);
 	}
 }
 
@@ -141,7 +174,7 @@ inline static void show_shx_text() {
 			Item * i = &var_memory_list.emplace_front();
 			i->file_info = varFileInfo;
 			varItems.push_back(i);
-			if (varItems.size() > 1 ) { break; }
+			//if (varItems.size() > 1 ) { break; }
 		}
 	}
 	/*cretae text styles*/
@@ -168,6 +201,16 @@ inline static void show_shx_text() {
 	catch (...) {
 	}
 	pRec->close();
+
+	QDir varDir{ varDirName };
+	const auto varSaveName = varDir.absoluteFilePath("test33.dwg").toStdWString();
+	try{
+		std::filesystem::remove(varSaveName);
+	}
+	catch (...) {}
+
+	acdbHostApplicationServices()->workingDatabase()->saveAs(
+		varSaveName.c_str());
 
 }
 
