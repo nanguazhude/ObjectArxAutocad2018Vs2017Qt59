@@ -14,11 +14,15 @@ using namespace std::string_view_literals;
 #include <string_view>
 #include <regex>
 #include <filesystem>
+#include <iostream>
+#include <fstream>
 
 using namespace std::string_view_literals;
+thread_local std::wofstream * globalLogFile;
 
 class Item {
 public:
+	QString shx_name;
 	QFileInfo file_info;
 	AcDbObjectId style_index;
 };
@@ -26,19 +30,23 @@ public:
 /****************************************/
 void drawitem(Item * i, int n, AcDbBlockTableRecord * t) {
 
-	if (! i->style_index.isValid()  ) {
-		return  ;
+	if (!i->style_index.isValid()) {
+		return;
 	}
+
+	const auto varLogData = i->shx_name.toStdWString();
+	(*globalLogFile) << varLogData;
+	globalLogFile->flush();
 
 	const static AcCmColor color1 = []() {
 		AcCmColor ans;
-		ans.setRGB( 132u,255u,113u );
+		ans.setRGB(132u, 255u, 113u);
 		return ans;
 	}();
 
 	const static AcCmColor color2 = []() {
 		AcCmColor ans;
-		ans.setRGB(55u, 55u, 221u);
+		ans.setRGB(32u, 236u, 233u);
 		return ans;
 	}();
 
@@ -70,6 +78,23 @@ void drawitem(Item * i, int n, AcDbBlockTableRecord * t) {
 		varItem->setContents(varData.c_str());
 		varItem->setColor(color2);
 		varItem->close();
+	}
+
+	(*globalLogFile) << LR"( OK
+)";
+
+	if constexpr(false) {
+		static unsigned int varN = 0;
+		const auto varDirLog = std::to_wstring( ((++varN) >> 6 ) ) ;
+		try {
+			const std::filesystem::path path_from = i->file_info.absoluteFilePath().toStdWString();
+			const static std::filesystem::path path_to = std::filesystem::path(LR"(D:\autodesk)"sv);
+			std::filesystem::create_directories(path_to / varDirLog);
+			std::filesystem::copy(
+				path_from,
+				path_to / varDirLog/ path_from.filename());
+		}
+		catch (...) {}
 	}
 		
 }
@@ -118,7 +143,8 @@ void create_text_style(Item * i,int n){
 	}
 
 	varR->setName(varStyleName.c_str());
-	varR->setFileName(LR"(ztxt.shx)");
+	varR->setFileName(LR"(MONOTXT8.SHX)");
+
 	{
 		const auto varFN = i->file_info.absoluteFilePath().toStdWString();
 		varR->setBigFontFileName( varFN.c_str() );
@@ -141,12 +167,20 @@ void create_text_styles(T b, const T1 e) {
 }
 
 inline static void show_shx_text() {
+	
 	std::forward_list< Item > var_memory_list;
 	std::vector< Item * > varItems;
 	const QString & varDirName = QFileDialog::getExistingDirectory();
 	if (varDirName.isEmpty()) {
 		return;
 	}
+	QDir varDir{ varDirName };
+	const auto varSaveName = varDir.absoluteFilePath("test33.dwg").toStdWString();
+	auto varLogName = varSaveName;
+	varLogName+=LR"(.txt)"sv;
+	std::wofstream varLogFile{ varLogName , std::ios::binary };
+	globalLogFile = &varLogFile;
+
 	/**/
 	QDirIterator varIt{ varDirName,
 		QDir::NoDotAndDotDot | QDir::NoSymLinks | QDir::Files,
@@ -173,10 +207,16 @@ inline static void show_shx_text() {
 
 			Item * i = &var_memory_list.emplace_front();
 			i->file_info = varFileInfo;
+			i->shx_name = varFileInfo.fileName();
 			varItems.push_back(i);
 			//if (varItems.size() > 1 ) { break; }
 		}
 	}
+
+	/*sort by name*/
+	std::sort(varItems.begin(), varItems.end(),
+		[](const auto & l, const auto &r) { return l->shx_name < r->shx_name; });
+
 	/*cretae text styles*/
 	{
 		create_text_styles(varItems.cbegin(), varItems.cend());
@@ -201,16 +241,14 @@ inline static void show_shx_text() {
 	catch (...) {
 	}
 	pRec->close();
-
-	QDir varDir{ varDirName };
-	const auto varSaveName = varDir.absoluteFilePath("test33.dwg").toStdWString();
+	
+	
 	try{
 		std::filesystem::remove(varSaveName);
 	}
 	catch (...) {}
 
-	acdbHostApplicationServices()->workingDatabase()->saveAs(
-		varSaveName.c_str());
+	acdbHostApplicationServices()->workingDatabase()->saveAs(varSaveName.c_str());
 
 }
 
