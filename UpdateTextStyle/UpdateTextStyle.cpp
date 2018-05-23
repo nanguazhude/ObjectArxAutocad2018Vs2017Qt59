@@ -59,7 +59,15 @@ namespace sstd {
 					argTST->add(argR);
 				}
 
-				argR->setFlagBits(argR->flagBits()&0b11111001)/*清除标志位*/;
+				/**
+				Returns the textStyleflagBits value.
+				Only the second and third bits are used. If the second bit is
+				set it indicates that the text is drawn backward (that is, mirrored in X).
+				If the third bit is set it indicates that the text is drawn upside down 
+				(that is, mirrored in Y).
+				The flagBits are used for DXF group code 71.
+				**/
+				argR->setFlagBits(argR->flagBits()&0b11111001u )/*清除标志位*/;
 				argR->setIsShapeFile(false);
 				argR->setFileName(LR"(ztxt.SHX)")/*shx字体文件名*/;
 				argR->setBigFontFileName(LR"(whtmtxt.shx)")/*shx大字体文件名*/;
