@@ -1,3 +1,8 @@
+
+(defun c:ggv()(command "DIMCONSTRAINT" "a" "p"  pause ) )        ;点和直线之间的距离 
+(defun c:zffgh() (command "GEOMCONSTRAINT" "H" "2P" pause ) )    ;水平
+(defun c:zffgv() (command "GEOMCONSTRAINT" "v" "2P" pause ) )    ;垂直
+
 (defun c:szb(/ varS)                                    ;选择"_坐标"
   (command "pselect" "" )                               ;取消全部选择
   (setq varS (ssget  (list (cons 8 "_坐标*" ) ) ) )     ;选择集合  
