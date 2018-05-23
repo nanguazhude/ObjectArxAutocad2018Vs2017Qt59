@@ -640,7 +640,7 @@ DX : %lf , DY : %lf
 	};
 
 	double PrivateDimDistance::space_0 = ((1.25 + 6.75) * 1.0) + 3.141592654;
-	double PrivateDimDistance::space_1 = ((1.25 + 1.25 + 0.75 * 6.75 + 0.75 * 6.75) * 1.0) + 3.141592654;
+	double PrivateDimDistance::space_1 = ((1.25 + 1.25 + 0.70 * 6.75 + 0.70 * 6.75) * 1.0) + 3.141592654;
 
 	class DimDistanceB {
 	public:
@@ -671,7 +671,7 @@ DX : %lf , DY : %lf
 	public:
 		static void update(double var) {
 			PrivateDimDistance::space_0 = ((1.25 + 6.75) * var) + 3.141592654;
-			PrivateDimDistance::space_1 = ((1.25 + 1.25 + 0.75 * 6.75 + 0.75 * 6.75) * var) + 3.141592654;
+			PrivateDimDistance::space_1 = ((1.25 + 1.25 + 0.70 * 6.75 + 0.70 * 6.75) * var) + 3.141592654;
 		}
 
 		static void main()try {
