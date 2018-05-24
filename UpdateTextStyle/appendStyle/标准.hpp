@@ -11,7 +11,7 @@
 	argR->setFlagBits(argR->flagBits()&0b11111001)/*清除标志位*/;
 	argR->setIsShapeFile(false)/**/;
 	argR->setFileName(LR"(txt.shx)")/*shx字体文件名*/;
-	argR->setBigFontFileName(LR"(whtmtxt.shx)")/*shx大字体文件名*/;
+	argR->setBigFontFileName(LR"(zsstdZtextBig.shx)")/*shx大字体文件名*/;
 	auto varSetTextHeight = [argR]() {
 	argR->setTextSize(zihao_shx(0.0))/*文字高度*/;
 	if (argR->priorSize()<zihao_shx(5))argR->setPriorSize(zihao_shx(6.75))/*默认大小*/;

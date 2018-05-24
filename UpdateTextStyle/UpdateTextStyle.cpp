@@ -69,8 +69,8 @@ namespace sstd {
 				**/
 				argR->setFlagBits(argR->flagBits()&0b11111001u )/*清除标志位*/;
 				argR->setIsShapeFile(false);
-				argR->setFileName(LR"(ztxt.SHX)")/*shx字体文件名*/;
-				argR->setBigFontFileName(LR"(whtmtxt.shx)")/*shx大字体文件名*/;
+				argR->setFileName(LR"(zsstdZtxt.shx)")/*shx字体文件名*/;
+				argR->setBigFontFileName(LR"(zsstdZtextBig.shx)")/*shx大字体文件名*/;
 
 				auto varSetTextHeight = [argR]() {
 					argR->setTextSize( zihao_shx(5.7))/*文字高度*/;
@@ -215,3 +215,8 @@ namespace sstd {
 //simsun.ttc
 //whtmtxt.shx
 //simfang.ttf
+
+//u'×' 215
+//u'°' 176
+//u'±' 177
+
