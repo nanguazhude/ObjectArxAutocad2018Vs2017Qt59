@@ -301,8 +301,8 @@ namespace sstd {
 			const auto varDx = std::abs(x0 - x1);
 			const auto varDy = std::abs(y0 - y1);
 
-			if (varDy < 0.00001) { svthrow(LR"(y is too small)"); }
-			if (varDx < 0.00001) { svthrow(LR"(x is too small)"); }
+			if (varDy < 0.00001) { svthrow(LR"(dy is too small)"sv); }
+			if (varDx < 0.00001) { svthrow(LR"(dx is too small)"sv); }
 
 			varFlageK = varDy > varDx;
 		}
@@ -379,9 +379,16 @@ namespace sstd {
 			//plot dialog box
 			pPlotSettingsValidator->refreshLists(pLayout);	// Refresh the layout lists in order to use it
 			//
-			pPlotSettingsValidator->setPlotViewName(pLayout, LR"(my_plot_view)");
+			//pPlotSettingsValidator->setPlotViewName(pLayout, LR"(my_plot_view)");
 			//pPlotSettingsValidator->setPlotViewName(pLayout,LR"()");
+			//@AutoCAD PDF (High Quality Print).pc3
 			es = pPlotSettingsValidator->setPlotCfgName(pLayout, LR"(@AutoCAD PDF(High Quality Print).pc3)");	//设置打印设备
+			if (es!=eOk) {
+				es = pPlotSettingsValidator->setPlotCfgName(pLayout, LR"(@AutoCAD PDF (High Quality Print).pc3)");	//设置打印设备
+				if (es!=eOk) {
+					svthrow(LR"(无法找到:@AutoCAD PDF (High Quality Print).pc3)"sv);
+				}
+			}
 			//es = pPlotSettingsValidator->setCanonicalMediaName(pLayout, LR"(User 1)");//设置图纸尺寸(A4?)
 			{
 				if (globalPlostStyle) {/*color*/
@@ -404,6 +411,7 @@ namespace sstd {
 			else {
 				es = pPlotSettingsValidator->setPlotRotation(pLayout, AcDbPlotSettings::k0degrees);//设置打印方向
 			}
+
 			es = pPlotSettingsValidator->setStdScaleType(pLayout, AcDbPlotSettings::StdScaleType::kScaleToFit);//布满图纸
 			// apply to layout		 
 			//pPlotSettingsValidator->setPlotViewName()
