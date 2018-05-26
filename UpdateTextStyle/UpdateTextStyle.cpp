@@ -111,7 +111,9 @@ namespace sstd {
 
 		template<long long Version>
 		inline void _p_update_text_style(AcDbDatabase * argDB) {
-			
+			/***************************************/
+			//acdbHostApplicationServices()->workingGlobals();
+			/***************************************/
 			sstd::ArxClosePointer< AcDbTextStyleTableRecord > varCopyOfStyleStandard{
 				new AcDbTextStyleTableRecord
 			};
