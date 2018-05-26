@@ -87,16 +87,6 @@ static inline AcDbObjectId current_viewport_id(ThisState *s) {
 static inline void setplotstyle(ThisState *s) {
 
 	bool varFlageK;
-	{
-		AcDbObjectId mCurViewportId = current_viewport_id(s);
-		sstd::ArxClosePointer<AcDbViewport> pCurViewport;
-		if (Acad::eOk != acdbOpenObject(pCurViewport.pointer(), mCurViewportId,
-			AcDb::kForWrite)) {
-			svthrow(LR"(can not open current view port)"sv);
-		}
-
-		varFlageK = pCurViewport->height() > pCurViewport->width();
-	}
 
 	AcDbLayout *  pLayout = nullptr;
 	if (eOk != acdbOpenObject(pLayout, s->$layoutId, AcDb::kForWrite))
@@ -109,15 +99,18 @@ static inline void setplotstyle(ThisState *s) {
 		~PLayoutLock() { d->close(); }
 	}PlayoutLock(pLayout);
 
+	{
+
+		varFlageK = false;
+	}
+
 	//AcDbPlotSettingsValidator
 	AcDbPlotSettingsValidator * pPlotSettingsValidator = acdbHostApplicationServices()->plotSettingsValidator();
 	if (pPlotSettingsValidator == nullptr) { svthrow(LR"(pointer is null)"sv); }
 	//plot dialog box
 	pPlotSettingsValidator->refreshLists(pLayout);	// Refresh the layout lists in order to use it
 													//
-													//pPlotSettingsValidator->setPlotViewName(pLayout, LR"(my_plot_view)");
-													//pPlotSettingsValidator->setPlotViewName(pLayout,LR"()");
-													//@AutoCAD PDF (High Quality Print).pc3
+	pPlotSettingsValidator->setPlotViewName(pLayout,  s->$LayoutName.c_str() );
 	auto es = pPlotSettingsValidator->setPlotCfgName(pLayout, LR"(@AutoCAD PDF(High Quality Print).pc3)");	//设置打印设备
 	if (es != eOk) {
 		es = pPlotSettingsValidator->setPlotCfgName(pLayout, LR"(@AutoCAD PDF (High Quality Print).pc3)");	//设置打印设备
@@ -126,8 +119,12 @@ static inline void setplotstyle(ThisState *s) {
 		}
 	}
 
-
-	//es = pPlotSettingsValidator->setCanonicalMediaName(pLayout, LR"(User 1)");//设置图纸尺寸(A4?)
+	{
+		AcArray<const ACHAR *>  mediaList;
+		pPlotSettingsValidator->canonicalMediaNameList(pLayout, mediaList);
+		if (mediaList.length() < 1) { svthrow(LR"(can not find canonicalMediaNameList)"); }
+		es = pPlotSettingsValidator->setCanonicalMediaName(pLayout, mediaList[0]);//设置图纸尺寸(A4?)
+	}
 
 	{
 		const auto globalPlostStyle = s->$DB->plotStyleMode();
@@ -143,7 +140,7 @@ static inline void setplotstyle(ThisState *s) {
 	//es = pPlotSettingsValidator->setPlotWindowArea(pLayout, x0, y0, x1, y1); //设置打印范围
 	//es = pPlotSettingsValidator->setPlotOrigin(pLayout, x0, y0);	//设置origin
 	es = pPlotSettingsValidator->setPlotCentered(pLayout, true);	//是否居中打印
-	es = pPlotSettingsValidator->setPlotType(pLayout, AcDbPlotSettings::kWindow);	//打印类型
+	es = pPlotSettingsValidator->setPlotType(pLayout, AcDbPlotSettings::kLayout);	//打印类型
 																					//es = pPlotSettingsValidator->setStdScale(pPlotSettings, dbScale);	//比例
 	if (varFlageK/*y>x?*/) {
 		es = pPlotSettingsValidator->setPlotRotation(pLayout, AcDbPlotSettings::k90degrees);//设置打印方向
@@ -153,7 +150,7 @@ static inline void setplotstyle(ThisState *s) {
 	}
 
 	es = pPlotSettingsValidator->setStdScaleType(pLayout, AcDbPlotSettings::StdScaleType::kScaleToFit);//布满图纸
-
+	
 }
 
 //https://forums.autodesk.com/t5/net/layouts-and-viewports/td-p/3128748
@@ -168,10 +165,32 @@ static inline void setviewport(ThisState *s) {
 		svthrow(LR"(can not open current view port)"sv);
 	}
 
+	double varWidth;
+	double varHeight;
+	double printableXmin;
+	double printableYmin;
+	double printableXmax;
+	double printableYmax;
+	{
+		AcDbLayout * pLayout = nullptr;
+		if (eOk != acdbOpenObject(pLayout, s->$layoutId, AcDb::kForWrite))
+			svthrow(LR"(can not open layout)");
+		class PLayoutLock {
+			AcDbLayout * d;
+		public:
+			PLayoutLock(AcDbLayout *a) :d(a) {}
+			~PLayoutLock() { d->close(); }
+		}PlayoutLock(pLayout);
+		pLayout->getPlotPaperSize(varWidth, varHeight);
+		pLayout->getPlotPaperMargins(printableXmin, printableYmin, printableXmax, printableYmax);
+	}
+
+	/*无边框打印*/
 	pCurViewport->setLayer(LR"(不打印)");
-	pCurViewport->setWidth(200);
-	pCurViewport->setHeight(200);
-	pCurViewport->setCenterPoint({ 1,2,0 });
+	pCurViewport->setWidth(varWidth);
+	pCurViewport->setHeight(varHeight);
+	pCurViewport->setCenterPoint({ (printableXmin + printableXmax)*0.5,
+		(printableYmax + printableYmin)*0.5, 0. });
 
 }
 
