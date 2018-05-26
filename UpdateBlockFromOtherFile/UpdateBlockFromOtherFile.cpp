@@ -94,6 +94,7 @@ namespace sstd {
 		std::wstring ThisFunction::$BlockSearchDir;
 		inline ThisFunction::BlockFiles ThisFunction::_p_getBlockFiles() {
 			static const element_t varData[] = {
+				/*文件名,块名,忽略已经存在的对象,注释性*/
 					{ LR"(_MY_ROW.dwg)"s,LR"(_MY_ROW)"sv ,false , false  }/*this must be the first*/,
 					{ LR"(横边框2(G3000).dwg)"s,LR"(横边框2(G3000))"sv,false ,false  },
 					{ LR"(_毂形位公差.dwg)"s,LR"(@毂形位公差.111133)"sv,false ,true },
