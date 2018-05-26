@@ -50,7 +50,8 @@ SOURCES += \
         $$PWD/DrawCrossLine/DrawCrossLine.cpp \
         $$PWD/WrapDim/WrapDim.cpp \
         $$PWD/TestMultiFiles/TestMultiFiles.cpp \
-        $$PWD/CopyToLayer/CopyToLayer.cpp
+        $$PWD/CopyToLayer/CopyToLayer.cpp \
+        $$PWD/VPrint/VPrint.cpp
 
 
 #.h .hpp source
@@ -104,7 +105,9 @@ HEADERS += \
         $$PWD/DrawCrossLine/DrawCrossLine.hpp \
         $$PWD/WrapDim/WrapDim.hpp \
         $$PWD/TestMultiFiles/TestMultiFiles.hpp \
-        $$PWD/CopyToLayer/CopyToLayer.hpp
+        $$PWD/CopyToLayer/CopyToLayer.hpp \
+        $$PWD/VPrint/VPrint.hpp
+
 
 
         

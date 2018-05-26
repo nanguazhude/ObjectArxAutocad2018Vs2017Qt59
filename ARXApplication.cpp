@@ -54,6 +54,7 @@ namespace sstd {
 	extern void loadWrapDim();
 	extern void loadTestMultiFiles();
 	extern void loadCopyToLayer();
+	extern void loadVPrint();
 
 	namespace {
 		using FunctionType = void(*)(void);
@@ -104,6 +105,7 @@ namespace sstd {
 			{ &sstd::loadWrapDim },
 			{ &sstd::loadTestMultiFiles },
 			{ &sstd::loadCopyToLayer },
+			{ &sstd::loadVPrint },
 		};
 	}
 
