@@ -377,7 +377,7 @@ namespace sstd {
 			AcDbPlotSettingsValidator * pPlotSettingsValidator = acdbHostApplicationServices()->plotSettingsValidator();
 			if (pPlotSettingsValidator == nullptr) { return false; }
 			//plot dialog box
-			pPlotSettingsValidator->refreshLists(pLayout);	// Refresh the layout lists in order to use it
+			//pPlotSettingsValidator->refreshLists(pLayout);	// Refresh the layout lists in order to use it
 			//
 			//pPlotSettingsValidator->setPlotViewName(pLayout, LR"(my_plot_view)");
 			//pPlotSettingsValidator->setPlotViewName(pLayout,LR"()");
@@ -389,6 +389,15 @@ namespace sstd {
 					svthrow(LR"(无法找到:@AutoCAD PDF (High Quality Print).pc3)"sv);
 				}
 			}
+
+			pPlotSettingsValidator->refreshLists(pLayout);	// Refresh the layout lists in order to use it
+			{
+				AcArray<const ACHAR *>  mediaList;
+				pPlotSettingsValidator->canonicalMediaNameList(pLayout, mediaList);
+				if (mediaList.length() < 1) { svthrow(LR"(can not find canonicalMediaNameList)"); }
+				es = pPlotSettingsValidator->setCanonicalMediaName(pLayout, mediaList[0]);//设置图纸尺寸(A4?)
+			}
+
 			//es = pPlotSettingsValidator->setCanonicalMediaName(pLayout, LR"(User 1)");//设置图纸尺寸(A4?)
 			{
 				if (globalPlostStyle) {/*color*/
