@@ -24,8 +24,8 @@
 		if (argTable->$TextTypeID) argR->setTextStyleId(*argTable->$TextTypeID);
 		argR->setTextAngleType(AcDbMLeaderStyle::kHorizontalAngle);
 		argR->setTextAttachmentDirection(AcDbMLeaderStyle::kAttachmentHorizontal);
-		argR->setTextAttachmentType(AcDbMLeaderStyle::kAttachmentBottomLine, AcDbMLeaderStyle::kLeftLeader);
-		argR->setTextAttachmentType(AcDbMLeaderStyle::kAttachmentBottomLine, AcDbMLeaderStyle::kRightLeader);
+		argR->setTextAttachmentType(AcDbMLeaderStyle::kAttachmentBottomOfTopLine, AcDbMLeaderStyle::kLeftLeader);
+		argR->setTextAttachmentType(AcDbMLeaderStyle::kAttachmentBottomOfTopLine, AcDbMLeaderStyle::kRightLeader);
 		argR->setExtendLeaderToText(true);
 		argR->setLandingGap(1.2);
 		argR->setEnableDogleg(false);

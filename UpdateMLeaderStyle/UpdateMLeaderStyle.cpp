@@ -151,8 +151,8 @@ namespace sstd {
 					argR->setContentType(AcDbMLeaderStyle::kMTextContent);
 					argR->setTextAngleType(AcDbMLeaderStyle::kHorizontalAngle);
 					argR->setTextAttachmentDirection(AcDbMLeaderStyle::kAttachmentHorizontal);
-					argR->setTextAttachmentType(AcDbMLeaderStyle::kAttachmentBottomLine, AcDbMLeaderStyle::kLeftLeader);
-					argR->setTextAttachmentType(AcDbMLeaderStyle::kAttachmentBottomLine, AcDbMLeaderStyle::kRightLeader);
+					argR->setTextAttachmentType(AcDbMLeaderStyle::kAttachmentBottomOfTopLine, AcDbMLeaderStyle::kLeftLeader);
+					argR->setTextAttachmentType(AcDbMLeaderStyle::kAttachmentBottomOfTopLine, AcDbMLeaderStyle::kRightLeader);
 					argR->setExtendLeaderToText(true);
 					argR->setEnableDogleg(false);
 					if (argTable->$ArrowID) {
