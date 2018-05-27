@@ -77,7 +77,9 @@ static inline bool hasLayout(ThisState * s) {
 //http://adndevblog.typepad.com/autocad/2012/06/create-a-layout-using-objectarx.html
 ////////////////////////
 static inline void createLayout(ThisState *s) {
-	if (eOk != s->$LM->createLayout(s->$LayoutName.c_str(), s->$layoutId, s->$blockTableRecId))
+	if (eOk != s->$LM->createLayout(s->$LayoutName.c_str(),
+		s->$layoutId, 
+		s->$blockTableRecId))
 		svthrow(LR"(can not create layout)"sv);
 	/*用默认打印机初始化*/
 	//s->$LM->setDefaultPlotConfig(s->$blockTableRecId);
@@ -102,9 +104,24 @@ static inline void setplotstyle(ThisState *s) {
 
 	bool varFlageK;
 
-	AcDbLayout *  pLayout = nullptr;
-	if (eOk != acdbOpenObject(pLayout, s->$layoutId, AcDb::kForWrite))
-		svthrow(LR"(can not open layout)");
+	AcDbLayout * pLayout = nullptr;
+	/***************************************************************/
+	///try to find current layout 
+	if constexpr(true) {
+		auto * pLayoutManager = acdbHostApplicationServices()->layoutManager();
+		AcDbObjectId idBTR = pLayoutManager->getActiveLayoutBTRId();
+		sstd::ArxClosePointer< AcDbBlockTableRecord  >pBTR;
+		auto es = acdbOpenObject(pBTR.pointer(), idBTR, AcDb::kForRead);
+		if (es != Acad::eOk) { svthrow(LR"(can not open )"sv) ; }
+		AcDbObjectId idLayout = pBTR->getLayoutId();
+		es = acdbOpenObject(pLayout, idLayout, AcDb::kForWrite);
+		if (es != Acad::eOk) { svthrow(LR"(can not open )"sv); }
+	}
+	/***************************************************************/
+	else {
+		if (eOk != acdbOpenObject(pLayout, s->$layoutId, AcDb::kForWrite))
+			svthrow(LR"(can not open layout)");
+	}
 
 	//std::unique_ptr<AcDbPlotSettings> ps{ new AcDbPlotSettings(pLayout->modelType() )};
 
