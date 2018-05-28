@@ -5,6 +5,7 @@
 #include <set>
 #include <optional>
 #include <string_view>
+#include <filesystem>
 
 namespace sstd {
 	extern void WCS2DCS(const double * i, double * o);
@@ -383,9 +384,9 @@ namespace sstd {
 			//pPlotSettingsValidator->setPlotViewName(pLayout,LR"()");
 			//@AutoCAD PDF (High Quality Print).pc3
 			es = pPlotSettingsValidator->setPlotCfgName(pLayout, LR"(@AutoCAD PDF(High Quality Print).pc3)");	//设置打印设备
-			if (es!=eOk) {
+			if (es != eOk) {
 				es = pPlotSettingsValidator->setPlotCfgName(pLayout, LR"(@AutoCAD PDF (High Quality Print).pc3)");	//设置打印设备
-				if (es!=eOk) {
+				if (es != eOk) {
 					svthrow(LR"(无法找到:@AutoCAD PDF (High Quality Print).pc3)"sv);
 				}
 			}
@@ -498,8 +499,47 @@ namespace sstd {
 		return true;
 	}
 
-	static inline void show_pdf(const std::wstring & strFileName) {
+	static inline std::string next_tmp_count() {
+		constexpr const static unsigned short varSize = 8;
+		static char varData[varSize];
+		constexpr const static char varBC = 'a';
+		constexpr const static char varBE = 'z';
+		static bool varIsRun = []() {
+			for (auto & i : varData) { i = varBC; }
+			varData[0] = varBE;
+			return (std::rand() & 1);
+		}();
+		auto varBegin = std::rbegin(varData);
+		const auto varEnd = std::rend(varData);
+		for (; varBegin != varEnd; ++varBegin) {
+			auto & i = *varBegin;
+			if (i==varBE/*the last ? */) {
+				i = varBC;
+				continue;
+			}
+			++i;
+			break;
+		}
+		return std::string{ varData,varSize }+'/';
+		(void)varIsRun;
+	}
+
+	static inline void show_pdf(std::wstring  strFileName) {
 		QtApplication varQtApp;
+		/******************************************************/
+		static QTemporaryDir varDir{ QDir::temp().absoluteFilePath(QStringLiteral("autocad_pdf_tmp_show")) };
+		const std::filesystem::path varSource = strFileName;
+		const auto varTargetPathQ = varDir.filePath(QString::fromUtf8((next_tmp_count() + varSource.filename().u8string()).c_str()));
+		strFileName = varTargetPathQ.toStdWString();
+		const std::filesystem::path varTarget = strFileName;
+		try {
+			std::filesystem::create_directories(varTarget.parent_path());
+			std::filesystem::copy(varSource, varTarget, std::filesystem::copy_options::overwrite_existing);
+		}
+		catch (...) {
+			return;
+		}
+		/******************************************************/
 		const auto varStartCode = QStringLiteral("mupdf ") +
 			(QChar('\"') + QString::fromStdWString(strFileName) + QChar('\"'));
 		if (false == QProcess::startDetached(varStartCode)) {
