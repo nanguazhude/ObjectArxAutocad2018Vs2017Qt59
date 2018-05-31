@@ -1,4 +1,4 @@
-#ifndef TEXT_RENDER_HPP
+ï»¿#ifndef TEXT_RENDER_HPP
 #define TEXT_RENDER_HPP
 
 /*include cplusplus ibrarys*/
@@ -22,20 +22,20 @@ using namespace std::string_view_literals/*sv*/;
 #include <QtWidgets/QtWidgets>
 
 namespace sstd {
-	/*ºÁÃ×µ¥Î»Ö¸Ê¾·û*/
+	/*æ¯«ç±³å•ä½æŒ‡ç¤ºç¬¦*/
 	static inline constexpr double operator""_mm(long double a) { return static_cast<double>(a); }
-	/*¡ãµ¥Î»Ö¸Ê¾·û*/
+	/*Â°å•ä½æŒ‡ç¤ºç¬¦*/
 	static inline constexpr double operator""_deg(long double a) { return static_cast<double>(a); }
-	/*±ÈÀıµ¥Î»Ö¸Ê¾·û*/
+	/*æ¯”ä¾‹å•ä½æŒ‡ç¤ºç¬¦*/
 	static inline constexpr double operator""_per(long double a) { return static_cast<double>(a); }
 	/*to Qt utf8 */
 	static inline QString operator""_qtu8str(const char *a, std::size_t b) { return QString::fromUtf8(a, static_cast<int>(b)); }
 	class RenderState {
 	public:
-		QString $TextFileName/*ÒªäÖÈ¾µÄtxtÎÄ¼şÃû×Ö*/;
-		QString $OutPutDir/*Êä³öäÖÈ¾½á¹ûÂ·¾¶*/;
-		double  $PageWidth/*Ò³Ãæ¿í¶È,µ¥Î»ºÁÃ×*/;
-		double  $PageHeight/*Ò³Ãæ¸ß¶È,µ¥Î»ºÁÃ×*/;
+		QString $TextFileName/*è¦æ¸²æŸ“çš„txtæ–‡ä»¶åå­—*/;
+		QString $OutPutDir/*è¾“å‡ºæ¸²æŸ“ç»“æœè·¯å¾„*/;
+		double  $PageWidth/*é¡µé¢å®½åº¦,å•ä½æ¯«ç±³*/;
+		double  $PageHeight/*é¡µé¢é«˜åº¦,å•ä½æ¯«ç±³*/;
 		enum MarginType : unsigned char {
 			Top = 0,
 			Bottom = 1,
@@ -44,27 +44,27 @@ namespace sstd {
 			SizeOfMargin = 4
 		};
 		std::array<double, MarginType::SizeOfMargin> $Margin{
-			0.1_mm /*ÉÏ±ß¾à,mm*/,
-			0.1_mm /*ÏÂ±ß¾à,mm*/,
-			0.1_mm /*×ó±ß¾à,mm*/,
-			0.1_mm /*ÓÒ±ß¾à,mm*/ }/*ÉÏÏÂ×óÓÒ±ß¾à*/;
+			0.1_mm /*ä¸Šè¾¹è·,mm*/,
+			0.1_mm /*ä¸‹è¾¹è·,mm*/,
+			0.1_mm /*å·¦è¾¹è·,mm*/,
+			0.1_mm /*å³è¾¹è·,mm*/ }/*ä¸Šä¸‹å·¦å³è¾¹è·*/;
 		class Limit {
 		public:
-			double $Min /*×îĞ¡Öµ*/;
-			double $Max /*×î´óÖµ*/;
+			double $Min /*æœ€å°å€¼*/;
+			double $Max /*æœ€å¤§å€¼*/;
 			constexpr inline Limit() :$Min(0), $Max(0) {}
 			constexpr inline Limit(const double &a, const double &b) : $Min(a), $Max(b) {}
 		};
-		double $FontBasicSize{ 5.2_mm }/*×ÖÌåÄ¬ÈÏ´óĞ¡,µ¥Î»mm*/;
-		double $FontLineHeight{ 6._mm }/*Ã¿ĞĞ¸ß¶È,µ¥Î»mm*/;
-		Limit $FontDx{ -1._mm,1._mm }/*ºáÏòËæ»úÎ»ÒÆ,µ¥Î»mm*/;
-		Limit $FontDy{ -1._mm,1._mm }/*×İÏòËæ»úÎ»ÒÆ,µ¥Î»mm*/;
-		Limit $FontRotate{ -1.5_deg,1.6_deg }/*×ÖÌåËæ»úĞı×ª,µ¥Î»¡ã*/;
-		Limit $FontGlobalScale{ 0.0_per,1.0_per }/*×ÖÌåÈ«¾ÖËõ·Å±ÈÀı*/;
-		Limit $FontScaleX{ 0.0_per,1.0_per }/*×ÖÌåºáÏòËõ·Å±ÈÀı*/;
-		Limit $FontScaleY{ 0.0_per,1.0_per }/*×ÖÌå×İÏòËõ·Å±ÈÀı*/;
-		QString $TextLayerName{ u8R"(0)"_qtu8str }/*ÎÄ×ÖËùÔÚÍ¼²ã*/;
-		QString $BorderLayerName{u8R"(Defpoints)"_qtu8str }/*±ß½çËùÔÚµÄÍ¼²ã*/;
+		double $FontBasicSize{ 5.2_mm }/*å­—ä½“é»˜è®¤å¤§å°,å•ä½mm*/;
+		double $FontLineHeight{ 6._mm }/*æ¯è¡Œé«˜åº¦,å•ä½mm*/;
+		Limit $FontDx{ -1._mm,1._mm }/*æ¨ªå‘éšæœºä½ç§»,å•ä½mm*/;
+		Limit $FontDy{ -1._mm,1._mm }/*çºµå‘éšæœºä½ç§»,å•ä½mm*/;
+		Limit $FontRotate{ -1.5_deg,1.6_deg }/*å­—ä½“éšæœºæ—‹è½¬,å•ä½Â°*/;
+		Limit $FontGlobalScale{ 0.0_per,1.0_per }/*å­—ä½“å…¨å±€ç¼©æ”¾æ¯”ä¾‹*/;
+		Limit $FontScaleX{ 0.0_per,1.0_per }/*å­—ä½“æ¨ªå‘ç¼©æ”¾æ¯”ä¾‹*/;
+		Limit $FontScaleY{ 0.0_per,1.0_per }/*å­—ä½“çºµå‘ç¼©æ”¾æ¯”ä¾‹*/;
+		QString $TextLayerName{ u8R"(0)"_qtu8str }/*æ–‡å­—æ‰€åœ¨å›¾å±‚*/;
+		QString $BorderLayerName{u8R"(Defpoints)"_qtu8str }/*è¾¹ç•Œæ‰€åœ¨çš„å›¾å±‚*/;
 		/*********************************************************/
 		template<
 			typename CharType = char,
@@ -83,7 +83,7 @@ namespace sstd {
 					for (auto & i : $String) { i = $EndChar; }
 					*$String.rbegin() = 0;
 				}
-				/*²»¿¼ÂÇÒç³ö*/
+				/*ä¸è€ƒè™‘æº¢å‡º*/
 				void next() {
 					++$CurrentNumber;
 					auto varPos = $String.rbegin() + 1;
@@ -100,10 +100,10 @@ namespace sstd {
 		};
 		/*********************************/
 		NextNumber<wchar_t, 8, '0', '9'> $CurrentPageNumber;
-		bool $IsFileAndStreamOpen=false/*ÅĞ¶ÏÁ÷ºÍÎÄ¼şÓĞÃ»ÓĞ´ò¿ª*/;
-		QFile $File/*µ±Ç°ÎÄ¼ş*/;
-		QTextStream $Stream/*µ±Ç°Á÷*/;
-		std::string $DataInPastPage/*ÉÏÒ»Ò³Ãæ»¹Ã´ÓĞ´¦ÀíµÄÊı¾İ,utf8±àÂë*/;
+		bool $IsFileAndStreamOpen=false/*åˆ¤æ–­æµå’Œæ–‡ä»¶æœ‰æ²¡æœ‰æ‰“å¼€*/;
+		QFile $File/*å½“å‰æ–‡ä»¶*/;
+		QTextStream $Stream/*å½“å‰æµ*/;
+		std::string $DataInPastPage/*ä¸Šä¸€é¡µé¢è¿˜ä¹ˆæœ‰å¤„ç†çš„æ•°æ®,utf8ç¼–ç */;
 		bool $IsEndl = false;
 	};
 
