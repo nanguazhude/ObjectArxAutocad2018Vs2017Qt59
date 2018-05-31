@@ -505,8 +505,7 @@ namespace sstd {
 		constexpr const static char varBC = 'a';
 		constexpr const static char varBE = 'z';
 		static bool varIsRun = []() {
-			for (auto & i : varData) { i = varBC; }
-			varData[0] = varBE;
+			for (auto & i : varData) { i = varBE; }
 			return (std::rand() & 1);
 		}();
 		auto varBegin = std::rbegin(varData);
