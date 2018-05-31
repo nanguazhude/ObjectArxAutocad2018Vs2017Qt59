@@ -617,45 +617,7 @@ namespace sstd {
 				}
 			}
 
-		}
-
-		/*获得打印区域*/
-		{
-			sstd::ArxClosePointer< AcDbBlockReference > varR;
-			if (eOk != acdbOpenObject(varR.pointer(), varHBKID)) {
-				svthrow(LR"(can not open  AcDbBlockReference)");
-			}
-			AcDbExtents varBound;
-			varR->bounds(varBound);
-			varTopRight = varBound.maxPoint();
-			varBottomLeft = varBound.minPoint();
-		}
-
-		{
-
-			/* zoom */
-			class Lock {
-			public:
-				ads_name ss = {};
-				Lock() { construct(); }
-				void construct() { acedSSAdd(nullptr, nullptr, ss); }
-				void destory() { acedSSFree(ss); ss[0] = 0; ss[1] = 0; }
-				~Lock() { destory(); }
-			} varLock;
-
-			{
-				ads_name s;
-				acdbGetAdsName(s, varHBKID);
-				acedSSAdd(s, varLock.ss, varLock.ss);
-			}
-
-			acedCommandS(
-				RTSTR, LR"(ZOOM)",
-				RTSTR, L"O",
-				RTPICKS, varLock.ss,
-				RTSTR, L"",
-				RTNONE);
-		}
+		}		
 
 		class PlotLock {
 			//BACKGROUNDPLOT
@@ -683,6 +645,43 @@ namespace sstd {
 			}
 		}varPlotLock;
 
+		{
+			/* zoom */
+			class Lock {
+			public:
+				ads_name ss = {};
+				Lock() { construct(); }
+				void construct() { acedSSAdd(nullptr, nullptr, ss); }
+				void destory() { acedSSFree(ss); ss[0] = 0; ss[1] = 0; }
+				~Lock() { destory(); }
+			} varLock;
+
+			{
+				ads_name s;
+				acdbGetAdsName(s, varHBKID);
+				acedSSAdd(s, varLock.ss, varLock.ss);
+			}
+
+			acedCommandS(
+				RTSTR, LR"(ZOOM)",
+				RTSTR, L"O",
+				RTPICKS, varLock.ss,
+				RTSTR, L"",
+				RTNONE);
+		}
+
+		/*获得打印区域*/
+		{
+			sstd::ArxClosePointer< AcDbBlockReference > varR;
+			if (eOk != acdbOpenObject(varR.pointer(), varHBKID)) {
+				svthrow(LR"(can not open  AcDbBlockReference)");
+			}
+			AcDbExtents varBound;
+			varR->bounds(varBound)/*geomExtents*/;
+			varTopRight = varBound.maxPoint();
+			varBottomLeft = varBound.minPoint();
+		}
+
 		WCS2DCS(&varBottomLeft.x, &varBottomLeft.x);
 		WCS2DCS(&varTopRight.x, &varTopRight.x);
 
@@ -690,7 +689,7 @@ namespace sstd {
 			varBottomLeft.x, varBottomLeft.y,
 			varTopRight.x, varTopRight.y,
 			varFileName)) {
-			show_pdf(varFileName);
+			show_pdf(varFileName);			
 			return true;
 		}
 		return false;
@@ -776,6 +775,26 @@ namespace sstd {
 		acutPrintf(LR"(
 @横边框2(G3000) : %d
 )", varHBKIDS.size());
+
+		class LayerVLock {
+		public:
+			LayerVLock() {
+				acedCommandS(
+					RTSTR, LR"(-layer)",
+					RTSTR, L"off",
+					RTSTR, L"Defpoints",
+					RTSTR, L"",
+					RTNONE);
+			}
+			~LayerVLock() {
+				acedCommandS(
+					RTSTR, LR"(-layer)",
+					RTSTR, L"on",
+					RTSTR, L"Defpoints",
+					RTSTR, L"",
+					RTNONE);
+			}
+		}varLayerVLock;
 
 		/*调整标题栏*/
 		if ((varBTLIDS.size() == 1) && (varHBKIDS.size() == 1)) {
