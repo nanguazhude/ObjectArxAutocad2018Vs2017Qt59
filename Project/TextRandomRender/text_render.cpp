@@ -221,7 +221,8 @@ goto_next_page:
 
 	}
 
-	if ((argRenderState->$DataInPastPage.empty() && (argRenderState->$File.atEnd() == true))) {
+	if ((argRenderState->$DataInPastPage.empty() && 
+		(argRenderState->$File.atEnd() == true))) {
 		argRenderState->$IsEndl = true;
 		return;
 	}
