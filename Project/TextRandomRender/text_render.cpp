@@ -107,16 +107,16 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 	const double varWidthBegin = argRenderState->$BorderTopLeftX +
 		argRenderState->$Margin[sstd::RenderState::MarginType::Left]/*初始列宽*/;
 	double varWidth = varWidthBegin;
-	const double varHeightMax = varHeight + argRenderState->$PageHeight -
+	const double varHeightMax = argRenderState->$BorderTopLeftY + argRenderState->$PageHeight -
 		argRenderState->$Margin[sstd::RenderState::MarginType::Bottom]/*最大高度*/;
-	const double varWidthMax = varWidthBegin + argRenderState->$PageWidth -
+	const double varWidthMax = argRenderState->$BorderTopLeftX + argRenderState->$PageWidth -
 		argRenderState->$Margin[sstd::RenderState::MarginType::Right]/*最大宽度*/;
 
 	{/*将文字逐个创建块,并布局*/
 		CharNumber varCurrentCharCount;
 		wchar_t varCurrentCharRaw = 0;
 		std::string varLine = std::move(argRenderState->$DataInPastPage)/*获得上一页剩余数据*/;
-		while ((varLine.size() > 0) || (argRenderState->$File.atEnd() == false)) {
+		while ((varLine.size() > 0) || (argRenderState->$Stream.atEnd() == false)) {
 			/*get line data*/
 			if (varLine.empty()) {
 				const auto varLineQ = argRenderState->$Stream.readLine().trimmed();
@@ -134,7 +134,8 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 			}
 
 			/*布局此Line*/
-			std::string_view varCurrentLine = varLine;
+			const std::string var_tmp_varline = std::move(varLine)/*清空缓冲区*/;
+			std::string_view varCurrentLine = var_tmp_varline;
 			std::string_view varNextChar;
 
 			varHeight += argRenderState->$FontLineHeight;
@@ -149,8 +150,8 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 				char varTmp[] = { 0,0,0,0,0,0,0,0 };
 				{
 					unsigned int j = 0;
-					for (auto & i : varTmp) {
-						i = varNextChar[j];
+					for (const auto & i : varNextChar) {
+						varTmp[j] = i;
 						++j;
 					}
 				}
@@ -282,7 +283,7 @@ goto_next_page:
 	}
 
 	if ((argRenderState->$DataInPastPage.empty() &&
-		(argRenderState->$File.atEnd() == true))) {
+		(argRenderState->$Stream.atEnd() == true))) {
 		argRenderState->$IsEndl = true;
 		return;
 	}

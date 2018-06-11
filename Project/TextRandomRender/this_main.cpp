@@ -49,9 +49,11 @@ static inline void init_state(sstd::RenderState *arg) {
 
 }
 
-static inline void next_state(sstd::RenderState *arg) {
+static inline AcApDocument*  next_state(sstd::RenderState *arg) {
 	acDocManager->appContextNewDocument(LR"(@acadISO -Named Plot Styles.dwt)");
-	acDocManager->lockDocument(acDocManager->curDocument());
+	auto varAns = acDocManager->curDocument();
+	acDocManager->lockDocument(varAns);
+	return varAns;
 	(void)arg;
 }
 
@@ -59,7 +61,7 @@ static inline void main_text_render() try {
 	UniquePtr varRenderState{ new sstd::RenderState };
 	init_state(varRenderState.get());
 	while (varRenderState->$IsEndl == false) {
-		next_state(varRenderState.get());
+		auto varCD = next_state(varRenderState.get());
 		text_render(varRenderState.get());
 		/*save the stete */
 		{
@@ -70,8 +72,8 @@ static inline void main_text_render() try {
 				->workingDatabase()
 				->saveAs(varSavePath.wstring().c_str())/*保存文档*/;
 		}
-		acDocManager->unlockDocument(acDocManager->curDocument());
-		acDocManager->closeDocument(acDocManager->curDocument())/*关闭文档*/;
+		acDocManager->unlockDocument(varCD);
+		acDocManager->appContextCloseDocument(varCD)/*关闭文档*/;
 	}
 }
 catch (...) {
@@ -85,8 +87,8 @@ acrxEntryPoint(AcRx::AppMsgCode msg, void* pkt) {
 		acrxRegisterAppMDIAware(pkt);
 		acedRegCmds->addCommand(
 			L"SSTD_GLOBAL_CMD_GROUP",
-			L"_shxtextview",
-			L"shxtextview",
+			L"_textrandomrender",
+			L"textrandomrender",
 			ACRX_CMD_SESSION,
 			&main_text_render);
 	}break;
