@@ -12,6 +12,7 @@
 #include <array>
 #include <exception>
 #include <stdexcept>
+#include <filesystem>
 
 using namespace std::string_literals/*s*/;
 using namespace std::string_view_literals/*sv*/;
@@ -33,7 +34,7 @@ namespace sstd {
 	class RenderState {
 	public:
 		QString $TextFileName/*要渲染的txt文件名字*/;
-		QString $OutPutDir/*输出渲染结果路径*/;
+		std::filesystem::path $OutPutDir/*输出渲染结果路径*/;
 		double  $PageWidth/*页面宽度,单位毫米*/;
 		double  $PageHeight/*页面高度,单位毫米*/;
 		enum MarginType : unsigned char {
@@ -101,7 +102,7 @@ namespace sstd {
 				}
 		};
 		/*********************************/
-		NextNumber<wchar_t, 8, '0', '9'> $CurrentPageNumber;
+		NextNumber<char, 8, '0', '9'> $CurrentPageNumber;
 		bool $IsFileAndStreamOpen=false/*判断流和文件有没有打开*/;
 		QFile $File/*当前文件*/;
 		QTextStream $Stream/*当前流*/;
