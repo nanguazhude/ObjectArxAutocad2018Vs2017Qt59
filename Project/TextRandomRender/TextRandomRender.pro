@@ -35,5 +35,7 @@ QT       += qml
 TEMPLATE = lib
 
 SOURCES += this_main.cpp
+SOURCES += text_render.cpp
+HEADERS += text_render.hpp
 
 DESTDIR = $$PWD/../../release/Autocad2019
