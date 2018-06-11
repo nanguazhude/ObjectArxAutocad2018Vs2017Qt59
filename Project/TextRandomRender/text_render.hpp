@@ -64,6 +64,8 @@ namespace sstd {
 		Limit $FontScaleX{ 0.0_per,1.0_per }/*字体横向缩放比例*/;
 		Limit $FontScaleY{ 0.0_per,1.0_per }/*字体纵向缩放比例*/;
 		QString $TextLayerName{ u8R"(0)"_qtu8str }/*文字所在图层*/;
+		double $BorderTopLeftX = 0.0_mm/**/;
+		double $BorderTopLeftY = 0.0_mm/**/;
 		QString $BorderLayerName{u8R"(Defpoints)"_qtu8str }/*边界所在的图层*/;
 		/*********************************************************/
 		template<

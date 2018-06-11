@@ -2,6 +2,7 @@
 
 **********/
 #include "text_render.hpp"
+#include <set>
 #include <vector>
 #include <memory>
 
@@ -40,12 +41,15 @@ namespace {
 		RenderChar() : RenderCharBasic(false) {}
 		double $X = 0.;
 		double $Y = 0.;
-		AcDbObjectId $Index;
+		AcDbObjectId $Index/*块的名字*/;
+		AcDbObjectId $InsertCharIndex/*插入块的名字*/;
 	};
 
 }/*****/
 
-/*获得下一个字符*/
+/*
+获得下一个字符
+*/
 inline static std::string_view get_next_char(std::string_view & arg) {
 	if (arg.empty()) { return{}; }
 	const auto varFirstChar = static_cast<unsigned int>(
@@ -83,8 +87,10 @@ inline static std::string_view get_next_char(std::string_view & arg) {
 
 extern void text_render(sstd::RenderState * argRenderState) try {
 	using CharNumber = sstd::RenderState::NextNumber<wchar_t, 8, '0', '9'>;
-	std::vector< std::unique_ptr<RenderCharBasic>/**/> varChars;
+	std::vector< std::unique_ptr<RenderCharBasic>/**/> varChars /*所有Char*/;
+	const auto varTextLayerName = argRenderState->$TextLayerName.toStdWString();
 
+	/*读取文件*/
 	if (false == argRenderState->$IsFileAndStreamOpen) {
 		/*读取数据*/
 		argRenderState->$File.setFileName(argRenderState->$TextFileName);
@@ -96,22 +102,28 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 	/*页码加一*/
 	argRenderState->$CurrentPageNumber.next();
 
-	double varHeight = 0;
-	double varWidthBegin = 0;
+	double varHeight = argRenderState->$BorderTopLeftY +
+		argRenderState->$Margin[sstd::RenderState::MarginType::Top]/*当前行高*/;
+	const double varWidthBegin = argRenderState->$BorderTopLeftX +
+		argRenderState->$Margin[sstd::RenderState::MarginType::Left]/*初始列宽*/;
 	double varWidth = varWidthBegin;
-	double varHeightMax = 0;
-	double varWidthMax = 0;
+	const double varHeightMax = varHeight + argRenderState->$PageHeight -
+		argRenderState->$Margin[sstd::RenderState::MarginType::Bottom]/*最大高度*/;
+	const double varWidthMax = varWidthBegin + argRenderState->$PageWidth -
+		argRenderState->$Margin[sstd::RenderState::MarginType::Right]/*最大宽度*/;
 
 	{/*将文字逐个创建块,并布局*/
 		CharNumber varCurrentCharCount;
-		std::string varLine = std::move(argRenderState->$DataInPastPage);
-		while (varLine.size() || (argRenderState->$File.atEnd() == false)) {
+		wchar_t varCurrentCharRaw = 0;
+		std::string varLine = std::move(argRenderState->$DataInPastPage)/*获得上一页剩余数据*/;
+		while ((varLine.size() > 0) || (argRenderState->$File.atEnd() == false)) {
 			/*get line data*/
 			if (varLine.empty()) {
 				const auto varLineQ = argRenderState->$Stream.readLine().trimmed();
 				if (varLineQ.isEmpty()) {
+					/*获得空行*/
 					varHeight += argRenderState->$FontLineHeight;
-					if (varHeight >= varHeightMax)/*直接删除此 空行*/ {
+					if (varHeight >= varHeightMax)/*跨页空行直接删除*/ {
 						goto goto_next_page;
 					}
 					varChars.emplace_back(new RenderCharEmpty);
@@ -120,23 +132,26 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 				}
 				varLine = varLineQ.toUtf8();
 			}
+
 			/*布局此Line*/
 			std::string_view varCurrentLine = varLine;
 			std::string_view varNextChar;
 
 			varHeight += argRenderState->$FontLineHeight;
-			if (varHeight >= varHeightMax)/**/ {
+			if (varHeight >= varHeightMax)/*如果超出这一页。。。*/ {
 				argRenderState->$DataInPastPage = varCurrentLine;
 				goto goto_next_page;
 			}
 
+			/*布局这一行文字*/
 			while ((varNextChar = get_next_char(varCurrentLine)).empty() == false) {
-				char varTmp[8];
+				/* 在TextView后面加一个 0 */
+				char varTmp[] = { 0,0,0,0,0,0,0,0 };
 				{
 					unsigned int j = 0;
 					for (auto & i : varTmp) {
-						if (j < varNextChar.size()) { i = varNextChar[j]; }
-						else { i = 0; }
+						i = varNextChar[j];
+						++j;
 					}
 				}
 
@@ -145,7 +160,7 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 				varCurrentCharCount.next();
 				auto varRenderChar = static_cast<RenderChar *>(varRenderCharParent.get());
 
-				/*create the block , insert it */
+				/*create the block */
 				{
 					{
 						std::unique_ptr<AcDbBlockTableRecord,
@@ -187,18 +202,34 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 							varMText->setContents(varCurrentChar);
 							varMText->setTextHeight(argRenderState->$FontBasicSize);
 							varBlockTableRecord->appendAcDbEntity(varMText.get());
+							varCurrentCharRaw = varCurrentChar.getAt(0);
+							varMText->setLayer(varTextLayerName.c_str());
 						}
 					}
 
 				}
 
+				/*判断是否创建新行*/
 				if (varWidth >= varWidthMax) {
 					varWidth = varWidthBegin;
-					bool varNeedRenderThisChar = true;
+					/*在行尾保留的标点...*/
+					const static std::set<wchar_t> _RenderRaw{
+						L',',
+						L'.',
+						L';',
+						L'\'',
+						L'。',
+						L'，',
+					};
+					/*标点符号排布在这一行*/
+					bool varNeedRenderThisChar = _RenderRaw.count(varCurrentCharRaw) > 0;
+
 					varHeight += argRenderState->$FontLineHeight;
 					if (varHeight >= varHeightMax)/**/ {
 						if (varNeedRenderThisChar) {
 							argRenderState->$DataInPastPage = varCurrentLine;
+							varRenderChar->$X = varWidth;
+							varRenderChar->$Y = varHeight;
 						}
 						else {
 							argRenderState->$DataInPastPage = std::string_view(
@@ -210,6 +241,35 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 					}
 				}
 
+				varRenderChar->$X = varWidth;
+				varRenderChar->$Y = varHeight;
+				/*insert the block*/
+				std::unique_ptr<AcDbBlockReference, void(*)(AcDbBlockReference*)>
+					varCharInsert{ new AcDbBlockReference({ varRenderChar->$X,varRenderChar->$Y,0. },
+						varRenderChar->$Index) ,[](AcDbBlockReference * arg) {
+					if (arg->objectId().isValid()) {
+						arg->close();
+					}
+					else {
+						delete arg;
+					}
+				} };
+				varCharInsert->setLayer(varTextLayerName.c_str());
+				{/*insert the char*/
+					auto varDB = acdbHostApplicationServices()->workingDatabase();
+					AcDbObjectPointer<AcDbBlockTable> varBlockTable(varDB->blockTableId(), kForWrite);
+					if (varBlockTable.openStatus() != kOk) {
+						throw Exception(u8R"(can not open AcDbBlockTable)"sv);
+					}
+					AcDbBlockTableRecord * varModel = nullptr;
+					if (varBlockTable->getAt(ACDB_MODEL_SPACE, varModel, AcDb::kForWrite) != kOk)
+						throw Exception(u8R"(can not open AcDbBlockTableRecord)"sv);
+					varModel->appendAcDbEntity(varRenderChar->$InsertCharIndex, varCharInsert.get());
+					varModel->close();
+				}
+				AcDbExtents varBounds;
+				varCharInsert->bounds(varBounds);
+				varWidth += std::abs(varBounds.maxPoint().x - varBounds.minPoint().x);
 			}
 
 		}//while
@@ -221,7 +281,7 @@ goto_next_page:
 
 	}
 
-	if ((argRenderState->$DataInPastPage.empty() && 
+	if ((argRenderState->$DataInPastPage.empty() &&
 		(argRenderState->$File.atEnd() == true))) {
 		argRenderState->$IsEndl = true;
 		return;

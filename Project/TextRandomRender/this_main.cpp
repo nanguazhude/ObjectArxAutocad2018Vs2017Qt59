@@ -4,12 +4,26 @@
 #include <arxHeaders.h>
 #pragma warning( pop )
 
+#include <memory>
 #include "text_render.hpp"
 extern void text_render(sstd::RenderState *);
 
-static inline void main_text_render() {
-	sstd::RenderState varRenderState;
-	text_render(&varRenderState);
+namespace {
+	template<typename T>
+	class UniquePtr : public std::unique_ptr<T> {
+		using Parent = std::unique_ptr<T>;
+	public:
+		UniquePtr(T * arg) :Parent(arg) {}
+	};
+}/*namespace*/
+
+static inline void main_text_render() try{
+	UniquePtr varRenderState{ new sstd::RenderState };
+	while (varRenderState->$IsEndl == false) {
+		text_render(varRenderState.get());
+	}
+}
+catch (...) {
 }
 
 extern "C" AcRx::AppRetCode
