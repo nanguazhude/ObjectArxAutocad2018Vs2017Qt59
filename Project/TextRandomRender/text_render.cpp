@@ -241,7 +241,7 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 					}
 					AcDbExtents varBounds;
 					varCharInsert->bounds(varBounds);
-					varWidth += std::abs(varBounds.maxPoint().x - varBounds.minPoint().x);
+					varWidth += std::abs(varBounds.maxPoint().x - varBounds.minPoint().x)/*+字间距*/;
 				};
 
 				/*判断是否创建新行*/
