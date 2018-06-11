@@ -35,8 +35,8 @@ namespace sstd {
 	public:
 		QString $TextFileName/*要渲染的txt文件名字*/;
 		std::filesystem::path $OutPutDir/*输出渲染结果路径*/;
-		double  $PageWidth/*页面宽度,单位毫米*/;
-		double  $PageHeight/*页面高度,单位毫米*/;
+		double  $PageWidth = 210._mm/*页面宽度,单位毫米*/;
+		double  $PageHeight = 297._mm/*页面高度,单位毫米*/;
 		enum MarginType : unsigned char {
 			Top = 0,
 			Bottom = 1,
@@ -67,7 +67,7 @@ namespace sstd {
 		QString $TextLayerName{ u8R"(0)"_qtu8str }/*文字所在图层*/;
 		double $BorderTopLeftX = 0.0_mm/**/;
 		double $BorderTopLeftY = 0.0_mm/**/;
-		QString $BorderLayerName{u8R"(Defpoints)"_qtu8str }/*边界所在的图层*/;
+		QString $BorderLayerName{ u8R"(Defpoints)"_qtu8str }/*边界所在的图层*/;
 		/*********************************************************/
 		template<
 			typename CharType = char,
@@ -103,7 +103,7 @@ namespace sstd {
 		};
 		/*********************************/
 		NextNumber<char, 8, '0', '9'> $CurrentPageNumber;
-		bool $IsFileAndStreamOpen=false/*判断流和文件有没有打开*/;
+		bool $IsFileAndStreamOpen = false/*判断流和文件有没有打开*/;
 		QFile $File/*当前文件*/;
 		QTextStream $Stream/*当前流*/;
 		std::string $DataInPastPage/*上一页面还么有处理的数据,utf8编码*/;

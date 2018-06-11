@@ -222,7 +222,7 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 						L'，',
 					};
 					/*标点符号排布在这一行*/
-					bool varNeedRenderThisChar = _RenderRaw.count(varCurrentCharRaw) > 0;
+					const bool varNeedRenderThisChar = _RenderRaw.count(varCurrentCharRaw) > 0;
 
 					varHeight += argRenderState->$FontLineHeight;
 					if (varHeight >= varHeightMax)/**/ {
