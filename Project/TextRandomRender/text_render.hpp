@@ -10,6 +10,7 @@
 #include <string>
 #include <string_view>
 #include <array>
+#include <random>
 #include <exception>
 #include <stdexcept>
 #include <filesystem>
@@ -50,20 +51,35 @@ namespace sstd {
 			0.1_mm /*左边距,mm*/,
 			0.1_mm /*右边距,mm*/ }/*上下左右边距*/;
 		class Limit {
-		public:
 			double $Min /*最小值*/;
 			double $Max /*最大值*/;
-			constexpr inline Limit() :$Min(0), $Max(0) {}
-			constexpr inline Limit(const double &a, const double &b) : $Min(a), $Max(b) {}
+			std::unique_ptr<std::normal_distribution<double>/**/> $ND;
+			static std::mt19937 $RD;
+			inline void _construct() {
+				const auto varMean/*平均数*/ = ($Min + $Max)*0.5;
+				const auto varS/*标准差*/ = std::abs($Max - $Min)*(1.0 / 6.0);
+				$ND.reset(new std::normal_distribution<double>(varMean, varS));
+			}
+		public:
+			inline Limit() :Limit(0, 1) {}
+			inline Limit(const double &a, const double &b) : $Min(a), $Max(b) { _construct(); }
+			inline void setLimit(const double &a, const double & b) { $Min = a; $Max = b; _construct(); }
+			inline double next() {
+				const auto varAns = (*$ND)($RD);
+				if (varAns > $Max) { return $Max; }
+				if (varAns < $Min) { return $Min; }
+				return varAns;
+			}
 		};
 		double $FontBasicSize{ 5.2_mm }/*字体默认大小,单位mm*/;
 		double $FontLineHeight{ 6._mm }/*每行高度,单位mm*/;
-		Limit $FontDx{ -1._mm,1._mm }/*横向随机位移,单位mm*/;
-		Limit $FontDy{ -1._mm,1._mm }/*纵向随机位移,单位mm*/;
+		double $FontCharSpace{ 0.5_mm }/*字间距*/;
+		Limit $FontDx{ -0.13_mm,0.13_mm }/*横向随机位移,单位mm*/;
+		Limit $FontDy{ -0.13_mm,0.13_mm }/*纵向随机位移,单位mm*/;
 		Limit $FontRotate{ -1.5_deg,1.6_deg }/*字体随机旋转,单位°*/;
-		Limit $FontGlobalScale{ 0.0_per,1.0_per }/*字体全局缩放比例*/;
-		Limit $FontScaleX{ 0.0_per,1.0_per }/*字体横向缩放比例*/;
-		Limit $FontScaleY{ 0.0_per,1.0_per }/*字体纵向缩放比例*/;
+		Limit $FontGlobalScale{ 0.980_per,0.990_per }/*字体全局缩放比例*/;
+		Limit $FontScaleX{ 0.980_per,0.992_per }/*字体横向缩放比例*/;
+		Limit $FontScaleY{ 0.980_per,0.991_per }/*字体纵向缩放比例*/;
 		QString $TextLayerName{ u8R"(0)"_qtu8str }/*文字所在图层*/;
 		double $BorderTopLeftX = 0.0_mm/**/;
 		double $BorderTopLeftY = 0.0_mm/**/;

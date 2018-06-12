@@ -224,7 +224,7 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 
 				}
 
-				auto varInsertTheBlock = [varRenderChar, &varTextLayerName, &varWidth]() {
+				auto varInsertTheBlock = [argRenderState, varRenderChar, &varTextLayerName, &varWidth]() {
 					/*insert the block*/
 					std::unique_ptr<AcDbBlockReference, void(*)(AcDbBlockReference*)>
 						varCharInsert{ new AcDbBlockReference({ varRenderChar->$X,varRenderChar->$Y,0. },
@@ -251,7 +251,8 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 					}
 					AcDbExtents varBounds;
 					varCharInsert->bounds(varBounds);
-					varWidth += std::abs(varBounds.maxPoint().x - varBounds.minPoint().x)/*+字间距*/;
+					varWidth += argRenderState->$FontCharSpace +
+						std::abs(varBounds.maxPoint().x - varBounds.minPoint().x)/*+字间距*/;
 				};
 
 				/*判断是否创建新行*/
@@ -312,7 +313,40 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 goto_next_page:
 
 	{/*random this page*/
+		for (const auto & varC : varChars) {
+			if (varC->$IsEmpty) { continue; }
+			auto c = static_cast<RenderChar*>(varC.get());
+			AcDbObjectPointer<AcDbBlockReference> varChar(c->$InsertCharIndex, kForWrite);
+			if (varChar.openStatus() != kOk) {
+				throw Exception(u8R"(can not open AcDbBlockTable)"sv);
+			}
 
+			auto varPos = varChar->position();
+
+			{/*缩放*/
+				const auto varFontGlobalScale = argRenderState->$FontGlobalScale.next();
+				const auto varFontScaleX = argRenderState->$FontScaleX.next();
+				const auto varFontScaleY = argRenderState->$FontScaleY.next();
+				varChar->setScaleFactors({
+					varFontGlobalScale*varFontScaleX,
+					varFontGlobalScale*varFontScaleY,
+					1. });
+			}
+
+			{/*旋转*/
+				const auto varFontRotate = argRenderState->$FontRotate.next();
+				varChar->setRotation(varFontRotate);
+			}
+
+			{/*移位*/
+				const auto varFontDx = argRenderState->$FontDx.next();
+				const auto varFontDy = argRenderState->$FontDy.next();
+				varPos.x += varFontDx;
+				varPos.y += varFontDy;
+				varChar->setPosition(varPos);
+			}
+
+		}
 	}
 
 	if ((argRenderState->$DataInPastPage.empty() &&
@@ -326,3 +360,4 @@ catch (...) {
 	throw;
 }
 
+std::mt19937 sstd::RenderState::Limit::$RD{ std::random_device{}.operator()() };
