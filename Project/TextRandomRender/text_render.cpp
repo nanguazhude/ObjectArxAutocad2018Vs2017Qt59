@@ -85,6 +85,13 @@ inline static std::string_view get_next_char(std::string_view & arg) {
 
 }
 
+namespace {
+	template<typename T>
+	inline void add_line_height(T & x, sstd::RenderState *a) {
+		x -= a->$FontLineHeight;
+	}
+}/**/
+
 extern void text_render(sstd::RenderState * argRenderState) try {
 	using CharNumber = sstd::RenderState::NextNumber<wchar_t, 8, '0', '9'>;
 	std::vector< std::unique_ptr<RenderCharBasic>/**/> varChars /*所有Char*/;
@@ -102,14 +109,17 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 	/*页码加一*/
 	argRenderState->$CurrentPageNumber.next();
 
-	double varHeight = argRenderState->$BorderTopLeftY +
-		argRenderState->$Margin[sstd::RenderState::MarginType::Top]/*当前行高*/;
+	double varHeight = argRenderState->$BorderTopLeftY -
+		argRenderState->$Margin[sstd::RenderState::MarginType::Top] -
+		argRenderState->$FontLineHeight/*当前行高*/;
 	const double varWidthBegin = argRenderState->$BorderTopLeftX +
 		argRenderState->$Margin[sstd::RenderState::MarginType::Left]/*初始列宽*/;
 	double varWidth = varWidthBegin;
-	const double varHeightMax = argRenderState->$BorderTopLeftY + argRenderState->$PageHeight -
+	const double varHeightMax = argRenderState->$BorderTopLeftY -
+		argRenderState->$PageHeight +
 		argRenderState->$Margin[sstd::RenderState::MarginType::Bottom]/*最大高度*/;
-	const double varWidthMax = argRenderState->$BorderTopLeftX + argRenderState->$PageWidth -
+	const double varWidthMax = argRenderState->$BorderTopLeftX +
+		argRenderState->$PageWidth -
 		argRenderState->$Margin[sstd::RenderState::MarginType::Right]/*最大宽度*/;
 
 	{/*将文字逐个创建块,并布局*/
@@ -123,9 +133,9 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 				const auto varLineQ = argRenderState->$Stream.readLine().trimmed();
 				if (varLineQ.isEmpty()) {
 					/*获得空行*/
-					varHeight += argRenderState->$FontLineHeight;
+					add_line_height(varHeight, argRenderState);
 					varWidth = varWidthBegin;
-					if (varHeight >= varHeightMax)/*跨页空行直接删除*/ {
+					if (varHeight <= varHeightMax)/*跨页空行直接删除*/ {
 						goto goto_next_page;
 					}
 					varChars.emplace_back(new RenderCharEmpty);
@@ -140,10 +150,10 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 			std::string_view varCurrentLine = var_tmp_varline;
 			std::string_view varNextChar;
 
-			varHeight += argRenderState->$FontLineHeight;
+			add_line_height(varHeight, argRenderState);
 			varWidth = varWidthBegin;
 
-			if (varHeight >= varHeightMax)/*如果超出这一页。。。*/ {
+			if (varHeight <= varHeightMax)/*如果超出这一页。。。*/ {
 				argRenderState->$DataInPastPage = varCurrentLine;
 				goto goto_next_page;
 			}
@@ -261,8 +271,8 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 					/*标点符号排布在这一行*/
 					const bool varNeedRenderThisChar = _RenderRaw.count(varCurrentCharRaw) > 0;
 
-					varHeight += argRenderState->$FontLineHeight;
-					if (varHeight >= varHeightMax)/*增加新页*/ {
+					add_line_height(varHeight, argRenderState);
+					if (varHeight <= varHeightMax)/*增加新页*/ {
 						if (varNeedRenderThisChar) {
 							argRenderState->$DataInPastPage = varCurrentLine;
 							varInsertTheBlock();
