@@ -76,7 +76,7 @@ namespace sstd {
 		double $FontCharSpace{ 0.5_mm }/*字间距*/;
 		Limit $FontDx{ -0.13_mm,0.13_mm }/*横向随机位移,单位mm*/;
 		Limit $FontDy{ -0.13_mm,0.13_mm }/*纵向随机位移,单位mm*/;
-		Limit $FontRotate{ -1.5_deg,1.6_deg }/*字体随机旋转,单位°*/;
+		Limit $FontRotate{ -0.5_deg,0.5_deg }/*字体随机旋转,单位°*/;
 		Limit $FontGlobalScale{ 0.980_per,0.990_per }/*字体全局缩放比例*/;
 		Limit $FontScaleX{ 0.980_per,0.992_per }/*字体横向缩放比例*/;
 		Limit $FontScaleY{ 0.980_per,0.991_per }/*字体纵向缩放比例*/;
