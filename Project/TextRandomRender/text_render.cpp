@@ -43,6 +43,7 @@ namespace {
 		double $Y = 0.;
 		AcDbObjectId $Index/*块的名字*/;
 		AcDbObjectId $InsertCharIndex/*插入块的名字*/;
+		std::size_t  $LineCharIndex = 0;
 	};
 
 }/*****/
@@ -89,6 +90,7 @@ namespace {
 	template<typename T>
 	inline void add_line_height(T & x, sstd::RenderState *a) {
 		x -= a->$FontLineHeight;
+		a->$LineCharIndex = 0;
 	}
 }/**/
 
@@ -99,19 +101,20 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 
 	/*读取文件*/
 	if (false == argRenderState->$IsFileAndStreamOpen) {
+		argRenderState->$IsFileAndStreamOpen = true;
 		/*读取数据*/
 		argRenderState->$File.setFileName(argRenderState->$TextFileName);
-		if (false == argRenderState->$File.open(QIODevice::ReadOnly))
+		if (false == argRenderState->$File.open(QIODevice::ReadOnly | QIODevice::Text))
 			throw Exception(u8R"(can not open file)"sv);
 		argRenderState->$Stream.setDevice(&argRenderState->$File);
+		argRenderState->$Stream.setAutoDetectUnicode(true);
 	}
 
 	/*页码加一*/
 	argRenderState->$CurrentPageNumber.next();
 
 	double varHeight = argRenderState->$BorderTopLeftY -
-		argRenderState->$Margin[sstd::RenderState::MarginType::Top] -
-		argRenderState->$FontLineHeight/*当前行高*/;
+		argRenderState->$Margin[sstd::RenderState::MarginType::Top];/*当前行高*/;
 	const double varWidthBegin = argRenderState->$BorderTopLeftX +
 		argRenderState->$Margin[sstd::RenderState::MarginType::Left]/*初始列宽*/;
 	double varWidth = varWidthBegin;
@@ -122,7 +125,7 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 		argRenderState->$PageWidth -
 		argRenderState->$Margin[sstd::RenderState::MarginType::Right]/*最大宽度*/;
 
-	{/*将文字逐个创建块,并布局*/
+	{   /*将文字逐个创建块,并布局*/
 		CharNumber varCurrentCharCount;
 		wchar_t varCurrentCharRaw = 0;
 		std::string varLine = std::move(argRenderState->$DataInPastPage)/*获得上一页剩余数据*/;
@@ -146,11 +149,15 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 			}
 
 			/*布局此Line*/
-			const std::string var_tmp_varline = std::move(varLine)/*清空缓冲区*/;
+			//const static std::string var_par_begin{ u8R"(    )"sv }/*首行缩进*/;
+			const std::string var_tmp_varline = /*var_par_begin + */std::move(varLine)/*清空缓冲区*/;
+			varLine.clear()/*强制清除数据...*/;
 			std::string_view varCurrentLine = var_tmp_varline;
 			std::string_view varNextChar;
 
-			add_line_height(varHeight, argRenderState);
+			if (argRenderState->$LineCharIndex) {
+				add_line_height(varHeight, argRenderState);
+			}
 			varWidth = varWidthBegin;
 
 			if (varHeight <= varHeightMax)/*如果超出这一页。。。*/ {
@@ -158,8 +165,22 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 				goto goto_next_page;
 			}
 
-			/*布局这一行文字*/
+			std::vector< std::string_view > __varAllChars;
 			while ((varNextChar = get_next_char(varCurrentLine)).empty() == false) {
+				__varAllChars.push_back(varNextChar);
+			}
+
+			/*布局这一行文字*/
+			auto __b = __varAllChars.cbegin();
+			const auto __e = __varAllChars.cend();
+			auto get_last_string = [__e](auto p) ->std::string_view {
+				++p;
+				if (p >= __e) { return std::string_view{}; }
+				const std::string_view & v = *p;
+				return v.data();
+			};
+			for (; __b != __e; ++__b) {
+				varNextChar = *__b;
 				/* 在TextView后面加一个 0 */
 				char varTmp[] = { 0,0,0,0,0,0,0,0 };
 				{
@@ -174,7 +195,7 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 				auto & varRenderCharParent = varChars.emplace_back(new RenderChar);
 				varCurrentCharCount.next();
 				auto varRenderChar = static_cast<RenderChar *>(varRenderCharParent.get());
-
+				varRenderChar->$LineCharIndex = argRenderState->$LineCharIndex++;
 				/*create the block */
 				{
 					{
@@ -275,26 +296,21 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 					add_line_height(varHeight, argRenderState);
 					if (varHeight <= varHeightMax)/*增加新页*/ {
 						if (varNeedRenderThisChar) {
-							argRenderState->$DataInPastPage = varCurrentLine;
+							argRenderState->$DataInPastPage = get_last_string(__b);
 							varInsertTheBlock();
 						}
 						else {
-							argRenderState->$DataInPastPage = std::string_view(
-								varCurrentLine.data() - varNextChar.size(),
-								varCurrentLine.size() + varNextChar.size());
+							argRenderState->$DataInPastPage = get_last_string(__b - 1);
 							varChars.pop_back();
 						}
 						goto goto_next_page;
 					}
 					else /*增加新行*/ {
 						if (varNeedRenderThisChar) {
-							varLine = varCurrentLine;
 							varInsertTheBlock();
 						}
 						else {
-							varLine = std::string_view(
-								varCurrentLine.data() - varNextChar.size(),
-								varCurrentLine.size() + varNextChar.size());
+							--__b;
 							varChars.pop_back();
 						}
 						continue;

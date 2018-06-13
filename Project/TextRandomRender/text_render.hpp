@@ -71,6 +71,7 @@ namespace sstd {
 				return varAns;
 			}
 		};
+		std::size_t $LineCharIndex = 0;
 		double $FontBasicSize{ 5.2_mm }/*字体默认大小,单位mm*/;
 		double $FontLineHeight{ 6._mm }/*每行高度,单位mm*/;
 		double $FontCharSpace{ 0.5_mm }/*字间距*/;
