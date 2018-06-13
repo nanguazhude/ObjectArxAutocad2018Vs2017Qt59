@@ -344,7 +344,8 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 							varMText->setContents(varCurrentChar);
 							varBlockTableRecord->appendAcDbEntity(varMText.get());
 							varMText->setLayer(varTextLayerName.c_str());
-							varMText->setLocation({ 0 , 0 , 0 });
+							varMText->setAttachment(AcDbMText::kBottomLeft);
+							varMText->setLocation({ 0 , -argRenderState->$FontLineHeight  , 0 });
 						}
 					}
 
@@ -539,4 +540,73 @@ const QString & sstd::Font::getFontName() const {
 	return thisp->$FontName;
 }
 
+/**
+作者：UncleSugar
+链接：https://www.zhihu.com/question/20308770/answer/241699602
+来源：知乎
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 
+Sub 字体修改()
+'
+' 字体修改 宏
+'
+Dim R_Character As Range
+
+
+Dim FontSize(5)
+' 字体大小在5个值之间进行波动，可以改写
+FontSize(1) = "21"
+FontSize(2) = "21.5"
+FontSize(3) = "22"
+FontSize(4) = "22.5"
+FontSize(5) = "23"
+
+
+
+Dim FontName(3)
+'字体名称在三种字体之间进行波动，可改写，但需要保证系统拥有下列字体
+FontName(1) = "陈静的字完整版"
+FontName(2) = "萌妹子体"
+FontName(3) = "李国夫手写体"
+
+Dim ParagraphSpace(5)
+'行间距 在一定以下值中均等分布，可改写
+ParagraphSpace(1) = "12"
+ParagraphSpace(2) = "13"
+ParagraphSpace(3) = "20"
+ParagraphSpace(4) = "7"
+ParagraphSpace(5) = "12"
+
+'不懂原理的话，不建议修改下列代码
+
+For Each R_Character In ActiveDocument.Characters
+
+VBA.Randomize
+
+R_Character.Font.Name = FontName(Int(VBA.Rnd * 3) + 1)
+
+R_Character.Font.Size = FontSize(Int(VBA.Rnd * 5) + 1)
+
+R_Character.Font.Position = Int(VBA.Rnd * 3) + 1
+
+R_Character.Font.Spacing = 0
+
+
+Next
+
+Application.ScreenUpdating = True
+
+
+
+For Each Cur_Paragraph In ActiveDocument.Paragraphs
+
+Cur_Paragraph.LineSpacing = ParagraphSpace(Int(VBA.Rnd * 5) + 1)
+
+
+Next
+Application.ScreenUpdating = True
+
+
+End Sub
+
+**/

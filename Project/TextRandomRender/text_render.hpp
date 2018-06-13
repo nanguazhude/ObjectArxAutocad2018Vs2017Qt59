@@ -35,9 +35,9 @@ namespace sstd {
 
 	class Font {
 	public:
-		Font(const QString & arg,double scale) { setFontName(arg,scale); }
+		Font(const QString & arg, double scale) { setFontName(arg, scale); }
 		bool has(const std::string_view &)/*判断字符集里面有没有此字节*/const;
-		void setFontName(const QString &,double scale);
+		void setFontName(const QString &, double scale);
 		const QString & getFontName()const;
 	private:
 		class Private;
@@ -52,8 +52,8 @@ namespace sstd {
 		std::vector<Font/**/> $Fonts;
 		QString $TextFileName/*要渲染的txt文件名字*/;
 		std::filesystem::path $OutPutDir/*输出渲染结果路径*/;
-		double  $PageWidth = 210._mm/*页面宽度,单位毫米*/;
-		double  $PageHeight = 297._mm/*页面高度,单位毫米*/;
+		double  $PageWidth = 1.5*70._mm/*页面宽度,单位毫米*/;
+		double  $PageHeight = 1.5*1.414*70._mm/*页面高度,单位毫米*/;
 		enum MarginType : unsigned char {
 			Top = 0,
 			Bottom = 1,
@@ -89,10 +89,10 @@ namespace sstd {
 		};
 		std::size_t $LineCharIndex = 0;
 		double $FontBasicSize{ 5.2_mm }/*字体默认大小,单位mm*/;
-		double $FontLineHeight{ 8.0_mm }/*每行高度,单位mm*/;
-		double $FontCharSpace{ 0.65_mm }/*字间距*/;
-		Limit $FontDx{ -0.13_mm,0.13_mm }/*横向随机位移,单位mm*/;
-		Limit $FontDy{ -0.13_mm,0.13_mm }/*纵向随机位移,单位mm*/;
+		double $FontLineHeight{ 8.2_mm }/*每行高度,单位mm*/;
+		double $FontCharSpace{ 0.65123_mm }/*字间距*/;
+		Limit $FontDx{ -0.43_mm,0.43_mm }/*横向随机位移,单位mm*/;
+		Limit $FontDy{ -0.43_mm,0.43_mm }/*纵向随机位移,单位mm*/;
 		Limit $FontRotate{ -1.5_deg,0.9_deg }/*字体随机旋转,单位°*/;
 		Limit $FontGlobalScale{ 0.980_per,0.990_per }/*字体全局缩放比例*/;
 		Limit $FontScaleX{ 0.880_per,0.892_per }/*字体横向缩放比例*/;
