@@ -96,7 +96,7 @@ namespace sstd {
 		Limit $FontRotate{ -1.5_deg,0.9_deg }/*字体随机旋转,单位°*/;
 		Limit $FontGlobalScale{ 0.980_per,0.990_per }/*字体全局缩放比例*/;
 		Limit $FontScaleX{ 0.880_per,0.892_per }/*字体横向缩放比例*/;
-		Limit $FontScaleY{ 0.980_per,0.991_per }/*字体纵向缩放比例*/;
+		Limit $FontScaleY{ 0.680_per,0.991_per }/*字体纵向缩放比例*/;
 		QString $TextLayerName{ u8R"(0)"_qtu8str }/*文字所在图层*/;
 		double $BorderTopLeftX = 0.0_mm/**/;
 		double $BorderTopLeftY = 0.0_mm/**/;

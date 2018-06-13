@@ -63,6 +63,7 @@ namespace {
 		AcDbObjectId $Index/*块的名字*/;
 		AcDbObjectId $InsertCharIndex/*插入块的名字*/;
 		std::size_t  $LineCharIndex = 0;
+		char $Utf8Code[8]{ 0,0,0,0,0,0,0,0 };
 	};
 
 }/*****/
@@ -264,23 +265,25 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 				const std::string_view & v = *p;
 				return v.data();
 			};
+
 			for (; __b != __e; ++__b) {
 				varNextChar = *__b;
+				auto & varRenderCharParent = varChars.emplace_back(new RenderChar);
+				auto varRenderChar = static_cast<RenderChar *>(varRenderCharParent.get());
 				/* 在TextView后面加一个 0 */
-				char varTmp[] = { 0,0,0,0,0,0,0,0 };
+			 
 				{
 					unsigned int j = 0;
 					for (const auto & i : varNextChar) {
-						varTmp[j] = i;
+						varRenderChar->$Utf8Code[j] = i;
 						++j;
 					}
 				}
 
-				AcString varCurrentChar(varTmp, AcString::Utf8);
-				auto & varRenderCharParent = varChars.emplace_back(new RenderChar);
+				AcString varCurrentChar(varRenderChar->$Utf8Code, AcString::Utf8);
 				varCurrentCharCount.next();
-				auto varRenderChar = static_cast<RenderChar *>(varRenderCharParent.get());
 				varRenderChar->$LineCharIndex = argRenderState->$LineCharIndex++;
+
 				/*create the block */
 				{
 					{
@@ -376,10 +379,13 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 						varModel->appendAcDbEntity(varRenderChar->$InsertCharIndex, varCharInsert.get());
 						varModel->close();
 					}
-					AcDbExtents varBounds;
-					varCharInsert->bounds(varBounds);
-					varWidth += argRenderState->$FontCharSpace +
-						std::abs(varBounds.maxPoint().x - varBounds.minPoint().x)/*+字间距*/;
+
+					{
+						AcDbExtents varBounds;
+						varCharInsert->bounds(varBounds);
+						varWidth += argRenderState->$FontCharSpace +
+							std::abs(varBounds.maxPoint().x - varBounds.minPoint().x)/*+字间距*/;
+					}
 				};
 
 				/*判断是否创建新行*/
@@ -470,6 +476,41 @@ goto_next_page:
 				varPos.x += varFontDx;
 				varPos.y += varFontDy;
 				varChar->setPosition(varPos);
+			}
+
+			if constexpr(true) {/*镜像*/
+				const static std::set<std::string_view> varKeyWord{
+					u8R"(平)"sv,
+					u8R"(逼)"sv,
+					u8R"(傻)"sv,
+					u8R"(功)"sv,
+					u8R"(习)"sv,
+					u8R"(裸)"sv,
+					u8R"(法)"sv,
+					u8R"(货)"sv,
+					u8R"(残)"sv,
+					u8R"(轮)"sv,
+					u8R"(赤)"sv,
+					u8R"(近)"sv,
+					u8R"(宪)"sv,
+				};
+
+				if ( varKeyWord.count( c->$Utf8Code ) > 0) {
+					AcDbExtents varBound;
+					varChar->bounds(varBound);
+					const auto varMaxP = varBound.maxPoint();
+					const auto varMinP = varBound.minPoint();
+
+					const AcGeVector3d varNormals[] = { { 1,0.05,0 },{ 0.05,1,0 }, };
+
+					const AcGePlane varMirrorPlane(
+						{ 0.5*(varMaxP.x + varMinP.x) ,0.5*(varMaxP.y + varMinP.y) ,0 },
+						varNormals[(varRandomDevice() & 1)]);
+					AcGeMatrix3d varMatrix;
+					varMatrix.setToMirroring(varMirrorPlane);
+					varChar->transformBy(varMatrix);
+				}
+
 			}
 
 		}
