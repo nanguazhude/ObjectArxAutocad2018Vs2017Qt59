@@ -16,11 +16,13 @@ inline constexpr static const sstd::RenderState * as_const(sstd::RenderState *a)
 namespace {
 	class sstd_Font_Private {
 	public:
-		sstd_Font_Private(const QString &arg) :
+		sstd_Font_Private(const QString &arg, double scale) :
 			$FontName(arg),
-			$QFont{ QFont{ arg } } {}
-		QString $FontName;
-		QFontMetricsF $QFont;
+			$QFont{ QFont{ arg } },
+			$Scale(scale){}
+		const QString $FontName;
+		const QFontMetricsF $QFont;
+		const double $Scale;
 		AcDbObjectId $Index;
 	};
 }/*namespace*/
@@ -133,58 +135,63 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 			argRenderState->$Stream.setDevice(&argRenderState->$File);
 			argRenderState->$Stream.setAutoDetectUnicode(true);
 		}
+	}
+
+	{
+		//getTextStyleTable
+		auto varDB = acdbHostApplicationServices()->workingDatabase();
+		AcDbObjectPointer<AcDbTextStyleTable> varBlockTable(varDB->textStyleTableId(), kForWrite);
+		if (varBlockTable.openStatus() != kOk) {
+			throw Exception(u8R"(can not open AcDbBlockTable)"sv);
+		}
+
+		/*创建字体集合*/
 		{
-			//getTextStyleTable
-			auto varDB = acdbHostApplicationServices()->workingDatabase();
-			AcDbObjectPointer<AcDbTextStyleTable> varBlockTable(varDB->textStyleTableId(), kForWrite);
-			if (varBlockTable.openStatus() != kOk) {
-				throw Exception(u8R"(can not open AcDbBlockTable)"sv);
-			}
-			/*创建字体集合*/
-			{
-				sstd::RenderState::NextNumber<wchar_t, 8, 'a', 'z'> varName;
-				std::list<sstd::Font> varFonts{
-					std::make_move_iterator(argRenderState->$Fonts.begin()),
-					std::make_move_iterator(argRenderState->$Fonts.end())
-				};
-				argRenderState->$Fonts.clear();
-				while (false == varFonts.empty()) {
-					auto var = varFonts.front();
-					varFonts.pop_front();
-					varName.next();
-					if (var.get_private() == nullptr) { continue; }
-					//const std::wstring_view & argNM,AcDbTextStyleTable * argTST,AcDbTextStyleTableRecord * argR
-					const wchar_t * argNM = varName.$String.data();
+			sstd::RenderState::NextNumber<wchar_t, 8, 'a', 'z'> varName;
+			std::list<sstd::Font> varFonts{
+				std::make_move_iterator(argRenderState->$Fonts.begin()),
+				std::make_move_iterator(argRenderState->$Fonts.end())
+			};
+			argRenderState->$Fonts.clear();
+			while (false == varFonts.empty()) {
+				auto var = varFonts.front();
+				varFonts.pop_front();
+				varName.next();
+				if (var.get_private() == nullptr) { continue; }
+				//const std::wstring_view & argNM,AcDbTextStyleTable * argTST,AcDbTextStyleTableRecord * argR
+				const wchar_t * argNM = varName.$String.data();
 
-					std::unique_ptr<AcDbTextStyleTableRecord, void(*)(AcDbTextStyleTableRecord*)>
-						argR(new AcDbTextStyleTableRecord, [](AcDbTextStyleTableRecord*arg) {
-						if (arg->objectId().isValid()) {
-							arg->close();
-						}
-						else {
-							delete arg;
-						}
-					});
-
-					if (eOk != argR->setName(argNM)) continue;
-
-					{
-						const auto varFontName = var.getFontName().toStdWString() ;
-						if (eOk != argR->setFont(varFontName.c_str(),
-							false,
-							false,
-							kChineseSimpCharset,
-							Autodesk::AutoCAD::PAL::FontUtils::FontPitch::kFixed,
-							Autodesk::AutoCAD::PAL::FontUtils::FontFamily::kModern
-						)) continue;
+				std::unique_ptr<AcDbTextStyleTableRecord, void(*)(AcDbTextStyleTableRecord*)>
+					argR(new AcDbTextStyleTableRecord, [](AcDbTextStyleTableRecord*arg) {
+					if (arg->objectId().isValid()) {
+						arg->close();
 					}
+					else {
+						delete arg;
+					}
+				});
 
-					argR->setTextSize(argRenderState->$FontBasicSize);
-					argR->setPriorSize(argRenderState->$FontBasicSize);
+				if (eOk != argR->setName(argNM)) continue;
 
-					if (eOk == varBlockTable->add(var.get_private()->$Index, argR.get()))
-						argRenderState->$Fonts.push_back(std::move(var));
+				{
+					const auto varFontName = var.getFontName().toStdWString();
+					if (eOk != argR->setFont(varFontName.c_str(),
+						false,
+						false,
+						kChineseSimpCharset,
+						Autodesk::AutoCAD::PAL::FontUtils::FontPitch::kFixed,
+						Autodesk::AutoCAD::PAL::FontUtils::FontFamily::kModern
+					)) continue;
 				}
+
+				{
+					const auto varSize = argRenderState->$FontBasicSize * var.get_private()->$Scale;
+					argR->setTextSize(varSize);
+					argR->setPriorSize(varSize);
+				}
+
+				if (eOk == varBlockTable->add(var.get_private()->$Index, argR.get()))
+					argRenderState->$Fonts.push_back(std::move(var));
 			}
 		}
 	}
@@ -313,24 +320,31 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 								}
 							} };
 
+							double varTextHeight = argRenderState->$FontBasicSize;
 							/*随机设置字体*/
+							if (argRenderState->$Fonts.empty() == false) {
+								std::swap(*argRenderState->$Fonts.begin(), *argRenderState->$Fonts.rbegin());
+							}
 							std::shuffle(
-								argRenderState->$Fonts.begin(), 
+								argRenderState->$Fonts.begin(),
 								argRenderState->$Fonts.end(),
 								varRandomDevice);
-							for ( const auto & varFont: argRenderState->$Fonts ) {
-								if ( varFont.has(*__b) ) {
+							for (const auto & varFont : argRenderState->$Fonts) {
+								if (varFont.has(*__b)) {
 									varMText->setTextStyle(varFont.get_private()->$Index);
+									varTextHeight *= varFont.get_private()->$Scale;
+									break;
 								}
 								else {
 									continue;
 								}
 							}
 
+							varMText->setTextHeight(varTextHeight);
 							varMText->setContents(varCurrentChar);
-							varMText->setTextHeight(argRenderState->$FontBasicSize);
 							varBlockTableRecord->appendAcDbEntity(varMText.get());
 							varMText->setLayer(varTextLayerName.c_str());
+							varMText->setLocation({ 0 , 0 , 0 });
 						}
 					}
 
@@ -517,10 +531,12 @@ bool sstd::Font::has(const std::string_view &arg) const {
 	return false;
 }
 
-void sstd::Font::setFontName(const QString &arg) {
-	thisp = std::make_shared<Private>(arg);
+void sstd::Font::setFontName(const QString &arg, double scale) {
+	thisp = std::make_shared<Private>(arg, scale);
 }
 
-const QString & sstd::Font::getFontName() const{
+const QString & sstd::Font::getFontName() const {
 	return thisp->$FontName;
 }
+
+

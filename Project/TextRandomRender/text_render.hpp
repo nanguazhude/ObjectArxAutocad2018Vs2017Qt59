@@ -35,9 +35,9 @@ namespace sstd {
 
 	class Font {
 	public:
-		Font(const QString & arg) { setFontName(arg); }
+		Font(const QString & arg,double scale) { setFontName(arg,scale); }
 		bool has(const std::string_view &)/*判断字符集里面有没有此字节*/const;
-		void setFontName(const QString &);
+		void setFontName(const QString &,double scale);
 		const QString & getFontName()const;
 	private:
 		class Private;
