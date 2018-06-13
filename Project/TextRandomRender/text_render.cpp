@@ -538,14 +538,16 @@ goto_next_page:
 
 					const auto varMX = 0.5*(varMaxP.x + varMinP.x);
 					const auto varMY = 0.5*(varMaxP.y + varMinP.y);
-					const AcGePlane varMirrorPlane(
-						{ varMX ,varMY ,0 },
-						varNormals1[var_dis(sstd::RenderState::Limit::$RD)]);
-					AcGeMatrix3d varMatrix;
-					varMatrix.setToMirroring(varMirrorPlane);
-					varChar->transformBy(varMatrix);
+					{
+						AcGeMatrix3d varMatrix;
+						const AcGePlane varMirrorPlane(
+							{ varMX ,varMY ,0 },
+							varNormals1[var_dis(sstd::RenderState::Limit::$RD)]);
+						varMatrix.setToMirroring(varMirrorPlane);
+						varChar->transformBy(varMatrix);
+					}
 					if (std::rand() & 1) {
-						varMatrix.setToIdentity();
+						AcGeMatrix3d varMatrix;
 						const AcGePlane varMirrorPlane(
 							{ varMX ,varMY ,0 },
 							varNormals2[var_dis(sstd::RenderState::Limit::$RD)]);
