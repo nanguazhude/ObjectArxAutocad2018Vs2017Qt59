@@ -32,6 +32,7 @@ namespace {
 
 static inline void init_state(sstd::RenderState *arg) {
 	DocumentLock varLock;
+
 	{/*get input file name and output dir name*/
 		if (qApp == nullptr) {/*this block should just run once or never run*/
 			static char args_0[] = u8R"(C:\Program Files\Autodesk\AutoCAD 2019\acad.exe)";
@@ -45,6 +46,12 @@ static inline void init_state(sstd::RenderState *arg) {
 		if (varDirName.isEmpty()) { throw std::runtime_error("can not find output dir"); }
 		arg->$OutPutDir = std::filesystem::u8path(varDirName.toUtf8().toStdString());
 		arg->$TextFileName = varFileName;
+	}
+
+	{/*set font names*/
+		arg->$Fonts.emplace_back(QStringLiteral("宋体"));
+		arg->$Fonts.emplace_back(QStringLiteral("楷体"));
+		arg->$Fonts.emplace_back(QStringLiteral("仿宋"));
 	}
 
 }

@@ -14,6 +14,23 @@
 inline constexpr static const sstd::RenderState * as_const(sstd::RenderState *a) { return a; }
 
 namespace {
+	class sstd_Font_Private {
+	public:
+		sstd_Font_Private(const QString &arg) :
+			$FontName(arg),
+			$QFont{ QFont{ arg } } {}
+		QString $FontName;
+		QFontMetricsF $QFont;
+		AcDbObjectId $Index;
+	};
+}/*namespace*/
+
+class sstd::Font::Private : public sstd_Font_Private {
+public:
+	using  sstd_Font_Private::sstd_Font_Private;
+};
+
+namespace {
 	class Exception : std::exception {
 		std::string $error_code;
 	public:
@@ -100,6 +117,7 @@ namespace {
 }/**/
 
 extern void text_render(sstd::RenderState * argRenderState) try {
+	static std::random_device varRandomDevice;
 	using CharNumber = sstd::RenderState::NextNumber<wchar_t, 8, '0', '9'>;
 	std::vector< std::unique_ptr<RenderCharBasic>/**/> varChars /*所有Char*/;
 	const auto varTextLayerName = argRenderState->$TextLayerName.toStdWString();
@@ -107,12 +125,68 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 	/*读取文件*/
 	if (false == argRenderState->$IsFileAndStreamOpen) {
 		argRenderState->$IsFileAndStreamOpen = true;
-		/*读取数据*/
-		argRenderState->$File.setFileName(argRenderState->$TextFileName);
-		if (false == argRenderState->$File.open(QIODevice::ReadOnly | QIODevice::Text))
-			throw Exception(u8R"(can not open file)"sv);
-		argRenderState->$Stream.setDevice(&argRenderState->$File);
-		argRenderState->$Stream.setAutoDetectUnicode(true);
+		{
+			/*读取数据*/
+			argRenderState->$File.setFileName(argRenderState->$TextFileName);
+			if (false == argRenderState->$File.open(QIODevice::ReadOnly | QIODevice::Text))
+				throw Exception(u8R"(can not open file)"sv);
+			argRenderState->$Stream.setDevice(&argRenderState->$File);
+			argRenderState->$Stream.setAutoDetectUnicode(true);
+		}
+		{
+			//getTextStyleTable
+			auto varDB = acdbHostApplicationServices()->workingDatabase();
+			AcDbObjectPointer<AcDbTextStyleTable> varBlockTable(varDB->textStyleTableId(), kForWrite);
+			if (varBlockTable.openStatus() != kOk) {
+				throw Exception(u8R"(can not open AcDbBlockTable)"sv);
+			}
+			/*创建字体集合*/
+			{
+				sstd::RenderState::NextNumber<wchar_t, 8, 'a', 'z'> varName;
+				std::list<sstd::Font> varFonts{
+					std::make_move_iterator(argRenderState->$Fonts.begin()),
+					std::make_move_iterator(argRenderState->$Fonts.end())
+				};
+				argRenderState->$Fonts.clear();
+				while (false == varFonts.empty()) {
+					auto var = varFonts.front();
+					varFonts.pop_front();
+					varName.next();
+					if (var.get_private() == nullptr) { continue; }
+					//const std::wstring_view & argNM,AcDbTextStyleTable * argTST,AcDbTextStyleTableRecord * argR
+					const wchar_t * argNM = varName.$String.data();
+
+					std::unique_ptr<AcDbTextStyleTableRecord, void(*)(AcDbTextStyleTableRecord*)>
+						argR(new AcDbTextStyleTableRecord, [](AcDbTextStyleTableRecord*arg) {
+						if (arg->objectId().isValid()) {
+							arg->close();
+						}
+						else {
+							delete arg;
+						}
+					});
+
+					if (eOk != argR->setName(argNM)) continue;
+
+					{
+						const auto varFontName = var.getFontName().toStdWString() ;
+						if (eOk != argR->setFont(varFontName.c_str(),
+							false,
+							false,
+							kChineseSimpCharset,
+							Autodesk::AutoCAD::PAL::FontUtils::FontPitch::kFixed,
+							Autodesk::AutoCAD::PAL::FontUtils::FontFamily::kModern
+						)) continue;
+					}
+
+					argR->setTextSize(argRenderState->$FontBasicSize);
+					argR->setPriorSize(argRenderState->$FontBasicSize);
+
+					if (eOk == varBlockTable->add(var.get_private()->$Index, argR.get()))
+						argRenderState->$Fonts.push_back(std::move(var));
+				}
+			}
+		}
 	}
 
 	/*页码加一*/
@@ -239,6 +313,20 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 								}
 							} };
 
+							/*随机设置字体*/
+							std::shuffle(
+								argRenderState->$Fonts.begin(), 
+								argRenderState->$Fonts.end(),
+								varRandomDevice);
+							for ( const auto & varFont: argRenderState->$Fonts ) {
+								if ( varFont.has(*__b) ) {
+									varMText->setTextStyle(varFont.get_private()->$Index);
+								}
+								else {
+									continue;
+								}
+							}
+
 							varMText->setContents(varCurrentChar);
 							varMText->setTextHeight(argRenderState->$FontBasicSize);
 							varBlockTableRecord->appendAcDbEntity(varMText.get());
@@ -292,6 +380,8 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 						u8R"(')"sv,
 						u8R"(。)"sv,
 						u8R"(，)"sv,
+						u8R"(：)"sv,
+						u8R"(:)"sv,
 					};
 
 					/*标点符号排布在这一行*/
@@ -383,16 +473,7 @@ catch (...) {
 
 std::mt19937 sstd::RenderState::Limit::$RD{ std::random_device{}.operator()() };
 
-class sstd::Font::Private {
-public:
-	Private(const QString &arg) :
-		$FontName(arg),
-		$QFont{ QFont{ arg } } {}
-	QString $FontName;
-	QFontMetricsF $QFont;
-};
-
-bool sstd::Font::has(std::string_view &arg) const {
+bool sstd::Font::has(const std::string_view &arg) const {
 	if (thisp) {
 		std::uint32_t varChar;
 		switch (arg.size()) {
@@ -438,4 +519,8 @@ bool sstd::Font::has(std::string_view &arg) const {
 
 void sstd::Font::setFontName(const QString &arg) {
 	thisp = std::make_shared<Private>(arg);
+}
+
+const QString & sstd::Font::getFontName() const{
+	return thisp->$FontName;
 }

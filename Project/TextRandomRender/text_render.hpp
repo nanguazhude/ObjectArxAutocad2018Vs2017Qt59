@@ -36,11 +36,15 @@ namespace sstd {
 	class Font {
 	public:
 		Font(const QString & arg) { setFontName(arg); }
-		bool has(std::string_view &)/*判断字符集里面有没有此字节*/const;
+		bool has(const std::string_view &)/*判断字符集里面有没有此字节*/const;
 		void setFontName(const QString &);
+		const QString & getFontName()const;
 	private:
 		class Private;
 		std::shared_ptr<Private> thisp;
+	public:
+		Private * get_private() { return thisp.operator->(); }
+		const Private * get_private() const { return thisp.operator->(); }
 	};
 
 	class RenderState {
