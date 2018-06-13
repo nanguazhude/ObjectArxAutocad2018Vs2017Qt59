@@ -509,7 +509,7 @@ goto_next_page:
 					const auto varMaxP = varBound.maxPoint();
 					const auto varMinP = varBound.minPoint();
 
-					const static AcGeVector3d varNormals[] = {
+					const static AcGeVector3d varNormals1[] = {
 						{ 0.05,1,0 },{ -0.05,1,0 },
 						{ 0.15,1,0 },{ -0.15,1,0 },
 						{ 0.07,1,0 },{ -0.07,1,0 },
@@ -519,13 +519,31 @@ goto_next_page:
 						{ 0.08,1,0 },{ -0.08,1,0 },
 					};
 
-					static std::uniform_int_distribution<std::size_t> var_dis{ 0, std::size(varNormals) - 1 };
+					const static AcGeVector3d varNormals2[] = {
+						{ 1,0.05,0 },{ 1,-0.05,0 },
+						{ 1,0.15,0 },{ 1,-0.15,0 },
+						{ 1,0.07,0 },{ 1,-0.07,0 },
+						{ 1,0.12,0 },{ 1,-0.12,0 },
+						{ 1,0.10,0 },{ 1,-0.10,0 },
+						{ 1,0.09,0 },{ 1,-0.09,0 },
+						{ 1,0.08,0 },{ 1,-0.08,0 },
+					};
+					static_assert(std::size(varNormals1) == std::size(varNormals2));
+					static std::uniform_int_distribution<std::size_t> var_dis{ 0, std::size(varNormals1) - 1 };
 
+					const auto varMX = 0.5*(varMaxP.x + varMinP.x);
+					const auto varMY = 0.5*(varMaxP.y + varMinP.y);
 					const AcGePlane varMirrorPlane(
-						{ 0.5*(varMaxP.x + varMinP.x) ,0.5*(varMaxP.y + varMinP.y) ,0 },
-						varNormals[var_dis(sstd::RenderState::Limit::$RD)]);
+						{ varMX ,varMY ,0 },
+						varNormals1[var_dis(sstd::RenderState::Limit::$RD)]);
 					AcGeMatrix3d varMatrix;
 					varMatrix.setToMirroring(varMirrorPlane);
+					if (std::rand() & 1) {
+						const AcGePlane varMirrorPlane(
+							{ varMX ,varMY ,0 },
+							varNormals2[var_dis(sstd::RenderState::Limit::$RD)]);
+						varMatrix.setToMirroring(varMirrorPlane);
+					}
 					varChar->transformBy(varMatrix);
 				}
 
