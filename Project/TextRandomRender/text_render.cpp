@@ -543,13 +543,15 @@ goto_next_page:
 						varNormals1[var_dis(sstd::RenderState::Limit::$RD)]);
 					AcGeMatrix3d varMatrix;
 					varMatrix.setToMirroring(varMirrorPlane);
+					varChar->transformBy(varMatrix);
 					if (std::rand() & 1) {
+						varMatrix.setToIdentity();
 						const AcGePlane varMirrorPlane(
 							{ varMX ,varMY ,0 },
 							varNormals2[var_dis(sstd::RenderState::Limit::$RD)]);
 						varMatrix.setToMirroring(varMirrorPlane);
+						varChar->transformBy(varMatrix);
 					}
-					varChar->transformBy(varMatrix);
 				}
 
 			}
