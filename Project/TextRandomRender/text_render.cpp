@@ -271,7 +271,7 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 				auto & varRenderCharParent = varChars.emplace_back(new RenderChar);
 				auto varRenderChar = static_cast<RenderChar *>(varRenderCharParent.get());
 				/* 在TextView后面加一个 0 */
-			 
+
 				{
 					unsigned int j = 0;
 					for (const auto & i : varNextChar) {
@@ -485,27 +485,45 @@ goto_next_page:
 					u8R"(傻)"sv,
 					u8R"(功)"sv,
 					u8R"(习)"sv,
+					u8R"(革)"sv,
+					u8R"(色)"sv,
 					u8R"(裸)"sv,
+					u8R"(激)"sv,
+					u8R"(日)"sv,
 					u8R"(法)"sv,
 					u8R"(货)"sv,
 					u8R"(残)"sv,
+					u8R"(台)"sv,
+					u8R"(情)"sv,
 					u8R"(轮)"sv,
 					u8R"(赤)"sv,
+					u8R"(命)"sv,
 					u8R"(近)"sv,
 					u8R"(宪)"sv,
+					u8R"(黄)"sv,
 				};
 
-				if ( varKeyWord.count( c->$Utf8Code ) > 0) {
+				if (varKeyWord.count(c->$Utf8Code) > 0) {
 					AcDbExtents varBound;
 					varChar->bounds(varBound);
 					const auto varMaxP = varBound.maxPoint();
 					const auto varMinP = varBound.minPoint();
 
-					const AcGeVector3d varNormals[] = { { 1,0.05,0 },{ 0.05,1,0 }, };
+					const static AcGeVector3d varNormals[] = {
+						{ 0.05,1,0 },{ -0.05,1,0 },
+						{ 0.15,1,0 },{ -0.15,1,0 },
+						{ 0.07,1,0 },{ -0.07,1,0 },
+						{ 0.12,1,0 },{ -0.12,1,0 },
+						{ 0.10,1,0 },{ -0.10,1,0 },
+						{ 0.09,1,0 },{ -0.09,1,0 },
+						{ 0.08,1,0 },{ -0.08,1,0 },
+					};
+
+					static std::uniform_int_distribution<std::size_t> var_dis{ 0, std::size(varNormals) - 1 };
 
 					const AcGePlane varMirrorPlane(
 						{ 0.5*(varMaxP.x + varMinP.x) ,0.5*(varMaxP.y + varMinP.y) ,0 },
-						varNormals[(varRandomDevice() & 1)]);
+						varNormals[var_dis(sstd::RenderState::Limit::$RD)]);
 					AcGeMatrix3d varMatrix;
 					varMatrix.setToMirroring(varMirrorPlane);
 					varChar->transformBy(varMatrix);

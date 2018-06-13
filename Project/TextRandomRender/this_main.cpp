@@ -49,16 +49,15 @@ static inline void init_state(sstd::RenderState *arg) {
 	}
 
 	{/*set font names*/
-		if constexpr(false) {
-			arg->$Fonts.emplace_back(QStringLiteral("陈静的字完整版"), 1.2);
-			arg->$Fonts.emplace_back(QStringLiteral("萌妹子体"), 1.0);
-			arg->$Fonts.emplace_back(QStringLiteral("李国夫手写体"), 1.0);
-		}
-		else {
-			arg->$Fonts.emplace_back(QStringLiteral("宋体"), 1.0);
-			arg->$Fonts.emplace_back(QStringLiteral("楷体"), 1.1);
-			arg->$Fonts.emplace_back(QStringLiteral("仿宋"), 1.0);
-		}
+		arg->$Fonts.emplace_back(QStringLiteral("陈静的字完整版"), 1.2);
+		arg->$Fonts.emplace_back(QStringLiteral("萌妹子体"), 1.0);
+		arg->$Fonts.emplace_back(QStringLiteral("李国夫手写体"), 1.0);
+		arg->$Fonts.emplace_back(QStringLiteral("宋体"), 1.0);
+		arg->$Fonts.emplace_back(QStringLiteral("楷体"), 1.1);
+		arg->$Fonts.emplace_back(QStringLiteral("仿宋"), 1.0);
+		arg->$Fonts.emplace_back(QStringLiteral("幼圆"), 1.0);
+		arg->$Fonts.emplace_back(QStringLiteral("等线"), 1.0);
+		arg->$Fonts.emplace_back(QStringLiteral("华文行楷"), 1.0);
 	}
 
 }

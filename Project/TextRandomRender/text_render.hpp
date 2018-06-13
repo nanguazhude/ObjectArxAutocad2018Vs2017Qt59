@@ -70,13 +70,13 @@ namespace sstd {
 			double $Min /*最小值*/;
 			double $Max /*最大值*/;
 			std::unique_ptr<std::normal_distribution<double>/**/> $ND;
-			static std::mt19937 $RD;
 			inline void _construct() {
 				const auto varMean/*平均数*/ = ($Min + $Max)*0.5;
 				const auto varS/*标准差*/ = std::abs($Max - $Min)*(1.0 / 6.0);
 				$ND.reset(new std::normal_distribution<double>(varMean, varS));
 			}
 		public:
+			static std::mt19937 $RD;
 			inline Limit() :Limit(0, 1) {}
 			inline Limit(const double &a, const double &b) : $Min(a), $Max(b) { _construct(); }
 			inline void setLimit(const double &a, const double & b) { $Min = a; $Max = b; _construct(); }
@@ -93,7 +93,7 @@ namespace sstd {
 		double $FontCharSpace{ 0.65123_mm }/*字间距*/;
 		Limit $FontDx{ -0.43_mm,0.43_mm }/*横向随机位移,单位mm*/;
 		Limit $FontDy{ -0.43_mm,0.43_mm }/*纵向随机位移,单位mm*/;
-		Limit $FontRotate{ -1.5_deg,0.9_deg }/*字体随机旋转,单位°*/;
+		Limit $FontRotate{ -4.6_deg,4.2_deg }/*字体随机旋转,单位°*/;
 		Limit $FontGlobalScale{ 0.980_per,0.990_per }/*字体全局缩放比例*/;
 		Limit $FontScaleX{ 0.880_per,0.892_per }/*字体横向缩放比例*/;
 		Limit $FontScaleY{ 0.680_per,0.991_per }/*字体纵向缩放比例*/;
