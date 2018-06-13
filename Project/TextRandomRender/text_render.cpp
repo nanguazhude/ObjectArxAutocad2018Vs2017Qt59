@@ -65,23 +65,28 @@ inline static std::string_view get_next_char(std::string_view & arg) {
 		arg.remove_prefix(2);
 		return std::move(varAns);
 	}
-	else if (varFirstChar < 0b11110000u) {
+	else if (varFirstChar < 0b11110000u) /*3*/ {
 		std::string_view varAns = arg.substr(0, 3);
 		arg.remove_prefix(3);
 		return std::move(varAns);
 	}
-	else if (varFirstChar < 0b11111000u) {
+	else if (varFirstChar < 0b11111000u) /*4*/ {
 		std::string_view varAns = arg.substr(0, 4);
 		arg.remove_prefix(4);
 		return std::move(varAns);
 	}
-	else if (varFirstChar < 0b11111100u) {
+	else if (varFirstChar < 0b11111100u)/*5*/ {
 		std::string_view varAns = arg.substr(0, 5);
 		arg.remove_prefix(5);
 		return std::move(varAns);
 	}
-	std::string_view varAns = arg.substr(0, 6);
-	arg.remove_prefix(6);
+	else if (varFirstChar < 0b11111110u)/*6*/ {
+		std::string_view varAns = arg.substr(0, 6);
+		arg.remove_prefix(6);
+		return std::move(varAns);
+	}
+	std::string_view varAns = arg.substr(0, 7)/*7*/;
+	arg.remove_prefix(7);
 	return std::move(varAns);
 
 }
@@ -127,7 +132,6 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 
 	{   /*将文字逐个创建块,并布局*/
 		CharNumber varCurrentCharCount;
-		wchar_t varCurrentCharRaw = 0;
 		std::string varLine = std::move(argRenderState->$DataInPastPage)/*获得上一页剩余数据*/;
 		while ((varLine.size() > 0) || (argRenderState->$Stream.atEnd() == false)) {
 
@@ -238,7 +242,6 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 							varMText->setContents(varCurrentChar);
 							varMText->setTextHeight(argRenderState->$FontBasicSize);
 							varBlockTableRecord->appendAcDbEntity(varMText.get());
-							varCurrentCharRaw = varCurrentChar.getAt(0);
 							varMText->setLayer(varTextLayerName.c_str());
 						}
 					}
@@ -282,16 +285,17 @@ extern void text_render(sstd::RenderState * argRenderState) try {
 					varRenderChar->$Y = varHeight;
 					varWidth = varWidthBegin;
 					/*在行尾保留的标点...*/
-					const static std::set<wchar_t> _RenderRaw{
-						L',',
-						L'.',
-						L';',
-						L'\'',
-						L'。',
-						L'，',
+					const static std::set<std::string_view> _RenderRaw{
+						u8R"(,)"sv,
+						u8R"(.)"sv,
+						u8R"(;)"sv,
+						u8R"(')"sv,
+						u8R"(。)"sv,
+						u8R"(，)"sv,
 					};
+
 					/*标点符号排布在这一行*/
-					const bool varNeedRenderThisChar = _RenderRaw.count(varCurrentCharRaw) > 0;
+					const bool varNeedRenderThisChar = _RenderRaw.count(*__b) > 0;
 
 					add_line_height(varHeight, argRenderState);
 					if (varHeight <= varHeightMax)/*增加新页*/ {
@@ -351,7 +355,8 @@ goto_next_page:
 
 			{/*旋转*/
 				const auto varFontRotate = argRenderState->$FontRotate.next();
-				varChar->setRotation(varFontRotate);
+				constexpr const static auto K = 3.141592654 / 180.0;
+				varChar->setRotation(varFontRotate*K);
 			}
 
 			{/*移位*/
@@ -377,3 +382,60 @@ catch (...) {
 }
 
 std::mt19937 sstd::RenderState::Limit::$RD{ std::random_device{}.operator()() };
+
+class sstd::Font::Private {
+public:
+	Private(const QString &arg) :
+		$FontName(arg),
+		$QFont{ QFont{ arg } } {}
+	QString $FontName;
+	QFontMetricsF $QFont;
+};
+
+bool sstd::Font::has(std::string_view &arg) const {
+	if (thisp) {
+		std::uint32_t varChar;
+		switch (arg.size()) {
+		case 0:return false;
+		case 1:varChar = arg[0]; break;
+		case 2: { varChar = arg[0]; varChar &= 0b0001'1111; varChar <<= 6; varChar |= (arg[1] & 0b0011'1111);  break; }
+		case 3: {
+			varChar = arg[2] & 0b0011'1111;
+			varChar |= (std::uint32_t(arg[1]) &std::uint32_t(0b0011'1111)) << 6;
+			varChar |= (std::uint32_t(arg[0]) &std::uint32_t(0b0000'1111)) << 12;
+			break;
+		}
+		case 4: {
+			varChar = arg[3] & 0b0011'1111;
+			varChar |= (std::uint32_t(arg[2]) &std::uint32_t(0b0011'1111)) << 6;
+			varChar |= (std::uint32_t(arg[1]) &std::uint32_t(0b0011'1111)) << 12;
+			varChar |= (std::uint32_t(arg[0]) &std::uint32_t(0b0000'0111)) << 18;
+			break;
+		}
+		case 5: {
+			varChar = arg[4] & 0b0011'1111;
+			varChar |= (std::uint32_t(arg[3]) &std::uint32_t(0b0011'1111)) << 6;
+			varChar |= (std::uint32_t(arg[2]) &std::uint32_t(0b0011'1111)) << 12;
+			varChar |= (std::uint32_t(arg[1]) &std::uint32_t(0b0011'1111)) << 18;
+			varChar |= (std::uint32_t(arg[0]) &std::uint32_t(0b0000'0011)) << 24;
+			break;
+		}
+		case 6: {
+			varChar = arg[5] & 0b0011'1111;
+			varChar |= (std::uint32_t(arg[4]) &std::uint32_t(0b0011'1111)) << 6;
+			varChar |= (std::uint32_t(arg[3]) &std::uint32_t(0b0011'1111)) << 12;
+			varChar |= (std::uint32_t(arg[2]) &std::uint32_t(0b0011'1111)) << 18;
+			varChar |= (std::uint32_t(arg[1]) &std::uint32_t(0b0011'1111)) << 24;
+			varChar |= (std::uint32_t(arg[0]) &std::uint32_t(0b0000'0001)) << 30;
+			break;
+		}
+		default:return false;
+		}
+		return thisp->$QFont.inFontUcs4(varChar);
+	}
+	return false;
+}
+
+void sstd::Font::setFontName(const QString &arg) {
+	thisp = std::make_shared<Private>(arg);
+}

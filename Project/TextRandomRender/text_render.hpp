@@ -32,8 +32,20 @@ namespace sstd {
 	static inline constexpr double operator""_per(long double a) { return static_cast<double>(a); }
 	/*to Qt utf8 */
 	static inline QString operator""_qtu8str(const char *a, std::size_t b) { return QString::fromUtf8(a, static_cast<int>(b)); }
+
+	class Font {
+	public:
+		Font(const QString & arg) { setFontName(arg); }
+		bool has(std::string_view &)/*判断字符集里面有没有此字节*/const;
+		void setFontName(const QString &);
+	private:
+		class Private;
+		std::shared_ptr<Private> thisp;
+	};
+
 	class RenderState {
 	public:
+		std::vector<Font/**/> $Fonts;
 		QString $TextFileName/*要渲染的txt文件名字*/;
 		std::filesystem::path $OutPutDir/*输出渲染结果路径*/;
 		double  $PageWidth = 210._mm/*页面宽度,单位毫米*/;
@@ -73,13 +85,13 @@ namespace sstd {
 		};
 		std::size_t $LineCharIndex = 0;
 		double $FontBasicSize{ 5.2_mm }/*字体默认大小,单位mm*/;
-		double $FontLineHeight{ 6._mm }/*每行高度,单位mm*/;
-		double $FontCharSpace{ 0.5_mm }/*字间距*/;
+		double $FontLineHeight{ 8.0_mm }/*每行高度,单位mm*/;
+		double $FontCharSpace{ 0.65_mm }/*字间距*/;
 		Limit $FontDx{ -0.13_mm,0.13_mm }/*横向随机位移,单位mm*/;
 		Limit $FontDy{ -0.13_mm,0.13_mm }/*纵向随机位移,单位mm*/;
-		Limit $FontRotate{ -0.5_deg,0.5_deg }/*字体随机旋转,单位°*/;
+		Limit $FontRotate{ -1.5_deg,0.9_deg }/*字体随机旋转,单位°*/;
 		Limit $FontGlobalScale{ 0.980_per,0.990_per }/*字体全局缩放比例*/;
-		Limit $FontScaleX{ 0.980_per,0.992_per }/*字体横向缩放比例*/;
+		Limit $FontScaleX{ 0.880_per,0.892_per }/*字体横向缩放比例*/;
 		Limit $FontScaleY{ 0.980_per,0.991_per }/*字体纵向缩放比例*/;
 		QString $TextLayerName{ u8R"(0)"_qtu8str }/*文字所在图层*/;
 		double $BorderTopLeftX = 0.0_mm/**/;
